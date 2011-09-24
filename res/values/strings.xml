@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">This should be the question</string>
+    <string name="exhibit">This should hold a possible exhibit</string>
+    <string name="app_name">LPIC 101-102 Exam Trainer</string>
+    <string name="ticker_text">Downloading new exam questions</string>
+    <string name="notification_title">Yoohoo</string>
+    <string name="notification_message">Downloading exam</string>
+    <string name="button_next">Next</string>
+    <string name="button_prev">Back</string>
+    <string name="button_start_exam">Start exam</string>
+    <string name="button_start_exam101">Start exam 101</string>
+    <string name="button_start_exam102">Start exam 102</string>
+    <string name="button_update">Get new questions</string>
+    <string name="button_results">Show previous exams</string>
+    <string name="answer1">Answer 1</string>
+    <string name="answer2">Answer 2</string>
+    <string name="answer3">Answer 3</string>
+    <string name="stop_exam">Quit</string>
+    <string name="leave_comment">Comment</string>
+    <string name="get_hint">Hint</string>
+</resources>
