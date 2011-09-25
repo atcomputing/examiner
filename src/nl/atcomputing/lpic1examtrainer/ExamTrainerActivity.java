@@ -19,16 +19,20 @@ public class ExamTrainerActivity extends Activity {
         
         dbHelper = new ExamTrainerDbAdapter(this);
 		dbHelper.open();
-		//dbHelper.upgrade();
+		dbHelper.upgrade();
 		
 		dbHelper.addQuestion("My First Question", "What is the first question?", null, "MULTIPLECHOICE", 
+				"The next question, The previous question, This question, None of the above", "This question");
+		dbHelper.addQuestion("My First Question", "What is the second question?", null, "MULTIPLECHOICE", 
+				"The next question, The previous question, This question, None of the above", "This question");
+		dbHelper.addQuestion("My First Question", "What is the third question?", null, "MULTIPLECHOICE", 
 				"The next question, The previous question, This question, None of the above", "This question");
 
         Button startExam = (Button) findViewById(R.id.button_start_exam);
         startExam.setOnClickListener( new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(Intent.ACTION_RUN, ExamTrainer.Questions.CONTENT_URI, ExamTrainerActivity.this, ExamQuestionsActivity.class);
+				Intent intent = new Intent(ExamTrainerActivity.this, ExamQuestionsActivity.class);
 				intent.putExtra("question", 1);
 				startActivity(intent);
 			}

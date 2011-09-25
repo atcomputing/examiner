@@ -1,10 +1,12 @@
 package nl.atcomputing.lpic1examtrainer;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -16,28 +18,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class ExamQuestionsActivity extends Activity {
-	
+	private ArrayList<CheckBox> cboxes;
 	private ExamTrainerDbAdapter dbHelper;
 	private Cursor cursor_question;
 	private int question_number;
-
+	private long answer_id;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Intent intent = getIntent();
 		
-		final String action = intent.getAction();
-
-        // For now we just abort if action is not ACTION_RUN
-		// we might add other action types for reviewing afterwards
-		// which means filling in the given answers
-        if (Intent.ACTION_RUN.equals(action)) {
-        	Log.e("ExamTrainer", "Unknown action, exiting");
-        	finishActivity();
-        }
-        
         question_number = intent.getIntExtra("question", 1);
-        
         if ( question_number < 1 ) {
         	finishActivity();
         }
@@ -51,7 +43,9 @@ public class ExamQuestionsActivity extends Activity {
 			//end of the exam
 			finishActivity();
 		}
-		createView();
+		
+		setupLayout();
+		addListeners();
 	}
 
 	@Override
@@ -79,7 +73,20 @@ public class ExamQuestionsActivity extends Activity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-	
+
+	protected void addListeners() {
+		for(int index = 0; index < cboxes.size(); index++) {
+			CheckBox cbox = cboxes.get(index);
+			answer_id = (long) index;
+			cbox.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					dbHelper.setAnswer(question_number, answer_id);
+				}
+			});
+		}
+		
+	}
 	protected void finishActivity() {
 		dbHelper.close();
 		finish();
@@ -92,28 +99,29 @@ public class ExamQuestionsActivity extends Activity {
 	}
 	
 	protected LinearLayout createAnswers(String text) {
-		
+		CheckBox cbox; 
+		cboxes = new ArrayList<CheckBox>();
 		LinearLayout v_layout = new LinearLayout(this);
 		v_layout.setOrientation(LinearLayout.VERTICAL);
 		
 		String[] answers = text.split(",");
 		
 		for (String answer : answers) {
-			CheckBox cbox = new CheckBox(this);
+			cbox = new CheckBox(this);
 			cbox.setText(answer);
 			v_layout.addView(cbox);
+			cboxes.add(cbox);
 		}
 		
 		return v_layout;
 	}
 	
-	protected void createView() {
-
+	protected void setupLayout() {
 		int index;
 		String text;
 		LinearLayout v_layout = new LinearLayout(this);
 		v_layout.setOrientation(LinearLayout.VERTICAL);
-
+		
 		index = cursor_question.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT);
 		text = cursor_question.getString(index);
 		TextView exhibit = new TextView(this);
@@ -123,7 +131,7 @@ public class ExamQuestionsActivity extends Activity {
 		exhibit.setTextSize(1, 14);
 		exhibit.setText(text);
 		v_layout.addView(exhibit);
-
+		
 		index = cursor_question.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_QUESTION);
 		text = cursor_question.getString(index);
 		TextView question_textview = new TextView(this);
@@ -133,38 +141,35 @@ public class ExamQuestionsActivity extends Activity {
 		question_textview.setTextSize(1, 12);
 		question_textview.setText(text);
 		v_layout.addView(question_textview);
-
+		
 		index = cursor_question.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_ANSWERS);
 		text = cursor_question.getString(index);
 		LinearLayout layout = createAnswers(text);
 		v_layout.addView(layout);
-
-		LinearLayout h_layout = new LinearLayout(this);
-
+		
+		//v_layout.addView(h_layout);
+		LayoutInflater li = getLayoutInflater();
+		li.inflate(R.layout.question, v_layout);
+		
+		setContentView(v_layout);
+		
 		Button button_prev_question = (Button) findViewById(R.id.button_prev_question);
 		button_prev_question.setOnClickListener( new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(Intent.ACTION_RUN, ExamTrainer.Questions.CONTENT_URI, ExamQuestionsActivity.this, ExamQuestionsActivity.class);
-				intent.putExtra("question", question_number - 1);
-				startActivity(intent);
+				finishActivity();
 			}
 		});
-		h_layout.addView(button_prev_question);
-		
 		Button button_next_question = (Button) findViewById(R.id.button_next_question);
 		button_next_question.setOnClickListener( new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(Intent.ACTION_RUN, ExamTrainer.Questions.CONTENT_URI, ExamQuestionsActivity.this, ExamQuestionsActivity.class);
+				Intent intent = new Intent(ExamQuestionsActivity.this, ExamQuestionsActivity.class);
 				intent.putExtra("question", question_number + 1);
 				startActivity(intent);
 			}
 		});
-		h_layout.addView(button_next_question);
 		
-
-		v_layout.addView(h_layout);
-		setContentView(v_layout);
+		
 	}
 }

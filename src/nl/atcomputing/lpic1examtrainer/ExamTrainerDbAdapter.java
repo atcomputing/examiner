@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class ExamTrainerDbAdapter {
 	private final Context context;
@@ -81,5 +82,56 @@ public class ExamTrainerDbAdapter {
 			mCursor.moveToFirst();
 		}
 		return mCursor;
+	}
+	
+	/**
+	 * @brief Retrieves answer from the score table for the given question ID.
+	 * @param questionId The row number of the question in the question table
+	 * @return Cursor that matched the SQL query. Note that Cursor can be null if no 
+	 * row was found for the given questionId. 
+	 * @throws SQLException
+	 */
+	public Cursor getAnswer(long questionId) throws SQLException {
+		Cursor mCursor = db.query(true, ExamTrainer.Score.TABLE_NAME, 
+				new String[] {
+				ExamTrainer.Score.COLUMN_NAME_ANSWER_ID
+				},
+				ExamTrainer.Score.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
+				null, null, null, null, null);
+		
+		return mCursor;
+	}
+	
+	public boolean checkIfAnswerInTable(long questionId, long answerId) 
+													throws SQLException {
+		Cursor mCursor = db.query(true, ExamTrainer.Score.TABLE_NAME, 
+				new String[] {
+				ExamTrainer.Score.COLUMN_NAME_ANSWER_ID
+				},
+				ExamTrainer.Score.COLUMN_NAME_QUESTION_ID + "=" + questionId
+				+ " AND " + ExamTrainer.Score.COLUMN_NAME_ANSWER_ID + "=" + answerId, 
+				null, null, null, null, null);
+		return mCursor != null;
+	}
+
+	/**
+	 * @brief Will update the database and set the answer for a specific multiple 
+	 * choice question as answered by the user
+	 * @param questionId	The rowId of the question answered
+	 * @param answerId		The number of the answer chosen by the user
+	 * @return true if succeeded, false otherwise
+	 */
+	public boolean setAnswer(long questionId, long answerId) {
+		
+		//Check if answer is already in the database
+		if( ! checkIfAnswerInTable(questionId, answerId) ) {
+			ContentValues values = new ContentValues();
+			values.put(ExamTrainer.Score.COLUMN_NAME_QUESTION_ID, questionId);
+			values.put(ExamTrainer.Score.COLUMN_NAME_ANSWER_ID, answerId);
+
+			return db.insert(ExamTrainer.Score.TABLE_NAME, null, values) != -1;
+		}
+		
+		return true;
 	}
 }

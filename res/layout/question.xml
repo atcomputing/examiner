@@ -1,27 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    >
-    <TextView
-    style="@style/exhibit"
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="@string/exhibit"
-    />
-<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="@string/hello"
-    />
-<CheckBox android:text="@string/answer1" android:id="@+id/checkBox1" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
-<CheckBox android:text="@string/answer2" android:id="@+id/checkBox2" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
-<CheckBox android:text="@string/answer3" android:id="@+id/checkBox3" android:layout_width="wrap_content" android:layout_height="wrap_content"></CheckBox>
-<RadioGroup android:id="@+id/radioGroup1" android:layout_width="wrap_content" android:layout_height="wrap_content">
-</RadioGroup>
-<LinearLayout android:id="@+id/linearLayout1" android:layout_height="wrap_content" android:layout_width="fill_parent">
-    <Button android:text="@string/button_prev" android:id="@+id/button_prev_question" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-    <Button android:text="@string/button_next" android:id="@+id/button_next_question" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
-</LinearLayout>
-</LinearLayout>
+    <LinearLayout 	android:id="@+id/prev_next_buttonlayout" 
+    				android:layout_width="fill_parent" 
+    				android:layout_height="fill_parent"
+    				android:orientation="horizontal" 
+    				xmlns:android="http://schemas.android.com/apk/res/android">
+        <Button android:text="Previous" 
+        		android:id="@+id/button_prev_question" 
+        		android:layout_width="wrap_content" 
+        		android:layout_height="wrap_content"></Button>
+        <Button android:text="Next" 
+        		android:id="@+id/button_next_question" 
+        		android:layout_width="wrap_content" 
+        		android:layout_height="wrap_content"></Button>
+    </LinearLayout>
+   
