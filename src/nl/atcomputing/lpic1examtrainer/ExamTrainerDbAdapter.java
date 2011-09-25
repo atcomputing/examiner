@@ -98,10 +98,34 @@ public class ExamTrainerDbAdapter {
 				},
 				ExamTrainer.Score.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
 				null, null, null, null, null);
-		
 		return mCursor;
 	}
 	
+	public void printAnswers() {
+		Cursor mCursor = db.query(true, ExamTrainer.Score.TABLE_NAME, 
+				new String[] {
+				ExamTrainer.Score._ID,
+				ExamTrainer.Score.COLUMN_NAME_QUESTION_ID,
+				ExamTrainer.Score.COLUMN_NAME_ANSWER_ID,
+				}, 
+				null, null, null, null, null, null);
+		int answerIndex = mCursor.getColumnIndex(ExamTrainer.Score.COLUMN_NAME_ANSWER_ID);
+		int questionIndex = mCursor.getColumnIndex(ExamTrainer.Score.COLUMN_NAME_QUESTION_ID);
+		int idIndex = mCursor.getColumnIndex(ExamTrainer.Score._ID);
+		if( mCursor.moveToFirst() ) {
+			do {
+				long answer_id = mCursor.getLong(answerIndex);
+				long question_id = mCursor.getLong(questionIndex);
+				long id = mCursor.getLong(idIndex);
+				Log.d("ExamTrainerDbAdapter", "printAnswers: " + 
+						ExamTrainer.Score._ID + "=" + id 
+						+ ", " + 
+						ExamTrainer.Score.COLUMN_NAME_QUESTION_ID + "=" + question_id
+						+ ", " + 
+						ExamTrainer.Score.COLUMN_NAME_ANSWER_ID + "=" + answer_id);
+			} while (mCursor.moveToNext());
+		}
+	}
 	public boolean checkIfAnswerInTable(long questionId, long answerId) 
 													throws SQLException {
 		Cursor mCursor = db.query(true, ExamTrainer.Score.TABLE_NAME, 
@@ -111,7 +135,8 @@ public class ExamTrainerDbAdapter {
 				ExamTrainer.Score.COLUMN_NAME_QUESTION_ID + "=" + questionId
 				+ " AND " + ExamTrainer.Score.COLUMN_NAME_ANSWER_ID + "=" + answerId, 
 				null, null, null, null, null);
-		return mCursor != null;
+		
+		return mCursor.getCount() > 0;
 	}
 
 	/**
@@ -125,6 +150,8 @@ public class ExamTrainerDbAdapter {
 		
 		//Check if answer is already in the database
 		if( ! checkIfAnswerInTable(questionId, answerId) ) {
+			Log.d("DbAdapter", "setAnswer: questionId=" + questionId + 
+					", answerId=" + answerId);
 			ContentValues values = new ContentValues();
 			values.put(ExamTrainer.Score.COLUMN_NAME_QUESTION_ID, questionId);
 			values.put(ExamTrainer.Score.COLUMN_NAME_ANSWER_ID, answerId);

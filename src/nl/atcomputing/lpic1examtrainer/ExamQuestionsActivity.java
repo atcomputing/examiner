@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -22,7 +23,6 @@ public class ExamQuestionsActivity extends Activity {
 	private ExamTrainerDbAdapter dbHelper;
 	private Cursor cursor_question;
 	private int question_number;
-	private long answer_id;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -46,6 +46,8 @@ public class ExamQuestionsActivity extends Activity {
 		
 		setupLayout();
 		addListeners();
+		setCheckboxStatus();
+		dbHelper.printAnswers();
 	}
 
 	@Override
@@ -77,16 +79,40 @@ public class ExamQuestionsActivity extends Activity {
 	protected void addListeners() {
 		for(int index = 0; index < cboxes.size(); index++) {
 			CheckBox cbox = cboxes.get(index);
-			answer_id = (long) index;
+			final long answer_id = (long) index;
 			cbox.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					dbHelper.setAnswer(question_number, answer_id);
+					if (((CheckBox) v).isChecked()) {
+						Log.d("ExamQuestionsActivity", "Check!");
+						dbHelper.setAnswer(question_number, answer_id);
+			        } else {
+			        	//dbHelper.deleteAnswer(question_number, answer_id);
+			        }
+					
 				}
 			});
 		}
-		
 	}
+	
+	protected void setCheckboxStatus() {
+		Log.d("ExamQuestionsActivity", "setCheckboxStatus: size=" + cboxes.size());
+		for(int index = 0; index < cboxes.size(); index++) {
+			CheckBox cbox = cboxes.get(index);
+			Cursor aCursor = dbHelper.getAnswer(question_number);
+			int cIndex = aCursor.getColumnIndex(ExamTrainer.Score.COLUMN_NAME_ANSWER_ID);
+			if( aCursor.moveToFirst() ) {
+				do {
+					Log.d("ExamQuestionsActivity", "answer_id = " + aCursor.getLong(cIndex));
+					if ( aCursor.getLong(cIndex) == index ) {
+						cbox.setChecked(true);
+						break;
+					}
+				} while (aCursor.moveToNext());
+			}
+		}
+	}
+	
 	protected void finishActivity() {
 		dbHelper.close();
 		finish();
