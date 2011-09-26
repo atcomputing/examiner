@@ -19,4 +19,6 @@
     <string name="stop_exam">Quit</string>
     <string name="leave_comment">Comment</string>
     <string name="get_hint">Hint</string>
+    <string name="the_results">The results</string>
+    <string name="quit_program">Quit ExamTrainer</string>
 </resources>

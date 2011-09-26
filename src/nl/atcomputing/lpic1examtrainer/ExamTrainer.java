@@ -6,6 +6,8 @@ import android.provider.BaseColumns;
 public final class ExamTrainer {
     public static final String AUTHORITY = "nl.atcomputing.provider.ExamTrainer";
     public static final String SCHEME = "content://";
+    public static final int DIALOG_ENDOFEXAM_ID = 1;
+	
     // This class cannot be instantiated
     private ExamTrainer() {
     }
@@ -14,7 +16,7 @@ public final class ExamTrainer {
      * Notes table contract
      */
     public static final class Questions implements BaseColumns {
-
+    	
         // This class cannot be instantiated
         private Questions() {}
         

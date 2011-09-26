@@ -28,6 +28,8 @@ public class ExamTrainerActivity extends Activity {
 		dbHelper.addQuestion("My First Question", "What is the third question?", null, "MULTIPLECHOICE", 
 				"The next question, The previous question, This question, None of the above", "This question");
 
+		dbHelper.close();
+		
         Button startExam = (Button) findViewById(R.id.button_start_exam);
         startExam.setOnClickListener( new View.OnClickListener() {
 			@Override
@@ -45,6 +47,4 @@ public class ExamTrainerActivity extends Activity {
     	Intent intent = new Intent(this, RetrieveExamQuestions.class);
     	startService(intent);
     }
-    
-    
 }

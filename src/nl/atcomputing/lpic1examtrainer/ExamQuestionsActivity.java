@@ -3,6 +3,9 @@ package nl.atcomputing.lpic1examtrainer;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -40,9 +43,8 @@ public class ExamQuestionsActivity extends Activity {
 		
 		cursor_question = dbHelper.getQuestion(question_number);
 		if ( cursor_question.getCount() < 1 ) {
-			Log.d("ExamQuestionsActivity", "No more questions left!");
-			//end of the exam
-			finishActivity();
+			//showDialog(ExamTrainer.DIALOG_ENDOFEXAM_ID);
+			showResults();
 		}
 		else {
 			setupLayout();
@@ -78,6 +80,31 @@ public class ExamQuestionsActivity extends Activity {
 		}
 	}
 
+	protected Dialog onCreateDialog(int id) {
+        Dialog dialog;
+        switch(id) {
+        case ExamTrainer.DIALOG_ENDOFEXAM_ID:
+        		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        		builder.setMessage("Are you sure you want to exit?")
+        		       .setCancelable(false)
+        		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+        		           public void onClick(DialogInterface dialog, int id) {
+        		                showResults();
+        		           }
+        		       })
+        		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
+        		           public void onClick(DialogInterface dialog, int id) {
+        		                dialog.dismiss();
+        		           }
+        		       });
+        		dialog = builder.create();
+            break;
+        default:
+            dialog = null;
+        }
+        return dialog;
+    }
+	
 	protected void addListeners() {
 		for(int index = 0; index < cboxes.size(); index++) {
 			CheckBox cbox = cboxes.get(index);
@@ -124,6 +151,14 @@ public class ExamQuestionsActivity extends Activity {
 		dbHelper.close();
 		Intent intent = new Intent(ExamQuestionsActivity.this, ExamTrainerActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
+	}
+	
+	protected void showResults() {
+		dbHelper.close();
+		Intent intent = new Intent(ExamQuestionsActivity.this, ExamResultsActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
 	}
 	
 	protected LinearLayout createAnswers(String text) {
