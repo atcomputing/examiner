@@ -39,15 +39,17 @@ public class ExamQuestionsActivity extends Activity {
 		dbHelper.open();
 		
 		cursor_question = dbHelper.getQuestion(question_number);
-		if ( cursor_question == null ) {
+		if ( cursor_question.getCount() < 1 ) {
+			Log.d("ExamQuestionsActivity", "No more questions left!");
 			//end of the exam
 			finishActivity();
 		}
-		
-		setupLayout();
-		addListeners();
-		setCheckboxStatus();
-		dbHelper.printAnswers();
+		else {
+			setupLayout();
+			addListeners();
+			setCheckboxStatus();
+			dbHelper.printAnswers();
+		}
 	}
 
 	@Override
