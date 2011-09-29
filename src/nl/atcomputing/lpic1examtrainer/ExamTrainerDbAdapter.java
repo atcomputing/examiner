@@ -30,16 +30,14 @@ public class ExamTrainerDbAdapter {
 		dbHelper.close();
 	}
 
-	public long addQuestion(String title, String question, String exhibit, String type, 
-			String answers, String correct_answers) {
+	public long addQuestion(ExamQuestion examQuestion) {
 		
 		ContentValues values = new ContentValues();
-		values.put(ExamTrainer.Questions.COLUMN_NAME_TITLE, title);
-		values.put(ExamTrainer.Questions.COLUMN_NAME_QUESTION, question);
-		values.put(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT, exhibit);
-		values.put(ExamTrainer.Questions.COLUMN_NAME_TYPE, type);
-		values.put(ExamTrainer.Questions.COLUMN_NAME_ANSWERS, answers);
-		values.put(ExamTrainer.Questions.COLUMN_NAME_CORRECT_ANSWERS, correct_answers);
+		values.put(ExamTrainer.Questions.COLUMN_NAME_QUESTION, examQuestion.getQuestion());
+		values.put(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT, examQuestion.getExhibit());
+		values.put(ExamTrainer.Questions.COLUMN_NAME_TYPE, examQuestion.getType());
+		values.put(ExamTrainer.Questions.COLUMN_NAME_ANSWERS, examQuestion.getAnswers().toString());
+		values.put(ExamTrainer.Questions.COLUMN_NAME_CORRECT_ANSWERS, examQuestion.getCorrectAnswers().toString());
 		
 		return db.insert(ExamTrainer.Questions.TABLE_NAME, null, values);
 	}
@@ -48,7 +46,6 @@ public class ExamTrainerDbAdapter {
 			String answers, String correct_answers) {
 		
 		ContentValues values = new ContentValues();
-		values.put(ExamTrainer.Questions.COLUMN_NAME_TITLE, title);
 		values.put(ExamTrainer.Questions.COLUMN_NAME_QUESTION, question);
 		values.put(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT, exhibit);
 		values.put(ExamTrainer.Questions.COLUMN_NAME_TYPE, type);
@@ -65,7 +62,7 @@ public class ExamTrainerDbAdapter {
 	}
 
 	/**
-	 * Return a Cursor positioned at the defined todo
+	 * Return a Cursor positioned at the defined question
 	 */
 	public Cursor getQuestion(long rowId) throws SQLException {
 		Cursor mCursor = db.query(true, ExamTrainer.Questions.TABLE_NAME, 
@@ -73,7 +70,6 @@ public class ExamTrainerDbAdapter {
 				ExamTrainer.Questions.COLUMN_NAME_QUESTION,
 				ExamTrainer.Questions.COLUMN_NAME_TYPE,
 				ExamTrainer.Questions.COLUMN_NAME_EXHIBIT,
-				ExamTrainer.Questions.COLUMN_NAME_TITLE,
 				ExamTrainer.Questions.COLUMN_NAME_ANSWERS,
 				ExamTrainer.Questions.COLUMN_NAME_CORRECT_ANSWERS
 				},

@@ -11,7 +11,6 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_CREATE_QUESTIONS_TABLE = "CREATE TABLE " 
 	+ ExamTrainer.Questions.TABLE_NAME + " ("
     + ExamTrainer.Questions._ID + " INTEGER PRIMARY KEY,"
-    + ExamTrainer.Questions.COLUMN_NAME_TITLE + " TEXT,"
     + ExamTrainer.Questions.COLUMN_NAME_QUESTION + " TEXT,"
     + ExamTrainer.Questions.COLUMN_NAME_EXHIBIT + " TEXT,"
     + ExamTrainer.Questions.COLUMN_NAME_TYPE + " TEXT,"

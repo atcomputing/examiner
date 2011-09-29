@@ -94,7 +94,7 @@ public class ExamQuestionsActivity extends Activity {
         		       })
         		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
         		           public void onClick(DialogInterface dialog, int id) {
-        		                dialog.dismiss();
+        		                dialog.cancel();
         		           }
         		       });
         		dialog = builder.create();
@@ -167,7 +167,7 @@ public class ExamQuestionsActivity extends Activity {
 		LinearLayout v_layout = new LinearLayout(this);
 		v_layout.setOrientation(LinearLayout.VERTICAL);
 		
-		String[] answers = text.split(",");
+		String[] answers = text.split(", ");
 		
 		for (String answer : answers) {
 			cbox = new CheckBox(this);
@@ -232,7 +232,5 @@ public class ExamQuestionsActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-		
-		
 	}
 }

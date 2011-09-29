@@ -54,5 +54,4 @@ public class RetrieveExamQuestions extends IntentService {
 	      }
 		return stringBuilder.toString();
     }
-
 }
