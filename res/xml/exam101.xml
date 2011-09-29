@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<exam>
+	<item>
+		<type>multiple choice</type>
+		<topic>System Architecture</topic>
+		<question>Which command can be used to examine kernel bootup messages after boot time?</question>
+		<correct_answer>dmesg</correct_answer>
+		<correct_answer>/bin/dmesg</correct_answer>
+	</item>
+	<item>
+		<type>open</type>
+		<topic>Devices, Linux Filesystems, Filesystem Hierarchy Standard</topic>
+		<exhibit>drw--w---- guru1 course 4096 2010-10-28 10:42 /home/guru1</exhibit>
+		<question>The user guru1 complains that he cannot access his homedirectory.
+Which of the following commands would fix this problem?</question>
+		<answer>chmod 0664 /home/guru1</answer>
+		<answer>chmod u+x,g= /home/guru1</answer>
+		<answer>chmod g+r /home/guru1</answer>
+		<answer>chmod g=rwx /home/guru1</answer>
+		<correct_answer>chmod u+x,g= /home/guru1</correct_answer>
+	</item>
+</exam>
