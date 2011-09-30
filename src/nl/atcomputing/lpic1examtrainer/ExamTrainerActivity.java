@@ -23,11 +23,7 @@ public class ExamTrainerActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 		retrieveExam();
-		setContentView(R.layout.main);
-
-		loadExam("exam101.xml");
-
-		
+		setContentView(R.layout.main);		
 
 		Button startExam = (Button) findViewById(R.id.button_start_exam);
 		startExam.setOnClickListener( new View.OnClickListener() {
@@ -36,6 +32,14 @@ public class ExamTrainerActivity extends Activity {
 				Intent intent = new Intent(ExamTrainerActivity.this, ExamQuestionsActivity.class);
 				intent.putExtra("question", 1);
 				startActivity(intent);
+			}
+		});
+		
+		Button updateExam = (Button) findViewById(R.id.button_get_updates);
+		updateExam.setOnClickListener( new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				loadExam("exam101.xml");
 			}
 		});
 	}

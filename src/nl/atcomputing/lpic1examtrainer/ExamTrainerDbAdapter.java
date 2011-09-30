@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public class ExamTrainerDbAdapter {
 	private final Context context;
@@ -100,12 +101,15 @@ public class ExamTrainerDbAdapter {
 	
 	public boolean checkIfAnswerInTable(long questionId, String answer) 
 													throws SQLException {
+		Log.d(this.getClass().getName(), "checkIfAnswerInTable questionId = " + 
+				questionId + " answer = " + answer);
 		Cursor mCursor = db.query(true, ExamTrainer.Score.TABLE_NAME, 
 				new String[] {
 				ExamTrainer.Score.COLUMN_NAME_ANSWER
 				},
 				ExamTrainer.Score.COLUMN_NAME_QUESTION_ID + "=" + questionId
-				+ " AND " + ExamTrainer.Score.COLUMN_NAME_ANSWER + "=" + answer, 
+				+ " AND " + ExamTrainer.Score.COLUMN_NAME_ANSWER + "=" + 
+				"\"" + answer + "\"", 
 				null, null, null, null, null);
 		
 		return mCursor.getCount() > 0;
@@ -123,10 +127,18 @@ public class ExamTrainerDbAdapter {
 			ContentValues values = new ContentValues();
 			values.put(ExamTrainer.Score.COLUMN_NAME_QUESTION_ID, questionId);
 			values.put(ExamTrainer.Score.COLUMN_NAME_ANSWER, answer);
-
+			Log.d(this.getClass().getName(), "setAnswer values: "+ values.toString());
 			return db.insert(ExamTrainer.Score.TABLE_NAME, null, values) != -1;
 		}
 		
 		return true;
+	}
+	
+	public boolean deleteAnswer(long questionId, String answer) {
+		return db.delete(ExamTrainer.Score.TABLE_NAME, 
+				ExamTrainer.Score.COLUMN_NAME_QUESTION_ID + "=" + questionId 
+				+ " AND " +
+				ExamTrainer.Score.COLUMN_NAME_ANSWER + "=" + "\"" + answer + "\""
+				, null) > 0;
 	}
 }

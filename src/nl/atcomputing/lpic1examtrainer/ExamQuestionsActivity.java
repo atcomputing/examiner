@@ -120,7 +120,7 @@ public class ExamQuestionsActivity extends Activity {
 					if (((CheckBox) v).isChecked()) {
 						dbHelper.setAnswer(questionNumber, answer);
 			        } else {
-			        	//dbHelper.deleteAnswer(question_number, answer_id);
+			        	dbHelper.deleteAnswer(questionNumber, answer);
 			        }
 					
 				}
@@ -221,6 +221,13 @@ public class ExamQuestionsActivity extends Activity {
 		else if ( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
 			editText = new EditText(this);
 			v_layout.addView(editText);
+			Cursor aCursor = dbHelper.getAnswer(questionNumber);
+			if ( aCursor.moveToFirst() ) {
+				index = aCursor.getColumnIndex(ExamTrainer.Score.COLUMN_NAME_ANSWER);
+				text = aCursor.getString(index);
+				editText.setText(text.toString());
+			}
+			
 		}
 				
 		LayoutInflater li = getLayoutInflater();
@@ -228,14 +235,17 @@ public class ExamQuestionsActivity extends Activity {
 		
 		setContentView(v_layout);
 		
-		Button button_prev_question = (Button) findViewById(R.id.button_prev_question);
+		Button button_prev_question = (Button) findViewById(R.id.button_prev);
 		button_prev_question.setOnClickListener( new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
+					dbHelper.setAnswer(questionNumber, editText.getText().toString());
+				}
 				finishActivity();
 			}
 		});
-		Button button_next_question = (Button) findViewById(R.id.button_next_question);
+		Button button_next_question = (Button) findViewById(R.id.button_next);
 		button_next_question.setOnClickListener( new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
