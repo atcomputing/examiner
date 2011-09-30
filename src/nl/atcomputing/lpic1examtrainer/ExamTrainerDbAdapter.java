@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 public class ExamTrainerDbAdapter {
 	private final Context context;
@@ -92,67 +91,38 @@ public class ExamTrainerDbAdapter {
 	public Cursor getAnswer(long questionId) throws SQLException {
 		Cursor mCursor = db.query(true, ExamTrainer.Score.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.Score.COLUMN_NAME_ANSWER_ID
+				ExamTrainer.Score.COLUMN_NAME_ANSWER
 				},
 				ExamTrainer.Score.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
 				null, null, null, null, null);
 		return mCursor;
 	}
 	
-	public void printAnswers() {
-		Cursor mCursor = db.query(true, ExamTrainer.Score.TABLE_NAME, 
-				new String[] {
-				ExamTrainer.Score._ID,
-				ExamTrainer.Score.COLUMN_NAME_QUESTION_ID,
-				ExamTrainer.Score.COLUMN_NAME_ANSWER_ID,
-				}, 
-				null, null, null, null, null, null);
-		int answerIndex = mCursor.getColumnIndex(ExamTrainer.Score.COLUMN_NAME_ANSWER_ID);
-		int questionIndex = mCursor.getColumnIndex(ExamTrainer.Score.COLUMN_NAME_QUESTION_ID);
-		int idIndex = mCursor.getColumnIndex(ExamTrainer.Score._ID);
-		if( mCursor.moveToFirst() ) {
-			do {
-				long answer_id = mCursor.getLong(answerIndex);
-				long question_id = mCursor.getLong(questionIndex);
-				long id = mCursor.getLong(idIndex);
-				Log.d("ExamTrainerDbAdapter", "printAnswers: " + 
-						ExamTrainer.Score._ID + "=" + id 
-						+ ", " + 
-						ExamTrainer.Score.COLUMN_NAME_QUESTION_ID + "=" + question_id
-						+ ", " + 
-						ExamTrainer.Score.COLUMN_NAME_ANSWER_ID + "=" + answer_id);
-			} while (mCursor.moveToNext());
-		}
-	}
-	public boolean checkIfAnswerInTable(long questionId, long answerId) 
+	public boolean checkIfAnswerInTable(long questionId, String answer) 
 													throws SQLException {
 		Cursor mCursor = db.query(true, ExamTrainer.Score.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.Score.COLUMN_NAME_ANSWER_ID
+				ExamTrainer.Score.COLUMN_NAME_ANSWER
 				},
 				ExamTrainer.Score.COLUMN_NAME_QUESTION_ID + "=" + questionId
-				+ " AND " + ExamTrainer.Score.COLUMN_NAME_ANSWER_ID + "=" + answerId, 
+				+ " AND " + ExamTrainer.Score.COLUMN_NAME_ANSWER + "=" + answer, 
 				null, null, null, null, null);
 		
 		return mCursor.getCount() > 0;
 	}
-
+	
 	/**
-	 * @brief Will update the database and set the answer for a specific multiple 
-	 * choice question as answered by the user
+	 * @brief Will update the database and set the answer
 	 * @param questionId	The rowId of the question answered
-	 * @param answerId		The number of the answer chosen by the user
+	 * @param answer		The answer
 	 * @return true if succeeded, false otherwise
 	 */
-	public boolean setAnswer(long questionId, long answerId) {
-		
+	public boolean setAnswer(long questionId, String answer) {	
 		//Check if answer is already in the database
-		if( ! checkIfAnswerInTable(questionId, answerId) ) {
-			Log.d("DbAdapter", "setAnswer: questionId=" + questionId + 
-					", answerId=" + answerId);
+		if( ! checkIfAnswerInTable(questionId, answer) ) {
 			ContentValues values = new ContentValues();
 			values.put(ExamTrainer.Score.COLUMN_NAME_QUESTION_ID, questionId);
-			values.put(ExamTrainer.Score.COLUMN_NAME_ANSWER_ID, answerId);
+			values.put(ExamTrainer.Score.COLUMN_NAME_ANSWER, answer);
 
 			return db.insert(ExamTrainer.Score.TABLE_NAME, null, values) != -1;
 		}

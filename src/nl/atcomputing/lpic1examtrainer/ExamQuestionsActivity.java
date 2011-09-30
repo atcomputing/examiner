@@ -25,8 +25,10 @@ import android.widget.TextView;
 public class ExamQuestionsActivity extends Activity {
 	private ArrayList<CheckBox> cboxes;
 	private ExamTrainerDbAdapter dbHelper;
-	private Cursor cursor_question;
-	private int question_number;
+	private Cursor cursorQuestion;
+	private int questionNumber;
+	private String questionType;
+	private EditText editText;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -34,8 +36,8 @@ public class ExamQuestionsActivity extends Activity {
 		Intent intent = getIntent();
 		cboxes = new ArrayList<CheckBox>();
 		
-        question_number = intent.getIntExtra("question", 1);
-        if ( question_number < 1 ) {
+        questionNumber = intent.getIntExtra("question", 1);
+        if ( questionNumber < 1 ) {
         	finishActivity();
         }
         
@@ -43,16 +45,17 @@ public class ExamQuestionsActivity extends Activity {
 		dbHelper = new ExamTrainerDbAdapter(this);
 		dbHelper.open();
 		
-		cursor_question = dbHelper.getQuestion(question_number);
-		if ( cursor_question.getCount() < 1 ) {
+		cursorQuestion = dbHelper.getQuestion(questionNumber);
+		if ( cursorQuestion.getCount() < 1 ) {
 			//showDialog(ExamTrainer.DIALOG_ENDOFEXAM_ID);
 			showResults();
 		}
 		else {
+			int index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_TYPE);
+			questionType = cursorQuestion.getString(index);
+			
 			setupLayout();
-			addListeners();
 			setCheckboxStatus();
-			dbHelper.printAnswers();
 		}
 	}
 
@@ -107,16 +110,15 @@ public class ExamQuestionsActivity extends Activity {
         return dialog;
     }
 	
-	protected void addListeners() {
+	protected void addCheckboxListeners() {
 		for(int index = 0; index < cboxes.size(); index++) {
 			CheckBox cbox = cboxes.get(index);
-			final long answer_id = (long) index;
+			final String answer = String.valueOf(index);
 			cbox.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					if (((CheckBox) v).isChecked()) {
-						Log.d("ExamQuestionsActivity", "Check!");
-						dbHelper.setAnswer(question_number, answer_id);
+						dbHelper.setAnswer(questionNumber, answer);
 			        } else {
 			        	//dbHelper.deleteAnswer(question_number, answer_id);
 			        }
@@ -130,8 +132,8 @@ public class ExamQuestionsActivity extends Activity {
 		Log.d("ExamQuestionsActivity", "setCheckboxStatus: size=" + cboxes.size());
 		for(int index = 0; index < cboxes.size(); index++) {
 			CheckBox cbox = cboxes.get(index);
-			Cursor aCursor = dbHelper.getAnswer(question_number);
-			int cIndex = aCursor.getColumnIndex(ExamTrainer.Score.COLUMN_NAME_ANSWER_ID);
+			Cursor aCursor = dbHelper.getAnswer(questionNumber);
+			int cIndex = aCursor.getColumnIndex(ExamTrainer.Score.COLUMN_NAME_ANSWER);
 			if( aCursor.moveToFirst() ) {
 				do {
 					Log.d("ExamQuestionsActivity", "answer_id = " + aCursor.getLong(cIndex));
@@ -183,11 +185,12 @@ public class ExamQuestionsActivity extends Activity {
 	protected void setupLayout() {
 		int index;
 		String text;
+		
 		LinearLayout v_layout = new LinearLayout(this);
 		v_layout.setOrientation(LinearLayout.VERTICAL);
 		
-		index = cursor_question.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT);
-		text = cursor_question.getString(index);
+		index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT);
+		text = cursorQuestion.getString(index);
 		TextView exhibit = new TextView(this);
 		exhibit.setLayoutParams(new ViewGroup.LayoutParams(
 				ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -196,8 +199,8 @@ public class ExamQuestionsActivity extends Activity {
 		exhibit.setText(text);
 		v_layout.addView(exhibit);
 		
-		index = cursor_question.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_QUESTION);
-		text = cursor_question.getString(index);
+		index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_QUESTION);
+		text = cursorQuestion.getString(index);
 		TextView question_textview = new TextView(this);
 		question_textview.setLayoutParams(new ViewGroup.LayoutParams(
 				ViewGroup.LayoutParams.WRAP_CONTENT,
@@ -206,16 +209,17 @@ public class ExamQuestionsActivity extends Activity {
 		question_textview.setText(text);
 		v_layout.addView(question_textview);
 		
-		index = cursor_question.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_TYPE);
-		String type = cursor_question.getString(index);
-		if( type.equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
-			index = cursor_question.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_ANSWERS);
-			text = cursor_question.getString(index);
+		
+		if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
+			index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_ANSWERS);
+			text = cursorQuestion.getString(index);
 			LinearLayout layout = createAnswers(text);
 			v_layout.addView(layout);
+			addCheckboxListeners();
+			setCheckboxStatus();
 		}
-		else if ( type.equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
-			EditText editText = new EditText(this);
+		else if ( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
+			editText = new EditText(this);
 			v_layout.addView(editText);
 		}
 				
@@ -235,8 +239,11 @@ public class ExamQuestionsActivity extends Activity {
 		button_next_question.setOnClickListener( new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
+					dbHelper.setAnswer(questionNumber, editText.getText().toString());
+				}
 				Intent intent = new Intent(ExamQuestionsActivity.this, ExamQuestionsActivity.class);
-				intent.putExtra("question", question_number + 1);
+				intent.putExtra("question", questionNumber + 1);
 				startActivity(intent);
 			}
 		});

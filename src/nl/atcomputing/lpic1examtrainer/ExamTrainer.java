@@ -52,6 +52,6 @@ public final class ExamTrainer {
         public static final Uri CONTENT_ID_URI_BASE
             = Uri.parse(SCHEME + AUTHORITY + PATH_SCORES_ID);
         public static final String COLUMN_NAME_QUESTION_ID = "question_id";
-        public static final String COLUMN_NAME_ANSWER_ID = "answer_id";
+        public static final String COLUMN_NAME_ANSWER = "answer";
     }
 }

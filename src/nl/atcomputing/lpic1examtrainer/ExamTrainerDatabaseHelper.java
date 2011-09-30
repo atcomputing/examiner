@@ -21,7 +21,7 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 		+ ExamTrainer.Score.TABLE_NAME + " ("
 		+ ExamTrainer.Score._ID + " INTEGER PRIMARY KEY,"
 	    + ExamTrainer.Score.COLUMN_NAME_QUESTION_ID + " TEXT,"
-	    + ExamTrainer.Score.COLUMN_NAME_ANSWER_ID + " TEXT"
+	    + ExamTrainer.Score.COLUMN_NAME_ANSWER + " TEXT"
 	    + ");";
 		
 	public ExamTrainerDatabaseHelper(Context context) {
