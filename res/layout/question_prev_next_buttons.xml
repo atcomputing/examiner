@@ -1,0 +1,5 @@
+
+    <LinearLayout android:id="@+id/linearLayout1" android:layout_width="fill_parent" android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+        <Button android:text="@string/button_prev" android:id="@+id/button_prev" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+        <Button android:text="@string/button_next" android:id="@+id/button_next" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+    </LinearLayout>
