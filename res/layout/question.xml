@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <LinearLayout 	android:id="@+id/prev_next_buttonlayout" 
+    <LinearLayout 	android:id="@+id/question_layout" 
     				android:layout_width="fill_parent" 
     				android:layout_height="fill_parent"
-    				android:orientation="horizontal" 
+    				android:orientation="vertical" 
     				xmlns:android="http://schemas.android.com/apk/res/android">
-        <Button android:text="Previous" 
-        		android:id="@+id/button_prev_question" 
-        		android:layout_width="wrap_content" 
-        		android:layout_height="wrap_content"></Button>
-        <Button android:text="Next" 
-        		android:id="@+id/button_next_question" 
-        		android:layout_width="wrap_content" 
-        		android:layout_height="wrap_content"></Button>
+        <TextView android:textAppearance="?android:attr/textAppearanceSmall" android:layout_height="wrap_content" android:id="@+id/textExhibit"></TextView>
+        <TextView android:text="TextView" android:id="@+id/textQuestion" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
     </LinearLayout>
    

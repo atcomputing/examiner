@@ -36,8 +36,10 @@ public class ExamTrainerDbAdapter {
 		values.put(ExamTrainer.Questions.COLUMN_NAME_QUESTION, examQuestion.getQuestion());
 		values.put(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT, examQuestion.getExhibit());
 		values.put(ExamTrainer.Questions.COLUMN_NAME_TYPE, examQuestion.getType());
-		values.put(ExamTrainer.Questions.COLUMN_NAME_ANSWERS, examQuestion.getAnswers().toString());
-		values.put(ExamTrainer.Questions.COLUMN_NAME_CORRECT_ANSWERS, examQuestion.getCorrectAnswers().toString());
+		values.put(ExamTrainer.Questions.COLUMN_NAME_ANSWERS, 
+				examQuestion.convertArrayListToString(examQuestion.getAnswers()));
+		values.put(ExamTrainer.Questions.COLUMN_NAME_CORRECT_ANSWERS, 
+				examQuestion.convertArrayListToString(examQuestion.getCorrectAnswers()));
 		
 		return db.insert(ExamTrainer.Questions.TABLE_NAME, null, values);
 	}

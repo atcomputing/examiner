@@ -7,6 +7,9 @@ import java.util.ArrayList;
  *
  */
 public class ExamQuestion {
+	public static final String TYPE_OPEN = "open";
+	public static final String TYPE_MULTIPLE_CHOICE = "multiple choice";
+	
 	private String type;
 	private String topic;
 	private String question;
@@ -18,6 +21,8 @@ public class ExamQuestion {
 		type = null;
 		topic = null;
 		question = null;
+		correctAnswers = new ArrayList<String>();
+		answers = new ArrayList<String>();
 	}
 	
 	
@@ -37,6 +42,16 @@ public class ExamQuestion {
 		this.question = question;
 		this.correctAnswers = correctAnswers;
 		this.answers = answers;
+	}
+	
+	protected String convertArrayListToString(ArrayList<String> answers) {
+		int size = answers.size();
+		StringBuilder stringBuilder = new StringBuilder();
+		
+		for ( int i = 0; i < size; i++ ) {
+			stringBuilder.append(answers.get(i) + ", ");
+		}
+		return stringBuilder.toString().replaceAll(", ^", "");
 	}
 	
 	protected String getType() {

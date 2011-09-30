@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -31,6 +32,7 @@ public class ExamQuestionsActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Intent intent = getIntent();
+		cboxes = new ArrayList<CheckBox>();
 		
         question_number = intent.getIntExtra("question", 1);
         if ( question_number < 1 ) {
@@ -163,7 +165,6 @@ public class ExamQuestionsActivity extends Activity {
 	
 	protected LinearLayout createAnswers(String text) {
 		CheckBox cbox; 
-		cboxes = new ArrayList<CheckBox>();
 		LinearLayout v_layout = new LinearLayout(this);
 		v_layout.setOrientation(LinearLayout.VERTICAL);
 		
@@ -205,14 +206,21 @@ public class ExamQuestionsActivity extends Activity {
 		question_textview.setText(text);
 		v_layout.addView(question_textview);
 		
-		index = cursor_question.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_ANSWERS);
-		text = cursor_question.getString(index);
-		LinearLayout layout = createAnswers(text);
-		v_layout.addView(layout);
-		
-		//v_layout.addView(h_layout);
+		index = cursor_question.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_TYPE);
+		String type = cursor_question.getString(index);
+		if( type.equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
+			index = cursor_question.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_ANSWERS);
+			text = cursor_question.getString(index);
+			LinearLayout layout = createAnswers(text);
+			v_layout.addView(layout);
+		}
+		else if ( type.equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
+			EditText editText = new EditText(this);
+			v_layout.addView(editText);
+		}
+				
 		LayoutInflater li = getLayoutInflater();
-		li.inflate(R.layout.question, v_layout);
+		li.inflate(R.layout.question_prev_next_buttons, v_layout);
 		
 		setContentView(v_layout);
 		

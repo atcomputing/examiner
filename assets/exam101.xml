@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <exam>
 	<item>
-		<type>multiple choice</type>
+		<type>open</type>
 		<topic>System Architecture</topic>
 		<question>Which command can be used to examine kernel bootup messages after boot time?</question>
 		<correct_answer>dmesg</correct_answer>
 		<correct_answer>/bin/dmesg</correct_answer>
 	</item>
 	<item>
-		<type>open</type>
+		<type>multiple choice</type>
 		<topic>Devices, Linux Filesystems, Filesystem Hierarchy Standard</topic>
 		<exhibit>drw--w---- guru1 course 4096 2010-10-28 10:42 /home/guru1</exhibit>
 		<question>The user guru1 complains that he cannot access his homedirectory.
