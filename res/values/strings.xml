@@ -20,5 +20,5 @@
     <string name="leave_comment">Comment</string>
     <string name="get_hint">Hint</string>
     <string name="the_results">The results</string>
-    <string name="quit_program">Quit ExamTrainer</string>
+    <string name="quit">Quit</string>
 </resources>

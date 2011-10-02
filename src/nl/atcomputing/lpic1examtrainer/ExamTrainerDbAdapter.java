@@ -7,6 +7,10 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+/**
+ * @author mbrekhof
+ *
+ */
 public class ExamTrainerDbAdapter {
 	private final Context context;
 	private SQLiteDatabase db;
@@ -99,39 +103,71 @@ public class ExamTrainerDbAdapter {
 		return mCursor;
 	}
 	
+	
+	/**
+	 * @brief Checks if an answer with given questionId and answer is present in the database.
+	 * @param questionId
+	 * @param answer
+	 * @return true if answer is in table, false otherwise
+	 * @throws SQLException
+	 */
 	public boolean checkIfAnswerInTable(long questionId, String answer) 
 													throws SQLException {
+		String whereClause = "";
+		
 		Log.d(this.getClass().getName(), "checkIfAnswerInTable questionId = " + 
 				questionId + " answer = " + answer);
+			
+			whereClause = ExamTrainer.Score.COLUMN_NAME_QUESTION_ID + "=" + questionId
+				+ " AND " + ExamTrainer.Score.COLUMN_NAME_ANSWER + "=" + 
+				"\"" + answer + "\"";
+			
 		Cursor mCursor = db.query(true, ExamTrainer.Score.TABLE_NAME, 
 				new String[] {
 				ExamTrainer.Score.COLUMN_NAME_ANSWER
 				},
-				ExamTrainer.Score.COLUMN_NAME_QUESTION_ID + "=" + questionId
-				+ " AND " + ExamTrainer.Score.COLUMN_NAME_ANSWER + "=" + 
-				"\"" + answer + "\"", 
+				whereClause, 
 				null, null, null, null, null);
 		
 		return mCursor.getCount() > 0;
 	}
 	
 	/**
-	 * @brief Will update the database and set the answer
-	 * @param questionId	The rowId of the question answered
-	 * @param answer		The answer
-	 * @return true if succeeded, false otherwise
+	 * @brief Checks if an answer with given questionId is present in the database.
+	 * @param questionId
+	 * @return true if answer is in table, false otherwise
+	 * @throws SQLException
 	 */
-	public boolean setAnswer(long questionId, String answer) {	
-		//Check if answer is already in the database
-		if( ! checkIfAnswerInTable(questionId, answer) ) {
-			ContentValues values = new ContentValues();
-			values.put(ExamTrainer.Score.COLUMN_NAME_QUESTION_ID, questionId);
-			values.put(ExamTrainer.Score.COLUMN_NAME_ANSWER, answer);
-			Log.d(this.getClass().getName(), "setAnswer values: "+ values.toString());
-			return db.insert(ExamTrainer.Score.TABLE_NAME, null, values) != -1;
-		}
-		
-		return true;
+	public boolean checkIfAnswerInTable(long questionId) 
+	throws SQLException {
+		Log.d(this.getClass().getName(), "checkIfAnswerInTable questionId = " + 
+				questionId);
+
+		String whereClause = ExamTrainer.Score.COLUMN_NAME_QUESTION_ID + "=" + questionId;
+
+		Cursor mCursor = db.query(true, ExamTrainer.Score.TABLE_NAME, 
+				new String[] {
+				ExamTrainer.Score.COLUMN_NAME_QUESTION_ID,
+				ExamTrainer.Score.COLUMN_NAME_ANSWER
+				}, whereClause, null, null, null, null, null);
+
+		Log.d(this.getClass().getName(), "checkIfAnswerInTable mCursor.getCount = " + mCursor.getCount());
+		return mCursor.getCount() > 0;
+	}
+
+	public boolean updateAnswer(long questionId, String answer) {
+		ContentValues values = new ContentValues();
+		values.put(ExamTrainer.Score.COLUMN_NAME_ANSWER, answer);
+		return db.update(ExamTrainer.Score.TABLE_NAME, values, ExamTrainer.Score.COLUMN_NAME_QUESTION_ID + "="
+				+ questionId, null) > 0;
+	}
+	
+	public boolean insertAnswer(long questionId, String answer) {
+		ContentValues values = new ContentValues();
+		values.put(ExamTrainer.Score.COLUMN_NAME_QUESTION_ID, questionId);
+		values.put(ExamTrainer.Score.COLUMN_NAME_ANSWER, answer);
+		Log.d(this.getClass().getName(), "insertAnswer values: "+ values.toString());
+		return db.insert(ExamTrainer.Score.TABLE_NAME, null, values) != -1;
 	}
 	
 	public boolean deleteAnswer(long questionId, String answer) {
@@ -140,5 +176,30 @@ public class ExamTrainerDbAdapter {
 				+ " AND " +
 				ExamTrainer.Score.COLUMN_NAME_ANSWER + "=" + "\"" + answer + "\""
 				, null) > 0;
+	}
+	
+	/**
+	 * @brief Will update the database and set the answer
+	 * @param questionId	The rowId of the question answered
+	 * @param answer		The answer
+	 * @return true if succeeded, false otherwise
+	 */
+	public boolean setMultipleChoiceAnswer(long questionId, String answer) {	
+		//Check if answer is already in the database
+		if( ! checkIfAnswerInTable(questionId, answer) ) {
+			return insertAnswer(questionId, answer);
+		}
+		
+		return true;
+	}
+	
+	public boolean setOpenAnswer(long questionId, String answer) {
+		Log.d(this.getClass().getName(), "setOpenAnswer: questionId=" + questionId + 
+				" answer=" + answer);
+		if( checkIfAnswerInTable(questionId) ) {
+			return updateAnswer(questionId, answer);
+		} else {	
+			return insertAnswer(questionId, answer);
+		}
 	}
 }

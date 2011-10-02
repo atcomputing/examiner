@@ -17,5 +17,6 @@
     		<Button android:text="@string/button_start_exam" android:id="@+id/button_start_exam" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
     		<Button android:text="@string/button_update" android:id="@+id/button_get_updates" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
     		<Button android:text="@string/button_results" android:id="@+id/button_show_results" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
+    		<Button android:text="@string/quit" android:id="@+id/button_quit" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
     	</LinearLayout>
 	</LinearLayout>

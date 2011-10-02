@@ -118,7 +118,7 @@ public class ExamQuestionsActivity extends Activity {
 				@Override
 				public void onClick(View v) {
 					if (((CheckBox) v).isChecked()) {
-						dbHelper.setAnswer(questionNumber, answer);
+						dbHelper.setMultipleChoiceAnswer(questionNumber, answer);
 			        } else {
 			        	dbHelper.deleteAnswer(questionNumber, answer);
 			        }
@@ -240,7 +240,7 @@ public class ExamQuestionsActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-					dbHelper.setAnswer(questionNumber, editText.getText().toString());
+					dbHelper.setOpenAnswer(questionNumber, editText.getText().toString());
 				}
 				finishActivity();
 			}
@@ -250,7 +250,7 @@ public class ExamQuestionsActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-					dbHelper.setAnswer(questionNumber, editText.getText().toString());
+					dbHelper.setOpenAnswer(questionNumber, editText.getText().toString());
 				}
 				Intent intent = new Intent(ExamQuestionsActivity.this, ExamQuestionsActivity.class);
 				intent.putExtra("question", questionNumber + 1);

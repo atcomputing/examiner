@@ -42,6 +42,14 @@ public class ExamTrainerActivity extends Activity {
 				loadExam("exam101.xml");
 			}
 		});
+		
+		Button quitExamTrainer = (Button) findViewById(R.id.button_quit);
+		quitExamTrainer.setOnClickListener( new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
 	}
 	
 	
@@ -80,15 +88,17 @@ public class ExamTrainerActivity extends Activity {
 		            }
 		        eventType = parser.next();
 		        }
+		    dbHelper.close();
 		} catch (FileNotFoundException e) {
+			dbHelper.close();
 		    Log.d(this.getClass().getName() , "Could not find " + filename);
 		} catch (IOException e) {
+			dbHelper.close();
 			Log.d(this.getClass().getName() , "I/O problem with " + filename + "exception: " + e.getMessage());
 		} catch (Exception e){
+			dbHelper.close();
 			Log.d(this.getClass().getName() , e.getMessage());
 		}
-		//dbHelper.printAnswers();
-		dbHelper.close();
 	}
 
 	private ExamQuestion parseItem(XmlPullParser parser) throws FileNotFoundException, IOException, Exception {
