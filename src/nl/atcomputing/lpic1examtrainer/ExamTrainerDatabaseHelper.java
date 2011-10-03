@@ -17,11 +17,12 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
     + ExamTrainer.Questions.COLUMN_NAME_ANSWERS + " TEXT,"
     + ExamTrainer.Questions.COLUMN_NAME_CORRECT_ANSWERS + " TEXT"
     + ");";
-	private static final String DATABASE_CREATE_SCORE_TABLE = "CREATE TABLE " 
-		+ ExamTrainer.Score.TABLE_NAME + " ("
-		+ ExamTrainer.Score._ID + " INTEGER PRIMARY KEY,"
-	    + ExamTrainer.Score.COLUMN_NAME_QUESTION_ID + " TEXT,"
-	    + ExamTrainer.Score.COLUMN_NAME_ANSWER + " TEXT"
+	
+	private static final String DATABASE_CREATE_ANSWERS_TABLE = "CREATE TABLE " 
+		+ ExamTrainer.Answers.TABLE_NAME + " ("
+		+ ExamTrainer.Answers._ID + " INTEGER PRIMARY KEY,"
+	    + ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID + " TEXT,"
+	    + ExamTrainer.Answers.COLUMN_NAME_ANSWER + " TEXT"
 	    + ");";
 		
 	public ExamTrainerDatabaseHelper(Context context) {
@@ -31,7 +32,7 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(DATABASE_CREATE_QUESTIONS_TABLE);
-		db.execSQL(DATABASE_CREATE_SCORE_TABLE);
+		db.execSQL(DATABASE_CREATE_ANSWERS_TABLE);
 	}
 
 	@Override
@@ -41,7 +42,7 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 				"Upgrading database from version " + oldVersion + " to "
 						+ newVersion + ", which will destroy all old data");
 		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.Questions.TABLE_NAME);
-		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.Score.TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.Answers.TABLE_NAME);
 		onCreate(db);	
 	}
 	

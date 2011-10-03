@@ -15,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -133,7 +132,7 @@ public class ExamQuestionsActivity extends Activity {
 		for(int index = 0; index < cboxes.size(); index++) {
 			CheckBox cbox = cboxes.get(index);
 			Cursor aCursor = dbHelper.getAnswer(questionNumber);
-			int cIndex = aCursor.getColumnIndex(ExamTrainer.Score.COLUMN_NAME_ANSWER);
+			int cIndex = aCursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
 			if( aCursor.moveToFirst() ) {
 				do {
 					Log.d("ExamQuestionsActivity", "answer_id = " + aCursor.getLong(cIndex));
@@ -213,7 +212,7 @@ public class ExamQuestionsActivity extends Activity {
 			v_layout.addView(editText);
 			Cursor aCursor = dbHelper.getAnswer(questionNumber);
 			if ( aCursor.moveToFirst() ) {
-				index = aCursor.getColumnIndex(ExamTrainer.Score.COLUMN_NAME_ANSWER);
+				index = aCursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
 				text = aCursor.getString(index);
 				editText.setText(text.toString());
 			}
