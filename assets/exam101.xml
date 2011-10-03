@@ -3,7 +3,8 @@
 	<item>
 		<type>multiple choice</type>
 		<topic>Devices, Linux Filesystems, Filesystem Hierarchy Standard</topic>
-		<exhibit>drw--w---- guru1 course 4096 2010-10-28 10:42 /home/guru1</exhibit>
+		<exhibit>drw--w---- guru1 course 4096 2010-10-28 10:42 /home/guru1
+drw-rw---- guru2 course 4096 2010-10-28 10:42 /home/guru2</exhibit>
 		<question>The user guru1 complains that he cannot access his homedirectory. Which of the following commands would fix this problem?</question>
 		<answer>chmod 0664 /home/guru1</answer>
 		<answer>chmod u+x,g= /home/guru1</answer>

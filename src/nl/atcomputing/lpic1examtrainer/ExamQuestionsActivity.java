@@ -55,7 +55,7 @@ public class ExamQuestionsActivity extends Activity {
 			questionType = cursorQuestion.getString(index);
 			
 			setupLayout();
-			setCheckboxStatus();
+			//setCheckboxStatus();
 		}
 	}
 
@@ -186,29 +186,19 @@ public class ExamQuestionsActivity extends Activity {
 		int index;
 		String text;
 		
-		LinearLayout v_layout = new LinearLayout(this);
-		v_layout.setOrientation(LinearLayout.VERTICAL);
+		setContentView(R.layout.question);
 		
 		index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT);
 		text = cursorQuestion.getString(index);
-		TextView exhibit = new TextView(this);
-		exhibit.setLayoutParams(new ViewGroup.LayoutParams(
-				ViewGroup.LayoutParams.WRAP_CONTENT,
-				ViewGroup.LayoutParams.WRAP_CONTENT));
-		exhibit.setTextSize(1, 14);
+		TextView exhibit = (TextView) findViewById(R.id.textExhibit);
 		exhibit.setText(text);
-		v_layout.addView(exhibit);
-		
+
 		index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_QUESTION);
 		text = cursorQuestion.getString(index);
-		TextView question_textview = new TextView(this);
-		question_textview.setLayoutParams(new ViewGroup.LayoutParams(
-				ViewGroup.LayoutParams.WRAP_CONTENT,
-				ViewGroup.LayoutParams.WRAP_CONTENT));
-		question_textview.setTextSize(1, 12);
+		TextView question_textview = (TextView) findViewById(R.id.textQuestion);
 		question_textview.setText(text);
-		v_layout.addView(question_textview);
-		
+
+		LinearLayout v_layout = (LinearLayout) findViewById(R.id.question_layout);
 		
 		if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
 			index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_ANSWERS);
@@ -229,12 +219,10 @@ public class ExamQuestionsActivity extends Activity {
 			}
 			
 		}
-				
+		
 		LayoutInflater li = getLayoutInflater();
 		li.inflate(R.layout.question_prev_next_buttons, v_layout);
-		
-		setContentView(v_layout);
-		
+
 		Button button_prev_question = (Button) findViewById(R.id.button_prev);
 		button_prev_question.setOnClickListener( new View.OnClickListener() {
 			@Override
