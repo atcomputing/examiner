@@ -54,7 +54,6 @@ public class ExamQuestionsActivity extends Activity {
 			questionType = cursorQuestion.getString(index);
 			
 			setupLayout();
-			//setCheckboxStatus();
 		}
 	}
 
@@ -133,17 +132,17 @@ public class ExamQuestionsActivity extends Activity {
 			CheckBox cbox = cboxes.get(index);
 			String answer = cbox.getText().toString();
 			Cursor aCursor = dbHelper.getAnswer(questionNumber);
-//			int cIndex = aCursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
-//			if( aCursor.moveToFirst() ) {
-//				do {
-//					Log.d("ExamQuestionsActivity", ExamTrainer.Answers.COLUMN_NAME_ANSWER +
-//							" = " + aCursor.getString(cIndex));
-//					if ( aCursor.getString(cIndex).equals(answer) ) {
-//						cbox.setChecked(true);
-//						break;
-//					}
-//				} while (aCursor.moveToNext());
-//			}
+			if( aCursor != null ) {
+				int cIndex = aCursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
+				do {
+					Log.d("ExamQuestionsActivity", ExamTrainer.Answers.COLUMN_NAME_ANSWER +
+							" = " + aCursor.getString(cIndex));
+					if ( aCursor.getString(cIndex).equals(answer) ) {
+						cbox.setChecked(true);
+						break;
+					}
+				} while (aCursor.moveToNext());
+			}
 		}
 	}
 	
@@ -208,17 +207,15 @@ public class ExamQuestionsActivity extends Activity {
 			v_layout.addView(layout);
 			addCheckboxListeners();
 			setCheckboxStatus();
-		}
-		else if ( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
+		} else if ( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
 			editText = new EditText(this);
-			v_layout.addView(editText);
 			Cursor aCursor = dbHelper.getAnswer(questionNumber);
-			if ( aCursor.moveToFirst() ) {
+			if ( aCursor != null ) {
 				index = aCursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
 				text = aCursor.getString(index);
 				editText.setText(text.toString());
 			}
-			
+			v_layout.addView(editText);
 		}
 		
 		LayoutInflater li = getLayoutInflater();

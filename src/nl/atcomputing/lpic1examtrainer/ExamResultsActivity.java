@@ -27,7 +27,7 @@ public class ExamResultsActivity extends Activity {
 		
 		dbHelper.close();
 		
-		Button quit = (Button) findViewById(R.id.button_quit);
+		Button quit = (Button) findViewById(R.id.result_button_quit);
         quit.setOnClickListener( new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -46,16 +46,15 @@ public class ExamResultsActivity extends Activity {
     		Cursor cursor = dbHelper.getCorrectAnswers(idList.get(i));
     		int index = cursor.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_CORRECT_ANSWERS);
     		String correct_answers = cursor.getString(index);
-    		cursor.close();
     		
     		cursor = dbHelper.getAnswer(idList.get(i));
     		index = cursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
     		String answers = cursor.getString(index);
-    		cursor.close();
     		
     		Log.d(this.getClass().getName(), "calculateResults:\n" + 
     				"correct_answers: " + correct_answers + 
     				"answers: "+ answers);
+    		
     		
     	}
     }
