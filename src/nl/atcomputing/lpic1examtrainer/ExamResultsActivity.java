@@ -10,6 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+/**
+ * @author martijn brekhof
+ *
+ */
 public class ExamResultsActivity extends Activity {
 	private ExamTrainerDbAdapter dbHelper;
 	
@@ -40,22 +44,27 @@ public class ExamResultsActivity extends Activity {
     }
     
     private void calculateResults() {
-    	List<Integer> idList = dbHelper.getAllQuestionIDs();
+    	Cursor cursor;
+    	int index;
+    	
+    	List<Long> idList = dbHelper.getAllQuestionIDs();
     	for(int i = 0; i < idList.size(); i++) {
-    		
-    		Cursor cursor = dbHelper.getCorrectAnswers(idList.get(i));
-    		int index = cursor.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_CORRECT_ANSWERS);
-    		String correct_answers = cursor.getString(index);
-    		
-    		cursor = dbHelper.getAnswer(idList.get(i));
-    		index = cursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
-    		String answers = cursor.getString(index);
-    		
-    		Log.d(this.getClass().getName(), "calculateResults:\n" + 
-    				"correct_answers: " + correct_answers + 
-    				"answers: "+ answers);
-    		
-    		
+    		long questionId = idList.get(i);
+    		cursor = dbHelper.getAnswers(idList.get(i));
+    		if ( cursor != null ) {
+    			index = cursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
+    			do {
+    				String answer = cursor.getString(index);
+    				if(dbHelper.checkAnswer(answer, questionId)) {
+    					Log.d(this.getClass().getName(), answer + " is correct");
+    				}
+    				else {
+    					Log.d(this.getClass().getName(), answer + " is wrong");
+    				}
+    			} while( cursor.moveToNext() );
+    		}	
     	}
     }
+    
+    
 }

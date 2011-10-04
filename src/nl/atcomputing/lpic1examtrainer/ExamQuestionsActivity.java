@@ -1,7 +1,5 @@
 package nl.atcomputing.lpic1examtrainer;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -21,29 +19,31 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+/**
+ * @author martijn brekhof
+ *
+ */
 public class ExamQuestionsActivity extends Activity {
-	private ArrayList<CheckBox> cboxes;
 	private ExamTrainerDbAdapter dbHelper;
 	private Cursor cursorQuestion;
 	private int questionNumber;
 	private String questionType;
 	private EditText editText;
-	
+
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		Intent intent = getIntent();
-		cboxes = new ArrayList<CheckBox>();
-		
-        questionNumber = intent.getIntExtra("question", 1);
-        if ( questionNumber < 1 ) {
-        	finishActivity();
-        }
-        
-        super.onCreate(savedInstanceState);
+
+		questionNumber = intent.getIntExtra("question", 1);
+		if ( questionNumber < 1 ) {
+			finishActivity();
+		}
+
+		super.onCreate(savedInstanceState);
 		dbHelper = new ExamTrainerDbAdapter(this);
 		dbHelper.open();
-		
+
 		cursorQuestion = dbHelper.getQuestion(questionNumber);
 		if ( cursorQuestion.getCount() < 1 ) {
 			//showDialog(ExamTrainer.DIALOG_ENDOFEXAM_ID);
@@ -52,7 +52,7 @@ public class ExamQuestionsActivity extends Activity {
 		else {
 			int index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_TYPE);
 			questionType = cursorQuestion.getString(index);
-			
+
 			setupLayout();
 		}
 	}
@@ -84,110 +84,93 @@ public class ExamQuestionsActivity extends Activity {
 	}
 
 	protected Dialog onCreateDialog(int id) {
-        Dialog dialog;
-        switch(id) {
-        case ExamTrainer.DIALOG_ENDOFEXAM_ID:
-        		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        		builder.setMessage("Are you sure you want to exit?")
-        		       .setCancelable(false)
-        		       .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-        		           public void onClick(DialogInterface dialog, int id) {
-        		                showResults();
-        		           }
-        		       })
-        		       .setNegativeButton("No", new DialogInterface.OnClickListener() {
-        		           public void onClick(DialogInterface dialog, int id) {
-        		                dialog.cancel();
-        		           }
-        		       });
-        		dialog = builder.create();
-            break;
-        default:
-            dialog = null;
-        }
-        return dialog;
-    }
-	
-	protected void addCheckboxListeners() {
-		for(int index = 0; index < cboxes.size(); index++) {
-			CheckBox cbox = cboxes.get(index);
-			final String answer = cbox.getText().toString();
-			cbox.setOnClickListener(new View.OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					if (((CheckBox) v).isChecked()) {
-						dbHelper.setMultipleChoiceAnswer(questionNumber, answer);
-			        } else {
-			        	dbHelper.deleteAnswer(questionNumber, answer);
-			        }
-					
+		Dialog dialog;
+		switch(id) {
+		case ExamTrainer.DIALOG_ENDOFEXAM_ID:
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("Are you sure you want to exit?")
+			.setCancelable(false)
+			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					showResults();
+				}
+			})
+			.setNegativeButton("No", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
 				}
 			});
+			dialog = builder.create();
+			break;
+		default:
+			dialog = null;
 		}
+		return dialog;
 	}
-	
-	protected void setCheckboxStatus() {
-		Log.d("ExamQuestionsActivity", "setCheckboxStatus: size=" + cboxes.size());
-		for(int index = 0; index < cboxes.size(); index++) {
-			CheckBox cbox = cboxes.get(index);
-			String answer = cbox.getText().toString();
-			Cursor aCursor = dbHelper.getAnswer(questionNumber);
-			if( aCursor != null ) {
-				int cIndex = aCursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
-				do {
-					Log.d("ExamQuestionsActivity", ExamTrainer.Answers.COLUMN_NAME_ANSWER +
-							" = " + aCursor.getString(cIndex));
-					if ( aCursor.getString(cIndex).equals(answer) ) {
-						cbox.setChecked(true);
-						break;
-					}
-				} while (aCursor.moveToNext());
-			}
-		}
-	}
-	
+
 	protected void finishActivity() {
 		dbHelper.close();
 		finish();
 	}
-	
+
 	protected void stopExam() {
 		dbHelper.close();
 		Intent intent = new Intent(ExamQuestionsActivity.this, ExamTrainerActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
-	
+
 	protected void showResults() {
 		dbHelper.close();
 		Intent intent = new Intent(ExamQuestionsActivity.this, ExamResultsActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
-	
-	protected LinearLayout createAnswers(String text) {
+
+	protected LinearLayout createChoices() {
 		CheckBox cbox; 
 		LinearLayout v_layout = new LinearLayout(this);
 		v_layout.setOrientation(LinearLayout.VERTICAL);
+
+		Log.d(this.getClass().getName(), "Oh YEAH!");
 		
-		String[] answers = text.split(", ");
-		
-		for (String answer : answers) {
-			cbox = new CheckBox(this);
-			cbox.setText(answer);
-			v_layout.addView(cbox);
-			cboxes.add(cbox);
+		Cursor cursor = dbHelper.getChoices(questionNumber);
+		if ( cursor != null ) {
+			int index = cursor.getColumnIndex(ExamTrainer.Choices.COLUMN_NAME_CHOICE);
+			do {
+				final String choice = cursor.getString(index);
+				cbox = new CheckBox(this);
+				cbox.setText(choice);
+				Log.d(this.getClass().getName(), "createChoices: " + choice);
+				
+				if ( dbHelper.checkAnswer(choice, questionNumber) ) {
+					cbox.setChecked(true);
+				}
+				
+				cbox.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						if (((CheckBox) v).isChecked()) {
+							dbHelper.setMultipleChoiceAnswer(questionNumber, choice);
+						} else {
+							dbHelper.deleteAnswer(questionNumber, choice);
+						}
+
+					}
+				});
+				
+				v_layout.addView(cbox);
+			} while( cursor.moveToNext() );
 		}
-		
 		return v_layout;
 	}
-	
+
 	protected void setupLayout() {
 		int index;
 		String text;
-		
+
 		setContentView(R.layout.question);
-		
+
 		index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT);
 		text = cursorQuestion.getString(index);
 		TextView exhibit = (TextView) findViewById(R.id.textExhibit);
@@ -199,17 +182,13 @@ public class ExamQuestionsActivity extends Activity {
 		question_textview.setText(text);
 
 		LinearLayout v_layout = (LinearLayout) findViewById(R.id.question_layout);
-		
+
 		if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
-			index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_ANSWERS);
-			text = cursorQuestion.getString(index);
-			LinearLayout layout = createAnswers(text);
+			LinearLayout layout = createChoices();
 			v_layout.addView(layout);
-			addCheckboxListeners();
-			setCheckboxStatus();
 		} else if ( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
 			editText = new EditText(this);
-			Cursor aCursor = dbHelper.getAnswer(questionNumber);
+			Cursor aCursor = dbHelper.getAnswers(questionNumber);
 			if ( aCursor != null ) {
 				index = aCursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
 				text = aCursor.getString(index);
@@ -217,7 +196,7 @@ public class ExamQuestionsActivity extends Activity {
 			}
 			v_layout.addView(editText);
 		}
-		
+
 		LayoutInflater li = getLayoutInflater();
 		li.inflate(R.layout.question_prev_next_buttons, v_layout);
 

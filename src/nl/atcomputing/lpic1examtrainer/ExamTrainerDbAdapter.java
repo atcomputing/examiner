@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 /**
- * @author mbrekhof
+ * @author martijn brekhof
  *
  */
 public class ExamTrainerDbAdapter {
@@ -43,28 +43,27 @@ public class ExamTrainerDbAdapter {
 		values.put(ExamTrainer.Questions.COLUMN_NAME_QUESTION, examQuestion.getQuestion());
 		values.put(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT, examQuestion.getExhibit());
 		values.put(ExamTrainer.Questions.COLUMN_NAME_TYPE, examQuestion.getType());
-		values.put(ExamTrainer.Questions.COLUMN_NAME_ANSWERS, 
-				examQuestion.convertArrayListToString(examQuestion.getAnswers()));
-		values.put(ExamTrainer.Questions.COLUMN_NAME_CORRECT_ANSWERS, 
-				examQuestion.convertArrayListToString(examQuestion.getCorrectAnswers()));
-		
 		return db.insert(ExamTrainer.Questions.TABLE_NAME, null, values);
 	}
 
-	public boolean updateQuestion(long rowId, String title, String question, String exhibit, String type, 
-			String answers, String correct_answers) {
+	public long addChoice(long questionId, String choice) {
 		
 		ContentValues values = new ContentValues();
-		values.put(ExamTrainer.Questions.COLUMN_NAME_QUESTION, question);
-		values.put(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT, exhibit);
-		values.put(ExamTrainer.Questions.COLUMN_NAME_TYPE, type);
-		values.put(ExamTrainer.Questions.COLUMN_NAME_ANSWERS, answers);
-		values.put(ExamTrainer.Questions.COLUMN_NAME_CORRECT_ANSWERS, correct_answers);
+		values.put(ExamTrainer.Choices.COLUMN_NAME_CHOICE, choice);
+		values.put(ExamTrainer.Choices.COLUMN_NAME_QUESTION_ID, questionId);
 		
-		return db.update(ExamTrainer.Questions.TABLE_NAME, values, ExamTrainer.Questions._ID + "="
-				+ rowId, null) > 0;
+		Log.d(this.getClass().getName(), "addChoice: " + values.toString() );
+		
+		return db.insert(ExamTrainer.Choices.TABLE_NAME, null, values);
 	}
 
+	public long addCorrectAnswers(long questionId, String answer) {
+	
+		ContentValues values = new ContentValues();
+		values.put(ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID, questionId);
+		values.put(ExamTrainer.CorrectAnswers.COLUMN_NAME_ANSWER, answer);
+		return db.insert(ExamTrainer.CorrectAnswers.TABLE_NAME, null, values);
+	}
 	
 	public boolean deleteQuestion(long rowId) {
 		return db.delete(ExamTrainer.Questions.TABLE_NAME, ExamTrainer.Questions._ID + "=" + rowId, null) > 0;
@@ -78,9 +77,7 @@ public class ExamTrainerDbAdapter {
 				new String[] {
 				ExamTrainer.Questions.COLUMN_NAME_QUESTION,
 				ExamTrainer.Questions.COLUMN_NAME_TYPE,
-				ExamTrainer.Questions.COLUMN_NAME_EXHIBIT,
-				ExamTrainer.Questions.COLUMN_NAME_ANSWERS,
-				ExamTrainer.Questions.COLUMN_NAME_CORRECT_ANSWERS
+				ExamTrainer.Questions.COLUMN_NAME_EXHIBIT
 				},
 				ExamTrainer.Questions._ID + "=" + rowId, null, null, null, null, null);
 		if (mCursor != null) {
@@ -89,8 +86,8 @@ public class ExamTrainerDbAdapter {
 		return mCursor;
 	}
 	
-	public List<Integer> getAllQuestionIDs() throws SQLException {
-		List<Integer> list = new ArrayList<Integer>();
+	public List<Long> getAllQuestionIDs() throws SQLException {
+		List<Long> list = new ArrayList<Long>();
 		
 		Cursor mCursor = db.query(true, ExamTrainer.Questions.TABLE_NAME, 
 				new String[] {
@@ -105,7 +102,7 @@ public class ExamTrainerDbAdapter {
 		
 		if(mCursor.moveToFirst()) {
 			do {
-				int questionId = mCursor.getInt(index);
+				long questionId = mCursor.getLong(index);
 				list.add(questionId);
 			} while (mCursor.moveToNext());
 		}
@@ -120,7 +117,7 @@ public class ExamTrainerDbAdapter {
 	 * row was found for the given questionId. 
 	 * @throws SQLException
 	 */
-	public Cursor getAnswer(long questionId) throws SQLException {
+	public Cursor getAnswers(long questionId) throws SQLException {
 		Cursor mCursor = db.query(true, ExamTrainer.Answers.TABLE_NAME, 
 				new String[] {
 				ExamTrainer.Answers.COLUMN_NAME_ANSWER
@@ -135,11 +132,11 @@ public class ExamTrainerDbAdapter {
 	}
 	
 	public Cursor getCorrectAnswers(long questionId) throws SQLException {
-		Cursor mCursor = db.query(true, ExamTrainer.Questions.TABLE_NAME, 
+		Cursor mCursor = db.query(true, ExamTrainer.CorrectAnswers.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.Questions.COLUMN_NAME_CORRECT_ANSWERS
+				ExamTrainer.CorrectAnswers.COLUMN_NAME_ANSWER
 				},
-				ExamTrainer.Questions._ID + "=" + questionId, 
+				ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
 				null, null, null, null, null);
 		
 		if(mCursor.moveToFirst())
@@ -148,6 +145,20 @@ public class ExamTrainerDbAdapter {
 		return null;
 	}
 	
+	public Cursor getChoices(long questionId) throws SQLException {
+		Cursor mCursor = db.query(true, ExamTrainer.Choices.TABLE_NAME, 
+				new String[] {
+				ExamTrainer.Choices.COLUMN_NAME_CHOICE
+				},
+				ExamTrainer.Choices.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
+				null, null, null, null, null);
+		
+		if(mCursor.moveToFirst())
+			return mCursor;
+		
+		return null;
+	}
+
 	/**
 	 * @brief Checks if an answer with given questionId and answer is present in the database.
 	 * @param questionId
@@ -233,7 +244,6 @@ public class ExamTrainerDbAdapter {
 		if( ! checkIfAnswerInTable(questionId, answer) ) {
 			return insertAnswer(questionId, answer);
 		}
-		
 		return true;
 	}
 	
@@ -245,5 +255,19 @@ public class ExamTrainerDbAdapter {
 		} else {	
 			return insertAnswer(questionId, answer);
 		}
+	}
+	
+	public boolean checkAnswer(String answer, long questionId) {
+		Cursor cursor = this.getCorrectAnswers(questionId);
+		if ( cursor != null ) {
+			int index = cursor.getColumnIndex(ExamTrainer.CorrectAnswers.COLUMN_NAME_ANSWER);
+			do {
+				String correct_answer = cursor.getString(index);
+				if(answer.equals(correct_answer)) {
+					return true;
+				}
+			} while( cursor.moveToNext() );
+		}
+		return false;
 	}
 }

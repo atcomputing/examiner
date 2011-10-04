@@ -5,23 +5,40 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * @author martijn brekhof
+ *
+ */
 public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_NAME = "lpic101-102exam_trainer.db";
 	private static final int DATABASE_VERSION = 1;
+	
 	private static final String DATABASE_CREATE_QUESTIONS_TABLE = "CREATE TABLE " 
 	+ ExamTrainer.Questions.TABLE_NAME + " ("
     + ExamTrainer.Questions._ID + " INTEGER PRIMARY KEY,"
     + ExamTrainer.Questions.COLUMN_NAME_QUESTION + " TEXT,"
     + ExamTrainer.Questions.COLUMN_NAME_EXHIBIT + " TEXT,"
-    + ExamTrainer.Questions.COLUMN_NAME_TYPE + " TEXT,"
-    + ExamTrainer.Questions.COLUMN_NAME_ANSWERS + " TEXT,"
-    + ExamTrainer.Questions.COLUMN_NAME_CORRECT_ANSWERS + " TEXT"
+    + ExamTrainer.Questions.COLUMN_NAME_TYPE + " TEXT"
     + ");";
+	
+	private static final String DATABASE_CREATE_CHOICES_TABLE = "CREATE TABLE " 
+		+ ExamTrainer.Choices.TABLE_NAME + " ("
+		+ ExamTrainer.Choices._ID + " INTEGER PRIMARY KEY,"
+	    + ExamTrainer.Choices.COLUMN_NAME_QUESTION_ID + " INTEGER,"
+	    + ExamTrainer.Choices.COLUMN_NAME_CHOICE + " TEXT"
+	    + ");";
+	
+	private static final String DATABASE_CREATE_CORRECT_ANSWERS_TABLE = "CREATE TABLE " 
+		+ ExamTrainer.CorrectAnswers.TABLE_NAME + " ("
+		+ ExamTrainer.CorrectAnswers._ID + " INTEGER PRIMARY KEY,"
+	    + ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID + " INTEGER,"
+	    + ExamTrainer.CorrectAnswers.COLUMN_NAME_ANSWER + " TEXT"
+	    + ");";
 	
 	private static final String DATABASE_CREATE_ANSWERS_TABLE = "CREATE TABLE " 
 		+ ExamTrainer.Answers.TABLE_NAME + " ("
 		+ ExamTrainer.Answers._ID + " INTEGER PRIMARY KEY,"
-	    + ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID + " TEXT,"
+	    + ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID + " INTEGER,"
 	    + ExamTrainer.Answers.COLUMN_NAME_ANSWER + " TEXT"
 	    + ");";
 		
@@ -33,6 +50,8 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(DATABASE_CREATE_QUESTIONS_TABLE);
 		db.execSQL(DATABASE_CREATE_ANSWERS_TABLE);
+		db.execSQL(DATABASE_CREATE_CORRECT_ANSWERS_TABLE);
+		db.execSQL(DATABASE_CREATE_CHOICES_TABLE);
 	}
 
 	@Override
@@ -43,6 +62,8 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 						+ newVersion + ", which will destroy all old data");
 		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.Questions.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.Answers.TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.Choices.TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.CorrectAnswers.TABLE_NAME);
 		onCreate(db);	
 	}
 	

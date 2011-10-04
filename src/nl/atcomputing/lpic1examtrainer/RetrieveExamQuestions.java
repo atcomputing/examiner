@@ -14,6 +14,10 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
+/**
+ * @author martijn brekhof
+ *
+ */
 public class RetrieveExamQuestions extends IntentService {
 	private String examURL;
 	

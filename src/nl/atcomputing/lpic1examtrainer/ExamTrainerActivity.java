@@ -3,6 +3,7 @@ package nl.atcomputing.lpic1examtrainer;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -14,6 +15,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+/**
+ * @author martijn brekhof
+ *
+ */
 public class ExamTrainerActivity extends Activity {
 	private ExamTrainerDbAdapter dbHelper;
 
@@ -81,7 +86,7 @@ public class ExamTrainerActivity extends Activity {
 		                if (name.equalsIgnoreCase("item")) {
 		                    examQuestion = parseItem(parser);
 		                    if ( examQuestion != null ) {
-		                    	dbHelper.addQuestion(examQuestion);
+		                    	addQuestionToDatabase(examQuestion);
 		                    }
 		                }
 		                break;
@@ -101,6 +106,21 @@ public class ExamTrainerActivity extends Activity {
 		}
 	}
 
+	private void addQuestionToDatabase(ExamQuestion examQuestion) {
+		ArrayList<String> arrayList;
+		long questionId = dbHelper.addQuestion(examQuestion);
+		
+		arrayList = examQuestion.getChoices();
+		for( int i = 0; i < arrayList.size(); i++ ) {
+			dbHelper.addChoice(questionId, arrayList.get(i));
+		}
+		
+		arrayList = examQuestion.getCorrectAnswers();
+		for( int i = 0; i < arrayList.size(); i++ ) {
+			dbHelper.addCorrectAnswers(questionId, arrayList.get(i));
+		}
+	    
+	}
 	private ExamQuestion parseItem(XmlPullParser parser) throws FileNotFoundException, IOException, Exception {
 		
 		ExamQuestion examQuestion = new ExamQuestion();
@@ -136,9 +156,9 @@ public class ExamTrainerActivity extends Activity {
 	                } else if (start_tag.equalsIgnoreCase("correct_answer")) {
 	                	Log.d(this.getClass().getName(), "parseItem TEXT correct_answer: " + parser.getText());
 	                	examQuestion.addCorrectAnswer(parser.getText());
-	                } else if (start_tag.equalsIgnoreCase("answer")) {
-	                	Log.d(this.getClass().getName(), "parseItem TEXT answer: " + parser.getText());
-	                	examQuestion.addAnswer(parser.getText());
+	                } else if (start_tag.equalsIgnoreCase("choice")) {
+	                	Log.d(this.getClass().getName(), "parseItem TEXT choice: " + parser.getText());
+	                	examQuestion.addChoice(parser.getText());
 	                } else if (start_tag.equalsIgnoreCase("item")) {
 	                	//do nothing
 	                } else {

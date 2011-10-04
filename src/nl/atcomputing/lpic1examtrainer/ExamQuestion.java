@@ -3,7 +3,7 @@ package nl.atcomputing.lpic1examtrainer;
 import java.util.ArrayList;
 
 /**
- * @author martijn
+ * @author martijn brekhof
  *
  */
 public class ExamQuestion {
@@ -15,14 +15,14 @@ public class ExamQuestion {
 	private String question;
 	private String exhibit;
 	private ArrayList<String> correctAnswers;
-	private ArrayList<String> answers;
+	private ArrayList<String> choices;
 	
 	protected ExamQuestion() {
 		type = null;
 		topic = null;
 		question = null;
 		correctAnswers = new ArrayList<String>();
-		answers = new ArrayList<String>();
+		choices = new ArrayList<String>();
 	}
 	
 	
@@ -33,23 +33,23 @@ public class ExamQuestion {
 	 * @param exhibit
 	 * @param question
 	 * @param correct_answer
-	 * @param answers
+	 * @param choices
 	 */
 	protected ExamQuestion(String type, String topic, String exhibit, String question, 
-			ArrayList<String> correctAnswers, ArrayList<String> answers) {
+			ArrayList<String> correctAnswers, ArrayList<String> choices) {
 		this.type = type;
 		this.topic = topic;
 		this.question = question;
 		this.correctAnswers = correctAnswers;
-		this.answers = answers;
+		this.choices = choices;
 	}
 	
-	protected String convertArrayListToString(ArrayList<String> answers) {
-		int size = answers.size();
+	protected String convertArrayListToString(ArrayList<String> choices) {
+		int size = choices.size();
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		for ( int i = 0; i < size; i++ ) {
-			stringBuilder.append(answers.get(i) + ", ");
+			stringBuilder.append(choices.get(i) + ", ");
 		}
 		return stringBuilder.toString().replaceAll(", ^", "");
 	}
@@ -62,8 +62,8 @@ public class ExamQuestion {
 		return topic;
 	}
 	
-	protected ArrayList<String> getAnswers() {
-		return answers;
+	protected ArrayList<String> getChoices() {
+		return choices;
 	}
 	
 	protected ArrayList<String> getCorrectAnswers() {
@@ -86,8 +86,8 @@ public class ExamQuestion {
 		topic = str;
 	}
 	
-	protected void setAnswers(ArrayList<String> arrayList) {
-		answers = arrayList;
+	protected void setChoices(ArrayList<String> arrayList) {
+		choices = arrayList;
 	}
 	
 	protected void setCorrectAnswers(ArrayList<String> arrayList) {
@@ -102,13 +102,11 @@ public class ExamQuestion {
 		exhibit = str;
 	}
 	
-	protected void addAnswer(String str) {
-		str.replaceAll(", ", ",\\ ");
-		answers.add(str);
+	protected void addChoice(String str) {
+		choices.add(str);
 	}
 	
 	protected void addCorrectAnswer(String str) {
-		str.replaceAll(", ", ",\\ ");
 		correctAnswers.add(str);
 	}
 }
