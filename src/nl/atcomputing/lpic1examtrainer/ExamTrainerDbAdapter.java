@@ -127,7 +127,11 @@ public class ExamTrainerDbAdapter {
 				},
 				ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
 				null, null, null, null, null);
-		return mCursor;
+		
+		if(mCursor.moveToFirst())
+			return mCursor;
+		
+		return null;
 	}
 	
 	public Cursor getCorrectAnswers(long questionId) throws SQLException {
@@ -137,7 +141,11 @@ public class ExamTrainerDbAdapter {
 				},
 				ExamTrainer.Questions._ID + "=" + questionId, 
 				null, null, null, null, null);
-		return mCursor;
+		
+		if(mCursor.moveToFirst())
+			return mCursor;
+		
+		return null;
 	}
 	
 	/**

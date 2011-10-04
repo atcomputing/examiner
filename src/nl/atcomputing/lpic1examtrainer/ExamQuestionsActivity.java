@@ -112,7 +112,7 @@ public class ExamQuestionsActivity extends Activity {
 	protected void addCheckboxListeners() {
 		for(int index = 0; index < cboxes.size(); index++) {
 			CheckBox cbox = cboxes.get(index);
-			final String answer = String.valueOf(index);
+			final String answer = cbox.getText().toString();
 			cbox.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -131,17 +131,19 @@ public class ExamQuestionsActivity extends Activity {
 		Log.d("ExamQuestionsActivity", "setCheckboxStatus: size=" + cboxes.size());
 		for(int index = 0; index < cboxes.size(); index++) {
 			CheckBox cbox = cboxes.get(index);
+			String answer = cbox.getText().toString();
 			Cursor aCursor = dbHelper.getAnswer(questionNumber);
-			int cIndex = aCursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
-			if( aCursor.moveToFirst() ) {
-				do {
-					Log.d("ExamQuestionsActivity", "answer_id = " + aCursor.getLong(cIndex));
-					if ( aCursor.getLong(cIndex) == index ) {
-						cbox.setChecked(true);
-						break;
-					}
-				} while (aCursor.moveToNext());
-			}
+//			int cIndex = aCursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
+//			if( aCursor.moveToFirst() ) {
+//				do {
+//					Log.d("ExamQuestionsActivity", ExamTrainer.Answers.COLUMN_NAME_ANSWER +
+//							" = " + aCursor.getString(cIndex));
+//					if ( aCursor.getString(cIndex).equals(answer) ) {
+//						cbox.setChecked(true);
+//						break;
+//					}
+//				} while (aCursor.moveToNext());
+//			}
 		}
 	}
 	
