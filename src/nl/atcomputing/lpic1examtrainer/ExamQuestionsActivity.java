@@ -143,7 +143,7 @@ public class ExamQuestionsActivity extends Activity {
 				cbox.setText(choice);
 				Log.d(this.getClass().getName(), "createChoices: " + choice);
 				
-				if ( dbHelper.checkAnswer(choice, questionNumber) ) {
+				if ( dbHelper.answerPresent(questionNumber, choice) ) {
 					cbox.setChecked(true);
 				}
 				

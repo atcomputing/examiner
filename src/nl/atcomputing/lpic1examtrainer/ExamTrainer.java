@@ -62,4 +62,27 @@ public final class ExamTrainer {
         public static final String COLUMN_NAME_QUESTION_ID = "question_id";
         public static final String COLUMN_NAME_ANSWER = "answer";
     }
+    
+    public static final class Scores implements BaseColumns {
+
+        // This class cannot be instantiated
+        private Scores() {}
+        
+        public static final String TABLE_NAME = "Scores";
+
+        public static final String COLUMN_NAME_DATE = "date";
+        public static final String COLUMN_NAME_SCORE = "score";
+    }
+    
+    public static final class ScoresAnswers implements BaseColumns {
+
+        // This class cannot be instantiated
+        private ScoresAnswers() {}
+        
+        public static final String TABLE_NAME = "ScoresAnswers";
+
+        public static final String COLUMN_NAME_EXAM_ID = "exam_id";
+        public static final String COLUMN_NAME_QUESTION_ID = "question_id";
+        public static final String COLUMN_NAME_ANSWER = "answer";
+    }
 }

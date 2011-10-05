@@ -16,6 +16,7 @@ import android.widget.Button;
  */
 public class ExamResultsActivity extends Activity {
 	private ExamTrainerDbAdapter dbHelper;
+	private int questionNumber;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -24,10 +25,18 @@ public class ExamResultsActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.results);
         
+        Intent intent = getIntent();
+		questionNumber = intent.getIntExtra("question", 1);
+		
         dbHelper = new ExamTrainerDbAdapter(this);
 		dbHelper.open();
 		
-		calculateResults();
+		if( questionNumber > 0 ) {
+			int examId = createScore();
+			int score = calculateScore(examId);
+			showScore(score);
+		}
+		
 		
 		dbHelper.close();
 		
@@ -43,9 +52,11 @@ public class ExamResultsActivity extends Activity {
 
     }
     
-    private void calculateResults() {
+    private int createScore() {
     	Cursor cursor;
     	int index;
+    	
+    	int examId = dbHelper.addScore(date, null);
     	
     	List<Long> idList = dbHelper.getAllQuestionIDs();
     	for(int i = 0; i < idList.size(); i++) {
@@ -55,16 +66,38 @@ public class ExamResultsActivity extends Activity {
     			index = cursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
     			do {
     				String answer = cursor.getString(index);
-    				if(dbHelper.checkAnswer(answer, questionId)) {
-    					Log.d(this.getClass().getName(), answer + " is correct");
-    				}
-    				else {
-    					Log.d(this.getClass().getName(), answer + " is wrong");
-    				}
+    				dbHelper.addScoresAnswers(examId, questionId, answer);
     			} while( cursor.moveToNext() );
     		}	
     	}
+    	return examId;
     }
     
+    private int calculateScore(int examId) {
+    	Cursor cursor;
+    	int index;
+    	int score;
+    	
+    	score = 0;
+    	cursor = dbHelper.getScoresAnswers(examId);
+    	if ( cursor == null )
+    		return 0;
+    	
+    		int answerIndex = cursor.getColumnIndex(ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER);
+    		int questionIdIndex = cursor.getColumnIndex(ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID);
+			do {
+				String answer = cursor.getString(index);
+				long questionId = cursor.getLong(questionIdIndex);
+				if ( dbHelper.checkAnswer(answer, questionId)) {
+					score++;
+				}
+			} while( cursor.moveToNext() );
+			
+			return score;
+			
+    }
     
+    private void showScore(int score) {
+    	
+    }
 }

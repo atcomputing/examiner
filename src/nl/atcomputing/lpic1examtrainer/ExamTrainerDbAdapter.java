@@ -166,7 +166,7 @@ public class ExamTrainerDbAdapter {
 	 * @return true if answer is in table, false otherwise
 	 * @throws SQLException
 	 */
-	public boolean checkIfAnswerInTable(long questionId, String answer) 
+	public boolean answerPresent(long questionId, String answer) 
 													throws SQLException {
 		String whereClause = "";
 		
@@ -241,7 +241,7 @@ public class ExamTrainerDbAdapter {
 	 */
 	public boolean setMultipleChoiceAnswer(long questionId, String answer) {	
 		//Check if answer is already in the database
-		if( ! checkIfAnswerInTable(questionId, answer) ) {
+		if( ! answerPresent(questionId, answer) ) {
 			return insertAnswer(questionId, answer);
 		}
 		return true;
