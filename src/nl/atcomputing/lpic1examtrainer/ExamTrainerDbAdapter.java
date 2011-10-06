@@ -65,6 +65,28 @@ public class ExamTrainerDbAdapter {
 		return db.insert(ExamTrainer.CorrectAnswers.TABLE_NAME, null, values);
 	}
 	
+	public long addScore(String date, int score) {
+		ContentValues values = new ContentValues();
+		values.put(ExamTrainer.Scores.COLUMN_NAME_DATE, date);
+		values.put(ExamTrainer.Scores.COLUMN_NAME_SCORE, score);
+		return db.insert(ExamTrainer.Scores.TABLE_NAME, null, values);
+	}
+	
+	public long addScoresAnswers(long examId, long questionId, String answer) {
+		ContentValues values = new ContentValues();
+		values.put(ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID, questionId);
+		values.put(ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER, answer);
+		values.put(ExamTrainer.ScoresAnswers.COLUMN_NAME_EXAM_ID, examId);
+		return db.insert(ExamTrainer.ScoresAnswers.TABLE_NAME, null, values);
+	}
+	
+	public boolean updateScore(long id, int score) {
+		ContentValues values = new ContentValues();
+		values.put(ExamTrainer.Scores.COLUMN_NAME_DATE, score);
+		return db.update(ExamTrainer.Scores.TABLE_NAME, values, 
+				ExamTrainer.Scores._ID + "=" + id, null) > 0;
+	}
+	
 	public boolean deleteQuestion(long rowId) {
 		return db.delete(ExamTrainer.Questions.TABLE_NAME, ExamTrainer.Questions._ID + "=" + rowId, null) > 0;
 	}
@@ -159,6 +181,21 @@ public class ExamTrainerDbAdapter {
 		return null;
 	}
 
+	public Cursor getScoresAnswers(long examId) {
+		Cursor cursor = db.query(true, ExamTrainer.ScoresAnswers.TABLE_NAME, 
+				new String[] {
+				ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER,
+				ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID
+				},
+				ExamTrainer.ScoresAnswers.COLUMN_NAME_EXAM_ID + "=" + examId, 
+				null, null, null, null, null);
+		
+		if(cursor.moveToFirst())
+			return cursor;
+		
+		return null;
+	}
+	
 	/**
 	 * @brief Checks if an answer with given questionId and answer is present in the database.
 	 * @param questionId

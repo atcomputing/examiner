@@ -33,14 +33,14 @@ public class ExamQuestionsActivity extends Activity {
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 		Intent intent = getIntent();
 
 		questionNumber = intent.getIntExtra("question", 1);
 		if ( questionNumber < 1 ) {
 			finishActivity();
 		}
-
-		super.onCreate(savedInstanceState);
+		
 		dbHelper = new ExamTrainerDbAdapter(this);
 		dbHelper.open();
 
@@ -123,6 +123,7 @@ public class ExamQuestionsActivity extends Activity {
 	protected void showResults() {
 		dbHelper.close();
 		Intent intent = new Intent(ExamQuestionsActivity.this, ExamResultsActivity.class);
+		intent.putExtra("question", questionNumber);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}

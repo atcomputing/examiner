@@ -42,6 +42,22 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 	    + ExamTrainer.Answers.COLUMN_NAME_ANSWER + " TEXT"
 	    + ");";
 		
+	private static final String DATABASE_CREATE_SCORES_ANSWERS_TABLE = "CREATE TABLE " 
+		+ ExamTrainer.ScoresAnswers.TABLE_NAME + " ("
+		+ ExamTrainer.ScoresAnswers._ID + " INTEGER PRIMARY KEY,"
+	    + ExamTrainer.ScoresAnswers.COLUMN_NAME_EXAM_ID + " INTEGER,"
+	    + ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID + " INTEGER,"
+	    + ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER + " TEXT"
+	    + ");";
+
+	private static final String DATABASE_CREATE_SCORES_TABLE = "CREATE TABLE " 
+		+ ExamTrainer.Scores.TABLE_NAME + " ("
+		+ ExamTrainer.Scores._ID + " INTEGER PRIMARY KEY,"
+	    + ExamTrainer.Scores.COLUMN_NAME_SCORE + " INTEGER,"
+	    + ExamTrainer.Scores.COLUMN_NAME_DATE + " TEXT"
+	    + ");";
+
+	
 	public ExamTrainerDatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -52,6 +68,8 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(DATABASE_CREATE_ANSWERS_TABLE);
 		db.execSQL(DATABASE_CREATE_CORRECT_ANSWERS_TABLE);
 		db.execSQL(DATABASE_CREATE_CHOICES_TABLE);
+		db.execSQL(DATABASE_CREATE_SCORES_ANSWERS_TABLE);
+		db.execSQL(DATABASE_CREATE_SCORES_TABLE);
 	}
 
 	@Override
@@ -64,6 +82,8 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.Answers.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.Choices.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.CorrectAnswers.TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.ScoresAnswers.TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.Scores.TABLE_NAME);
 		onCreate(db);	
 	}
 	
