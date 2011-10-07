@@ -8,6 +8,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 
 /**
  * @author martijn brekhof
@@ -25,6 +28,9 @@ public class ExamResultsActivity extends Activity {
         
         setContentView(R.layout.results);
         
+        LayoutInflater li = getLayoutInflater();
+		li.inflate(R.layout.results, null);
+		
         Intent intent = getIntent();
 		questionNumber = intent.getIntExtra("question", 1);
 		
@@ -40,15 +46,15 @@ public class ExamResultsActivity extends Activity {
 		
 		dbHelper.close();
 		
-//		Button quit = (Button) findViewById(R.id.result_button_return_to_main_menu);
-//        quit.setOnClickListener( new View.OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				Intent intent = new Intent(ExamResultsActivity.this, ExamTrainerActivity.class);
-//				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//				startActivity(intent);
-//			}
-//		});
+		Button quit = (Button) findViewById(R.id.result_button_return_to_main_menu);
+        quit.setOnClickListener( new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(ExamResultsActivity.this, ExamTrainerActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+			}
+		});
 
     }
     
@@ -89,9 +95,11 @@ public class ExamResultsActivity extends Activity {
 				String answer = cursor.getString(answerIndex);
 				long questionId = cursor.getLong(questionIdIndex);
 				if ( dbHelper.checkAnswer(answer, questionId)) {
+					Log.d(this.getClass().getName(), "calculateScore: answer " + answer + " is correct");
 					score_correct++;
 				}
 				else {
+					Log.d(this.getClass().getName(), "calculateScore: answer " + answer + " is wrong");
 					score_wrong++;
 				}
 					
@@ -102,7 +110,7 @@ public class ExamResultsActivity extends Activity {
 	    	double percentage = 0.0;
 			
 	    	if( total > 0 ) {
-				percentage = 100 * (score_correct / (score_correct + score_wrong));	
+				percentage = 100 * (score_correct / (double) total);	
 			}
 			
 			return (int) percentage;

@@ -132,8 +132,6 @@ public class ExamQuestionsActivity extends Activity {
 		CheckBox cbox; 
 		LinearLayout v_layout = new LinearLayout(this);
 		v_layout.setOrientation(LinearLayout.VERTICAL);
-
-		Log.d(this.getClass().getName(), "Oh YEAH!");
 		
 		Cursor cursor = dbHelper.getChoices(questionNumber);
 		if ( cursor != null ) {
@@ -142,7 +140,6 @@ public class ExamQuestionsActivity extends Activity {
 				final String choice = cursor.getString(index);
 				cbox = new CheckBox(this);
 				cbox.setText(choice);
-				Log.d(this.getClass().getName(), "createChoices: " + choice);
 				
 				if ( dbHelper.answerPresent(questionNumber, choice) ) {
 					cbox.setChecked(true);
