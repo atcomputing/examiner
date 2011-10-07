@@ -30,6 +30,8 @@ public class ExamQuestionsActivity extends Activity {
 	private String questionType;
 	private EditText editText;
 
+	private static final int DIALOG_ENDOFEXAM_ID = 1;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,8 +48,7 @@ public class ExamQuestionsActivity extends Activity {
 
 		cursorQuestion = dbHelper.getQuestion(questionNumber);
 		if ( cursorQuestion.getCount() < 1 ) {
-			//showDialog(ExamTrainer.DIALOG_ENDOFEXAM_ID);
-			showResults();
+			showDialog(DIALOG_ENDOFEXAM_ID);
 		}
 		else {
 			int index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_TYPE);
@@ -86,9 +87,9 @@ public class ExamQuestionsActivity extends Activity {
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog;
 		switch(id) {
-		case ExamTrainer.DIALOG_ENDOFEXAM_ID:
+		case DIALOG_ENDOFEXAM_ID:
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("Are you sure you want to exit?")
+			builder.setMessage("End of Exam.\nAre you sure you want to exit?")
 			.setCancelable(false)
 			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
@@ -97,7 +98,7 @@ public class ExamQuestionsActivity extends Activity {
 			})
 			.setNegativeButton("No", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dialog.cancel();
+					dialog.dismiss();
 				}
 			});
 			dialog = builder.create();

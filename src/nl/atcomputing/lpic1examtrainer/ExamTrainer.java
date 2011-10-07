@@ -7,7 +7,6 @@ import android.provider.BaseColumns;
  *
  */
 public final class ExamTrainer {
-	public static final int DIALOG_ENDOFEXAM_ID = 1;
 	
     // This class cannot be instantiated
     private ExamTrainer() {

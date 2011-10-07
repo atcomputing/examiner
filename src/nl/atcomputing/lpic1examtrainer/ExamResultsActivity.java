@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -19,6 +22,8 @@ import android.widget.Button;
 public class ExamResultsActivity extends Activity {
 	private ExamTrainerDbAdapter dbHelper;
 	private int questionNumber;
+	private int score;
+	private static final int DIALOG_SHOW_SCORE = 1;
 	
 	/** Called when the activity is first created. */
     @Override
@@ -39,8 +44,8 @@ public class ExamResultsActivity extends Activity {
 		
 		if( questionNumber > 0 ) {
 			long examId = createScore();
-			int score = calculateScore(examId);
-			showScore(score);
+			score = calculateScore(examId);
+			showDialog(DIALOG_SHOW_SCORE);
 		}
 		
 		
@@ -58,6 +63,26 @@ public class ExamResultsActivity extends Activity {
 
     }
     
+	protected Dialog onCreateDialog(int id) {
+		Dialog dialog;
+		switch(id) {
+		case DIALOG_SHOW_SCORE:
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("You scored " + score)
+			.setCancelable(true)
+			.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.dismiss();
+				}
+			});
+			dialog = builder.create();
+			break;
+		default:
+			dialog = null;
+		}
+		return dialog;
+	}
+
     private long createScore() {
     	Cursor cursor;
     	int index;
@@ -117,7 +142,7 @@ public class ExamResultsActivity extends Activity {
 			
     }
     
-    private void showScore(int score) {
+    private void showScore() {
     	Log.d(this.getClass().getName(), "showScore: score=" + score);
     }
 
