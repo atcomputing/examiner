@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -124,7 +123,7 @@ public class ExamQuestionsActivity extends Activity {
 	protected void showResults() {
 		dbHelper.close();
 		Intent intent = new Intent(ExamQuestionsActivity.this, ExamResultsActivity.class);
-		intent.putExtra("question", questionNumber);
+		intent.putExtra("action", ExamResultsActivity.END_EXAM);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}

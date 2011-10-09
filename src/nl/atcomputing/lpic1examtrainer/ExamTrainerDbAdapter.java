@@ -196,6 +196,21 @@ public class ExamTrainerDbAdapter {
 		return null;
 	}
 	
+	public Cursor getScores() {
+		Cursor cursor = db.query(true, ExamTrainer.Scores.TABLE_NAME, 
+				new String[] {
+				ExamTrainer.ScoresAnswers._ID,
+				ExamTrainer.Scores.COLUMN_NAME_DATE,
+				ExamTrainer.Scores.COLUMN_NAME_SCORE
+				},
+				null, null, null, null, null, null);
+		
+		if(cursor.moveToFirst())
+			return cursor;
+		
+		return null;
+	}
+	
 	/**
 	 * @brief Checks if an answer with given questionId and answer is present in the database.
 	 * @param questionId

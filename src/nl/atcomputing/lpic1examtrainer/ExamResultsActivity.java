@@ -20,8 +20,10 @@ import android.widget.Button;
  *
  */
 public class ExamResultsActivity extends Activity {
+	public static final int END_EXAM = 1;
+	public static final int NONE = 2;
+	
 	private ExamTrainerDbAdapter dbHelper;
-	private int questionNumber;
 	private int score;
 	private static final int DIALOG_SHOW_SCORE = 1;
 	
@@ -37,12 +39,12 @@ public class ExamResultsActivity extends Activity {
 		li.inflate(R.layout.results, null);
 		
         Intent intent = getIntent();
-		questionNumber = intent.getIntExtra("question", 1);
+		int action = intent.getIntExtra("action", 1);
 		
         dbHelper = new ExamTrainerDbAdapter(this);
 		dbHelper.open();
 		
-		if( questionNumber > 0 ) {
+		if( action == END_EXAM ) {
 			long examId = createScore();
 			score = calculateScore(examId);
 			showDialog(DIALOG_SHOW_SCORE);
@@ -57,6 +59,15 @@ public class ExamResultsActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent(ExamResultsActivity.this, ExamTrainerActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				startActivity(intent);
+			}
+		});
+        
+        Button showScores = (Button) findViewById(R.id.result_button_show_scores);
+        showScores.setOnClickListener( new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(ExamResultsActivity.this, ExamShowScoresActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -140,10 +151,6 @@ public class ExamResultsActivity extends Activity {
 			
 			return (int) percentage;
 			
-    }
-    
-    private void showScore() {
-    	Log.d(this.getClass().getName(), "showScore: score=" + score);
     }
 
 }

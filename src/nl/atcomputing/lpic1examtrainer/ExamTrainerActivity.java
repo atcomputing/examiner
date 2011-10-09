@@ -48,6 +48,16 @@ public class ExamTrainerActivity extends Activity {
 			}
 		});
 		
+		Button reviewPreviousExam = (Button) findViewById(R.id.button_show_results);
+		reviewPreviousExam.setOnClickListener( new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(ExamTrainerActivity.this, ExamResultsActivity.class);
+				intent.putExtra("action", ExamResultsActivity.NONE);
+				startActivity(intent);
+			}
+		});
+		
 		Button quitExamTrainer = (Button) findViewById(R.id.button_quit);
 		quitExamTrainer.setOnClickListener( new View.OnClickListener() {
 			@Override
