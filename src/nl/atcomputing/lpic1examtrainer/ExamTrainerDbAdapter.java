@@ -80,6 +80,13 @@ public class ExamTrainerDbAdapter {
 		return db.insert(ExamTrainer.ScoresAnswers.TABLE_NAME, null, values);
 	}
 	
+	
+	/**
+	 * updates the score for the exam with id
+	 * @param id the exam Identification
+	 * @param score the score for the specific exam
+	 * @return boolean true if update was succesful, false otherwise
+	 */
 	public boolean updateScore(long id, int score) {
 		ContentValues values = new ContentValues();
 		values.put(ExamTrainer.Scores.COLUMN_NAME_DATE, score);
@@ -87,8 +94,27 @@ public class ExamTrainerDbAdapter {
 				ExamTrainer.Scores._ID + "=" + id, null) > 0;
 	}
 	
+	
+	/**
+	 * Deletes a complete exam from the score table. This will delete both the score and
+	 * the answers
+	 * @param id
+	 * @return true if rows were deleted, false if nothing was deleted.
+	 */
+	public boolean deleteScore(long id) {
+		int status = db.delete(ExamTrainer.ScoresAnswers.TABLE_NAME, 
+				ExamTrainer.ScoresAnswers.COLUMN_NAME_EXAM_ID + "=" + id, null);
+		//If ScoresAnswers rows were deleted, delete the corresponding Score as well
+		if( status > 0 ) {
+			return db.delete(ExamTrainer.Scores.TABLE_NAME, 
+				ExamTrainer.Scores._ID + "=" + id, null) > 0;
+		}
+		return status > 0;
+	}
+	
 	public boolean deleteQuestion(long rowId) {
-		return db.delete(ExamTrainer.Questions.TABLE_NAME, ExamTrainer.Questions._ID + "=" + rowId, null) > 0;
+		return db.delete(ExamTrainer.Questions.TABLE_NAME, 
+				ExamTrainer.Questions._ID + "=" + rowId, null) > 0;
 	}
 
 	/**
@@ -321,5 +347,17 @@ public class ExamTrainerDbAdapter {
 			} while( cursor.moveToNext() );
 		}
 		return false;
+	}
+	
+	public int getAmountOfQuestions() {
+		Cursor mCursor = db.query(true, ExamTrainer.Questions.TABLE_NAME, 
+				new String[] {
+				ExamTrainer.Questions.COLUMN_NAME_QUESTION
+				},
+				null, null, null, null, null, null);
+		if (mCursor != null) {
+			return mCursor.getCount();
+		}
+		return 0;
 	}
 }

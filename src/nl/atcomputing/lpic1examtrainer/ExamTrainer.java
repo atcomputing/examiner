@@ -20,6 +20,8 @@ public final class ExamTrainer {
         // This class cannot be instantiated
         private Questions() {}
         
+        public static int amount = 0;
+        
         public static final String TABLE_NAME = "Questions";
         
         public static final String TYPE_OPEN = "open";

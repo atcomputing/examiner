@@ -30,10 +30,14 @@ public class ExamTrainerActivity extends Activity {
 		retrieveExam();
 		setContentView(R.layout.main);		
 
+		dbHelper = new ExamTrainerDbAdapter(this);
+		dbHelper.open();
+		
 		Button startExam = (Button) findViewById(R.id.button_start_exam);
 		startExam.setOnClickListener( new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				ExamTrainer.Questions.amount = dbHelper.getAmountOfQuestions();
 				Intent intent = new Intent(ExamTrainerActivity.this, ExamQuestionsActivity.class);
 				intent.putExtra("question", 1);
 				startActivity(intent);
@@ -67,6 +71,10 @@ public class ExamTrainerActivity extends Activity {
 		});
 	}
 	
+	protected void onDestroy() {
+		super.onDestroy();
+		dbHelper.close();
+	}
 	
 	protected void retrieveExam() {
 		Intent intent = new Intent(this, RetrieveExamQuestions.class);
@@ -74,8 +82,6 @@ public class ExamTrainerActivity extends Activity {
 	}
 	
 	protected void loadExam(String filename) {
-		dbHelper = new ExamTrainerDbAdapter(this);
-		dbHelper.open();
 		dbHelper.upgrade();
 		
 		try {
@@ -103,15 +109,11 @@ public class ExamTrainerActivity extends Activity {
 		            }
 		        eventType = parser.next();
 		        }
-		    dbHelper.close();
 		} catch (FileNotFoundException e) {
-			dbHelper.close();
 		    Log.d(this.getClass().getName() , "Could not find " + filename);
 		} catch (IOException e) {
-			dbHelper.close();
 			Log.d(this.getClass().getName() , "I/O problem with " + filename + "exception: " + e.getMessage());
 		} catch (Exception e){
-			dbHelper.close();
 			Log.d(this.getClass().getName() , e.getMessage());
 		}
 	}

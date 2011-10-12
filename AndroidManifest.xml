@@ -16,6 +16,8 @@
 			android:label="@string/app_name" />
 		<activity android:name=".ExamResultsActivity"
 			android:label="@string/app_name" />
+			<activity android:name=".ExamReviewActivity"
+			android:label="@string/app_name" />
 		<activity android:name=".ExamShowScoresActivity"
 			android:label="@string/app_name" />
 		<service android:exported="false" android:name=".RetrieveExamQuestions"

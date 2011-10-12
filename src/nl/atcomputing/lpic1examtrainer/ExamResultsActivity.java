@@ -47,6 +47,7 @@ public class ExamResultsActivity extends Activity {
 		if( action == END_EXAM ) {
 			long examId = createScore();
 			score = calculateScore(examId);
+			dbHelper.updateScore(examId, score);
 			showDialog(DIALOG_SHOW_SCORE);
 		}
 		
@@ -76,9 +77,10 @@ public class ExamResultsActivity extends Activity {
     
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog;
+		AlertDialog.Builder builder;
 		switch(id) {
 		case DIALOG_SHOW_SCORE:
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder = new AlertDialog.Builder(this);
 			builder.setMessage("You scored " + score)
 			.setCancelable(true)
 			.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
@@ -153,4 +155,5 @@ public class ExamResultsActivity extends Activity {
 			
     }
 
+    
 }
