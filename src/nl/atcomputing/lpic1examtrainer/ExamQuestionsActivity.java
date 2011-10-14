@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -151,7 +150,6 @@ public class ExamQuestionsActivity extends Activity {
 				}
 				
 				cbox.setOnClickListener(new View.OnClickListener() {
-					@Override
 					public void onClick(View v) {
 						if (((CheckBox) v).isChecked()) {
 							dbHelper.setMultipleChoiceAnswer(questionNumber, choice);
@@ -205,7 +203,6 @@ public class ExamQuestionsActivity extends Activity {
 
 		Button button_prev_question = (Button) findViewById(R.id.button_prev);
 		button_prev_question.setOnClickListener( new View.OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
 					dbHelper.setOpenAnswer(questionNumber, editText.getText().toString());
@@ -215,7 +212,6 @@ public class ExamQuestionsActivity extends Activity {
 		});
 		Button button_next_question = (Button) findViewById(R.id.button_next);
 		button_next_question.setOnClickListener( new View.OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
 					dbHelper.setOpenAnswer(questionNumber, editText.getText().toString());

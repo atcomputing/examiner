@@ -56,7 +56,6 @@ public class ExamResultsActivity extends Activity {
 		
 		Button quit = (Button) findViewById(R.id.result_button_return_to_main_menu);
         quit.setOnClickListener( new View.OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(ExamResultsActivity.this, ExamTrainerActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -66,7 +65,6 @@ public class ExamResultsActivity extends Activity {
         
         Button showScores = (Button) findViewById(R.id.result_button_show_scores);
         showScores.setOnClickListener( new View.OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(ExamResultsActivity.this, ExamShowScoresActivity.class);
 				startActivity(intent);

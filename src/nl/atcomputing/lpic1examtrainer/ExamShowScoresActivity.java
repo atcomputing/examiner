@@ -103,6 +103,7 @@ public class ExamShowScoresActivity extends Activity {
 			.setPositiveButton("Review exam", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					Intent intent = new Intent(ExamShowScoresActivity.this, ExamReviewActivity.class);
+					intent.putExtra("examId", examId);
 					startActivity(intent);
 				}
 			})

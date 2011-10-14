@@ -23,7 +23,6 @@ public class ExamTrainerActivity extends Activity {
 	private ExamTrainerDbAdapter dbHelper;
 
 	/** Called when the activity is first created. */
-	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
@@ -35,7 +34,6 @@ public class ExamTrainerActivity extends Activity {
 		
 		Button startExam = (Button) findViewById(R.id.button_start_exam);
 		startExam.setOnClickListener( new View.OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				ExamTrainer.Questions.amount = dbHelper.getAmountOfQuestions();
 				Intent intent = new Intent(ExamTrainerActivity.this, ExamQuestionsActivity.class);
@@ -46,7 +44,6 @@ public class ExamTrainerActivity extends Activity {
 		
 		Button updateExam = (Button) findViewById(R.id.button_get_updates);
 		updateExam.setOnClickListener( new View.OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				loadExam("exam101.xml");
 			}
@@ -54,7 +51,6 @@ public class ExamTrainerActivity extends Activity {
 		
 		Button reviewPreviousExam = (Button) findViewById(R.id.button_show_results);
 		reviewPreviousExam.setOnClickListener( new View.OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(ExamTrainerActivity.this, ExamResultsActivity.class);
 				intent.putExtra("action", ExamResultsActivity.NONE);
@@ -64,7 +60,6 @@ public class ExamTrainerActivity extends Activity {
 		
 		Button quitExamTrainer = (Button) findViewById(R.id.button_quit);
 		quitExamTrainer.setOnClickListener( new View.OnClickListener() {
-			@Override
 			public void onClick(View v) {
 				finish();
 			}

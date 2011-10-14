@@ -210,6 +210,7 @@ public class ExamTrainerDbAdapter {
 	public Cursor getScoresAnswers(long examId) {
 		Cursor cursor = db.query(true, ExamTrainer.ScoresAnswers.TABLE_NAME, 
 				new String[] {
+				ExamTrainer.ScoresAnswers._ID,
 				ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER,
 				ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID
 				},
@@ -225,7 +226,7 @@ public class ExamTrainerDbAdapter {
 	public Cursor getScores() {
 		Cursor cursor = db.query(true, ExamTrainer.Scores.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.ScoresAnswers._ID,
+				ExamTrainer.Scores._ID,
 				ExamTrainer.Scores.COLUMN_NAME_DATE,
 				ExamTrainer.Scores.COLUMN_NAME_SCORE
 				},
