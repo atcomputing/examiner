@@ -361,4 +361,17 @@ public class ExamTrainerDbAdapter {
 		}
 		return 0;
 	}
+	
+	public int getAmountOfScoreAnswers(long examId) {
+		Cursor mCursor = db.query(true, ExamTrainer.ScoresAnswers.TABLE_NAME, 
+				new String[] {
+				ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID
+				},
+				ExamTrainer.ScoresAnswers.COLUMN_NAME_EXAM_ID + "=" + examId,
+				null, null, null, null, null);
+		if (mCursor != null) {
+			return mCursor.getCount();
+		}
+		return 0;
+	}
 }

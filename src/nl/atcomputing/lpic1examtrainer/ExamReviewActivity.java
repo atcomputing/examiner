@@ -1,15 +1,20 @@
 package nl.atcomputing.lpic1examtrainer;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 /**
  * @author martijn brekhof
@@ -22,6 +27,7 @@ public class ExamReviewActivity extends Activity {
 	private GridView scoresGrid;
 	private Cursor cursor;
 	private Button cancelButton;
+	private long examId;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "Activity started");
@@ -38,7 +44,7 @@ public class ExamReviewActivity extends Activity {
 		});
 
 		Intent intent = getIntent();
-		long examId = intent.getLongExtra("examId", 1);
+		examId = intent.getLongExtra("examId", 1);
 		
 		Log.d(TAG, "examId: " + examId);
 		
@@ -46,7 +52,13 @@ public class ExamReviewActivity extends Activity {
 		dbHelper.open();
 		cursor = dbHelper.getScoresAnswers(examId);
 		
-		populateScoresAnswersGrid();
+		//populateScoresAnswersGrid();
+		scoresGrid.setAdapter(new ImageAdapter(this));
+	}
+	
+	protected void onDestroy() {
+		super.onDestroy();
+		dbHelper.close();
 	}
 	
 	private void populateScoresAnswersGrid() {
@@ -60,4 +72,63 @@ public class ExamReviewActivity extends Activity {
 				R.id.reviewExamAnswer});
 		scoresGrid.setAdapter(adapter);
 	}
+	
+	public class ImageAdapter extends BaseAdapter
+	{
+	      Context MyContext;
+	      
+	      public ImageAdapter(Context _MyContext)
+	      {
+	         MyContext = _MyContext;
+	      }
+	      
+	      public int getCount() 
+	      {
+	         /* Set the number of element we want on the grid */
+	    	 return dbHelper.getAmountOfScoreAnswers(examId);
+	      }
+
+	      public View getView(int position, View convertView, ViewGroup parent) 
+	      {
+	         View MyView = convertView;
+	         
+	         if ( convertView == null )
+	         {  
+	            LayoutInflater li = getLayoutInflater();
+	            MyView = li.inflate(R.layout.review_exam_entry, null);
+	            
+	            long questionId = 0;
+	            int rImageId = R.drawable.not_ok_48x48;
+	            
+	            if( cursor.moveToNext() ) {
+	            	int index = cursor.getColumnIndex(ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID);
+	            	questionId = cursor.getLong(index);
+	            	
+	            	index = cursor.getColumnIndex(ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER);
+	            	String answer = cursor.getString(index);
+	            	
+	            	if ( dbHelper.checkAnswer(answer, questionId) == true ) {
+	            		rImageId = R.drawable.ok_48x48;
+	            	}
+	            }
+	            TextView tv = (TextView)MyView.findViewById(R.id.reviewExamQuestionID);
+	            tv.setText(Long.toString(questionId));
+	            
+	            ImageView iv = (ImageView)MyView.findViewById(R.id.reviewExamAnswer);
+	            iv.setImageResource(rImageId);
+	         }
+	         
+	         return MyView;
+	      }
+
+	      public Object getItem(int arg0) {
+	         // TODO Auto-generated method stub
+	         return null;
+	      }
+
+	      public long getItemId(int arg0) {
+	         // TODO Auto-generated method stub
+	         return 0;
+	      }
+	   }
 }

@@ -24,7 +24,7 @@ public class ExamShowScoresActivity extends Activity {
 	private ListView scoresList;
 	private SimpleCursorAdapter adapter;
 	private Cursor cursor;
-	private int examId;
+	private long examId;
 	private String examDate;
 	public static final String TAG = "ExamShowScoresActivity";
 	private ExamTrainerDbAdapter dbHelper;
@@ -69,7 +69,7 @@ public class ExamShowScoresActivity extends Activity {
 				// When clicked, show a toast with the TextView text
 				Cursor cursor = (Cursor) adapter.getCursor();
 				int index = cursor.getColumnIndex(ExamTrainer.Scores._ID);
-				examId = cursor.getInt(index);
+				examId = cursor.getLong(index);
 				index = cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_DATE);
 				examDate = cursor.getString(index);
 				Log.d(TAG, "ExamID: " + examId + " ExamDate: " + examDate);
