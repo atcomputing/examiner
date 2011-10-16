@@ -3,7 +3,9 @@ package nl.atcomputing.lpic1examtrainer;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +30,8 @@ public class ExamReviewActivity extends Activity {
 	private Cursor cursor;
 	private Button cancelButton;
 	private long examId;
+	Drawable not_okImage;
+	Drawable okImage;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		Log.d(TAG, "Activity started");
@@ -51,6 +55,10 @@ public class ExamReviewActivity extends Activity {
 		dbHelper = new ExamTrainerDbAdapter(this);
 		dbHelper.open();
 		cursor = dbHelper.getScoresAnswers(examId);
+		
+		Resources res = this.getResources();
+		not_okImage = res.getDrawable(R.drawable.not_ok_48x48);
+		okImage = res.getDrawable(R.drawable.ok_48x48);
 		
 		//populateScoresAnswersGrid();
 		scoresGrid.setAdapter(new ImageAdapter(this));
@@ -91,6 +99,9 @@ public class ExamReviewActivity extends Activity {
 	      public View getView(int position, View convertView, ViewGroup parent) 
 	      {
 	         View MyView = convertView;
+	         Drawable icon;
+	         
+	         icon = not_okImage;
 	         
 	         if ( convertView == null )
 	         {  
@@ -98,7 +109,6 @@ public class ExamReviewActivity extends Activity {
 	            MyView = li.inflate(R.layout.review_exam_entry, null);
 	            
 	            long questionId = 0;
-	            int rImageId = R.drawable.not_ok_48x48;
 	            
 	            if( cursor.moveToNext() ) {
 	            	int index = cursor.getColumnIndex(ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID);
@@ -108,14 +118,14 @@ public class ExamReviewActivity extends Activity {
 	            	String answer = cursor.getString(index);
 	            	
 	            	if ( dbHelper.checkAnswer(answer, questionId) == true ) {
-	            		rImageId = R.drawable.ok_48x48;
+	            		icon = okImage;
 	            	}
 	            }
 	            TextView tv = (TextView)MyView.findViewById(R.id.reviewExamQuestionID);
 	            tv.setText(Long.toString(questionId));
 	            
 	            ImageView iv = (ImageView)MyView.findViewById(R.id.reviewExamAnswer);
-	            iv.setImageResource(rImageId);
+	            iv.setImageDrawable(icon);
 	         }
 	         
 	         return MyView;
