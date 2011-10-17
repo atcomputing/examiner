@@ -1,8 +1,9 @@
-package nl.atcomputing.lpic1examtrainer;
+package nl.atcomputing.examtrainer;
 
 import java.util.Date;
 import java.util.List;
 
+import nl.atcomputing.lpic1examtrainer.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -23,7 +24,7 @@ public class ExamResultsActivity extends Activity {
 	public static final int END_EXAM = 1;
 	public static final int NONE = 2;
 	
-	private ExamTrainerDbAdapter dbHelper;
+	private ExaminationDbAdapter dbHelper;
 	private int score;
 	private static final int DIALOG_SHOW_SCORE = 1;
 	
@@ -41,7 +42,7 @@ public class ExamResultsActivity extends Activity {
         Intent intent = getIntent();
 		int action = intent.getIntExtra("action", 1);
 		
-        dbHelper = new ExamTrainerDbAdapter(this);
+        dbHelper = new ExaminationDbAdapter(this);
 		dbHelper.open();
 		
 		if( action == END_EXAM ) {

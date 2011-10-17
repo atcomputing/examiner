@@ -1,5 +1,6 @@
-package nl.atcomputing.lpic1examtrainer;
+package nl.atcomputing.examtrainer;
 
+import nl.atcomputing.lpic1examtrainer.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -23,13 +24,16 @@ import android.widget.TextView;
  *
  */
 public class ExamQuestionsActivity extends Activity {
-	private ExamTrainerDbAdapter dbHelper;
+	private ExaminationDbAdapter examinationDbHelper;
 	private Cursor cursorQuestion;
 	private int questionNumber;
 	private String questionType;
 	private EditText editText;
-
+	private boolean review = false;
+	private String examTitle = "";
+	
 	private static final int DIALOG_ENDOFEXAM_ID = 1;
+	private static final int DIALOG_SHOW_HINT_ID = 2;
 	
 	private static final String TAG = "ExamQuestionsActivity";
 	
@@ -44,10 +48,13 @@ public class ExamQuestionsActivity extends Activity {
 			finishActivity();
 		}
 		
-		dbHelper = new ExamTrainerDbAdapter(this);
-		dbHelper.open();
+		review = intent.getBooleanExtra("reviewExam", false);
+		examTitle = intent.getStringExtra("examTitle");
+		
+		examinationDbHelper = new ExaminationDbAdapter(this);
+		examinationDbHelper.open();
 
-		cursorQuestion = dbHelper.getQuestion(questionNumber);
+		cursorQuestion = examinationDbHelper.getQuestion(questionNumber);
 		
 			int index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_TYPE);
 			questionType = cursorQuestion.getString(index);
@@ -58,13 +65,14 @@ public class ExamQuestionsActivity extends Activity {
 
 	protected void onDestroy() {
 		super.onDestroy();
-		dbHelper.open();
+		examinationDbHelper.open();
 	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu, menu);
+		menu.getItem(R.id.menu_get_hint).setTitle("BLAH");
 		return true;
 	}
 
@@ -72,14 +80,14 @@ public class ExamQuestionsActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		case R.id.stop_exam:
+		case R.id.menu_stop_exam:
 			stopExam();
 			return true;
-		case R.id.leave_comment:
+		case R.id.menu_leave_comment:
 
 			return true;
-		case R.id.get_hint:
-
+		case R.id.menu_get_hint:
+			showHint();
 			return true;
 
 		default:
@@ -88,24 +96,49 @@ public class ExamQuestionsActivity extends Activity {
 	}
 
 	protected Dialog onCreateDialog(int id) {
-		Dialog dialog;
+		Dialog dialog = null;
+		AlertDialog.Builder builder;
 		switch(id) {
 		case DIALOG_ENDOFEXAM_ID:
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
-			builder.setMessage("End of Exam.\nAre you sure you want to exit?")
+			builder = new AlertDialog.Builder(this);
+			int messageId;
+			if(review) {
+				messageId = R.string.end_of_review_message;
+			} else {
+				messageId = R.string.end_of_exam_message;
+			}
+			builder.setMessage(messageId)
 			.setCancelable(false)
-			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					showResults();
 				}
 			})
-			.setNegativeButton("No", new DialogInterface.OnClickListener() {
+			.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.dismiss();
 				}
 			});
 			dialog = builder.create();
 			break;
+		case DIALOG_SHOW_HINT_ID:
+			builder = new AlertDialog.Builder(this);
+			if(review) {
+				//showAnswers();
+				break;
+			} 
+			else {
+				String message = examinationDbHelper.getHint(questionNumber);
+				builder.setMessage(message)
+				.setCancelable(false)
+				.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						dialog.dismiss();
+					}
+				});
+				dialog = builder.create();
+				break;
+			}
 		default:
 			dialog = null;
 		}
@@ -113,19 +146,25 @@ public class ExamQuestionsActivity extends Activity {
 	}
 
 	protected void finishActivity() {
-		dbHelper.close();
+		examinationDbHelper.close();
 		finish();
 	}
 
 	protected void stopExam() {
-		dbHelper.close();
+		examinationDbHelper.close();
 		Intent intent = new Intent(ExamQuestionsActivity.this, ExamTrainerActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
 
+	protected void showHint() {
+		if( review ) {
+			showDialog(DIALOG_SHOW_HINT_ID);
+		}
+	}
+	
 	protected void showResults() {
-		dbHelper.close();
+		examinationDbHelper.close();
 		Intent intent = new Intent(ExamQuestionsActivity.this, ExamResultsActivity.class);
 		intent.putExtra("action", ExamResultsActivity.END_EXAM);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -137,7 +176,7 @@ public class ExamQuestionsActivity extends Activity {
 		LinearLayout v_layout = new LinearLayout(this);
 		v_layout.setOrientation(LinearLayout.VERTICAL);
 		
-		Cursor cursor = dbHelper.getChoices(questionNumber);
+		Cursor cursor = examinationDbHelper.getChoices(questionNumber);
 		if ( cursor != null ) {
 			int index = cursor.getColumnIndex(ExamTrainer.Choices.COLUMN_NAME_CHOICE);
 			do {
@@ -145,16 +184,16 @@ public class ExamQuestionsActivity extends Activity {
 				cbox = new CheckBox(this);
 				cbox.setText(choice);
 				
-				if ( dbHelper.answerPresent(questionNumber, choice) ) {
+				if ( examinationDbHelper.answerPresent(questionNumber, choice) ) {
 					cbox.setChecked(true);
 				}
 				
 				cbox.setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
 						if (((CheckBox) v).isChecked()) {
-							dbHelper.setMultipleChoiceAnswer(questionNumber, choice);
+							examinationDbHelper.setMultipleChoiceAnswer(questionNumber, choice);
 						} else {
-							dbHelper.deleteAnswer(questionNumber, choice);
+							examinationDbHelper.deleteAnswer(questionNumber, choice);
 						}
 
 					}
@@ -172,6 +211,9 @@ public class ExamQuestionsActivity extends Activity {
 
 		setContentView(R.layout.question);
 
+		TextView title = (TextView) findViewById(R.id.textExamTitle);
+		title.setText(examTitle);
+		
 		index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT);
 		text = cursorQuestion.getString(index);
 		TextView exhibit = (TextView) findViewById(R.id.textExhibit);
@@ -189,7 +231,7 @@ public class ExamQuestionsActivity extends Activity {
 			v_layout.addView(layout);
 		} else if ( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
 			editText = new EditText(this);
-			Cursor aCursor = dbHelper.getAnswers(questionNumber);
+			Cursor aCursor = examinationDbHelper.getAnswers(questionNumber);
 			if ( aCursor != null ) {
 				index = aCursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
 				text = aCursor.getString(index);
@@ -205,7 +247,7 @@ public class ExamQuestionsActivity extends Activity {
 		button_prev_question.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-					dbHelper.setOpenAnswer(questionNumber, editText.getText().toString());
+					examinationDbHelper.setOpenAnswer(questionNumber, editText.getText().toString());
 				}
 				finishActivity();
 			}
@@ -214,15 +256,17 @@ public class ExamQuestionsActivity extends Activity {
 		button_next_question.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-					dbHelper.setOpenAnswer(questionNumber, editText.getText().toString());
+					examinationDbHelper.setOpenAnswer(questionNumber, editText.getText().toString());
 				}
 				
-				if ( questionNumber >= ExamTrainer.Questions.amount ) {
+				if ( questionNumber >= examinationDbHelper.getAmountOfQuestions() ) {
 					showDialog(DIALOG_ENDOFEXAM_ID);
 				}
 				else {
 					Intent intent = new Intent(ExamQuestionsActivity.this, ExamQuestionsActivity.class);
 					intent.putExtra("question", questionNumber + 1);
+					intent.putExtra("review", review);
+					intent.putExtra("examTitle", examTitle);
 					startActivity(intent);
 				}
 			}

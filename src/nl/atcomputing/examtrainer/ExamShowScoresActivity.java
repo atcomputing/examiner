@@ -1,5 +1,6 @@
-package nl.atcomputing.lpic1examtrainer;
+package nl.atcomputing.examtrainer;
 
+import nl.atcomputing.lpic1examtrainer.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -27,7 +28,7 @@ public class ExamShowScoresActivity extends Activity {
 	private long examId;
 	private String examDate;
 	public static final String TAG = "ExamShowScoresActivity";
-	private ExamTrainerDbAdapter dbHelper;
+	private ExaminationDbAdapter examinationDbHelper;
 
 	private static final int DIALOG_SHOW_EXAM = 1;
 
@@ -47,9 +48,9 @@ public class ExamShowScoresActivity extends Activity {
 		//Initialize
 		examId = -1;
 		
-		dbHelper = new ExamTrainerDbAdapter(this);
-		dbHelper.open();
-		cursor = dbHelper.getScores();
+		examinationDbHelper = new ExaminationDbAdapter(this);
+		examinationDbHelper.open();
+		cursor = examinationDbHelper.getScores();
 		
 		populateScoresList();
 
@@ -59,7 +60,7 @@ public class ExamShowScoresActivity extends Activity {
 
 	protected void onDestroy() {
 		super.onDestroy();
-		dbHelper.close();
+		examinationDbHelper.close();
 	}
 	
 	private void setupListener() {
@@ -109,7 +110,7 @@ public class ExamShowScoresActivity extends Activity {
 			})
 			.setNegativeButton("Delete exam", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					dbHelper.deleteScore(examId);
+					examinationDbHelper.deleteScore(examId);
 					cursor.requery();
 					adapter.notifyDataSetChanged();
 					dialog.dismiss();

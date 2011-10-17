@@ -1,4 +1,4 @@
-package nl.atcomputing.lpic1examtrainer;
+package nl.atcomputing.examtrainer;
 
 import java.io.BufferedReader;
 import java.io.IOException;

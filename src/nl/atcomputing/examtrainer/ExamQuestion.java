@@ -1,4 +1,4 @@
-package nl.atcomputing.lpic1examtrainer;
+package nl.atcomputing.examtrainer;
 
 import java.util.ArrayList;
 
@@ -14,6 +14,7 @@ public class ExamQuestion {
 	private String topic;
 	private String question;
 	private String exhibit;
+	private String hint;
 	private ArrayList<String> correctAnswers;
 	private ArrayList<String> choices;
 	
@@ -23,6 +24,7 @@ public class ExamQuestion {
 		question = null;
 		correctAnswers = new ArrayList<String>();
 		choices = new ArrayList<String>();
+		hint = null;
 	}
 	
 	
@@ -36,12 +38,13 @@ public class ExamQuestion {
 	 * @param choices
 	 */
 	protected ExamQuestion(String type, String topic, String exhibit, String question, 
-			ArrayList<String> correctAnswers, ArrayList<String> choices) {
+			ArrayList<String> correctAnswers, ArrayList<String> choices, String hint) {
 		this.type = type;
 		this.topic = topic;
 		this.question = question;
 		this.correctAnswers = correctAnswers;
 		this.choices = choices;
+		this.hint = hint;
 	}
 	
 	protected String convertArrayListToString(ArrayList<String> choices) {
@@ -78,6 +81,10 @@ public class ExamQuestion {
 		return exhibit;
 	}
 	
+	protected String getHint() {
+		return hint;
+	}
+	
 	protected void setType(String str) {
 		type = str;
 	}
@@ -102,6 +109,9 @@ public class ExamQuestion {
 		exhibit = str;
 	}
 	
+	protected void setHint(String str) {
+		hint = str;
+	}
 	protected void addChoice(String str) {
 		choices.add(str);
 	}

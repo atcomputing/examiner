@@ -18,9 +18,9 @@
 			android:label="@string/app_name" />
 			<activity android:name=".ExamReviewActivity"
 			android:label="@string/app_name" />
-		<activity android:name=".ExamShowScoresActivity"
+		<activity android:name="nl.atcomputing.examtrainer.ExamShowScoresActivity"
 			android:label="@string/app_name" />
-		<service android:exported="false" android:name=".RetrieveExamQuestions"
+		<service android:exported="false" android:name="nl.atcomputing.examtrainer.RetrieveExamQuestions"
 			android:label="@string/app_name" />
 	</application>
 </manifest>

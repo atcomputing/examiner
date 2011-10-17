@@ -1,4 +1,4 @@
-package nl.atcomputing.lpic1examtrainer;
+package nl.atcomputing.examtrainer;
 
 import android.provider.BaseColumns;
 
@@ -12,15 +12,21 @@ public final class ExamTrainer {
     private ExamTrainer() {
     }
 
-    /**
-     * Notes table contract
-     */
+    public static final class Exams implements BaseColumns {
+    	private Exams() {}
+    	
+    	public static final String TABLE_NAME = "Exams";
+    	public static final String COLUMN_NAME_EXAMTITLE = "examTitle";
+    	public static final String COLUMN_NAME_DATE = "date";
+    	public static final String COLUMN_NAME_ITEMSNEEDEDTOPASS = "itemsNeededToPass";
+    }
+    
     public static final class Questions implements BaseColumns {
     	
         // This class cannot be instantiated
         private Questions() {}
         
-        public static int amount = 0;
+        //public static int amount = 0;
         
         public static final String TABLE_NAME = "Questions";
         
@@ -30,6 +36,7 @@ public final class ExamTrainer {
         public static final String COLUMN_NAME_TYPE = "type";
         public static final String COLUMN_NAME_QUESTION = "question";
         public static final String COLUMN_NAME_EXHIBIT = "exhibit";
+        public static final String COLUMN_NAME_HINT = "hint";
         
     }
     

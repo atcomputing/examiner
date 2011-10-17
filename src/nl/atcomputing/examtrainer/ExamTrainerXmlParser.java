@@ -1,4 +1,4 @@
-package nl.atcomputing.lpic1examtrainer;
+package nl.atcomputing.examtrainer;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -8,127 +8,76 @@ import java.util.ArrayList;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.os.Bundle;
+import android.content.res.AssetManager;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
-/**
- * @author martijn brekhof
- *
- */
-public class ExamTrainerActivity extends Activity {
-	private ExamTrainerDbAdapter dbHelper;
-
-	/** Called when the activity is first created. */
-	public void onCreate(Bundle savedInstanceState) {
-
-		super.onCreate(savedInstanceState);
-		retrieveExam();
-		setContentView(R.layout.main);		
-
-		dbHelper = new ExamTrainerDbAdapter(this);
-		dbHelper.open();
+public class ExamTrainerXmlParser {
+	private static final String TAG = "ExamTrainerXmlParser";
+	private ExaminationDbAdapter examinationDbHelper;
+	private ExamTrainerDbAdapter examTrainerDbHelper;
+	
+	public ExamTrainerXmlParser() {}
+	
+	protected void checkDatabaseXmlFiles(XmlPullParser xmlParser, AssetManager assetManager) {
+		examTrainerDbHelper = new ExamTrainerDbAdapter();
+		examTrainerDbHelper.open();
 		
-		Button startExam = (Button) findViewById(R.id.button_start_exam);
-		startExam.setOnClickListener( new View.OnClickListener() {
-			public void onClick(View v) {
-				ExamTrainer.Questions.amount = dbHelper.getAmountOfQuestions();
-				Intent intent = new Intent(ExamTrainerActivity.this, ExamQuestionsActivity.class);
-				intent.putExtra("question", 1);
-				startActivity(intent);
+		if( assetManager != null ) {
+			try {
+				String[] filenames = assetManager.list("");
+				int size = filenames.length;
+				for( int i = 0; i < size; i++) {
+					if(filenames[i].matches("exam..*.xml")) {
+						Log.d(TAG, "Found databasefile " + filenames[i]);
+					}
+				}
+			} catch (IOException e) {
+				Log.d(this.getClass().getName() , e.getMessage());
 			}
-		});
-		
-		Button updateExam = (Button) findViewById(R.id.button_get_updates);
-		updateExam.setOnClickListener( new View.OnClickListener() {
-			public void onClick(View v) {
-				loadExam("exam101.xml");
-			}
-		});
-		
-		Button reviewPreviousExam = (Button) findViewById(R.id.button_show_results);
-		reviewPreviousExam.setOnClickListener( new View.OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(ExamTrainerActivity.this, ExamResultsActivity.class);
-				intent.putExtra("action", ExamResultsActivity.NONE);
-				startActivity(intent);
-			}
-		});
-		
-		Button quitExamTrainer = (Button) findViewById(R.id.button_quit);
-		quitExamTrainer.setOnClickListener( new View.OnClickListener() {
-			public void onClick(View v) {
-				finish();
-			}
-		});
+		}
+		examTrainerDbHelper.close();
 	}
 	
-	protected void onDestroy() {
-		super.onDestroy();
-		dbHelper.close();
-	}
-	
-	protected void retrieveExam() {
-		Intent intent = new Intent(this, RetrieveExamQuestions.class);
-		startService(intent);
-	}
-	
-	protected void loadExam(String filename) {
-		dbHelper.upgrade();
-		
+	protected void loadExam(InputStream is) {
 		try {
-		    InputStream is = getAssets().open(filename);
+			String examTitle;
+			
+			examinationDbHelper = new ExaminationDbAdapter();
+			examinationDbHelper.open();
+			
 		    XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 	        factory.setNamespaceAware(true);
 	        XmlPullParser parser = factory.newPullParser();
 		    parser.setInput(is, null);
 
 		    int eventType = parser.getEventType();
+		    String name = null;
 		    while (eventType != XmlPullParser.END_DOCUMENT){
-		        String name = null;
-		        ExamQuestion examQuestion;
-		        switch (eventType){
+		        switch (eventType) {
 		            case XmlPullParser.START_TAG:
 		                name = parser.getName();
 		                Log.d(this.getClass().getName(), "loadExam TAG: " + name);
 		                if (name.equalsIgnoreCase("item")) {
-		                    examQuestion = parseItem(parser);
+		                    ExamQuestion examQuestion = parseItem(parser);
 		                    if ( examQuestion != null ) {
 		                    	addQuestionToDatabase(examQuestion);
 		                    }
 		                }
 		                break;
+		            case XmlPullParser.TEXT:
+		            	if(name.equalsIgnoreCase("titel")) {
+		            		examTitle=parser.getText();
+		            	}
 		            }
 		        eventType = parser.next();
 		        }
-		} catch (FileNotFoundException e) {
-		    Log.d(this.getClass().getName() , "Could not find " + filename);
-		} catch (IOException e) {
-			Log.d(this.getClass().getName() , "I/O problem with " + filename + "exception: " + e.getMessage());
-		} catch (Exception e){
+		    
+		} catch (Exception e) {
 			Log.d(this.getClass().getName() , e.getMessage());
 		}
 	}
 
-	private void addQuestionToDatabase(ExamQuestion examQuestion) {
-		ArrayList<String> arrayList;
-		long questionId = dbHelper.addQuestion(examQuestion);
-		
-		arrayList = examQuestion.getChoices();
-		for( int i = 0; i < arrayList.size(); i++ ) {
-			dbHelper.addChoice(questionId, arrayList.get(i));
-		}
-		
-		arrayList = examQuestion.getCorrectAnswers();
-		for( int i = 0; i < arrayList.size(); i++ ) {
-			dbHelper.addCorrectAnswers(questionId, arrayList.get(i));
-		}
-	    
-	}
-	private ExamQuestion parseItem(XmlPullParser parser) throws FileNotFoundException, IOException, Exception {
+	protected ExamQuestion parseItem(XmlPullParser parser) throws FileNotFoundException, IOException, Exception {
 		
 		ExamQuestion examQuestion = new ExamQuestion();
 		String start_tag = null;
@@ -166,6 +115,9 @@ public class ExamTrainerActivity extends Activity {
 	                } else if (start_tag.equalsIgnoreCase("choice")) {
 	                	Log.d(this.getClass().getName(), "parseItem TEXT choice: " + parser.getText());
 	                	examQuestion.addChoice(parser.getText());
+	                } else if (start_tag.equalsIgnoreCase("hint")) {
+	                	Log.d(this.getClass().getName(), "parseItem TEXT hint: " + parser.getText());
+	                	examQuestion.setHint(parser.getText());
 	                } else if (start_tag.equalsIgnoreCase("item")) {
 	                	//do nothing
 	                } else {
@@ -176,5 +128,21 @@ public class ExamTrainerActivity extends Activity {
 	        	eventType = parser.next();
 	        }
 	    return null;
+	}
+	
+	private void addQuestionToDatabase(ExamQuestion examQuestion) {
+		ArrayList<String> arrayList;
+		long questionId = examinationDbHelper.addQuestion(examQuestion);
+		
+		arrayList = examQuestion.getChoices();
+		for( int i = 0; i < arrayList.size(); i++ ) {
+			examinationDbHelper.addChoice(questionId, arrayList.get(i));
+		}
+		
+		arrayList = examQuestion.getCorrectAnswers();
+		for( int i = 0; i < arrayList.size(); i++ ) {
+			examinationDbHelper.addCorrectAnswers(questionId, arrayList.get(i));
+		}
+	    
 	}
 }

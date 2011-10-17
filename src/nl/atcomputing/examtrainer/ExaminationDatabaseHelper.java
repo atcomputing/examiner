@@ -1,4 +1,4 @@
-package nl.atcomputing.lpic1examtrainer;
+package nl.atcomputing.examtrainer;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -9,16 +9,17 @@ import android.util.Log;
  * @author martijn brekhof
  *
  */
-public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
-	private static final String DATABASE_NAME = "lpic101-102exam_trainer.db";
+public class ExaminationDatabaseHelper extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
+	private static String databaseName = null;
 	
 	private static final String DATABASE_CREATE_QUESTIONS_TABLE = "CREATE TABLE " 
 	+ ExamTrainer.Questions.TABLE_NAME + " ("
     + ExamTrainer.Questions._ID + " INTEGER PRIMARY KEY,"
     + ExamTrainer.Questions.COLUMN_NAME_QUESTION + " TEXT,"
     + ExamTrainer.Questions.COLUMN_NAME_EXHIBIT + " TEXT,"
-    + ExamTrainer.Questions.COLUMN_NAME_TYPE + " TEXT"
+    + ExamTrainer.Questions.COLUMN_NAME_TYPE + " TEXT,"
+    + ExamTrainer.Questions.COLUMN_NAME_HINT + " TEXT"
     + ");";
 	
 	private static final String DATABASE_CREATE_CHOICES_TABLE = "CREATE TABLE " 
@@ -58,8 +59,8 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 	    + ");";
 
 	
-	public ExamTrainerDatabaseHelper(Context context) {
-		super(context, DATABASE_NAME, null, DATABASE_VERSION);
+	public ExaminationDatabaseHelper(Context context) {
+		super(context, databaseName, null, DATABASE_VERSION);
 	}
 
 	@Override
@@ -74,7 +75,7 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.w(ExamTrainerDatabaseHelper.class.getName(),
+		Log.w(ExaminationDatabaseHelper.class.getName(),
 		// TODO Auto-generated method stub
 				"Upgrading database from version " + oldVersion + " to "
 						+ newVersion + ", which will destroy all old data");
@@ -87,4 +88,7 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 		onCreate(db);	
 	}
 	
+	public void setDatabaseExamName(String name) {
+		databaseName = name;
+	}
 }
