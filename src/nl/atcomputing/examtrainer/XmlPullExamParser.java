@@ -2,7 +2,7 @@ package nl.atcomputing.examtrainer;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -20,6 +20,10 @@ public class XmlPullExamParser extends BaseExamParser {
 	
 	public XmlPullExamParser(String filename) {
 		super(filename);
+	}
+	
+	public XmlPullExamParser(URL url) {
+		super(url);
 	}
 	
 	public boolean checkIfExamInDatabase() {

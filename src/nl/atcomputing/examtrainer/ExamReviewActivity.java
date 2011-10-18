@@ -2,7 +2,7 @@ package nl.atcomputing.examtrainer;
 
 import java.util.ArrayList;
 
-import nl.atcomputing.lpic1examtrainer.R;
+import nl.atcomputing.examtrainer.R;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;

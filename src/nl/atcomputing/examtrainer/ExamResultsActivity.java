@@ -3,7 +3,7 @@ package nl.atcomputing.examtrainer;
 import java.util.Date;
 import java.util.List;
 
-import nl.atcomputing.lpic1examtrainer.R;
+import nl.atcomputing.examtrainer.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;

@@ -1,6 +1,6 @@
 package nl.atcomputing.examtrainer;
 
-import nl.atcomputing.lpic1examtrainer.R;
+import nl.atcomputing.examtrainer.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
