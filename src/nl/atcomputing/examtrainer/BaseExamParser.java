@@ -1,35 +1,66 @@
 package nl.atcomputing.examtrainer;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 
-public abstract class BaseFeedParser implements FeedParser {
+/**
+ * @author martijn brekhof
+ *
+ */
+public abstract class BaseExamParser implements ExamParser {
 
-    // names of the XML tags
-    static final String PUB_DATE = "pubDate";
-    static final  String DESCRIPTION = "description";
-    static final  String LINK = "link";
-    static final  String TITLE = "title";
-    static final  String ITEM = "item";
-    
-    final URL feedUrl;
+	// names of the XML tags
+	static final String EXAM = "exam";
+	static final String EXAM_DB_VERSION_ATTR = "databaseversion";
+	static final String EXAM_TITLE = "title";
+	static final String EXAM_NUMBER_OF_ITEMS = "numberofitems";
+	static final String EXAM_ITEMS_NEEDED_TO_PASS = "itemsneededtopass";
+	
+	static final String ITEM = "item";
+	static final String ITEM_TYPE = "type";
+	static final String ITEM_TOPIC = "topic";
+	static final String ITEM_EXHIBIT = "exhibit";
+	static final String ITEM_QUESTION = "question";
+	static final String ITEM_CHOICE = "choice";
+	static final String ITEM_CORRECT = "correct_answer";
+	static final String ITEM_HINT = "hint";
+	
+	final URL feedUrl;
+	final String filename;
 
-    protected BaseFeedParser(String feedUrl){
-        try {
-            this.feedUrl = new URL(feedUrl);
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
-    }
+	/**
+	 * Creates a new BaseFeedParser for a URL
+	 * @param feedUrl
+	 */
+	protected BaseExamParser(URL feedUrl){
+		this.feedUrl = feedUrl;
+		this.filename = null;
+	}
 
-    protected InputStream getInputStream() {
-        try {
-            return feedUrl.openConnection().getInputStream();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
+	/**
+	 * Creates a new BaseFeedParser for a file
+	 * @param feedUrl
+	 */
+	protected BaseExamParser(String filename){
+		this.filename = filename;
+		this.feedUrl = null;
+	}
+
+	protected InputStream getInputStream() {
+		try {
+			if(feedUrl == null) {
+				return new BufferedInputStream(new FileInputStream(filename));
+			}
+			else {
+				return feedUrl.openConnection().getInputStream();
+
+			} 
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

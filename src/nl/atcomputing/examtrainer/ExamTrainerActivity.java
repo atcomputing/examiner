@@ -1,9 +1,13 @@
 package nl.atcomputing.examtrainer;
 
+import java.io.IOException;
+
 import nl.atcomputing.lpic1examtrainer.R;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -13,6 +17,7 @@ import android.widget.Button;
  */
 public class ExamTrainerActivity extends Activity {
 	private final String TAG = this.getClass().getName();
+	private XmlPullExamParser xmlPullFeedParser;
 	
 	private String examTitle;
 	
@@ -23,9 +28,25 @@ public class ExamTrainerActivity extends Activity {
 		retrieveExam();
 		setContentView(R.layout.main);		
 		
-		ExamTrainerXmlParser examTrainerXmlParser = new ExamTrainerXmlParser();
+		AssetManager assetManager = getAssets();
 		
-		examTrainerXmlParser.checkDatabaseXmlFiles();
+		if( assetManager != null ) {
+			try {
+				String[] filenames = assetManager.list("");
+				int size = filenames.length;
+				for( int i = 0; i < size; i++) {
+					if(filenames[i].matches("exam..*.xml")) {
+						Log.d(TAG, "Found databasefile " + filenames[i]);
+						xmlPullFeedParser = new XmlPullExamParser(filenames[i]);
+						if ( xmlPullFeedParser.checkIfExamInDatabase() ) {
+							//Exam found in database. Ask user what to do.
+						}
+					}
+				}
+			} catch (IOException e) {
+				Log.d(this.getClass().getName() , e.getMessage());
+			}
+		}
 		
 		Button startExam = (Button) findViewById(R.id.button_start_exam);
 		startExam.setOnClickListener( new View.OnClickListener() {

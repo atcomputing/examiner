@@ -1,10 +1,15 @@
 package nl.atcomputing.examtrainer;
 
 
-import java.util.List;
+public interface ExamParser {
 
-import android.os.Message;
+	/**
+	 * Adds an exam from a file or URL to the database
+	 */
+	void addExam();
 
-public interface FeedParser {
-    List<Message> parse();
+	/**
+	 * Checks if feed (be it a file or URL) is already in the database
+	 */
+	boolean checkIfExamInDatabase();
 }

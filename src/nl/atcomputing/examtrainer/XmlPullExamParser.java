@@ -8,47 +8,70 @@ import java.util.ArrayList;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import android.content.res.AssetManager;
 import android.util.Log;
+import android.util.Xml;
 
-public class ExamTrainerXmlParser {
+//http://www.ibm.com/developerworks/opensource/library/x-android/#download
+
+public class XmlPullExamParser extends BaseExamParser {
 	private static final String TAG = "ExamTrainerXmlParser";
 	private ExaminationDbAdapter examinationDbHelper;
 	private ExamTrainerDbAdapter examTrainerDbHelper;
 	
-	public ExamTrainerXmlParser() {}
-	
-	protected void checkDatabaseXmlFiles(XmlPullParser xmlParser, AssetManager assetManager) {
-		examTrainerDbHelper = new ExamTrainerDbAdapter();
-		examTrainerDbHelper.open();
-		
-		if( assetManager != null ) {
-			try {
-				String[] filenames = assetManager.list("");
-				int size = filenames.length;
-				for( int i = 0; i < size; i++) {
-					if(filenames[i].matches("exam..*.xml")) {
-						Log.d(TAG, "Found databasefile " + filenames[i]);
-					}
-				}
-			} catch (IOException e) {
-				Log.d(this.getClass().getName() , e.getMessage());
-			}
-		}
-		examTrainerDbHelper.close();
+	public XmlPullExamParser(String filename) {
+		super(filename);
 	}
 	
-	protected void loadExam(InputStream is) {
+	public boolean checkIfExamInDatabase() {
+		examTrainerDbHelper = new ExamTrainerDbAdapter();
+		examTrainerDbHelper.open();
+		String title = null;
+		
+        XmlPullParser parser = Xml.newPullParser();
+        try {
+            // auto-detect the encoding from the stream
+            parser.setInput(this.getInputStream(), null);
+            int eventType = parser.getEventType();
+            boolean done = false;
+            String name = null;
+            while (eventType != XmlPullParser.END_DOCUMENT && !done){
+                switch (eventType){
+                    case XmlPullParser.START_TAG:
+                        name = parser.getName();
+                        break;
+                    case XmlPullParser.TEXT:
+                    	if ( name.equalsIgnoreCase(EXAM_TITLE)) {
+                    		title = parser.getText();
+                    		done = true;
+                    	}
+                }
+                eventType = parser.next();
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+		
+        if( examTrainerDbHelper.checkIfExamAlreadyInDatabase(title) ) {
+        	examTrainerDbHelper.close();
+        	return true;
+        }
+        else {
+        	examTrainerDbHelper.close();
+        	return false;
+        }
+        	
+	}
+	
+	public void addExam() {
+		examinationDbHelper = new ExaminationDbAdapter();
+		examinationDbHelper.open();
+		String examTitle;
+		
 		try {
-			String examTitle;
-			
-			examinationDbHelper = new ExaminationDbAdapter();
-			examinationDbHelper.open();
-			
 		    XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 	        factory.setNamespaceAware(true);
 	        XmlPullParser parser = factory.newPullParser();
-		    parser.setInput(is, null);
+		    parser.setInput(this.getInputStream(), null);
 
 		    int eventType = parser.getEventType();
 		    String name = null;
@@ -75,6 +98,8 @@ public class ExamTrainerXmlParser {
 		} catch (Exception e) {
 			Log.d(this.getClass().getName() , e.getMessage());
 		}
+		
+		examinationDbHelper.close();
 	}
 
 	protected ExamQuestion parseItem(XmlPullParser parser) throws FileNotFoundException, IOException, Exception {

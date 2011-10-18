@@ -21,7 +21,7 @@ public class ExamTrainerDbAdapter {
 	public ExamTrainerDbAdapter() {
 		this.context = null;
 	}
-	
+
 	public ExamTrainerDbAdapter open() {
 		dbHelper = new ExamTrainerDatabaseHelper(context);
 		db = dbHelper.getWritableDatabase();
@@ -34,6 +34,20 @@ public class ExamTrainerDbAdapter {
 
 	public void close() {
 		dbHelper.close();
+	}
+
+	public boolean checkIfExamAlreadyInDatabase(String title) {
+		Cursor cursor = db.query(true, ExamTrainer.Exams.TABLE_NAME, 
+				new String[] {
+				ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE,
+		},
+		ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE + "=" + title, 
+		null, null, null, null, null);
+		if ( cursor != null ) {
+			return cursor.getCount() > 0;
+		} else {
+			return false;
+		}
 	}
 
 	public long addExam(String examTitle, String date, int itemsNeededToPass) {
@@ -55,12 +69,12 @@ public class ExamTrainerDbAdapter {
 				ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE,
 				ExamTrainer.Exams.COLUMN_NAME_DATE,
 				ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS
-				},
-				ExamTrainer.Exams._ID + "=" + rowId, null, null, null, null, null);
+		},
+		ExamTrainer.Exams._ID + "=" + rowId, null, null, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();
 		}
 		return cursor;
 	}
-	
+
 }
