@@ -29,38 +29,17 @@ public abstract class BaseExamParser implements ExamParser {
 	static final String ITEM_CORRECT = "correct_answer";
 	static final String ITEM_HINT = "hint";
 	
-	final URL feedUrl;
-	final String filename;
+	final InputStream inputStream;
 
 	/**
-	 * Creates a new BaseFeedParser for a URL
-	 * @param feedUrl
+	 * Creates a new BaseFeedParser
+	 * @param is
 	 */
-	protected BaseExamParser(URL feedUrl){
-		this.feedUrl = feedUrl;
-		this.filename = null;
-	}
-
-	/**
-	 * Creates a new BaseFeedParser for a file
-	 * @param feedUrl
-	 */
-	protected BaseExamParser(String filename){
-		this.filename = filename;
-		this.feedUrl = null;
+	protected BaseExamParser(InputStream is){
+		this.inputStream = is;
 	}
 
 	protected InputStream getInputStream() {
-		try {
-			if(feedUrl == null) {
-				return new BufferedInputStream(new FileInputStream(filename));
-			}
-			else {
-				return feedUrl.openConnection().getInputStream();
-
-			} 
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		return inputStream;
 	}
 }

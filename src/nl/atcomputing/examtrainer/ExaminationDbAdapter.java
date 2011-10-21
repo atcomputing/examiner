@@ -17,7 +17,7 @@ import android.util.Log;
 public class ExaminationDbAdapter {
 	private final Context context;
 	private SQLiteDatabase db;
-	private ExamTrainerDatabaseHelper dbHelper;
+	private ExaminationDatabaseHelper dbHelper;
 
 	public ExaminationDbAdapter(Context context) {
 		this.context = context;
@@ -28,7 +28,7 @@ public class ExaminationDbAdapter {
 	}
 	
 	public ExaminationDbAdapter open() {
-		dbHelper = new ExamTrainerDatabaseHelper(context);
+		dbHelper = new ExaminationDatabaseHelper(context);
 		db = dbHelper.getWritableDatabase();
 		return this;
 	}

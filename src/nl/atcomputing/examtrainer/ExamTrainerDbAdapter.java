@@ -18,10 +18,6 @@ public class ExamTrainerDbAdapter {
 		this.context = context;
 	}
 
-	public ExamTrainerDbAdapter() {
-		this.context = null;
-	}
-
 	public ExamTrainerDbAdapter open() {
 		dbHelper = new ExamTrainerDatabaseHelper(context);
 		db = dbHelper.getWritableDatabase();
@@ -64,7 +60,7 @@ public class ExamTrainerDbAdapter {
 	}
 
 	public Cursor getExam(long rowId) {
-		Cursor cursor = db.query(true, ExamTrainer.Exams.TABLE_NAME, 
+		Cursor cursor = db.query(true, ExamTrainer.Exams.TABLE_NAME,
 				new String[] {
 				ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE,
 				ExamTrainer.Exams.COLUMN_NAME_DATE,

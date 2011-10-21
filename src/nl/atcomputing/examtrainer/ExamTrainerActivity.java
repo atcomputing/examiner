@@ -1,8 +1,8 @@
 package nl.atcomputing.examtrainer;
 
 import java.io.IOException;
+import java.io.InputStream;
 
-import nl.atcomputing.examtrainer.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -82,7 +82,8 @@ public class ExamTrainerActivity extends Activity {
 				for( int i = 0; i < size; i++) {
 					if(filenames[i].matches("exam..*.xml")) {
 						Log.d(TAG, "Found databasefile " + filenames[i]);
-						xmlPullFeedParser = new XmlPullExamParser(filenames[i]);
+						InputStream raw = getApplicationContext().getAssets().open(filenames[i]);
+						xmlPullFeedParser = new XmlPullExamParser(this, raw);
 						if ( xmlPullFeedParser.checkIfExamInDatabase() ) {
 							//Exam found in database. Ask user what to do.
 							Log.d(TAG, "Exam already in database: " + filenames[i]);

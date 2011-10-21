@@ -2,12 +2,13 @@ package nl.atcomputing.examtrainer;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URL;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import android.content.Context;
 import android.util.Log;
 import android.util.Xml;
 
@@ -17,17 +18,15 @@ public class XmlPullExamParser extends BaseExamParser {
 	private static final String TAG = "ExamTrainerXmlParser";
 	private ExaminationDbAdapter examinationDbHelper;
 	private ExamTrainerDbAdapter examTrainerDbHelper;
+	private Context context;
 	
-	public XmlPullExamParser(String filename) {
-		super(filename);
-	}
-	
-	public XmlPullExamParser(URL url) {
-		super(url);
+	public XmlPullExamParser(Context context, InputStream is) {
+		super(is);
+		this.context = context;
 	}
 	
 	public boolean checkIfExamInDatabase() {
-		examTrainerDbHelper = new ExamTrainerDbAdapter();
+		examTrainerDbHelper = new ExamTrainerDbAdapter(context);
 		examTrainerDbHelper.open();
 		String title = null;
 		
