@@ -86,10 +86,10 @@ public class ExamTrainerActivity extends Activity {
 						xmlPullFeedParser = new XmlPullExamParser(this, raw);
 						if ( xmlPullFeedParser.checkIfExamInDatabase() ) {
 							//Exam found in database. Ask user what to do.
-							Log.d(TAG, "Exam already in database: " + filenames[i]);
+							Log.d(TAG, "Included Exam already in database: " + filenames[i]);
 						}
 						else {
-							Log.d(TAG, "Exam not in database:  " + filenames[i]);
+							Log.d(TAG, "Included Exam not in database:  " + filenames[i]);
 						}
 					}
 				}

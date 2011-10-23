@@ -83,7 +83,7 @@ public class XmlPullExamParser extends BaseExamParser {
 		            case XmlPullParser.START_TAG:
 		                name = parser.getName();
 		                Log.d(this.getClass().getName(), "loadExam TAG: " + name);
-		                if (name.equalsIgnoreCase("item")) {
+		                if (name.equalsIgnoreCase(ITEM)) {
 		                    ExamQuestion examQuestion = parseItem(parser);
 		                    if ( examQuestion != null ) {
 		                    	addQuestionToDatabase(examQuestion);
@@ -91,7 +91,7 @@ public class XmlPullExamParser extends BaseExamParser {
 		                }
 		                break;
 		            case XmlPullParser.TEXT:
-		            	if(name.equalsIgnoreCase("titel")) {
+		            	if(name.equalsIgnoreCase(EXAM_TITLE)) {
 		            		examTitle=parser.getText();
 		            	}
 		            }
@@ -119,37 +119,33 @@ public class XmlPullExamParser extends BaseExamParser {
 	                break;
 	        	case XmlPullParser.END_TAG:
 	        		Log.d(this.getClass().getName(), "parseItem END_TAG: " + parser.getName());
-	        		if (parser.getName().equalsIgnoreCase("item")) {
+	        		if (parser.getName().equalsIgnoreCase(ITEM)) {
 	        			return examQuestion;
 	        		}
 	        		start_tag = "";
 	        		break;
 	            case XmlPullParser.TEXT:
-	                if (start_tag.equalsIgnoreCase("type")) {
+	                if (start_tag.equalsIgnoreCase(ITEM_TYPE)) {
 	                	Log.d(this.getClass().getName(), "parseItem TEXT type: " + parser.getText());
 	                	examQuestion.setType(parser.getText());
-	                } else if (start_tag.equalsIgnoreCase("topic")) {
+	                } else if (start_tag.equalsIgnoreCase(ITEM_TOPIC)) {
 	                	Log.d(this.getClass().getName(), "parseItem TEXT topic: " + parser.getText());
 	                	examQuestion.setTopic(parser.getText());
-	                } else if (start_tag.equalsIgnoreCase("question")) {
+	                } else if (start_tag.equalsIgnoreCase(ITEM_QUESTION)) {
 	                	Log.d(this.getClass().getName(), "parseItem TEXT question: " + parser.getText());
 	                	examQuestion.setQuestion(parser.getText());
-	                } else if (start_tag.equalsIgnoreCase("exhibit")) {
+	                } else if (start_tag.equalsIgnoreCase(ITEM_EXHIBIT)) {
 	                	Log.d(this.getClass().getName(), "parseItem TEXT exhibit: " + parser.getText());
 	                	examQuestion.setExhibit(parser.getText());
-	                } else if (start_tag.equalsIgnoreCase("correct_answer")) {
+	                } else if (start_tag.equalsIgnoreCase(ITEM_CORRECT_ANSWER)) {
 	                	Log.d(this.getClass().getName(), "parseItem TEXT correct_answer: " + parser.getText());
 	                	examQuestion.addCorrectAnswer(parser.getText());
-	                } else if (start_tag.equalsIgnoreCase("choice")) {
+	                } else if (start_tag.equalsIgnoreCase(ITEM_CHOICE)) {
 	                	Log.d(this.getClass().getName(), "parseItem TEXT choice: " + parser.getText());
 	                	examQuestion.addChoice(parser.getText());
-	                } else if (start_tag.equalsIgnoreCase("hint")) {
+	                } else if (start_tag.equalsIgnoreCase(ITEM_HINT)) {
 	                	Log.d(this.getClass().getName(), "parseItem TEXT hint: " + parser.getText());
 	                	examQuestion.setHint(parser.getText());
-	                } else if (start_tag.equalsIgnoreCase("item")) {
-	                	//do nothing
-	                } else {
-	                	Log.d(ExamTrainerActivity.class.getName(), "Unknown tag " + start_tag + " in xml file");
 	                }
 	                break;
 	            }

@@ -26,7 +26,7 @@ public abstract class BaseExamParser implements ExamParser {
 	static final String ITEM_EXHIBIT = "exhibit";
 	static final String ITEM_QUESTION = "question";
 	static final String ITEM_CHOICE = "choice";
-	static final String ITEM_CORRECT = "correct_answer";
+	static final String ITEM_CORRECT_ANSWER = "correct_answer";
 	static final String ITEM_HINT = "hint";
 	
 	final InputStream inputStream;

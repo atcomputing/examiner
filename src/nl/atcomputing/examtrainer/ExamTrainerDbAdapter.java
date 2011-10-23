@@ -37,7 +37,7 @@ public class ExamTrainerDbAdapter {
 				new String[] {
 				ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE,
 		},
-		ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE + "=" + title, 
+		ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE + "=" + "\"" + title + "\"", 
 		null, null, null, null, null);
 		if ( cursor != null ) {
 			return cursor.getCount() > 0;
