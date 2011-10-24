@@ -8,6 +8,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.util.Log;
 
 /**
@@ -27,8 +28,8 @@ public class ExaminationDbAdapter {
 		this.context = null;
 	}
 	
-	public ExaminationDbAdapter open() {
-		dbHelper = new ExaminationDatabaseHelper(context);
+	public ExaminationDbAdapter open(String databaseName) throws SQLiteException {
+		dbHelper = new ExaminationDatabaseHelper(context, databaseName);
 		db = dbHelper.getWritableDatabase();
 		return this;
 	}
@@ -92,8 +93,9 @@ public class ExaminationDbAdapter {
 	 * @param score the score for the specific exam
 	 * @return boolean true if update was succesful, false otherwise
 	 */
-	public boolean updateScore(long id, int score) {
+	public boolean updateScore(long id, String date, int score) {
 		ContentValues values = new ContentValues();
+		values.put(ExamTrainer.Scores.COLUMN_NAME_SCORE, score);
 		values.put(ExamTrainer.Scores.COLUMN_NAME_DATE, score);
 		return db.update(ExamTrainer.Scores.TABLE_NAME, values, 
 				ExamTrainer.Scores._ID + "=" + id, null) > 0;

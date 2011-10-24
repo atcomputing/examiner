@@ -52,11 +52,12 @@ public class ExamReviewActivity extends Activity {
 
 		Intent intent = getIntent();
 		examId = intent.getLongExtra("examId", 1);
-
-		Log.d(TAG, "examId: " + examId);
+		String databaseName = intent.getStringExtra("databaseName");
+		
+		Log.d(TAG, "databaseName: " + databaseName + "examId: " + examId);
 
 		examinationDbHelper = new ExaminationDbAdapter(this);
-		examinationDbHelper.open();
+		examinationDbHelper.open(databaseName);
 		cursor = examinationDbHelper.getScoresAnswers(examId);
 
 		Resources res = this.getResources();

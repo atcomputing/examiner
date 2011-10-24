@@ -31,6 +31,7 @@ public class ExamQuestionsActivity extends Activity {
 	private EditText editText;
 	private boolean review = false;
 	private String examTitle = "";
+	private String databaseName = "";
 	
 	private static final int DIALOG_ENDOFEXAM_ID = 1;
 	private static final int DIALOG_SHOW_HINT_ID = 2;
@@ -48,11 +49,13 @@ public class ExamQuestionsActivity extends Activity {
 			finishActivity();
 		}
 		
+		databaseName = intent.getStringExtra("databaseName");
+		
 		review = intent.getBooleanExtra("reviewExam", false);
 		examTitle = intent.getStringExtra("examTitle");
 		
 		examinationDbHelper = new ExaminationDbAdapter(this);
-		examinationDbHelper.open();
+		examinationDbHelper.open(databaseName);
 
 		cursorQuestion = examinationDbHelper.getQuestion(questionNumber);
 		
@@ -65,7 +68,7 @@ public class ExamQuestionsActivity extends Activity {
 
 	protected void onDestroy() {
 		super.onDestroy();
-		examinationDbHelper.open();
+		examinationDbHelper.close();
 	}
 	
 	@Override
@@ -267,6 +270,7 @@ public class ExamQuestionsActivity extends Activity {
 					intent.putExtra("question", questionNumber + 1);
 					intent.putExtra("review", review);
 					intent.putExtra("examTitle", examTitle);
+					intent.putExtra("databaseName", databaseName);
 					startActivity(intent);
 				}
 			}

@@ -11,7 +11,6 @@ import android.util.Log;
  */
 public class ExaminationDatabaseHelper extends SQLiteOpenHelper {
 	private static final int DATABASE_VERSION = 1;
-	private static String databaseName = null;
 	
 	private static final String DATABASE_CREATE_QUESTIONS_TABLE = "CREATE TABLE " 
 	+ ExamTrainer.Questions.TABLE_NAME + " ("
@@ -59,7 +58,7 @@ public class ExaminationDatabaseHelper extends SQLiteOpenHelper {
 	    + ");";
 
 	
-	public ExaminationDatabaseHelper(Context context) {
+	public ExaminationDatabaseHelper(Context context, String databaseName) {
 		super(context, databaseName, null, DATABASE_VERSION);
 	}
 
@@ -86,9 +85,5 @@ public class ExaminationDatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.ScoresAnswers.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.Scores.TABLE_NAME);
 		onCreate(db);	
-	}
-	
-	public void setDatabaseExamName(String name) {
-		databaseName = name;
 	}
 }

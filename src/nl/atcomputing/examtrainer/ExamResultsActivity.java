@@ -1,9 +1,10 @@
 package nl.atcomputing.examtrainer;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
-import nl.atcomputing.examtrainer.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -41,14 +42,18 @@ public class ExamResultsActivity extends Activity {
 		
         Intent intent = getIntent();
 		int action = intent.getIntExtra("action", 1);
+		String databaseName = intent.getStringExtra("databaseName");
 		
         dbHelper = new ExaminationDbAdapter(this);
-		dbHelper.open();
+		dbHelper.open(databaseName);
 		
 		if( action == END_EXAM ) {
 			long examId = createScore();
 			score = calculateScore(examId);
-			dbHelper.updateScore(examId, score);
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+			Date date = new Date(0);
+			dbHelper.addScore(dateFormat.format(date), score);
 			showDialog(DIALOG_SHOW_SCORE);
 		}
 		

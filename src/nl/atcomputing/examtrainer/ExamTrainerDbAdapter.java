@@ -46,11 +46,12 @@ public class ExamTrainerDbAdapter {
 		}
 	}
 
-	public long addExam(String examTitle, String date, int itemsNeededToPass) {
+	public long addExam(String examTitle, String date, int itemsNeededToPass, int amountOfItems) {
 		ContentValues values = new ContentValues();
 		values.put(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE, examTitle);
 		values.put(ExamTrainer.Exams.COLUMN_NAME_DATE, date);
 		values.put(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS, itemsNeededToPass);
+		values.put(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS, amountOfItems);
 		return db.insert(ExamTrainer.Exams.TABLE_NAME, null, values);
 	}
 
@@ -64,7 +65,8 @@ public class ExamTrainerDbAdapter {
 				new String[] {
 				ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE,
 				ExamTrainer.Exams.COLUMN_NAME_DATE,
-				ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS
+				ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
+				ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS
 		},
 		ExamTrainer.Exams._ID + "=" + rowId, null, null, null, null, null);
 		if (cursor != null) {
@@ -73,4 +75,17 @@ public class ExamTrainerDbAdapter {
 		return cursor;
 	}
 
+	public Cursor getExams() {
+		Cursor cursor = db.query(true, ExamTrainer.Exams.TABLE_NAME,
+				new String[] {
+				ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE,
+				ExamTrainer.Exams.COLUMN_NAME_DATE,
+				ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
+				ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS
+		}, null, null, null, null, null, null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+		}
+		return cursor;
+	}
 }

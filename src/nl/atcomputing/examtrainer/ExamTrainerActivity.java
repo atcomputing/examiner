@@ -2,6 +2,9 @@ package nl.atcomputing.examtrainer;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -90,6 +93,7 @@ public class ExamTrainerActivity extends Activity {
 						}
 						else {
 							Log.d(TAG, "Included Exam not in database:  " + filenames[i]);
+							xmlPullFeedParser.addExam();
 						}
 					}
 				}

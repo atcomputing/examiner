@@ -19,6 +19,7 @@ public final class ExamTrainer {
     	public static final String COLUMN_NAME_EXAMTITLE = "examTitle";
     	public static final String COLUMN_NAME_DATE = "date";
     	public static final String COLUMN_NAME_ITEMSNEEDEDTOPASS = "itemsNeededToPass";
+    	public static final String COLUMN_NAME_AMOUNTOFITEMS = "amountOfItems";
     }
     
     public static final class Questions implements BaseColumns {

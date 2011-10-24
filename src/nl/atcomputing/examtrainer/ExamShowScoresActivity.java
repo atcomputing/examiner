@@ -48,8 +48,11 @@ public class ExamShowScoresActivity extends Activity {
 		//Initialize
 		examId = -1;
 		
+		Intent intent = getIntent();
+		String databaseName = intent.getStringExtra("databaseName");
+		
 		examinationDbHelper = new ExaminationDbAdapter(this);
-		examinationDbHelper.open();
+		examinationDbHelper.open(databaseName);
 		cursor = examinationDbHelper.getScores();
 		
 		populateScoresList();
