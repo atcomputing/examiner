@@ -4,12 +4,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
+import android.util.Log;
 
 /**
  * @author martijn brekhof
  *
  */
 public class ExamTrainerDbAdapter {
+	private static final String TAG = "ExamTrainerDbAdapter";
 	private final Context context;
 	private SQLiteDatabase db;
 	private ExamTrainerDatabaseHelper dbHelper;
@@ -20,7 +23,11 @@ public class ExamTrainerDbAdapter {
 
 	public ExamTrainerDbAdapter open() {
 		dbHelper = new ExamTrainerDatabaseHelper(context);
-		db = dbHelper.getWritableDatabase();
+		try {
+			db = dbHelper.getWritableDatabase();
+		} catch (SQLiteException e) {
+			Log.d(TAG, "Could not get writable database " + dbHelper.getDatabaseName());
+		}
 		return this;
 	}
 

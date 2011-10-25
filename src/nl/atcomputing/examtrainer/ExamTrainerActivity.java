@@ -2,9 +2,6 @@ package nl.atcomputing.examtrainer;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -31,8 +28,7 @@ public class ExamTrainerActivity extends Activity {
 		Button startExam = (Button) findViewById(R.id.button_start_exam);
 		startExam.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(ExamTrainerActivity.this, ExamQuestionsActivity.class);
-				intent.putExtra("question", 1);
+				Intent intent = new Intent(ExamTrainerActivity.this, ExamTrainerSelectExamActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -75,6 +71,11 @@ public class ExamTrainerActivity extends Activity {
 	private void checkForUpdates() {
 		
 		//retrieveExam();
+		//For testing purposes
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+		examTrainerDbHelper.open();
+		examTrainerDbHelper.upgrade();
+		examTrainerDbHelper.close();
 		
 		AssetManager assetManager = getAssets();
 		

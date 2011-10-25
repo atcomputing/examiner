@@ -16,6 +16,7 @@ import android.util.Log;
  *
  */
 public class ExaminationDbAdapter {
+	private static final String TAG = "ExaminationDbAdapter";
 	private final Context context;
 	private SQLiteDatabase db;
 	private ExaminationDatabaseHelper dbHelper;
@@ -24,13 +25,14 @@ public class ExaminationDbAdapter {
 		this.context = context;
 	}
 	
-	public ExaminationDbAdapter() {
-		this.context = null;
-	}
-	
-	public ExaminationDbAdapter open(String databaseName) throws SQLiteException {
+	public ExaminationDbAdapter open(String databaseName) {
+		Log.d(TAG, "Opening " + databaseName);
 		dbHelper = new ExaminationDatabaseHelper(context, databaseName);
-		db = dbHelper.getWritableDatabase();
+		try {
+			db = dbHelper.getWritableDatabase();
+		} catch (SQLiteException e) {
+			Log.d(TAG, "Could not get writable database " + databaseName);
+		}
 		return this;
 	}
 	

@@ -38,8 +38,8 @@ public class XmlPullExamParser extends BaseExamParser {
             parser.setInput(this.getInputStream(), null);
             int eventType = parser.getEventType();
             int done = 0;
-            String name = null;
-            while (eventType != XmlPullParser.END_DOCUMENT && ( done < 2 )){
+            String name = "";
+            while (eventType != XmlPullParser.END_DOCUMENT && ( done < 200 )){
                 switch (eventType){
                     case XmlPullParser.START_TAG:
                         name = parser.getName();
@@ -48,9 +48,11 @@ public class XmlPullExamParser extends BaseExamParser {
                     	if ( name.equalsIgnoreCase(EXAM_TITLE)) {
                     		title = parser.getText();
                     		done++;
+                    		name = "";
                     	} else if ( name.equalsIgnoreCase(EXAM_ITEMS_NEEDED_TO_PASS)) {
                     		itemsNeededToPass = Integer.parseInt(parser.getText());
                     		done++;
+                    		name = "";
                     	}
                     	break;
                 }
@@ -111,7 +113,7 @@ public class XmlPullExamParser extends BaseExamParser {
 		
 		long rowId = addExamToExamTrainerDB();
 		
-		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter();
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(context);
 		
 		try {
 			examinationDbHelper.open(title + "-" + date);

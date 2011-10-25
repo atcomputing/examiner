@@ -32,4 +32,7 @@
 	<string name="ok">ok</string>
 	<string name="hint_not_available">Hint not available</string>
 	<string name="start_exam">Start exam</string>
+	<string name="no_exams_available">No exams available</string>
+	<string name="questions">Questions: </string>
+	<string name="installed_on">Installed on </string>
 </resources>

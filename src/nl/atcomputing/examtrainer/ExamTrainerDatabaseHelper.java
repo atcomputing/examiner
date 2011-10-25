@@ -40,4 +40,8 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.Exams.TABLE_NAME);
 		onCreate(db);	
 	}
+	
+	public String getDatabaseName() {
+		return DATABASE_NAME;
+	}
 }
