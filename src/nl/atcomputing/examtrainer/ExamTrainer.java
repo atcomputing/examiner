@@ -8,6 +8,10 @@ import android.provider.BaseColumns;
  */
 public final class ExamTrainer {
 	
+	public static String examTitle = "ExamTrainer";
+	public static String examDatabaseName = null;
+	public static boolean examReview = false;
+	
     // This class cannot be instantiated
     private ExamTrainer() {
     }

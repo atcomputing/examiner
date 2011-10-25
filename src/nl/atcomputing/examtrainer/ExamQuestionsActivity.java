@@ -1,6 +1,5 @@
 package nl.atcomputing.examtrainer;
 
-import nl.atcomputing.examtrainer.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,9 +29,6 @@ public class ExamQuestionsActivity extends Activity {
 	private int questionNumber;
 	private String questionType;
 	private EditText editText;
-	private boolean review = false;
-	private String examTitle = "";
-	private String databaseName = "";
 	
 	private static final int DIALOG_ENDOFEXAM_ID = 1;
 	private static final int DIALOG_SHOW_HINT_ID = 2;
@@ -45,17 +42,12 @@ public class ExamQuestionsActivity extends Activity {
 		Intent intent = getIntent();
 
 		questionNumber = intent.getIntExtra("question", 1);
-		if ( questionNumber < 1 ) {
+		if ( ( questionNumber < 1 ) || ( ExamTrainer.examDatabaseName == null ) ) {
 			finishActivity();
 		}
 		
-		databaseName = intent.getStringExtra("databaseName");
-		
-		review = intent.getBooleanExtra("reviewExam", false);
-		examTitle = intent.getStringExtra("examTitle");
-		
 		examinationDbHelper = new ExaminationDbAdapter(this);
-		examinationDbHelper.open(databaseName);
+		examinationDbHelper.open(ExamTrainer.examDatabaseName);
 
 		cursorQuestion = examinationDbHelper.getQuestion(questionNumber);
 		
@@ -105,7 +97,7 @@ public class ExamQuestionsActivity extends Activity {
 		case DIALOG_ENDOFEXAM_ID:
 			builder = new AlertDialog.Builder(this);
 			int messageId;
-			if(review) {
+			if(ExamTrainer.examReview) {
 				messageId = R.string.end_of_review_message;
 			} else {
 				messageId = R.string.end_of_exam_message;
@@ -126,7 +118,7 @@ public class ExamQuestionsActivity extends Activity {
 			break;
 		case DIALOG_SHOW_HINT_ID:
 			builder = new AlertDialog.Builder(this);
-			if(review) {
+			if(ExamTrainer.examReview) {
 				//showAnswers();
 				break;
 			} 
@@ -161,7 +153,7 @@ public class ExamQuestionsActivity extends Activity {
 	}
 
 	protected void showHint() {
-		if( review ) {
+		if( ExamTrainer.examReview ) {
 			showDialog(DIALOG_SHOW_HINT_ID);
 		}
 	}
@@ -215,7 +207,7 @@ public class ExamQuestionsActivity extends Activity {
 		setContentView(R.layout.question);
 
 		TextView title = (TextView) findViewById(R.id.textExamTitle);
-		title.setText(examTitle);
+		title.setText(ExamTrainer.examTitle);
 		
 		index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT);
 		text = cursorQuestion.getString(index);
@@ -268,9 +260,6 @@ public class ExamQuestionsActivity extends Activity {
 				else {
 					Intent intent = new Intent(ExamQuestionsActivity.this, ExamQuestionsActivity.class);
 					intent.putExtra("question", questionNumber + 1);
-					intent.putExtra("review", review);
-					intent.putExtra("examTitle", examTitle);
-					intent.putExtra("databaseName", databaseName);
 					startActivity(intent);
 				}
 			}

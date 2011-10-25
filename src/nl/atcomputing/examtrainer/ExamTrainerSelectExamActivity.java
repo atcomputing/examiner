@@ -2,6 +2,7 @@ package nl.atcomputing.examtrainer;
 
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,7 +12,6 @@ import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.Filterable;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,16 +43,23 @@ public class ExamTrainerSelectExamActivity extends ListActivity {
 	    examTrainerDbHelper.close();
 	  }
 
-	  protected void onListItemClick(ListView l, View v, int position, long id) {
-	    // TODO Auto-generated method stub
-	    super.onListItemClick(l, v, position, id);
-	    Toast.makeText(this, "Click-" + String.valueOf(position), Toast.LENGTH_SHORT).show();
+	  protected void startExam(Cursor mCursor) {
+		  int index = mCursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
+		  ExamTrainer.examTitle = mCursor.getString(index);
+		  index = mCursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
+		  String examDate = mCursor.getString(index);
+		  
+    	  Intent intent = new Intent(ExamTrainerSelectExamActivity.this, ExamQuestionsActivity.class);
+    	  intent.putExtra("question", 1);
+		  intent.putExtra("review", false);
+		  intent.putExtra("databaseName", ExamTrainer.examTitle + "-" + examDate);
+		  startActivity(intent);
 	  }
-
-	  public static class EfficientAdapter extends BaseAdapter implements Filterable {
+	  
+	  public class EfficientAdapter extends BaseAdapter implements Filterable {
 	    private LayoutInflater mInflater;
-	    private Context context;
-
+	    Context context;
+	    
 	    public EfficientAdapter(Context context) {
 	      // Cache the LayoutInflate to avoid asking for a new one each time.
 	      mInflater = LayoutInflater.from(context);
@@ -79,20 +86,36 @@ public class ExamTrainerSelectExamActivity extends ListActivity {
 	      if (convertView == null) {
 	        convertView = (View) mInflater.inflate(R.layout.selectexam_entry, null);
 
+	        convertView.setOnClickListener(new View.OnClickListener() {
+				
+				public void onClick(View v) {
+					int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
+				    String examTitle = cursor.getString(index);
+				    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
+				    String examDate = cursor.getString(index);
+				    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS);
+				    int examAmountOfItems = cursor.getInt(index);
+				    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
+				    int examItemsNeededToPass = cursor.getInt(index);
+					Toast.makeText(context, examTitle + "\n" +
+							context.getString(R.string.installed_on) + " " + examDate + "\n" +
+							context.getString(R.string.questions) + ": " +  examAmountOfItems + "\n" +
+							context.getString(R.string.correct_answer_required_to_pass) + ": " +  examItemsNeededToPass + "\n"
+							, Toast.LENGTH_LONG).show();
+				}
+			});
+	        
 	        // Creates a ViewHolder and store references to the two children
 	        // views
 	        // we want to bind data to.
 	        holder = new ViewHolder();
 	        holder.examTitle = (TextView) convertView.findViewById(R.id.selectexamEntryTitle);
-	        holder.examDate = (TextView) convertView.findViewById(R.id.selectexamEntryDate);
-	        holder.examAmountOfQuestions = (TextView) convertView.findViewById(R.id.selectexamEntryAmountOfQuestions);
 	        holder.buttonStartExam = (Button) convertView.findViewById(R.id.selectexamStart);
 	        
 	        holder.buttonStartExam.setOnClickListener(new View.OnClickListener() {
-	          private int pos = position;
 
 	          public void onClick(View v) {
-	            Toast.makeText(context, "Delete-" + String.valueOf(pos), Toast.LENGTH_SHORT).show();
+	        	  startExam(cursor);
 	          }
 	        });
 	        
@@ -105,15 +128,11 @@ public class ExamTrainerSelectExamActivity extends ListActivity {
 
 	      int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
 	      holder.examTitle.setText(cursor.getString(index));
-	      index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
-	      holder.examDate.setText(cursor.getString(index));
-	      index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS);
-	      holder.examAmountOfQuestions.setText(cursor.getString(index));
 	      
 	      return convertView;
 	    }
 
-	    static class ViewHolder {
+	    class ViewHolder {
 	      TextView examTitle;
 	      TextView examDate;
 	      TextView examAmountOfQuestions;

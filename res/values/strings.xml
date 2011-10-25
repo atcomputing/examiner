@@ -33,6 +33,7 @@
 	<string name="hint_not_available">Hint not available</string>
 	<string name="start_exam">Start exam</string>
 	<string name="no_exams_available">No exams available</string>
-	<string name="questions">Questions: </string>
-	<string name="installed_on">Installed on </string>
+	<string name="questions">Questions</string>
+	<string name="installed_on">Installed on</string>
+	<string name="correct_answer_required_to_pass">Correct answers required to pass</string>
 </resources>

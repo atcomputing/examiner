@@ -1,46 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:id="@+id/lineItem"
-	xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="wrap_content" android:layout_height="wrap_content"
-	android:gravity="center_vertical">
-	
-    <TextView android:text="@+id/selectexamEntryTitle"
-              android:id="@+id/selectexamEntryTitle"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignParentLeft="true"/>
-    <TextView android:text="@string/questions"
-              android:id="@+id/selectexamTextQuestions"
-              android:layout_marginLeft="10dip" android:textSize="10sp"
-		      android:textColor="#ffAAAAAA"
-		      android:layout_width="wrap_content"
-		      android:layout_height="wrap_content"
-		      android:layout_toRightOf="@+id/selectexamEntryTitle"/>
-    <TextView android:text="@+id/selectexamEntryAmountOfQuestions"
-              android:id="@+id/selectexamEntryAmountOfQuestions"
-              android:textSize="10sp"
-		      android:textColor="#ffAAAAAA"
-		      android:layout_width="wrap_content"
-		      android:layout_height="wrap_content"
-		      android:layout_toRightOf="@+id/selectexamTextQuestions"/>
-    <Button android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/selectexamStart"
-            android:text="@string/start_exam"
-            android:layout_alignParentRight="true"/>
-    <TextView android:text="@string/installed_on"
-              android:id="@+id/selectexamInstalledOn"
-              android:textSize="10sp"
-		      android:textColor="#ffAAAAAA"
-		      android:layout_width="wrap_content"
-		      android:layout_height="wrap_content"
-		      android:layout_below="@+id/selectexamEntryTitle"/>
-    <TextView android:text="@+id/selectexamEntryDate"
-              android:id="@+id/selectexamEntryDate"
-              android:textSize="10sp"
-		      android:textColor="#ffAAAAAA"
-		      android:layout_width="wrap_content"
-		      android:layout_height="wrap_content"
-		      android:layout_toRightOf="@+id/selectexamInstalledOn"
-		      android:layout_below="@+id/selectexamEntryTitle"/>
-</RelativeLayout>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/lineItem"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:baselineAligned="true" >
+
+    <TextView
+        android:id="@+id/selectexamEntryTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_weight="1.0"
+        android:text="@+id/selectexamEntryTitle" />
+
+    <Button
+        android:id="@+id/selectexamStart"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:text="@string/start_exam" />
+
+</LinearLayout>
