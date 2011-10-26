@@ -25,13 +25,14 @@ public class ExaminationDbAdapter {
 		this.context = context;
 	}
 	
-	public ExaminationDbAdapter open(String databaseName) {
+	public ExaminationDbAdapter open(String databaseName) throws SQLiteException {
 		Log.d(TAG, "Opening " + databaseName);
 		dbHelper = new ExaminationDatabaseHelper(context, databaseName);
 		try {
 			db = dbHelper.getWritableDatabase();
 		} catch (SQLiteException e) {
 			Log.d(TAG, "Could not get writable database " + databaseName);
+			throw e;
 		}
 		return this;
 	}

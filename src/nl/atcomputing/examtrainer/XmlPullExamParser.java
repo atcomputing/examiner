@@ -22,8 +22,8 @@ public class XmlPullExamParser extends BaseExamParser {
 	private static final String TAG = "XmlPullExamParser";
 	private String title = null;
 	private int itemsNeededToPass = -1;
-	private int amountOfItems = 0;
 	private String date = null;
+	private ArrayList<ExamQuestion> examQuestions = new ArrayList<ExamQuestion>();
 	
 	private Context context;
 	
@@ -32,29 +32,36 @@ public class XmlPullExamParser extends BaseExamParser {
 		this.context = context;
 	}
 	
-	private void getExamMetaData() throws RuntimeException {
+	public void parse() throws RuntimeException {
         XmlPullParser parser = Xml.newPullParser();
         try {
             parser.setInput(this.getInputStream(), null);
             int eventType = parser.getEventType();
-            int done = 0;
             String name = "";
-            while (eventType != XmlPullParser.END_DOCUMENT && ( done < 200 )){
+            while (eventType != XmlPullParser.END_DOCUMENT){
                 switch (eventType){
                     case XmlPullParser.START_TAG:
+                    	Log.d(TAG, "parse: START_TAG " + parser.getName());
                         name = parser.getName();
                         break;
                     case XmlPullParser.TEXT:
-                    	if ( name.equalsIgnoreCase(EXAM_TITLE)) {
-                    		title = parser.getText();
-                    		done++;
-                    		name = "";
+                    	Log.d(TAG, "parse: TEXT " + parser.getText());
+                    	if (name.equalsIgnoreCase(ITEM)) {
+		                    ExamQuestion examQuestion = parseItem(parser);
+		                    if ( examQuestion != null ) {
+		                    	examQuestions.add(examQuestion);
+		                    }
                     	} else if ( name.equalsIgnoreCase(EXAM_ITEMS_NEEDED_TO_PASS)) {
                     		itemsNeededToPass = Integer.parseInt(parser.getText());
-                    		done++;
-                    		name = "";
-                    	}
-                    	break;
+                    	} else if ( name.equalsIgnoreCase(EXAM_TITLE)) {
+                    		title = parser.getText();
+		                }
+                    	name = "";
+		                break;
+                    case XmlPullParser.END_TAG:
+                    	Log.d(TAG, "parse: END_TAG " + parser.getName());
+                    	name = "";
+    	        		break;
                 }
                 eventType = parser.next();
             }
@@ -63,33 +70,10 @@ public class XmlPullExamParser extends BaseExamParser {
         }
 	}
 	
-	private long addExamToExamTrainerDB() {
-		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(context);
-		examTrainerDbHelper.open();
-		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mmZ");
-		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-		date = dateFormat.format(new Date(0));
-		
-		long rowId = examTrainerDbHelper.addExam(title, date, itemsNeededToPass, amountOfItems);
-		examTrainerDbHelper.close();
-		
-		return rowId;
-	}
-	
-	private void delExamFromExamTrainerDB(long rowId) {
-		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(context);
-		examTrainerDbHelper.open();
-		
-		examTrainerDbHelper.deleteExam(rowId);
-		
-		examTrainerDbHelper.close();
-	}
-	
 	public boolean checkIfExamInDatabase() throws RuntimeException {
 		
 		if ( title == null ) {
-			getExamMetaData();
+			return false;
 		}
 		
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(context);
@@ -107,61 +91,46 @@ public class XmlPullExamParser extends BaseExamParser {
 	
 	public boolean addExam() {
 		
-		if ( title == null ) {
-			getExamMetaData();
-		}
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(context);
+		examTrainerDbHelper.open();
 		
-		long rowId = addExamToExamTrainerDB();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mmZ");
+		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+		date = dateFormat.format(new Date());
+		
+		long rowId = examTrainerDbHelper.addExam(title, date, itemsNeededToPass, examQuestions.size());
 		
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(context);
 		
 		try {
 			examinationDbHelper.open(title + "-" + date);
+			for ( int i = 0; i < examQuestions.size(); i++ ) {
+				try {
+					examQuestions.get(i).addToDatabase(examinationDbHelper);
+				} catch (SQLiteException e) {
+					Log.d(TAG, "Could not add examQuestion. Error: " + e.toString());
+				}
+			}
 		} catch (SQLiteException e) {
 			Log.d(TAG, "Cannot open database " + title + "-" + date + "for writing");
-			delExamFromExamTrainerDB(rowId);
+			examTrainerDbHelper.deleteExam(rowId);
 			return false;
 		}
 		
-		try {
-		    XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-	        factory.setNamespaceAware(true);
-	        XmlPullParser parser = factory.newPullParser();
-		    parser.setInput(this.getInputStream(), null);
-
-		    int eventType = parser.getEventType();
-		    String name = null;
-		    while (eventType != XmlPullParser.END_DOCUMENT){
-		        switch (eventType) {
-		            case XmlPullParser.START_TAG:
-		                name = parser.getName();
-		                Log.d(this.getClass().getName(), "loadExam TAG: " + name);
-		                if (name.equalsIgnoreCase(ITEM)) {
-		                    ExamQuestion examQuestion = parseItem(parser);
-		                    if ( examQuestion != null ) {
-		                    	addQuestionToDatabase(examQuestion, examinationDbHelper);
-		                    	amountOfItems++;
-		                    }
-		                }
-		                break;
-		        }
-		        eventType = parser.next();
-		        }
-		    
-		} catch (Exception e) {
-			Log.d(this.getClass().getName() , e.getMessage());
-		}
+		//no need for examQuestions anymore
+		examQuestions = null;
 		
 		examinationDbHelper.close();
+		examTrainerDbHelper.close();
 		return true;
 	}
 
 	
 	
-	private ExamQuestion parseItem(XmlPullParser parser) throws FileNotFoundException, IOException, Exception {
+	private ExamQuestion parseItem(XmlPullParser parser) throws Exception {
 		
 		ExamQuestion examQuestion = new ExamQuestion();
-		String start_tag = null;
+		String start_tag = "";
 		
 		int eventType = parser.getEventType();
 	    while (eventType != XmlPullParser.END_DOCUMENT){
@@ -204,22 +173,10 @@ public class XmlPullExamParser extends BaseExamParser {
 	            }
 	        	eventType = parser.next();
 	        }
+	    if ( eventType == XmlPullParser.END_DOCUMENT ) {
+	    	throw new RuntimeException("End of document reached while parsing item");
+	    }
 	    return null;
 	}
 	
-	private void addQuestionToDatabase(ExamQuestion examQuestion, ExaminationDbAdapter examinationDbHelper) {
-		ArrayList<String> arrayList;
-		long questionId = examinationDbHelper.addQuestion(examQuestion);
-		
-		arrayList = examQuestion.getChoices();
-		for( int i = 0; i < arrayList.size(); i++ ) {
-			examinationDbHelper.addChoice(questionId, arrayList.get(i));
-		}
-		
-		arrayList = examQuestion.getCorrectAnswers();
-		for( int i = 0; i < arrayList.size(); i++ ) {
-			examinationDbHelper.addCorrectAnswers(questionId, arrayList.get(i));
-		}
-	    
-	}
 }

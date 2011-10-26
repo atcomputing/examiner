@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 /**
  * @author martijn brekhof
@@ -69,7 +70,8 @@ public class ExamTrainerActivity extends Activity {
 	}
 	
 	private void checkForUpdates() {
-		
+		int file_index = 0;
+		String[] filenames = null;
 		//retrieveExam();
 		//For testing purposes
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
@@ -81,25 +83,28 @@ public class ExamTrainerActivity extends Activity {
 		
 		if( assetManager != null ) {
 			try {
-				String[] filenames = assetManager.list("");
+				filenames = assetManager.list("");
 				int size = filenames.length;
-				for( int i = 0; i < size; i++) {
-					if(filenames[i].matches("exam..*.xml")) {
-						Log.d(TAG, "Found databasefile " + filenames[i]);
-						InputStream raw = getApplicationContext().getAssets().open(filenames[i]);
+				for( file_index = 0; file_index < size; file_index++) {
+					String filename = filenames[file_index];
+					if(filename.matches("exam..*.xml")) {
+						Log.d(TAG, "Found databasefile " + filename);
+						InputStream raw = getApplicationContext().getAssets().open(filename);
 						xmlPullFeedParser = new XmlPullExamParser(this, raw);
+						xmlPullFeedParser.parse();
 						if ( xmlPullFeedParser.checkIfExamInDatabase() ) {
 							//Exam found in database. Ask user what to do.
-							Log.d(TAG, "Included Exam already in database: " + filenames[i]);
+							Log.d(TAG, "Included Exam already in database: " + filename);
 						}
 						else {
-							Log.d(TAG, "Included Exam not in database:  " + filenames[i]);
+							Log.d(TAG, "Included Exam not in database:  " + filename);
 							xmlPullFeedParser.addExam();
 						}
 					}
 				}
-			} catch (IOException e) {
-				Log.d(this.getClass().getName() , e.getMessage());
+			} catch (Exception e) {
+				Log.d(this.getClass().getName() , "Updating exams failed: Error " + e.getMessage());
+				Toast.makeText(this, "Error: updating exam " + filenames[file_index] + " failed.", Toast.LENGTH_LONG).show();
 			}
 		}
 	}

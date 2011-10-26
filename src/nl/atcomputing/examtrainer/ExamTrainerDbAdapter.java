@@ -21,12 +21,13 @@ public class ExamTrainerDbAdapter {
 		this.context = context;
 	}
 
-	public ExamTrainerDbAdapter open() {
+	public ExamTrainerDbAdapter open() throws SQLiteException {
 		dbHelper = new ExamTrainerDatabaseHelper(context);
 		try {
 			db = dbHelper.getWritableDatabase();
 		} catch (SQLiteException e) {
 			Log.d(TAG, "Could not get writable database " + dbHelper.getDatabaseName());
+			throw e;
 		}
 		return this;
 	}
@@ -67,6 +68,37 @@ public class ExamTrainerDbAdapter {
 				ExamTrainer.Exams._ID + "=" + rowId, null) > 0;
 	}
 
+	/**
+	 * Updates an already existing exam entry
+	 * @param rowId the row number that should be updated
+	 * @param examTitle the new title or null if examTitle should not be updated
+	 * @param date the new date or null if date should not be updated
+	 * @param itemsNeededToPass the new amount of items needed to pass or negative to not update the amount
+	 * @param amountOfItems the new amount of items in the exam or negative to not update the amount
+	 * @return true if update succeeded, false otherwise
+	 */
+	public boolean updateExam(long rowId, String examTitle, String date, int itemsNeededToPass, int amountOfItems) {
+		ContentValues values = new ContentValues();
+		if ( examTitle != null ) {
+			values.put(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE, examTitle);
+		}
+		if ( date != null ) {
+			values.put(ExamTrainer.Exams.COLUMN_NAME_DATE, date);
+		}
+		if ( itemsNeededToPass >= 0 ) {
+			values.put(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS, itemsNeededToPass);
+		}
+		if ( amountOfItems >= 0 ) {
+			values.put(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS, amountOfItems);
+		}
+		Log.d(TAG, ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE + ":" + examTitle
+				+ ExamTrainer.Exams.COLUMN_NAME_DATE + ":" + date
+				+ ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS + ":" + itemsNeededToPass
+				+ ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS + ":" + amountOfItems);
+		return db.update(ExamTrainer.Exams.TABLE_NAME, values, 
+				ExamTrainer.Exams._ID + "=" + rowId, null) > 0;
+	}
+	
 	public Cursor getExam(long rowId) {
 		Cursor cursor = db.query(true, ExamTrainer.Exams.TABLE_NAME,
 				new String[] {

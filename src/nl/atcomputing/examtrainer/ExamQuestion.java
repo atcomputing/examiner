@@ -2,6 +2,8 @@ package nl.atcomputing.examtrainer;
 
 import java.util.ArrayList;
 
+import android.database.sqlite.SQLiteException;
+
 /**
  * @author martijn brekhof
  *
@@ -118,5 +120,21 @@ public class ExamQuestion {
 	
 	protected void addCorrectAnswer(String str) {
 		correctAnswers.add(str);
+	}
+	
+	protected void addToDatabase(ExaminationDbAdapter examinationDbHelper) throws SQLiteException {
+		ArrayList<String> arrayList;
+		long questionId = examinationDbHelper.addQuestion(this);
+		
+			
+		arrayList = this.getChoices();
+		for( int i = 0; i < arrayList.size(); i++ ) {
+			examinationDbHelper.addChoice(questionId, arrayList.get(i));
+		}
+		
+		arrayList = this.getCorrectAnswers();
+		for( int i = 0; i < arrayList.size(); i++ ) {
+			examinationDbHelper.addCorrectAnswers(questionId, arrayList.get(i));
+		}
 	}
 }
