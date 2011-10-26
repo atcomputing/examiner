@@ -42,17 +42,16 @@ public class ExamResultsActivity extends Activity {
 		
         Intent intent = getIntent();
 		int action = intent.getIntExtra("action", 1);
-		String databaseName = intent.getStringExtra("databaseName");
 		
         dbHelper = new ExaminationDbAdapter(this);
-		dbHelper.open(databaseName);
+		dbHelper.open(ExamTrainer.examDatabaseName);
 		
 		if( action == END_EXAM ) {
 			long examId = createScore();
 			score = calculateScore(examId);
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-			Date date = new Date(0);
+			Date date = new Date();
 			dbHelper.addScore(dateFormat.format(date), score);
 			showDialog(DIALOG_SHOW_SCORE);
 		}

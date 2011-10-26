@@ -48,11 +48,8 @@ public class ExamShowScoresActivity extends Activity {
 		//Initialize
 		examId = -1;
 		
-		Intent intent = getIntent();
-		String databaseName = intent.getStringExtra("databaseName");
-		
 		examinationDbHelper = new ExaminationDbAdapter(this);
-		examinationDbHelper.open(databaseName);
+		examinationDbHelper.open(ExamTrainer.examDatabaseName);
 		cursor = examinationDbHelper.getScores();
 		
 		populateScoresList();
@@ -111,14 +108,19 @@ public class ExamShowScoresActivity extends Activity {
 					startActivity(intent);
 				}
 			})
-			.setNegativeButton("Delete exam", new DialogInterface.OnClickListener() {
+			.setNeutralButton("Delete exam", new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						examinationDbHelper.deleteScore(examId);
+						cursor.requery();
+						adapter.notifyDataSetChanged();
+						dialog.dismiss();
+					}
+			})
+			.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					examinationDbHelper.deleteScore(examId);
-					cursor.requery();
-					adapter.notifyDataSetChanged();
 					dialog.dismiss();
 				}
-			});
+			});			;
 			dialog = builder.create();
 			break;
 		default:

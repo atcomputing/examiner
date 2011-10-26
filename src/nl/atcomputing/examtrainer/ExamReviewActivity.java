@@ -52,12 +52,11 @@ public class ExamReviewActivity extends Activity {
 
 		Intent intent = getIntent();
 		examId = intent.getLongExtra("examId", 1);
-		String databaseName = intent.getStringExtra("databaseName");
 		
-		Log.d(TAG, "databaseName: " + databaseName + "examId: " + examId);
+		Log.d(TAG, "databaseName: " + ExamTrainer.examDatabaseName + "examId: " + examId);
 
 		examinationDbHelper = new ExaminationDbAdapter(this);
-		examinationDbHelper.open(databaseName);
+		examinationDbHelper.open(ExamTrainer.examDatabaseName);
 		cursor = examinationDbHelper.getScoresAnswers(examId);
 
 		Resources res = this.getResources();
@@ -82,8 +81,8 @@ public class ExamReviewActivity extends Activity {
 					int position, long id) {
 				Log.d(TAG, "Pos: " + position + " QuestionId: " + adapter.getItem(position).toString());
 				Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionsActivity.class);
-				intent.putExtra("questionId", (long) adapter.getItemId(position));
-				intent.putExtra("reviewExam", true);
+				intent.putExtra("question", (long) adapter.getItemId(position));
+				ExamTrainer.examReview = true;
 				startActivity(intent);
 			}
 		});

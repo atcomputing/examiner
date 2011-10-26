@@ -18,7 +18,7 @@ import android.widget.Toast;
  */
 public class ExamTrainerActivity extends Activity {
 	private final String TAG = this.getClass().getName();
-	private XmlPullExamParser xmlPullFeedParser;
+	
 	
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -26,7 +26,7 @@ public class ExamTrainerActivity extends Activity {
 		
 		setContentView(R.layout.main);		
 		
-		Button startExam = (Button) findViewById(R.id.button_start_exam);
+		Button startExam = (Button) findViewById(R.id.button_select_exam);
 		startExam.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(ExamTrainerActivity.this, ExamTrainerSelectExamActivity.class);
@@ -34,10 +34,11 @@ public class ExamTrainerActivity extends Activity {
 			}
 		});
 		
-		Button updateExam = (Button) findViewById(R.id.button_get_updates);
+		Button updateExam = (Button) findViewById(R.id.button_manage_exams);
 		updateExam.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
-				checkForUpdates();
+				Intent intent = new Intent(ExamTrainerActivity.this, ExamTrainerManageExamsActivity.class);
+				startActivity(intent);
 			}
 		});
 		
@@ -69,43 +70,5 @@ public class ExamTrainerActivity extends Activity {
 		startService(intent);
 	}
 	
-	private void checkForUpdates() {
-		int file_index = 0;
-		String[] filenames = null;
-		//retrieveExam();
-		//For testing purposes
-		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
-		examTrainerDbHelper.open();
-		examTrainerDbHelper.upgrade();
-		examTrainerDbHelper.close();
-		
-		AssetManager assetManager = getAssets();
-		
-		if( assetManager != null ) {
-			try {
-				filenames = assetManager.list("");
-				int size = filenames.length;
-				for( file_index = 0; file_index < size; file_index++) {
-					String filename = filenames[file_index];
-					if(filename.matches("exam..*.xml")) {
-						Log.d(TAG, "Found databasefile " + filename);
-						InputStream raw = getApplicationContext().getAssets().open(filename);
-						xmlPullFeedParser = new XmlPullExamParser(this, raw);
-						xmlPullFeedParser.parse();
-						if ( xmlPullFeedParser.checkIfExamInDatabase() ) {
-							//Exam found in database. Ask user what to do.
-							Log.d(TAG, "Included Exam already in database: " + filename);
-						}
-						else {
-							Log.d(TAG, "Included Exam not in database:  " + filename);
-							xmlPullFeedParser.addExam();
-						}
-					}
-				}
-			} catch (Exception e) {
-				Log.d(this.getClass().getName() , "Updating exams failed: Error " + e.getMessage());
-				Toast.makeText(this, "Error: updating exam " + filenames[file_index] + " failed.", Toast.LENGTH_LONG).show();
-			}
-		}
-	}
+	
 }

@@ -1,10 +1,14 @@
 package nl.atcomputing.examtrainer;
 
+import java.io.InputStream;
+
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,16 +27,18 @@ import android.widget.Toast;
 //Example code on how to setup nice selectionbox: 
 //http://www.codemobiles.com/forum/viewtopic.php?t=876
 
-public class ExamTrainerSelectExamActivity extends ListActivity {
+public class ExamTrainerManageExamsActivity extends ListActivity {
+	private final String TAG = this.getClass().getName();
 	  private EfficientAdapter adap;
 	  private static Cursor cursor;
+	  private XmlPullExamParser xmlPullFeedParser;
 	  
 	  public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    requestWindowFeature(Window.FEATURE_NO_TITLE);
-	    setContentView(R.layout.selectexam);
+	    setContentView(R.layout.manageexams);
 	    
-	    Button cancel = (Button) this.findViewById(R.id.selectexam_cancel);
+	    Button cancel = (Button) this.findViewById(R.id.manageExams_cancel);
 	    cancel.setOnClickListener(new View.OnClickListener() {
 
 	          public void onClick(View v) {
@@ -59,7 +65,7 @@ public class ExamTrainerSelectExamActivity extends ListActivity {
 		  ExamTrainer.examReview = false;
     	  ExamTrainer.examDatabaseName = ExamTrainer.examTitle + "-" + examDate;
     	  
-    	  Intent intent = new Intent(ExamTrainerSelectExamActivity.this, ExamQuestionsActivity.class);
+    	  Intent intent = new Intent(ExamTrainerManageExamsActivity.this, ExamQuestionsActivity.class);
     	  intent.putExtra("question", 1);
 		  startActivity(intent);
 	  }
@@ -92,7 +98,7 @@ public class ExamTrainerSelectExamActivity extends ListActivity {
 	      // supplied
 	      // by ListView is null.
 	      if (convertView == null) {
-	        convertView = (View) mInflater.inflate(R.layout.selectexam_entry, null);
+	        convertView = (View) mInflater.inflate(R.layout.manageexams_entry, null);
 
 	        convertView.setOnClickListener(new View.OnClickListener() {
 				
@@ -117,10 +123,10 @@ public class ExamTrainerSelectExamActivity extends ListActivity {
 	        // views
 	        // we want to bind data to.
 	        holder = new ViewHolder();
-	        holder.examTitle = (TextView) convertView.findViewById(R.id.selectexamEntryTitle);
-	        holder.buttonStartExam = (Button) convertView.findViewById(R.id.selectexamStart);
+	        holder.examTitle = (TextView) convertView.findViewById(R.id.manageExamsEntryTitle);
+	        holder.buttonDeleteExam = (Button) convertView.findViewById(R.id.manageExamsDelete);
 	        
-	        holder.buttonStartExam.setOnClickListener(new View.OnClickListener() {
+	        holder.buttonDeleteExam.setOnClickListener(new View.OnClickListener() {
 
 	          public void onClick(View v) {
 	        	  startExam(cursor);
@@ -142,7 +148,7 @@ public class ExamTrainerSelectExamActivity extends ListActivity {
 
 	    class ViewHolder {
 	      TextView examTitle;
-	      Button buttonStartExam;
+	      Button buttonDeleteExam;
 	    }
 
 	    public android.widget.Filter getFilter() {
@@ -166,4 +172,44 @@ public class ExamTrainerSelectExamActivity extends ListActivity {
 	    }
 
 	  }
+	  
+	  private void checkForUpdates() {
+			int file_index = 0;
+			String[] filenames = null;
+			//retrieveExam();
+			//For testing purposes
+			ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+			examTrainerDbHelper.open();
+			examTrainerDbHelper.upgrade();
+			examTrainerDbHelper.close();
+			
+			AssetManager assetManager = getAssets();
+			
+			if( assetManager != null ) {
+				try {
+					filenames = assetManager.list("");
+					int size = filenames.length;
+					for( file_index = 0; file_index < size; file_index++) {
+						String filename = filenames[file_index];
+						if(filename.matches("exam..*.xml")) {
+							Log.d(TAG, "Found databasefile " + filename);
+							InputStream raw = getApplicationContext().getAssets().open(filename);
+							xmlPullFeedParser = new XmlPullExamParser(this, raw);
+							xmlPullFeedParser.parse();
+							if ( xmlPullFeedParser.checkIfExamInDatabase() ) {
+								//Exam found in database. Ask user what to do.
+								Log.d(TAG, "Included Exam already in database: " + filename);
+							}
+							else {
+								Log.d(TAG, "Included Exam not in database:  " + filename);
+								xmlPullFeedParser.addExam();
+							}
+						}
+					}
+				} catch (Exception e) {
+					Log.d(this.getClass().getName() , "Updating exams failed: Error " + e.getMessage());
+					Toast.makeText(this, "Error: updating exam " + filenames[file_index] + " failed.", Toast.LENGTH_LONG).show();
+				}
+			}
+		}
 }

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
+    <ListView android:layout_width="fill_parent"
+              android:layout_height="wrap_content"
+              android:id="@android:id/list"
+              android:layout_weight="1"/>
+    <TextView
+    android:id="@android:id/empty"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/no_exams_available"/>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="wrap_content">
+    <Button android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/manageExams_deleteAll"
+            android:text="@string/delete_all"/>
+    <Button android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/manageExams_getNewExams"
+            android:text="@string/get_new_exams"/>
+    </LinearLayout>
+    <Button android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/manageExams_cancel"
+            android:text="@string/cancel"/>
+</LinearLayout>

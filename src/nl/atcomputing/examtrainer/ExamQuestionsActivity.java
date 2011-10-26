@@ -244,7 +244,10 @@ public class ExamQuestionsActivity extends Activity {
 				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
 					examinationDbHelper.setOpenAnswer(questionNumber, editText.getText().toString());
 				}
-				finishActivity();
+				Intent intent = new Intent(ExamQuestionsActivity.this, ExamQuestionsActivity.class);
+				intent.putExtra("question", questionNumber - 1);
+				startActivity(intent);
+				finish();
 			}
 		});
 		Button button_next_question = (Button) findViewById(R.id.button_next);
@@ -261,6 +264,7 @@ public class ExamQuestionsActivity extends Activity {
 					Intent intent = new Intent(ExamQuestionsActivity.this, ExamQuestionsActivity.class);
 					intent.putExtra("question", questionNumber + 1);
 					startActivity(intent);
+					finish();
 				}
 			}
 		});
