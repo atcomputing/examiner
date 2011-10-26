@@ -48,11 +48,11 @@ public class ExamTrainerSelectExamActivity extends ListActivity {
 		  ExamTrainer.examTitle = mCursor.getString(index);
 		  index = mCursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
 		  String examDate = mCursor.getString(index);
-		  
+		  ExamTrainer.examReview = false;
+    	  ExamTrainer.examDatabaseName = ExamTrainer.examTitle + "-" + examDate;
+    	  
     	  Intent intent = new Intent(ExamTrainerSelectExamActivity.this, ExamQuestionsActivity.class);
     	  intent.putExtra("question", 1);
-		  intent.putExtra("review", false);
-		  intent.putExtra("databaseName", ExamTrainer.examTitle + "-" + examDate);
 		  startActivity(intent);
 	  }
 	  
