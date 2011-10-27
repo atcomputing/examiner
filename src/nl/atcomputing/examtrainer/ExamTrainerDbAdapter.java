@@ -54,12 +54,20 @@ public class ExamTrainerDbAdapter {
 		}
 	}
 
-	public long addExam(String examTitle, String date, int itemsNeededToPass, int amountOfItems) {
+	public long addExam(String examTitle, String date, int itemsNeededToPass, 
+			int amountOfItems, boolean installed, String url) {
 		ContentValues values = new ContentValues();
 		values.put(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE, examTitle);
 		values.put(ExamTrainer.Exams.COLUMN_NAME_DATE, date);
 		values.put(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS, itemsNeededToPass);
 		values.put(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS, amountOfItems);
+		if(installed) {
+			values.put(ExamTrainer.Exams.COLUMN_NAME_INSTALLED, 1);
+		}
+		else {
+			values.put(ExamTrainer.Exams.COLUMN_NAME_INSTALLED, 0);
+		}
+		values.put(ExamTrainer.Exams.COLUMN_NAME_URL, url);
 		return db.insert(ExamTrainer.Exams.TABLE_NAME, null, values);
 	}
 
@@ -77,34 +85,37 @@ public class ExamTrainerDbAdapter {
 	 * @param amountOfItems the new amount of items in the exam or negative to not update the amount
 	 * @return true if update succeeded, false otherwise
 	 */
-	public boolean updateExam(long rowId, String examTitle, String date, int itemsNeededToPass, int amountOfItems) {
-		ContentValues values = new ContentValues();
-		if ( examTitle != null ) {
-			values.put(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE, examTitle);
-		}
-		if ( date != null ) {
-			values.put(ExamTrainer.Exams.COLUMN_NAME_DATE, date);
-		}
-		if ( itemsNeededToPass >= 0 ) {
-			values.put(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS, itemsNeededToPass);
-		}
-		if ( amountOfItems >= 0 ) {
-			values.put(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS, amountOfItems);
-		}
-		Log.d(TAG, ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE + ":" + examTitle
-				+ ExamTrainer.Exams.COLUMN_NAME_DATE + ":" + date
-				+ ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS + ":" + itemsNeededToPass
-				+ ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS + ":" + amountOfItems);
-		return db.update(ExamTrainer.Exams.TABLE_NAME, values, 
-				ExamTrainer.Exams._ID + "=" + rowId, null) > 0;
-	}
+//	public boolean updateExam(long rowId, String examTitle, String date, int itemsNeededToPass, int amountOfItems) {
+//		ContentValues values = new ContentValues();
+//		if ( examTitle != null ) {
+//			values.put(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE, examTitle);
+//		}
+//		if ( date != null ) {
+//			values.put(ExamTrainer.Exams.COLUMN_NAME_DATE, date);
+//		}
+//		if ( itemsNeededToPass >= 0 ) {
+//			values.put(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS, itemsNeededToPass);
+//		}
+//		if ( amountOfItems >= 0 ) {
+//			values.put(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS, amountOfItems);
+//		}
+//		Log.d(TAG, ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE + ":" + examTitle
+//				+ ExamTrainer.Exams.COLUMN_NAME_DATE + ":" + date
+//				+ ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS + ":" + itemsNeededToPass
+//				+ ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS + ":" + amountOfItems);
+//		return db.update(ExamTrainer.Exams.TABLE_NAME, values, 
+//				ExamTrainer.Exams._ID + "=" + rowId, null) > 0;
+//	}
 	
 	public Cursor getExam(long rowId) {
 		Cursor cursor = db.query(true, ExamTrainer.Exams.TABLE_NAME,
 				new String[] {
+				ExamTrainer.Exams._ID,
 				ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE,
 				ExamTrainer.Exams.COLUMN_NAME_DATE,
 				ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
+				ExamTrainer.Exams.COLUMN_NAME_INSTALLED,
+				ExamTrainer.Exams.COLUMN_NAME_URL,
 				ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS
 		},
 		ExamTrainer.Exams._ID + "=" + rowId, null, null, null, null, null);
@@ -117,9 +128,12 @@ public class ExamTrainerDbAdapter {
 	public Cursor getExams() {
 		Cursor cursor = db.query(true, ExamTrainer.Exams.TABLE_NAME,
 				new String[] {
+				ExamTrainer.Exams._ID,
 				ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE,
 				ExamTrainer.Exams.COLUMN_NAME_DATE,
 				ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
+				ExamTrainer.Exams.COLUMN_NAME_INSTALLED,
+				ExamTrainer.Exams.COLUMN_NAME_URL,
 				ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS
 		}, null, null, null, null, null, null);
 		if (cursor != null) {

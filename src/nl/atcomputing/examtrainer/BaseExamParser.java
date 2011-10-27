@@ -1,10 +1,10 @@
 package nl.atcomputing.examtrainer;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+
+import android.content.Context;
 
 
 /**
@@ -29,17 +29,32 @@ public abstract class BaseExamParser implements ExamParser {
 	static final String ITEM_CORRECT_ANSWER = "correct_answer";
 	static final String ITEM_HINT = "hint";
 	
-	final InputStream inputStream;
-
+	final URL url;
+	private Context context;
+	
 	/**
 	 * Creates a new BaseFeedParser
 	 * @param is
 	 */
-	protected BaseExamParser(InputStream is){
-		this.inputStream = is;
+	protected BaseExamParser(Context context, URL url){
+		this.url = url;
+		this.context = context;
 	}
 
+	protected URL getUrl() {
+		return url;
+	}
+	
 	protected InputStream getInputStream() {
-		return inputStream;
+		try {
+			if(url.getProtocol().equals("file")) {
+				return context.getApplicationContext().getAssets().open(url.getFile());
+			} 
+			else {	
+				return url.openConnection().getInputStream();
+			}
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 	}
 }

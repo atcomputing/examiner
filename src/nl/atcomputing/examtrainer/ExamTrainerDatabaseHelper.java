@@ -19,7 +19,9 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
     + ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE + " TEXT,"
     + ExamTrainer.Exams.COLUMN_NAME_DATE + " TEXT,"
     + ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS + " INTEGER,"
-    + ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS + " INTEGER"
+    + ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS + " INTEGER,"
+    + ExamTrainer.Exams.COLUMN_NAME_INSTALLED + " INTEGER,"
+    + ExamTrainer.Exams.COLUMN_NAME_URL + " TEXT"
     + ");";
 	
 	public ExamTrainerDatabaseHelper(Context context) {

@@ -1,15 +1,12 @@
 package nl.atcomputing.examtrainer;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.TimeZone;
 
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserFactory;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteException;
@@ -27,8 +24,14 @@ public class XmlPullExamParser extends BaseExamParser {
 	
 	private Context context;
 	
-	public XmlPullExamParser(Context context, InputStream is) {
-		super(is);
+	/**
+	 * Creates a new ExamParser
+	 * @param context the application's context
+	 * @param url location of the exam. Use file:// for local file, http:// for http access.
+	 * @param is The inputstream associated with the url
+	 */
+	public XmlPullExamParser(Context context, URL url) {
+		super(context, url);
 		this.context = context;
 	}
 	
@@ -89,8 +92,7 @@ public class XmlPullExamParser extends BaseExamParser {
         }
 	}
 	
-	public boolean addExam() {
-		
+	public boolean addExamToExamTrainer() {
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(context);
 		examTrainerDbHelper.open();
 		
@@ -98,12 +100,18 @@ public class XmlPullExamParser extends BaseExamParser {
 		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		date = dateFormat.format(new Date());
 		
-		long rowId = examTrainerDbHelper.addExam(title, date, itemsNeededToPass, examQuestions.size());
-		
+		examTrainerDbHelper.addExam(title, date, itemsNeededToPass, examQuestions.size(), 
+				false, this.getUrl().toExternalForm());
+
+		examTrainerDbHelper.close();
+		return true;
+	}
+	
+	public boolean installExam() {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(context);
 		
 		try {
-			examinationDbHelper.open(title + "-" + date);
+			examinationDbHelper.open(title, date);
 			for ( int i = 0; i < examQuestions.size(); i++ ) {
 				try {
 					examQuestions.get(i).addToDatabase(examinationDbHelper);
@@ -113,7 +121,6 @@ public class XmlPullExamParser extends BaseExamParser {
 			}
 		} catch (SQLiteException e) {
 			Log.d(TAG, "Cannot open database " + title + "-" + date + "for writing");
-			examTrainerDbHelper.deleteExam(rowId);
 			return false;
 		}
 		
@@ -121,7 +128,6 @@ public class XmlPullExamParser extends BaseExamParser {
 		examQuestions = null;
 		
 		examinationDbHelper.close();
-		examTrainerDbHelper.close();
 		return true;
 	}
 

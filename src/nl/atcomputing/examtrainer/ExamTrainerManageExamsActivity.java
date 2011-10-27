@@ -1,10 +1,9 @@
 package nl.atcomputing.examtrainer;
 
-import java.io.InputStream;
+import java.net.URL;
 
 import android.app.ListActivity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -33,17 +32,28 @@ public class ExamTrainerManageExamsActivity extends ListActivity {
 	  private static Cursor cursor;
 	  private XmlPullExamParser xmlPullFeedParser;
 	  private ExamTrainerDbAdapter examTrainerDbHelper;
+	  private Context context;
 	  
 	  public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	    requestWindowFeature(Window.FEATURE_NO_TITLE);
 	    setContentView(R.layout.manageexams);
 	    
+	    context = this;
+	    
 	    Button cancel = (Button) this.findViewById(R.id.manageExams_cancel);
 	    cancel.setOnClickListener(new View.OnClickListener() {
 
 	          public void onClick(View v) {
 	        	  finish();
+	          }
+	        });
+	    
+	    Button getNewExams = (Button) this.findViewById(R.id.manageExams_getNewExams);
+	    getNewExams.setOnClickListener(new View.OnClickListener() {
+
+	          public void onClick(View v) {
+	        	  loadLocalExams();
 	          }
 	        });
 	    
@@ -63,20 +73,22 @@ public class ExamTrainerManageExamsActivity extends ListActivity {
 	  }
 	  
 	  protected void deleteExam(Cursor mCursor) {
-//		  int columnIndex = mCursor.getColumnIndex(ExamTrainer.Exams._ID);
-//		  long examID = mCursor.getLong(columnIndex);
-		  int columnIndex = mCursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
+		  int columnIndex = mCursor.getColumnIndex(ExamTrainer.Exams._ID);
+		  long examID = mCursor.getLong(columnIndex);
+		  columnIndex = mCursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
 		  String examTitle = mCursor.getString(columnIndex);
 		  columnIndex = mCursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
 		  String examDate = mCursor.getString(columnIndex);
 		  
-//		  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
-//		  if ( examinationDbHelper.delete(examTitle, examDate) ) {
-//			  examTrainerDbHelper.deleteExam(examID);
-//		  }
-//		  else {
-//			  Toast.makeText(this, "Failed to delete exam " + examTitle, Toast.LENGTH_LONG).show(); 
-//		  }
+		  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+		  if ( examinationDbHelper.delete(examTitle, examDate) &&
+			  examTrainerDbHelper.deleteExam(examID) ) {
+			  cursor.requery();
+			  adap.notifyDataSetChanged();
+		  }
+		  else {
+			  Toast.makeText(this, "Failed to delete exam " + examTitle, Toast.LENGTH_LONG).show(); 
+		  }
 	  }
 	  
 	  public class EfficientAdapter extends BaseAdapter implements Filterable {
@@ -182,16 +194,10 @@ public class ExamTrainerManageExamsActivity extends ListActivity {
 
 	  }
 	  
-	  private void checkForUpdates() {
+	  private void loadLocalExams() {
 			int file_index = 0;
 			String[] filenames = null;
-			//retrieveExam();
-			//For testing purposes
-			ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
-			examTrainerDbHelper.open();
-			examTrainerDbHelper.upgrade();
-			examTrainerDbHelper.close();
-			
+
 			AssetManager assetManager = getAssets();
 			
 			if( assetManager != null ) {
@@ -202,8 +208,8 @@ public class ExamTrainerManageExamsActivity extends ListActivity {
 						String filename = filenames[file_index];
 						if(filename.matches("exam..*.xml")) {
 							Log.d(TAG, "Found databasefile " + filename);
-							InputStream raw = getApplicationContext().getAssets().open(filename);
-							xmlPullFeedParser = new XmlPullExamParser(this, raw);
+							URL url = new URL("file://"+filename);
+							xmlPullFeedParser = new XmlPullExamParser(context, url);
 							xmlPullFeedParser.parse();
 							if ( xmlPullFeedParser.checkIfExamInDatabase() ) {
 								//Exam found in database. Ask user what to do.
@@ -211,7 +217,7 @@ public class ExamTrainerManageExamsActivity extends ListActivity {
 							}
 							else {
 								Log.d(TAG, "Included Exam not in database:  " + filename);
-								xmlPullFeedParser.addExam();
+								xmlPullFeedParser.addExamToExamTrainer();
 							}
 						}
 					}
@@ -221,4 +227,8 @@ public class ExamTrainerManageExamsActivity extends ListActivity {
 				}
 			}
 		}
+	  
+	  private void loadRemoteExams() {
+		//retrieveExam();
+	  }
 }
