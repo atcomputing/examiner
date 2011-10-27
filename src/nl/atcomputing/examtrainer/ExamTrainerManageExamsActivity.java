@@ -32,6 +32,7 @@ public class ExamTrainerManageExamsActivity extends ListActivity {
 	  private EfficientAdapter adap;
 	  private static Cursor cursor;
 	  private XmlPullExamParser xmlPullFeedParser;
+	  private ExamTrainerDbAdapter examTrainerDbHelper;
 	  
 	  public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -46,7 +47,7 @@ public class ExamTrainerManageExamsActivity extends ListActivity {
 	          }
 	        });
 	    
-	    ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+	    examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		examTrainerDbHelper.open();
 		
 		cursor = examTrainerDbHelper.getExams();
@@ -54,20 +55,28 @@ public class ExamTrainerManageExamsActivity extends ListActivity {
 	    adap = new EfficientAdapter(this);
 	    setListAdapter(adap);
 	    
-	    examTrainerDbHelper.close();
 	  }
 
-	  protected void startExam(Cursor mCursor) {
-		  int index = mCursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
-		  ExamTrainer.examTitle = mCursor.getString(index);
-		  index = mCursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
-		  String examDate = mCursor.getString(index);
-		  ExamTrainer.examReview = false;
-    	  ExamTrainer.examDatabaseName = ExamTrainer.examTitle + "-" + examDate;
-    	  
-    	  Intent intent = new Intent(ExamTrainerManageExamsActivity.this, ExamQuestionsActivity.class);
-    	  intent.putExtra("question", 1);
-		  startActivity(intent);
+	  protected void onDestroy() {
+		  super.onDestroy();
+		  examTrainerDbHelper.close();
+	  }
+	  
+	  protected void deleteExam(Cursor mCursor) {
+//		  int columnIndex = mCursor.getColumnIndex(ExamTrainer.Exams._ID);
+//		  long examID = mCursor.getLong(columnIndex);
+		  int columnIndex = mCursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
+		  String examTitle = mCursor.getString(columnIndex);
+		  columnIndex = mCursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
+		  String examDate = mCursor.getString(columnIndex);
+		  
+//		  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+//		  if ( examinationDbHelper.delete(examTitle, examDate) ) {
+//			  examTrainerDbHelper.deleteExam(examID);
+//		  }
+//		  else {
+//			  Toast.makeText(this, "Failed to delete exam " + examTitle, Toast.LENGTH_LONG).show(); 
+//		  }
 	  }
 	  
 	  public class EfficientAdapter extends BaseAdapter implements Filterable {
@@ -129,7 +138,7 @@ public class ExamTrainerManageExamsActivity extends ListActivity {
 	        holder.buttonDeleteExam.setOnClickListener(new View.OnClickListener() {
 
 	          public void onClick(View v) {
-	        	  startExam(cursor);
+	        	  deleteExam(cursor);
 	          }
 	        });
 	        

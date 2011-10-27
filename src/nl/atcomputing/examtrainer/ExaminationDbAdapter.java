@@ -37,6 +37,11 @@ public class ExaminationDbAdapter {
 		return this;
 	}
 	
+	public ExaminationDbAdapter open(String title, String date) throws SQLiteException {
+		String databaseName = createDataseName(title, date);
+		return this.open(databaseName);
+	}
+	
 	public void upgrade() {
 		dbHelper.onUpgrade(db, 1, 1);
 	}
@@ -45,6 +50,11 @@ public class ExaminationDbAdapter {
 		dbHelper.close();
 	}
 
+	public boolean delete(String title, String date) {
+		String databaseName = createDataseName(title, date);
+		return context.deleteDatabase(databaseName);
+	}
+	
 	public long addQuestion(ExamQuestion examQuestion) {
 		
 		ContentValues values = new ContentValues();
@@ -398,5 +408,9 @@ public class ExaminationDbAdapter {
 			return mCursor.getCount();
 		}
 		return 0;
+	}
+	
+	private String createDataseName(String title, String date) {
+		return title +"-"+ date;
 	}
 }
