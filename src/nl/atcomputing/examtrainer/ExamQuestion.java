@@ -122,11 +122,10 @@ public class ExamQuestion {
 		correctAnswers.add(str);
 	}
 	
-	protected void addToDatabase(ExaminationDbAdapter examinationDbHelper) throws SQLiteException {
+	protected void addToDatabase(ExaminationDbAdapter examinationDbHelper) {
 		ArrayList<String> arrayList;
 		long questionId = examinationDbHelper.addQuestion(this);
 		
-			
 		arrayList = this.getChoices();
 		for( int i = 0; i < arrayList.size(); i++ ) {
 			examinationDbHelper.addChoice(questionId, arrayList.get(i));

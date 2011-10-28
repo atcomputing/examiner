@@ -76,6 +76,19 @@ public class ExamTrainerDbAdapter {
 				ExamTrainer.Exams._ID + "=" + rowId, null) > 0;
 	}
 
+	public boolean setInstalled(String title, String date, boolean installed) {
+		ContentValues values = new ContentValues();
+		if ( installed ) {
+			values.put(ExamTrainer.Exams.COLUMN_NAME_INSTALLED, 1);
+		} else {
+			values.put(ExamTrainer.Exams.COLUMN_NAME_INSTALLED, 0);
+		}
+		return db.update(ExamTrainer.Exams.TABLE_NAME, values, 
+				ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE + "=\"" + title + "\" AND " +
+						ExamTrainer.Exams.COLUMN_NAME_DATE + "=\"" + date + "\""
+						, null) > 0;
+	}
+	
 	/**
 	 * Updates an already existing exam entry
 	 * @param rowId the row number that should be updated

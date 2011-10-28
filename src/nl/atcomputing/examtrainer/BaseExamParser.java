@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.URL;
 
 import android.content.Context;
+import android.util.Log;
 
 
 /**
@@ -12,7 +13,7 @@ import android.content.Context;
  *
  */
 public abstract class BaseExamParser implements ExamParser {
-
+	private static final String TAG = "BaseExamParser";
 	// names of the XML tags
 	static final String EXAM = "exam";
 	static final String EXAM_DB_VERSION_ATTR = "databaseversion";
@@ -48,9 +49,11 @@ public abstract class BaseExamParser implements ExamParser {
 	protected InputStream getInputStream() {
 		try {
 			if(url.getProtocol().equals("file")) {
-				return context.getApplicationContext().getAssets().open(url.getFile());
+				Log.d(TAG, "getInputStream returning protocol " + url.getProtocol() +" and file "+ url.getFile());
+				return context.getApplicationContext().getAssets().open(url.getFile().replaceFirst("^/", ""));
 			} 
-			else {	
+			else {
+				Log.d(TAG, "getInputStream returning protocol " + url.getProtocol() +" and location "+ url.getFile());
 				return url.openConnection().getInputStream();
 			}
         } catch (IOException e) {

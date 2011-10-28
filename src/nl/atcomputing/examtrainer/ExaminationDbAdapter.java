@@ -50,9 +50,19 @@ public class ExaminationDbAdapter {
 		dbHelper.close();
 	}
 
+	/**
+	 * Deletes database file for a specific exam with database name title-date
+	 * @param title
+	 * @param date
+	 * @return true if database was succesfully removed. False otherwiser
+	 * @throws RuntimeException if database file does not exist.
+	 */
 	public boolean delete(String title, String date) {
 		String databaseName = createDataseName(title, date);
-		return context.deleteDatabase(databaseName);
+		if ( databaseExist(databaseName) ) {
+			return context.deleteDatabase(databaseName);
+		}
+		return true;
 	}
 	
 	public long addQuestion(ExamQuestion examQuestion) {
@@ -71,7 +81,7 @@ public class ExaminationDbAdapter {
 		values.put(ExamTrainer.Choices.COLUMN_NAME_CHOICE, choice);
 		values.put(ExamTrainer.Choices.COLUMN_NAME_QUESTION_ID, questionId);
 		
-		Log.d(this.getClass().getName(), "addChoice: " + values.toString() );
+		//Log.d(this.getClass().getName(), "addChoice: " + values.toString() );
 		
 		return db.insert(ExamTrainer.Choices.TABLE_NAME, null, values);
 	}
@@ -335,7 +345,7 @@ public class ExaminationDbAdapter {
 		ContentValues values = new ContentValues();
 		values.put(ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID, questionId);
 		values.put(ExamTrainer.Answers.COLUMN_NAME_ANSWER, answer);
-		Log.d(this.getClass().getName(), "insertAnswer values: "+ values.toString());
+		//Log.d(this.getClass().getName(), "insertAnswer values: "+ values.toString());
 		return db.insert(ExamTrainer.Answers.TABLE_NAME, null, values) != -1;
 	}
 	
@@ -412,5 +422,17 @@ public class ExaminationDbAdapter {
 	
 	private String createDataseName(String title, String date) {
 		return title +"-"+ date;
+	}
+	
+	private boolean databaseExist(String name ) {
+		SQLiteDatabase checkDB = null;
+	    try {
+	        checkDB = SQLiteDatabase.openDatabase(name, null,
+	                SQLiteDatabase.OPEN_READONLY);
+	        checkDB.close();
+	    } catch (SQLiteException e) {
+	        // database doesn't exist yet.
+	    }
+	    return checkDB != null ? true : false;
 	}
 }

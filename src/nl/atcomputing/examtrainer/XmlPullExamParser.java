@@ -19,7 +19,6 @@ public class XmlPullExamParser extends BaseExamParser {
 	private static final String TAG = "XmlPullExamParser";
 	private String title = null;
 	private int itemsNeededToPass = -1;
-	private String date = null;
 	private ArrayList<ExamQuestion> examQuestions = new ArrayList<ExamQuestion>();
 	
 	private Context context;
@@ -44,11 +43,11 @@ public class XmlPullExamParser extends BaseExamParser {
             while (eventType != XmlPullParser.END_DOCUMENT){
                 switch (eventType){
                     case XmlPullParser.START_TAG:
-                    	Log.d(TAG, "parse: START_TAG " + parser.getName());
+                    	//Log.d(TAG, "parse: START_TAG " + parser.getName());
                         name = parser.getName();
                         break;
                     case XmlPullParser.TEXT:
-                    	Log.d(TAG, "parse: TEXT " + parser.getText());
+                    	//Log.d(TAG, "parse: TEXT " + parser.getText());
                     	if (name.equalsIgnoreCase(ITEM)) {
 		                    ExamQuestion examQuestion = parseItem(parser);
 		                    if ( examQuestion != null ) {
@@ -62,18 +61,19 @@ public class XmlPullExamParser extends BaseExamParser {
                     	name = "";
 		                break;
                     case XmlPullParser.END_TAG:
-                    	Log.d(TAG, "parse: END_TAG " + parser.getName());
+                    	//Log.d(TAG, "parse: END_TAG " + parser.getName());
                     	name = "";
     	        		break;
                 }
                 eventType = parser.next();
             }
+            parser = null;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 	}
 	
-	public boolean checkIfExamInDatabase() throws RuntimeException {
+	public boolean checkIfExamInDatabase() {
 		
 		if ( title == null ) {
 			return false;
@@ -98,7 +98,7 @@ public class XmlPullExamParser extends BaseExamParser {
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mmZ");
 		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-		date = dateFormat.format(new Date());
+		String date = dateFormat.format(new Date());
 		
 		examTrainerDbHelper.addExam(title, date, itemsNeededToPass, examQuestions.size(), 
 				false, this.getUrl().toExternalForm());
@@ -107,28 +107,26 @@ public class XmlPullExamParser extends BaseExamParser {
 		return true;
 	}
 	
-	public boolean installExam() {
-		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(context);
-		
+	public void installExam(String title, String date) throws SQLiteException {
 		try {
+			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(context);
 			examinationDbHelper.open(title, date);
 			for ( int i = 0; i < examQuestions.size(); i++ ) {
-				try {
 					examQuestions.get(i).addToDatabase(examinationDbHelper);
-				} catch (SQLiteException e) {
-					Log.d(TAG, "Could not add examQuestion. Error: " + e.toString());
-				}
 			}
+			examinationDbHelper.close();
+			
+			ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(context);
+			examTrainerDbHelper.open();
+			examTrainerDbHelper.setInstalled(title, date, true);
+			examTrainerDbHelper.close();
 		} catch (SQLiteException e) {
 			Log.d(TAG, "Cannot open database " + title + "-" + date + "for writing");
-			return false;
+			throw e;
 		}
 		
 		//no need for examQuestions anymore
 		examQuestions = null;
-		
-		examinationDbHelper.close();
-		return true;
 	}
 
 	
@@ -143,10 +141,10 @@ public class XmlPullExamParser extends BaseExamParser {
 	        switch (eventType){
 	        	case XmlPullParser.START_TAG:
 	                start_tag = parser.getName();
-	                Log.d(this.getClass().getName(), "parseItem START_TAG: " + start_tag);
+	                //Log.d(this.getClass().getName(), "parseItem START_TAG: " + start_tag);
 	                break;
 	        	case XmlPullParser.END_TAG:
-	        		Log.d(this.getClass().getName(), "parseItem END_TAG: " + parser.getName());
+	        		//Log.d(this.getClass().getName(), "parseItem END_TAG: " + parser.getName());
 	        		if (parser.getName().equalsIgnoreCase(ITEM)) {
 	        			return examQuestion;
 	        		}
@@ -154,25 +152,25 @@ public class XmlPullExamParser extends BaseExamParser {
 	        		break;
 	            case XmlPullParser.TEXT:
 	                if (start_tag.equalsIgnoreCase(ITEM_TYPE)) {
-	                	Log.d(this.getClass().getName(), "parseItem TEXT type: " + parser.getText());
+	                	//Log.d(this.getClass().getName(), "parseItem TEXT type: " + parser.getText());
 	                	examQuestion.setType(parser.getText());
 	                } else if (start_tag.equalsIgnoreCase(ITEM_TOPIC)) {
-	                	Log.d(this.getClass().getName(), "parseItem TEXT topic: " + parser.getText());
+	                	//Log.d(this.getClass().getName(), "parseItem TEXT topic: " + parser.getText());
 	                	examQuestion.setTopic(parser.getText());
 	                } else if (start_tag.equalsIgnoreCase(ITEM_QUESTION)) {
-	                	Log.d(this.getClass().getName(), "parseItem TEXT question: " + parser.getText());
+	                	//Log.d(this.getClass().getName(), "parseItem TEXT question: " + parser.getText());
 	                	examQuestion.setQuestion(parser.getText());
 	                } else if (start_tag.equalsIgnoreCase(ITEM_EXHIBIT)) {
-	                	Log.d(this.getClass().getName(), "parseItem TEXT exhibit: " + parser.getText());
+	                	//Log.d(this.getClass().getName(), "parseItem TEXT exhibit: " + parser.getText());
 	                	examQuestion.setExhibit(parser.getText());
 	                } else if (start_tag.equalsIgnoreCase(ITEM_CORRECT_ANSWER)) {
-	                	Log.d(this.getClass().getName(), "parseItem TEXT correct_answer: " + parser.getText());
+	                	//Log.d(this.getClass().getName(), "parseItem TEXT correct_answer: " + parser.getText());
 	                	examQuestion.addCorrectAnswer(parser.getText());
 	                } else if (start_tag.equalsIgnoreCase(ITEM_CHOICE)) {
-	                	Log.d(this.getClass().getName(), "parseItem TEXT choice: " + parser.getText());
+	                	//Log.d(this.getClass().getName(), "parseItem TEXT choice: " + parser.getText());
 	                	examQuestion.addChoice(parser.getText());
 	                } else if (start_tag.equalsIgnoreCase(ITEM_HINT)) {
-	                	Log.d(this.getClass().getName(), "parseItem TEXT hint: " + parser.getText());
+	                	//Log.d(this.getClass().getName(), "parseItem TEXT hint: " + parser.getText());
 	                	examQuestion.setHint(parser.getText());
 	                }
 	                break;
