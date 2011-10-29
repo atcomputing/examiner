@@ -80,70 +80,78 @@ public class ExamTrainerSelectExamActivity extends ListActivity {
 	     * @see android.widget.ListAdapter#getView(int, android.view.View,
 	     *      android.view.ViewGroup)
 	     */
-	    public View getView(final int position, View convertView, ViewGroup parent) {
+	    public View getView(final int position, View view, ViewGroup parent) {
 	      // A ViewHolder keeps references to children views to avoid
 	      // unneccessary calls
 	      // to findViewById() on each row.
-	      ViewHolder holder;
+	    	final ViewHolder holder;
 
 	      // When convertView is not null, we can reuse it directly, there is
 	      // no need
 	      // to reinflate it. We only inflate a new View when the convertView
 	      // supplied
 	      // by ListView is null.
-	      if (convertView == null) {
-	        convertView = (View) mInflater.inflate(R.layout.selectexam_entry, null);
+	      if (view == null) {
+	        view = (View) mInflater.inflate(R.layout.selectexam_entry, null);
 
-	        convertView.setOnClickListener(new View.OnClickListener() {
-				
-				public void onClick(View v) {
-					int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
-				    String examTitle = cursor.getString(index);
-				    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
-				    String examDate = cursor.getString(index);
-				    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS);
-				    int examAmountOfItems = cursor.getInt(index);
-				    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
-				    int examItemsNeededToPass = cursor.getInt(index);
-					Toast.makeText(context, examTitle + "\n" +
-							context.getString(R.string.installed_on) + " " + examDate + "\n" +
-							context.getString(R.string.questions) + ": " +  examAmountOfItems + "\n" +
-							context.getString(R.string.correct_answer_required_to_pass) + ": " +  examItemsNeededToPass + "\n"
-							, Toast.LENGTH_LONG).show();
-				}
-			});
-	        
-	        // Creates a ViewHolder and store references to the two children
-	        // views
-	        // we want to bind data to.
 	        holder = new ViewHolder();
-	        holder.examTitle = (TextView) convertView.findViewById(R.id.selectexamEntryTitle);
-	        holder.buttonStartExam = (Button) convertView.findViewById(R.id.selectexamStart);
 	        
-	        holder.buttonStartExam.setOnClickListener(new View.OnClickListener() {
-
-	          public void onClick(View v) {
-	        	  startExam(cursor);
-	          }
-	        });
+	        int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
+	        holder.examTitle = cursor.getString(index);
+	        index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
+		    holder.examDate = cursor.getString(index);
+		    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS);
+		    holder.examAmountOfItems = cursor.getInt(index);
+		    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
+		    holder.examItemsNeededToPass = cursor.getInt(index);
+		    
+		    holder.examTitleView = (TextView) view.findViewById(R.id.manageExamsEntryTitle);
+	        holder.examStartButton = (Button) view.findViewById(R.id.manageExamsDelete);
 	        
-	        convertView.setTag(holder);
+		    
+	        
+	        view.setTag(holder);
 	      } else {
 	        // Get the ViewHolder back to get fast access to the TextView
 	        // and the ImageView.
-	        holder = (ViewHolder) convertView.getTag();
+	        holder = (ViewHolder) view.getTag();
 	      }
 
 	      int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
-	      holder.examTitle.setText(cursor.getString(index));
+	      holder.examTitleView.setText(cursor.getString(index));
 	      
-	      return convertView;
+	      holder.examStartButton.setOnClickListener(new View.OnClickListener() {
+	          public void onClick(View v) {
+	        	  
+	          }
+	        });
+		    
+		    view.setOnClickListener(new View.OnClickListener() {
+				
+				public void onClick(View v) {
+					Toast.makeText(context, holder.examTitle + "\n" +
+							context.getString(R.string.installed_on) + 
+							" " + holder.examDate + "\n" +
+							context.getString(R.string.questions) + 
+							": " +  holder.examAmountOfItems + "\n" +
+							context.getString(R.string.correct_answer_required_to_pass) +
+							": " +  holder.examItemsNeededToPass + "\n"
+							, Toast.LENGTH_LONG).show();
+				}
+			});
+	      return view;
 	    }
 
 	    class ViewHolder {
-	      TextView examTitle;
-	      Button buttonStartExam;
-	    }
+			  String examTitle;
+			  long examID;
+			  String examDate;
+			  String url;
+			  int examAmountOfItems;
+			  int examItemsNeededToPass;
+		      TextView examTitleView;
+		      Button examStartButton;
+		    }
 
 	    public android.widget.Filter getFilter() {
 	      // TODO Auto-generated method stub
