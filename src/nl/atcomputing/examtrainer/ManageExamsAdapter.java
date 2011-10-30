@@ -133,7 +133,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		  protected void updateView() {
 			  ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(context);
 			  examTrainerDbHelper.open();
-			  Cursor cursor = examTrainerDbHelper.getExams();
+			  Cursor cursor = examTrainerDbHelper.getAllExams();
 			  examTrainerDbHelper.close();
 			  this.changeCursor(cursor);
 		      this.notifyDataSetChanged();

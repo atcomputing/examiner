@@ -138,7 +138,7 @@ public class ExamTrainerDbAdapter {
 		return cursor;
 	}
 
-	public Cursor getExams() {
+	public Cursor getAllExams() {
 		Cursor cursor = db.query(true, ExamTrainer.Exams.TABLE_NAME,
 				new String[] {
 				ExamTrainer.Exams._ID,
@@ -149,6 +149,24 @@ public class ExamTrainerDbAdapter {
 				ExamTrainer.Exams.COLUMN_NAME_URL,
 				ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS
 		}, null, null, null, null, null, null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+		}
+		return cursor;
+	}
+	
+	public Cursor getInstalledExams() {
+		Cursor cursor = db.query(true, ExamTrainer.Exams.TABLE_NAME,
+				new String[] {
+				ExamTrainer.Exams._ID,
+				ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE,
+				ExamTrainer.Exams.COLUMN_NAME_DATE,
+				ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
+				ExamTrainer.Exams.COLUMN_NAME_INSTALLED,
+				ExamTrainer.Exams.COLUMN_NAME_URL,
+				ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS
+		}, ExamTrainer.Exams.COLUMN_NAME_INSTALLED + "= 1",
+		null, null, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();
 		}

@@ -43,7 +43,7 @@ public class ExamTrainerSelectExamActivity extends ListActivity {
 	    ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		examTrainerDbHelper.open();
 		
-		cursor = examTrainerDbHelper.getExams();
+		cursor = examTrainerDbHelper.getInstalledExams();
 		
 	    adap = new EfficientAdapter(this);
 	    setListAdapter(adap);
@@ -85,48 +85,38 @@ public class ExamTrainerSelectExamActivity extends ListActivity {
 	      // unneccessary calls
 	      // to findViewById() on each row.
 	    	final ViewHolder holder;
-
+	    	final Cursor myCursor = (Cursor) getItem(position);
+	    	
 	      // When convertView is not null, we can reuse it directly, there is
 	      // no need
 	      // to reinflate it. We only inflate a new View when the convertView
 	      // supplied
 	      // by ListView is null.
 	      if (view == null) {
-	        view = (View) mInflater.inflate(R.layout.selectexam_entry, null);
-
-	        holder = new ViewHolder();
 	        
-	        int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
-	        holder.examTitle = cursor.getString(index);
-	        index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
-		    holder.examDate = cursor.getString(index);
-		    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS);
-		    holder.examAmountOfItems = cursor.getInt(index);
-		    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
-		    holder.examItemsNeededToPass = cursor.getInt(index);
-		    
-		    holder.examTitleView = (TextView) view.findViewById(R.id.manageExamsEntryTitle);
-	        holder.examStartButton = (Button) view.findViewById(R.id.manageExamsDelete);
+	    	int mindex = myCursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_INSTALLED);
+	    	if (  myCursor.getInt(mindex) == 0 ) {
+	    		return null;
+	    	}
+	    	
+	    	view = (View) mInflater.inflate(R.layout.selectexam_entry, null);
+	    	holder = new ViewHolder();
 	        
-		    
+	        int index = myCursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
+	        holder.examTitle = myCursor.getString(index);
+	        index = myCursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
+		    holder.examDate = myCursor.getString(index);
+		    index = myCursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS);
+		    holder.examAmountOfItems = myCursor.getInt(index);
+		    index = myCursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
+		    holder.examItemsNeededToPass = myCursor.getInt(index);
+		      
+		    holder.examTitleView = (TextView) view.findViewById(R.id.selectexamEntryTitle);
+	        holder.examStartButton = (Button) view.findViewById(R.id.selectexamStart);
 	        
-	        view.setTag(holder);
-	      } else {
-	        // Get the ViewHolder back to get fast access to the TextView
-	        // and the ImageView.
-	        holder = (ViewHolder) view.getTag();
-	      }
-
-	      int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
-	      holder.examTitleView.setText(cursor.getString(index));
-	      
-	      holder.examStartButton.setOnClickListener(new View.OnClickListener() {
-	          public void onClick(View v) {
-	        	  
-	          }
-	        });
+		    holder.examTitleView.setText(holder.examTitle);
 		    
-		    view.setOnClickListener(new View.OnClickListener() {
+	        view.setOnClickListener(new View.OnClickListener() {
 				
 				public void onClick(View v) {
 					Toast.makeText(context, holder.examTitle + "\n" +
@@ -139,6 +129,22 @@ public class ExamTrainerSelectExamActivity extends ListActivity {
 							, Toast.LENGTH_LONG).show();
 				}
 			});
+		    
+	        holder.examStartButton.setOnClickListener(new View.OnClickListener() {
+		          public void onClick(View v) {
+		        	  startExam(myCursor);
+		          }
+		        });
+	        
+	        view.setTag(holder);
+	      } else {
+	        // Get the ViewHolder back to get fast access to the TextView
+	        // and the ImageView.
+	        holder = (ViewHolder) view.getTag();
+	      }
+
+	      
+	      
 	      return view;
 	    }
 
@@ -160,7 +166,7 @@ public class ExamTrainerSelectExamActivity extends ListActivity {
 
 	    public long getItemId(int position) {
 	      // TODO Auto-generated method stub
-	      return 0;
+	      return position;
 	    }
 
 	    public int getCount() {
@@ -170,7 +176,8 @@ public class ExamTrainerSelectExamActivity extends ListActivity {
 
 	    public Object getItem(int position) {
 	      // TODO Auto-generated method stub
-	      return null;
+	    	cursor.moveToPosition(position);
+	      return cursor;
 	    }
 
 	  }

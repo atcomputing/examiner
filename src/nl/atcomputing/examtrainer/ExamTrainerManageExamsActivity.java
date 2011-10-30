@@ -49,7 +49,7 @@ public class ExamTrainerManageExamsActivity extends ListActivity {
 		
 	    examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		examTrainerDbHelper.open();
-		Cursor cursor = examTrainerDbHelper.getExams();
+		Cursor cursor = examTrainerDbHelper.getAllExams();
 	    adap = new ManageExamsAdapter(this, R.layout.manageexams_entry, cursor);
 	    examTrainerDbHelper.close();
 	    setListAdapter(adap);
