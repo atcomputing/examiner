@@ -95,6 +95,7 @@ public class ExaminationDbAdapter {
 	}
 	
 	public long addScore(String date, int score) {
+		Log.d(TAG, "Adding score: " + date + " " + score);
 		ContentValues values = new ContentValues();
 		values.put(ExamTrainer.Scores.COLUMN_NAME_DATE, date);
 		values.put(ExamTrainer.Scores.COLUMN_NAME_SCORE, score);
@@ -116,10 +117,9 @@ public class ExaminationDbAdapter {
 	 * @param score the score for the specific exam
 	 * @return boolean true if update was succesful, false otherwise
 	 */
-	public boolean updateScore(long id, String date, int score) {
+	public boolean updateScore(long id, int score) {
 		ContentValues values = new ContentValues();
 		values.put(ExamTrainer.Scores.COLUMN_NAME_SCORE, score);
-		values.put(ExamTrainer.Scores.COLUMN_NAME_DATE, score);
 		return db.update(ExamTrainer.Scores.TABLE_NAME, values, 
 				ExamTrainer.Scores._ID + "=" + id, null) > 0;
 	}
@@ -293,9 +293,6 @@ public class ExaminationDbAdapter {
 	public boolean answerPresent(long questionId, String answer) 
 													throws SQLException {
 		String whereClause = "";
-		
-		Log.d(this.getClass().getName(), "checkIfAnswerInTable questionId = " + 
-				questionId + " answer = " + answer);
 			
 			whereClause = ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID + "=" + questionId
 				+ " AND " + ExamTrainer.Answers.COLUMN_NAME_ANSWER + "=" + 
@@ -319,9 +316,7 @@ public class ExaminationDbAdapter {
 	 */
 	public boolean checkIfAnswerInTable(long questionId) 
 	throws SQLException {
-		Log.d(this.getClass().getName(), "checkIfAnswerInTable questionId = " + 
-				questionId);
-
+	
 		String whereClause = ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID + "=" + questionId;
 
 		Cursor mCursor = db.query(true, ExamTrainer.Answers.TABLE_NAME, 
@@ -330,7 +325,6 @@ public class ExaminationDbAdapter {
 				ExamTrainer.Answers.COLUMN_NAME_ANSWER
 				}, whereClause, null, null, null, null, null);
 
-		Log.d(this.getClass().getName(), "checkIfAnswerInTable mCursor.getCount = " + mCursor.getCount());
 		return mCursor.getCount() > 0;
 	}
 
@@ -372,8 +366,8 @@ public class ExaminationDbAdapter {
 	}
 	
 	public boolean setOpenAnswer(long questionId, String answer) {
-		Log.d(this.getClass().getName(), "setOpenAnswer: questionId=" + questionId + 
-				" answer=" + answer);
+		//Log.d(this.getClass().getName(), "setOpenAnswer: questionId=" + questionId + 
+		//		" answer=" + answer);
 		if( checkIfAnswerInTable(questionId) ) {
 			return updateAnswer(questionId, answer);
 		} else {	

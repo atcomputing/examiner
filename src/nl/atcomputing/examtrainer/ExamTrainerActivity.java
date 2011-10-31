@@ -34,10 +34,10 @@ public class ExamTrainerActivity extends Activity {
 			}
 		});
 		
-		Button updateExam = (Button) findViewById(R.id.button_manage_exams);
-		updateExam.setOnClickListener( new View.OnClickListener() {
+		Button manageExams = (Button) findViewById(R.id.button_manage_exams);
+		manageExams.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(ExamTrainerActivity.this, ExamTrainerManageExamsActivity.class);
+				Intent intent = new Intent(ExamTrainerActivity.this, ManageExamsActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -46,7 +46,6 @@ public class ExamTrainerActivity extends Activity {
 		reviewPreviousExam.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(ExamTrainerActivity.this, ExamResultsActivity.class);
-				intent.putExtra("action", ExamResultsActivity.NONE);
 				startActivity(intent);
 			}
 		});

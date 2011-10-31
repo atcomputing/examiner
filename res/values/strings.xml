@@ -36,5 +36,6 @@
 	<string name="installed_on">Installed on</string>
 	<string name="install">Install</string>
 	<string name="uninstall">Uninstall</string>
+	<string name="you_scored">You scored</string>
 	<string name="correct_answer_required_to_pass">Correct answers required to pass</string>
 </resources>

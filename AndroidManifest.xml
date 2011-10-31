@@ -18,11 +18,11 @@
 			android:exported="false" />
 			<activity android:name=".ExamReviewActivity"
 			android:exported="false" />
-		<activity android:name=".ExamShowScoresActivity"
+		<activity android:name=".ShowScoresActivity"
 			android:exported="false" />
 		<activity android:name=".ExamTrainerSelectExamActivity"
 			android:exported="false" />
-		<activity android:name=".ExamTrainerManageExamsActivity"
+		<activity android:name=".ManageExamsActivity"
 			android:exported="false" />
 		<service android:exported="false" android:name=".RetrieveExamQuestions"
 			android:label="@string/app_name" />

@@ -20,7 +20,7 @@ import android.widget.Toast;
 //Example code on how to setup nice selectionbox: 
 //http://www.codemobiles.com/forum/viewtopic.php?t=876
 
-public class ExamTrainerManageExamsActivity extends ListActivity {
+public class ManageExamsActivity extends ListActivity {
 	private final String TAG = this.getClass().getName();
 	  private ManageExamsAdapter adap;
 	  
