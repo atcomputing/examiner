@@ -1,6 +1,7 @@
 package  nl.atcomputing.examtrainer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,14 +41,11 @@ public class SelectExamAdapter extends CursorAdapter  {
 			    holder.examStartButton.setOnClickListener(new View.OnClickListener() {
 					
 					public void onClick(View v) {
-						Toast.makeText(myContext, holder.examTitle + "\n" +
-								myContext.getString(R.string.installed_on) + 
-								" " + holder.examDate + "\n" +
-								myContext.getString(R.string.questions) + 
-								": " +  holder.examAmountOfItems + "\n" +
-								myContext.getString(R.string.correct_answer_required_to_pass) +
-								": " +  holder.examItemsNeededToPass + "\n"
-								, Toast.LENGTH_LONG).show();
+						ExamTrainer.setExamTitle(holder.examTitle);
+						  ExamTrainer.setExamReview(false);
+				    	  ExamTrainer.setExamDatabaseName(holder.examTitle, holder.examDate);
+				    	  
+						startExam(myContext);
 					}
 				});
 			    
@@ -83,4 +81,10 @@ public class SelectExamAdapter extends CursorAdapter  {
 		      TextView examTitleView;
 		      Button examStartButton;
 		    }
+		
+		private void startExam(Context context) {
+			Intent intent = new Intent(context, ExamQuestionsActivity.class);
+	    	intent.putExtra("question", 1);
+			context.startActivity(intent);
+		}
 	  }
