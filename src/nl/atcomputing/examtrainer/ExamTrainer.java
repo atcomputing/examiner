@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
  * @author martijn brekhof
  *
  */
-public final class ExamTrainer {
+public abstract class ExamTrainer {
 	
 	public static String examTitle = "ExamTrainer";
 	public static String examDatabaseName = null;
@@ -16,6 +16,30 @@ public final class ExamTrainer {
     private ExamTrainer() {
     }
 
+    public static void setExamDatabaseName(String examTitle, String date) {
+    	examDatabaseName = examTitle + "-" + date;
+    }
+    
+    public static String getExamDatabaseName() {
+    	return examDatabaseName;
+    }
+    
+    public static void setExamTitle(String title) {
+    	examTitle = title;
+    }
+    
+    public static String getExamTitle() {
+    	return examTitle;
+    }
+    
+    public static void setExamReview(boolean review) {
+    	examReview = review;
+    }
+    
+    public static boolean getExamReview() {
+    	return examReview;
+    }
+    
     public static final class Exams implements BaseColumns {
     	private Exams() {}
     	

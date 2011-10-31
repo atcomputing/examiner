@@ -41,20 +41,19 @@ public class ExamQuestionsActivity extends Activity {
 	
 	private static final String TAG = "ExamQuestionsActivity";
 	
-	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Intent intent = getIntent();
 
-		questionNumber = intent.getIntExtra("question", 1);
-		if ( ( questionNumber < 1 ) || ( ExamTrainer.examDatabaseName == null ) ) {
-			finish();
-		}
-		
 		examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.examDatabaseName);
-
+		
+		questionNumber = intent.getIntExtra("question", 1);
+		if ( ( questionNumber < 1 ) || ( ExamTrainer.examDatabaseName == null ) ) {
+			this.finish();
+		}
+		else {
 		cursorQuestion = examinationDbHelper.getQuestion(questionNumber);
 		
 			int index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_TYPE);
@@ -62,8 +61,9 @@ public class ExamQuestionsActivity extends Activity {
 
 			setupLayout();
 			cursorQuestion.close();
+		}
 	}
-
+	
 	protected void onDestroy() {
 		super.onDestroy();
 		examinationDbHelper.close();
