@@ -7,85 +7,104 @@
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     	android:orientation="horizontal"
     	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content">
+    	android:layout_height="wrap_content"
+    	android:padding="3dip">
     <CheckBox
-            android:id="@+id/checkSendStatistics"
+            android:id="@+id/config_checkSendStatistics"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""/>
     <TextView
-    		    android:id="@+id/textSendStatistics"
+    		    android:id="@+id/config_textSendStatistics"
     		    android:layout_width="wrap_content"
     		    android:layout_height="wrap_content"
     		    android:text="@string/send_statistics_to_at_computing"
     		    />
     </LinearLayout>
     <RelativeLayout
-    	    android:id="@+id/relativeLayout2"
+    	    android:id="@+id/config_relativeLayout2"
     	    android:layout_width="fill_parent"
-    	    android:layout_height="wrap_content" >
+    	    android:layout_height="wrap_content" 
+    	    android:padding="3dip">
      <CheckBox
-            android:id="@+id/checkUpdatesStartup"
+            android:id="@+id/config_checkUpdatesStartup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""/>
     <TextView
-    		    android:id="@+id/textUpdatesStartup"
+    		    android:id="@+id/config_textUpdatesStartup"
     		    android:layout_width="wrap_content"
     		    android:layout_height="wrap_content"
-		    	android:layout_toRightOf="@+id/checkUpdatesStartup"
-		    	android:layout_alignBaseline="@+id/checkUpdatesStartup"
+		    	android:layout_toRightOf="@+id/config_checkUpdatesStartup"
+		    	android:layout_alignBaseline="@+id/config_checkUpdatesStartup"
     		    android:text="@string/check_for_updates_at_startup"
     		    />
 
     		<TextView
-    		    android:id="@+id/textExamURL"
+    		    android:id="@+id/config_textExamURL"
     		    android:layout_width="wrap_content"
     		    android:layout_height="wrap_content"
-    		    android:layout_below="@+id/checkUpdatesStartup"
-		    	android:layout_toRightOf="@+id/checkUpdatesStartup"
-		    	android:layout_alignBaseline="@+id/editExamURL"
+    		    android:layout_below="@+id/config_checkUpdatesStartup"
+		    	android:layout_toRightOf="@+id/config_checkUpdatesStartup"
+		    	android:layout_alignBaseline="@+id/config_editExamURL"
     		    android:text="@string/URL"
     		    />
 
     		<EditText
-    		    android:id="@+id/editExamURL"
+    		    android:id="@+id/config_editExamURL"
     		    android:layout_width="fill_parent"
-    		    android:layout_below="@+id/checkUpdatesStartup"
-		    	android:layout_toRightOf="@+id/textExamURL"
+    		    android:layout_below="@+id/config_checkUpdatesStartup"
+		    	android:layout_toRightOf="@+id/config_textExamURL"
     		    android:layout_height="wrap_content" >
     		</EditText>
     	</RelativeLayout>
     	<RelativeLayout
-    	    android:id="@+id/relativeLayout2"
+    	    android:id="@+id/config_relativeLayout2"
     	    android:layout_width="fill_parent"
-    	    android:layout_height="fill_parent" >
+    	    android:layout_height="fill_parent" 
+    	    android:padding="3dip">
      <CheckBox
-            android:id="@+id/checkUseTimelimit"
+            android:id="@+id/config_checkUseTimelimit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""/>
     <TextView
-    		    android:id="@+id/textUseTimelimit"
+    		    android:id="@+id/config_textUseTimelimit"
     		    android:layout_width="wrap_content"
     		    android:layout_height="wrap_content"
-    		    android:layout_toRightOf="@+id/checkUseTimelimit"
+    		    android:layout_toRightOf="@+id/config_checkUseTimelimit"
     		    android:text="@string/use_timelimits"
     		    />
-		<TextView
-		    android:id="@+id/textIfAvailable"
-		    android:layout_width="wrap_content"
-		    android:layout_height="wrap_content"
-		    android:layout_below="@+id/textUseTimelimit"
-		    android:layout_toRightOf="@+id/checkUseTimelimit"
-		    android:text="@string/if_available_in_braces" />
-    	
-
+	<TextView
+	     android:id="@+id/config_textIfAvailable"
+	     android:layout_width="wrap_content"
+	     android:layout_height="wrap_content"
+	     android:layout_below="@+id/config_textUseTimelimit"
+	     android:layout_toRightOf="@+id/config_checkUseTimelimit"
+	     android:text="@string/if_available_in_braces" />
+	
+	 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    	android:orientation="horizontal"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content"
+    	android:padding="3dip"
+    	android:layout_alignParentBottom="true">    	
     	<Button
-    	    android:id="@+id/button1"
-    	    android:layout_width="fill_parent"
+    	    android:id="@+id/config_buttonReturnToMain"
+    	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
     	    android:text="@string/return_to_main_menu" 
-    	    android:layout_alignParentBottom="true"/>
+    	   />
+		<Button
+    	    android:id="@+id/config_buttonManageExams"
+    	    android:layout_width="wrap_content"
+    	    android:layout_height="wrap_content"
+    	    android:text="@string/manage_exams" 
+    	    />
+    	
+		</LinearLayout>
+
+	 
+
 		</RelativeLayout>
 	</LinearLayout>

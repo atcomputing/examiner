@@ -20,7 +20,21 @@ public class ConfigureActivity extends Activity {
 		
 		setContentView(R.layout.configure);		
 		
-		
+		Button returnToMain = (Button) this.findViewById(R.id.config_buttonReturnToMain);
+		returnToMain.setOnClickListener(new View.OnClickListener() {
+
+	          public void onClick(View v) {
+	        	  finish();
+	          }
+	        });
+	    
+	    Button manageExams = (Button) this.findViewById(R.id.config_buttonManageExams);
+	    manageExams.setOnClickListener(new View.OnClickListener() {
+	          public void onClick(View v) {
+	        	  Intent intent = new Intent(ConfigureActivity.this, ManageExamsActivity.class);
+				  startActivity(intent);
+	          }
+	        });
 	}
 	
 	protected void onDestroy() {

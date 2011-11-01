@@ -33,7 +33,7 @@ public class ExamTrainerActivity extends Activity {
 		Button configureExamTrainer = (Button) findViewById(R.id.button_configure_examtrainer);
 		configureExamTrainer.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(ExamTrainerActivity.this, ManageExamsActivity.class);
+				Intent intent = new Intent(ExamTrainerActivity.this, ConfigureActivity.class);
 				startActivity(intent);
 			}
 		});
