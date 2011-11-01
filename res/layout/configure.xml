@@ -59,7 +59,7 @@
     	<RelativeLayout
     	    android:id="@+id/relativeLayout2"
     	    android:layout_width="fill_parent"
-    	    android:layout_height="wrap_content" >
+    	    android:layout_height="fill_parent" >
      <CheckBox
             android:id="@+id/checkUseTimelimit"
             android:layout_width="wrap_content"
@@ -78,7 +78,14 @@
 		    android:layout_height="wrap_content"
 		    android:layout_below="@+id/textUseTimelimit"
 		    android:layout_toRightOf="@+id/checkUseTimelimit"
-		    android:text="@string/(if_available)" />
-    	</RelativeLayout>
+		    android:text="@string/if_available_in_braces" />
+    	
 
+    	<Button
+    	    android:id="@+id/button1"
+    	    android:layout_width="fill_parent"
+    	    android:layout_height="wrap_content"
+    	    android:text="@string/return_to_main_menu" 
+    	    android:layout_alignParentBottom="true"/>
+		</RelativeLayout>
 	</LinearLayout>

@@ -43,5 +43,5 @@
 	<string name="URL">URL</string>
 	<string name="check_for_updates_at_startup">Check for updates at startup</string>
 	<string name="use_timelimits">Use time limits during exams</string>
-	<string name="(if_available)">(if available)</string>
+	<string name="if_available_in_braces">(if available)</string>
 </resources>
