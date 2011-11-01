@@ -1,16 +1,12 @@
 package nl.atcomputing.examtrainer;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 /**
  * @author martijn brekhof
@@ -34,8 +30,8 @@ public class ExamTrainerActivity extends Activity {
 			}
 		});
 		
-		Button manageExams = (Button) findViewById(R.id.button_manage_exams);
-		manageExams.setOnClickListener( new View.OnClickListener() {
+		Button configureExamTrainer = (Button) findViewById(R.id.button_configure_examtrainer);
+		configureExamTrainer.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(ExamTrainerActivity.this, ManageExamsActivity.class);
 				startActivity(intent);

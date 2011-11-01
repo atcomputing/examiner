@@ -12,6 +12,7 @@
     <string name="get_new_questions">Get new questions</string>
     <string name="show_previous_exams">Show previous exams</string>
     <string name="manage_exams">Manage exams</string>
+    <string name="configure_examtrainer">Configure ExamTrainer</string>
     <string name="select_exam">Select exam</string>
     <string name="stop_exam">Quit</string>
     <string name="delete_exam">Delete exam</string>    
@@ -38,4 +39,9 @@
 	<string name="uninstall">Uninstall</string>
 	<string name="you_scored">You scored</string>
 	<string name="correct_answer_required_to_pass">Correct answers required to pass</string>
+	<string name="send_statistics_to_at_computing">Send statistics to AT Computing</string>
+	<string name="URL">URL</string>
+	<string name="check_for_updates_at_startup">Check for updates at startup</string>
+	<string name="use_timelimits">Use time limits during exams</string>
+	<string name="(if_available)">(if available)</string>
 </resources>

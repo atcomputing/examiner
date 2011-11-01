@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    	android:orientation="horizontal"
+    	android:layout_width="fill_parent"
+    	android:layout_height="wrap_content">
+    <CheckBox
+            android:id="@+id/checkSendStatistics"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""/>
+    <TextView
+    		    android:id="@+id/textSendStatistics"
+    		    android:layout_width="wrap_content"
+    		    android:layout_height="wrap_content"
+    		    android:text="@string/send_statistics_to_at_computing"
+    		    />
+    </LinearLayout>
+    <RelativeLayout
+    	    android:id="@+id/relativeLayout2"
+    	    android:layout_width="fill_parent"
+    	    android:layout_height="wrap_content" >
+     <CheckBox
+            android:id="@+id/checkUpdatesStartup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""/>
+    <TextView
+    		    android:id="@+id/textUpdatesStartup"
+    		    android:layout_width="wrap_content"
+    		    android:layout_height="wrap_content"
+		    	android:layout_toRightOf="@+id/checkUpdatesStartup"
+		    	android:layout_alignBaseline="@+id/checkUpdatesStartup"
+    		    android:text="@string/check_for_updates_at_startup"
+    		    />
+
+    		<TextView
+    		    android:id="@+id/textExamURL"
+    		    android:layout_width="wrap_content"
+    		    android:layout_height="wrap_content"
+    		    android:layout_below="@+id/checkUpdatesStartup"
+		    	android:layout_toRightOf="@+id/checkUpdatesStartup"
+		    	android:layout_alignBaseline="@+id/editExamURL"
+    		    android:text="@string/URL"
+    		    />
+
+    		<EditText
+    		    android:id="@+id/editExamURL"
+    		    android:layout_width="fill_parent"
+    		    android:layout_below="@+id/checkUpdatesStartup"
+		    	android:layout_toRightOf="@+id/textExamURL"
+    		    android:layout_height="wrap_content" >
+    		</EditText>
+    	</RelativeLayout>
+    	<RelativeLayout
+    	    android:id="@+id/relativeLayout2"
+    	    android:layout_width="fill_parent"
+    	    android:layout_height="wrap_content" >
+     <CheckBox
+            android:id="@+id/checkUseTimelimit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""/>
+    <TextView
+    		    android:id="@+id/textUseTimelimit"
+    		    android:layout_width="wrap_content"
+    		    android:layout_height="wrap_content"
+    		    android:layout_toRightOf="@+id/checkUseTimelimit"
+    		    android:text="@string/use_timelimits"
+    		    />
+		<TextView
+		    android:id="@+id/textIfAvailable"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:layout_below="@+id/textUseTimelimit"
+		    android:layout_toRightOf="@+id/checkUseTimelimit"
+		    android:text="@string/(if_available)" />
+    	</RelativeLayout>
+
+	</LinearLayout>
