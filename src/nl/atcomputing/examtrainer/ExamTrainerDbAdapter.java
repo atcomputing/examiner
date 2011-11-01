@@ -40,6 +40,22 @@ public class ExamTrainerDbAdapter {
 		dbHelper.close();
 	}
 
+	public void initialize() {
+		Cursor cursor = db.query(true, ExamTrainer.Configuration.TABLE_NAME, 
+				new String[] {
+				ExamTrainer.Configuration._ID
+		}, null, null, null, null, null, null);
+		if ( cursor.getCount() == 0 ) {
+			ContentValues values = new ContentValues();
+			values.put(ExamTrainer.Configuration.COLUMN_NAME_CHECKFORUPDATES, 1);
+			values.put(ExamTrainer.Configuration.COLUMN_NAME_SENDSCORES, 1);
+			values.put(ExamTrainer.Configuration.COLUMN_NAME_USETIMELIMIT, 1);
+			values.put(ExamTrainer.Configuration.COLUMN_NAME_URL, "http://www.atcomputing.nl/examtrainer");
+			db.insert(ExamTrainer.Configuration.TABLE_NAME, null, values);
+		}
+		cursor.close();
+	}
+	
 	public boolean checkIfExamAlreadyInDatabase(String title) {
 		Cursor cursor = db.query(true, ExamTrainer.Exams.TABLE_NAME, 
 				new String[] {
@@ -171,5 +187,96 @@ public class ExamTrainerDbAdapter {
 			cursor.moveToFirst();
 		}
 		return cursor;
+	}
+	
+	public boolean setSendScores(boolean bool) {
+		ContentValues values = new ContentValues();
+		if( bool ) {
+			values.put(ExamTrainer.Configuration.COLUMN_NAME_SENDSCORES, 1);
+		}
+		else {
+			values.put(ExamTrainer.Configuration.COLUMN_NAME_SENDSCORES, 0);
+		}
+		return db.update(ExamTrainer.Configuration.TABLE_NAME, values, null, null) > 0;
+	}
+	
+	public boolean getSendScores() {
+		Cursor cursor = db.query(true, ExamTrainer.Configuration.TABLE_NAME,
+				new String[] {
+				ExamTrainer.Configuration.COLUMN_NAME_SENDSCORES
+		}, null, null, null, null, null, null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			int index = cursor.getColumnIndex(ExamTrainer.Configuration.COLUMN_NAME_SENDSCORES);
+			return cursor.getInt(index) == 1;
+		}
+		return false;
+	}
+	
+	public boolean setCheckForUpdates(boolean bool) {
+		ContentValues values = new ContentValues();
+		if( bool ) {
+			values.put(ExamTrainer.Configuration.COLUMN_NAME_CHECKFORUPDATES, 1);
+		}
+		else {
+			values.put(ExamTrainer.Configuration.COLUMN_NAME_CHECKFORUPDATES, 0);
+		}
+		return db.update(ExamTrainer.Configuration.TABLE_NAME, values, null, null) > 0;
+	}
+	
+	public boolean getCheckForUpdates() {
+		Cursor cursor = db.query(true, ExamTrainer.Configuration.TABLE_NAME,
+				new String[] {
+				ExamTrainer.Configuration.COLUMN_NAME_CHECKFORUPDATES
+		}, null, null, null, null, null, null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			int index = cursor.getColumnIndex(ExamTrainer.Configuration.COLUMN_NAME_CHECKFORUPDATES);
+			return cursor.getInt(index) == 1;
+		}
+		return false;
+	}
+	
+	public boolean setUseTimeLimit(boolean bool) {
+		ContentValues values = new ContentValues();
+		if( bool ) {
+			values.put(ExamTrainer.Configuration.COLUMN_NAME_USETIMELIMIT, 1);
+		}
+		else {
+			values.put(ExamTrainer.Configuration.COLUMN_NAME_USETIMELIMIT, 0);
+		}
+		return db.update(ExamTrainer.Configuration.TABLE_NAME, values, null, null) > 0;
+	}
+	
+	public boolean getUseTimeLimit() {
+		Cursor cursor = db.query(true, ExamTrainer.Configuration.TABLE_NAME,
+				new String[] {
+				ExamTrainer.Configuration.COLUMN_NAME_USETIMELIMIT
+		}, null, null, null, null, null, null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			int index = cursor.getColumnIndex(ExamTrainer.Configuration.COLUMN_NAME_USETIMELIMIT);
+			return cursor.getInt(index) == 1;
+		}
+		return false;
+	}
+	
+	public boolean setURL(String url) {
+		ContentValues values = new ContentValues();
+		values.put(ExamTrainer.Configuration.COLUMN_NAME_URL, url);
+		return db.update(ExamTrainer.Configuration.TABLE_NAME, values, null, null) > 0;
+	}
+	
+	public String getURL() {
+		Cursor cursor = db.query(true, ExamTrainer.Configuration.TABLE_NAME,
+				new String[] {
+				ExamTrainer.Configuration.COLUMN_NAME_URL
+		}, null, null, null, null, null, null);
+		if (cursor != null) {
+			cursor.moveToFirst();
+			int index = cursor.getColumnIndex(ExamTrainer.Configuration.COLUMN_NAME_URL);
+			return cursor.getString(index);
+		}
+		return "";
 	}
 }

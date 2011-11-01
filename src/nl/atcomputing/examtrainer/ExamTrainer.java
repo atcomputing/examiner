@@ -6,7 +6,7 @@ import android.provider.BaseColumns;
  * @author martijn brekhof
  *
  */
-public abstract class ExamTrainer {
+public final class ExamTrainer {
 	
 	public static String examTitle = "ExamTrainer";
 	public static String examDatabaseName = null;
@@ -49,6 +49,16 @@ public abstract class ExamTrainer {
     	public static final String COLUMN_NAME_ITEMSNEEDEDTOPASS = "itemsNeededToPass";
     	public static final String COLUMN_NAME_AMOUNTOFITEMS = "amountOfItems";
     	public static final String COLUMN_NAME_INSTALLED = "installed";
+    	public static final String COLUMN_NAME_URL = "URL";
+    }
+    
+    public static final class Configuration implements BaseColumns {
+    	private Configuration() {}
+    	
+    	public static final String TABLE_NAME = "Configuration";
+    	public static final String COLUMN_NAME_SENDSCORES = "sendScores";
+    	public static final String COLUMN_NAME_CHECKFORUPDATES = "checkForUpdates";
+    	public static final String COLUMN_NAME_USETIMELIMIT = "useTimeLimit";
     	public static final String COLUMN_NAME_URL = "URL";
     }
     
