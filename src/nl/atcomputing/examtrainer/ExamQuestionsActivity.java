@@ -23,6 +23,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @author martijn brekhof
@@ -37,7 +38,6 @@ public class ExamQuestionsActivity extends Activity {
 	
 	private static final int DIALOG_ENDOFEXAM_ID = 1;
 	private static final int DIALOG_SHOW_HINT_ID = 2;
-	private static final int DIALOG_SHOW_SCORE_ID = 3;
 	
 	private static final String TAG = "ExamQuestionsActivity";
 	
@@ -73,7 +73,6 @@ public class ExamQuestionsActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu, menu);
-		menu.getItem(R.id.menu_get_hint).setTitle("BLAH");
 		return true;
 	}
 
@@ -88,7 +87,7 @@ public class ExamQuestionsActivity extends Activity {
 
 			return true;
 		case R.id.menu_get_hint:
-			showHint();
+			showDialog(DIALOG_SHOW_HINT_ID);
 			return true;
 
 		default:
@@ -127,10 +126,12 @@ public class ExamQuestionsActivity extends Activity {
 			builder = new AlertDialog.Builder(this);
 			if(ExamTrainer.examReview) {
 				//showAnswers();
-				break;
 			} 
 			else {
 				String message = examinationDbHelper.getHint(questionNumber);
+				if( message == null ) {
+					message = getString(R.string.hint_not_available);
+				}
 				builder.setMessage(message)
 				.setCancelable(false)
 				.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -139,24 +140,8 @@ public class ExamQuestionsActivity extends Activity {
 					}
 				});
 				dialog = builder.create();
-				break;
 			}
-		case DIALOG_SHOW_SCORE_ID:
-			int score = createScore();
-			builder = new AlertDialog.Builder(this);
-			String message = getString(R.string.you_scored) + " " + Integer.toString(score);
-			builder.setMessage(message)
-			.setCancelable(false)
-			.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					Intent intent = new Intent(ExamQuestionsActivity.this, ExamResultsActivity.class);
-					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(intent);
-					dialog.dismiss();
-				}
-			});
-			dialog = builder.create();
-		break;
+			break;
 		default:
 			dialog = null;
 		}
@@ -169,54 +154,12 @@ public class ExamQuestionsActivity extends Activity {
 		startActivity(intent);
 	}
 
-	protected void showHint() {
-		if( ExamTrainer.examReview ) {
-			showDialog(DIALOG_SHOW_HINT_ID);
-		}
-	}
-	
 	protected void showResults() {
-		
-		showDialog(DIALOG_SHOW_SCORE_ID);
+		Intent intent = new Intent(ExamQuestionsActivity.this, ExamResultsActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.putExtra("calculatescore", true);
+		startActivity(intent);
 	}
-
-	private int createScore() {
-    	Cursor cursor;
-    	int index;
-    	
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-    	Date date = new Date();
-    	
-    	long examId = examinationDbHelper.addScore(dateFormat.format(date), 0);
-    	
-    	List<Long> idList = examinationDbHelper.getAllQuestionIDs();
-    	int amountOfQuestions = idList.size();
-    	int answers_correct = 0;
-    	for(int i = 0; i < amountOfQuestions; i++) {
-    		long questionId = idList.get(i);
-    		cursor = examinationDbHelper.getAnswers(idList.get(i));
-    		if ( cursor != null ) {
-    			index = cursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
-    			do {
-    				String answer = cursor.getString(index);
-    				examinationDbHelper.addScoresAnswers(examId, questionId, answer);
-    				if ( examinationDbHelper.checkAnswer(answer, questionId)) {
-    					Log.d(this.getClass().getName(), "calculateScore: answer " + answer + " is correct");
-    					answers_correct++;
-    				}
-    				else {
-    					Log.d(this.getClass().getName(), "calculateScore: answer " + answer + " is wrong");
-    				}
-    			} while( cursor.moveToNext() );
-    			cursor.close();
-    		}
-    	}
-    	
-    	examinationDbHelper.updateScore(examId, answers_correct);
-    	
-    	return answers_correct;
-    }
 	
 	protected LinearLayout createChoices() {
 		CheckBox cbox; 
@@ -311,7 +254,7 @@ public class ExamQuestionsActivity extends Activity {
 					examinationDbHelper.setOpenAnswer(questionNumber, editText.getText().toString());
 				}
 				
-				if ( questionNumber >= examinationDbHelper.getAmountOfQuestions() ) {
+				if ( questionNumber >= examinationDbHelper.getQuestionsCount() ) {
 					showDialog(DIALOG_ENDOFEXAM_ID);
 				}
 				else {

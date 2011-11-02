@@ -18,10 +18,10 @@ drw-rw---- guru2 course 4096 2010-10-28 10:42 /home/guru2</exhibit>
 	<item>
 		<type>open</type>
 		<topic>System Architecture</topic>
-		<question>Which command can be used to examine kernel boot messages after boot time stored in memory?</question>
+		<question>Which command can be used to examine kernel boot messages in memory after booting the system?</question>
 		<correct_answer>dmesg</correct_answer>
 		<correct_answer>/bin/dmesg</correct_answer>
-		<hint>Although the boot messages are stored in a logfile the question is about reading the messages from the kernel ringbuffer.
+		<hint>Although the boot messages are usually also stored in a logfile the question is about reading the messages from the kernel ringbuffer.
 		So answers like "less /var/log/messages" are incorrect. The answer can be just the commandname (i.e. less) or its complete pathname (i.e. /bin/less)</hint>
 	</item>
 </exam>

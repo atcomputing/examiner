@@ -101,7 +101,7 @@ public class ExamReviewActivity extends Activity {
 		public int getCount() 
 		{
 			/* Set the number of element we want on the grid */
-			return examinationDbHelper.getAmountOfScoreAnswers(examId);
+			return examinationDbHelper.getScoresAnswersCount(examId);
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) 
@@ -125,10 +125,10 @@ public class ExamReviewActivity extends Activity {
 
 					index = cursor.getColumnIndex(ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER);
 					String answer = cursor.getString(index);
-
-					if ( examinationDbHelper.checkAnswer(answer, questionId) == true ) {
-						ok_notokImage = okImage;
-					}
+//TODO add column to ScoresAnswers table specifying if answer is correct or not to save precious CPU
+//					if ( examinationDbHelper.checkAnswer(answer, questionId) == true ) {
+//						ok_notokImage = okImage;
+//					}
 				}
 				
 				questionIds.add(questionId);

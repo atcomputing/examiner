@@ -165,6 +165,33 @@ public class ExaminationDbAdapter {
 		return mCursor;
 	}
 	
+	public String getQuestionType(long rowId) throws SQLException {
+		String type = null;
+		Cursor mCursor = db.query(true, ExamTrainer.Questions.TABLE_NAME, 
+				new String[] {
+				ExamTrainer.Questions.COLUMN_NAME_TYPE
+				},
+				ExamTrainer.Questions._ID + "=" + rowId, null, null, null, null, null);
+		if (mCursor != null) {
+			mCursor.moveToFirst();
+			int columnIndex = mCursor.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_TYPE);
+			type = mCursor.getString(columnIndex);
+		}
+		return type;
+	}
+	
+	public int getQuestionsCount() {
+		Cursor mCursor = db.query(true, ExamTrainer.Questions.TABLE_NAME, 
+				new String[] {
+				ExamTrainer.Questions.COLUMN_NAME_QUESTION
+				},
+				null, null, null, null, null, null);
+		if (mCursor != null) {
+			return mCursor.getCount();
+		}
+		return 0;
+	}
+	
 	public List<Long> getAllQuestionIDs() throws SQLException {
 		List<Long> list = new ArrayList<Long>();
 		
@@ -269,6 +296,11 @@ public class ExaminationDbAdapter {
 		return null;
 	}
 	
+	/**
+	 * Returns the hint if specified for the question
+	 * @param questionId _ID of the question 
+	 * @return String or null if no hint was not found
+	 */
 	public String getHint(long questionId) {
 		Cursor cursor = db.query(true, ExamTrainer.Questions.TABLE_NAME, 
 				new String[] {
@@ -314,7 +346,7 @@ public class ExaminationDbAdapter {
 	 * @return true if answer is in table, false otherwise
 	 * @throws SQLException
 	 */
-	public boolean checkIfAnswerInTable(long questionId) 
+	public boolean answerPresent(long questionId) 
 	throws SQLException {
 	
 		String whereClause = ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID + "=" + questionId;
@@ -368,40 +400,45 @@ public class ExaminationDbAdapter {
 	public boolean setOpenAnswer(long questionId, String answer) {
 		//Log.d(this.getClass().getName(), "setOpenAnswer: questionId=" + questionId + 
 		//		" answer=" + answer);
-		if( checkIfAnswerInTable(questionId) ) {
+		if( answerPresent(questionId) ) {
 			return updateAnswer(questionId, answer);
 		} else {	
 			return insertAnswer(questionId, answer);
 		}
 	}
 	
-	public boolean checkAnswer(String answer, long questionId) {
-		Cursor cursor = this.getCorrectAnswers(questionId);
-		if ( cursor != null ) {
-			int index = cursor.getColumnIndex(ExamTrainer.CorrectAnswers.COLUMN_NAME_ANSWER);
-			do {
-				String correct_answer = cursor.getString(index);
-				if(answer.equals(correct_answer)) {
-					return true;
-				}
-			} while( cursor.moveToNext() );
+	public boolean checkOpenAnswer(long questionId) {
+		
+		return false;
+	}
+	
+	/**
+	 * TODO Find out how to query multiple tables so that we can simple do a select
+	 * on tables CorrectAnswers and ScoresAnswers for the given questionID and examId
+	 * @param questionId
+	 * @return
+	 */
+	public boolean checkMultipleChoiceAnswer(long questionId, long examId) {
+		Cursor mCursor = db.query(true, ExamTrainer.CorrectAnswers.TABLE_NAME, 
+				new String[] {
+				ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID
+				},
+				ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId
+				+ " AND " +
+				ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId,
+				null, null, null, null, null);
+		if (mCursor != null) {
+			int answersFound = mCursor.getCount();
 		}
 		return false;
 	}
 	
-	public int getAmountOfQuestions() {
-		Cursor mCursor = db.query(true, ExamTrainer.Questions.TABLE_NAME, 
-				new String[] {
-				ExamTrainer.Questions.COLUMN_NAME_QUESTION
-				},
-				null, null, null, null, null, null);
-		if (mCursor != null) {
-			return mCursor.getCount();
-		}
-		return 0;
-	}
-	
-	public int getAmountOfScoreAnswers(long examId) {
+	/**
+	 * Returns the amount of saved answers for a exam with given ID 
+	 * @param examId the _ID of the exam
+	 * @return amount of answers for exam with ID examId
+	 */
+	public int getScoresAnswersCount(long examId) {
 		Cursor mCursor = db.query(true, ExamTrainer.ScoresAnswers.TABLE_NAME, 
 				new String[] {
 				ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID
