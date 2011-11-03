@@ -407,28 +407,62 @@ public class ExaminationDbAdapter {
 		}
 	}
 	
-	public boolean checkOpenAnswer(long questionId) {
-		
+	/**
+	 * Checks if a open choice question was answered correctly using a SQL query
+	 * with a JOIN over the scores answers table and correct answers table
+	 * @param questionId ID of the question you want to check the answers for
+	 * @param examId  The ID of the score associated with the exam
+	 * @return true if all answers are correct, false otherwise
+	 */
+	public boolean checkOpenAnswer(long questionId, long examId) {
+		String sqlQuery = "SELECT " 
+			+ ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID + 
+			" FROM " 
+			+ ExamTrainer.CorrectAnswers.TABLE_NAME + ", " + ExamTrainer.Answers.TABLE_NAME +
+			" WHERE "
+			+ ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID + 
+			" = "
+			+ ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID +
+			" AND "
+			+ ExamTrainer.CorrectAnswers.COLUMN_NAME_ANSWER +
+			" = "
+			+ ExamTrainer.Answers.COLUMN_NAME_ANSWER
+			;
+		Cursor mCursor = db.rawQuery(sqlQuery, null);
+		if (mCursor != null) {
+			return mCursor.getCount() > 0;
+		}
 		return false;
 	}
 	
 	/**
-	 * TODO Find out how to query multiple tables so that we can simple do a select
-	 * on tables CorrectAnswers and ScoresAnswers for the given questionID and examId
-	 * @param questionId
-	 * @return
+	 * Checks if a multiple choice question was answered correctly using a SQL query
+	 * with a JOIN over the scores answers table and correct answers table
+	 * @param questionId ID of the question you want to check the answers for
+	 * @param examId  The ID of the score associated with the exam
+	 * @return true if all answers are correct, false otherwise
 	 */
 	public boolean checkMultipleChoiceAnswer(long questionId, long examId) {
-		Cursor mCursor = db.query(true, ExamTrainer.CorrectAnswers.TABLE_NAME, 
-				new String[] {
-				ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID
-				},
-				ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId
-				+ " AND " +
-				ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId,
-				null, null, null, null, null);
+		String sqlQuery = "SELECT " 
+			+ ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID + 
+			" FROM " 
+			+ ExamTrainer.CorrectAnswers.TABLE_NAME + ", " + ExamTrainer.Answers.TABLE_NAME +
+			" WHERE "
+			+ ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID + 
+			" = "
+			+ ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID +
+			" AND "
+			+ ExamTrainer.CorrectAnswers.COLUMN_NAME_ANSWER +
+			" = "
+			+ ExamTrainer.Answers.COLUMN_NAME_ANSWER
+			;
+		Cursor mCursor = db.rawQuery(sqlQuery, null);
 		if (mCursor != null) {
 			int answersFound = mCursor.getCount();
+			mCursor = getCorrectAnswers(questionId);
+			if ( mCursor != null ) {
+				return mCursor.getCount() == answersFound;
+			}
 		}
 		return false;
 	}

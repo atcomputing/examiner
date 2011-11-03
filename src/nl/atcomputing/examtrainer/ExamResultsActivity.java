@@ -97,6 +97,8 @@ public class ExamResultsActivity extends Activity {
 		examinationDbHelper.open(ExamTrainer.examDatabaseName);
     	long examId = examinationDbHelper.addScore(dateFormat.format(date), 0);
     	
+    	//TODO: add all questions to the scoresanswer table first. Because the check...Answer
+    	//methods will check the answers from the scoresanswer table.
     	List<Long> questionIDsList = examinationDbHelper.getAllQuestionIDs();
     	int amountOfQuestions = questionIDsList.size();
     	int answers_correct = 0;
@@ -105,7 +107,7 @@ public class ExamResultsActivity extends Activity {
     		String questionType = examinationDbHelper.getQuestionType(questionId);
     		boolean answerCorrect = false;
     		if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-    			answerCorrect = examinationDbHelper.checkOpenAnswer(questionId);
+    			answerCorrect = examinationDbHelper.checkOpenAnswer(questionId, examId);
     		}
     		else {
     			answerCorrect = examinationDbHelper.checkMultipleChoiceAnswer(questionId, examId);
