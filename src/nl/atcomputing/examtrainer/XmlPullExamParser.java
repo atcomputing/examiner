@@ -165,7 +165,7 @@ public class XmlPullExamParser extends BaseExamParser {
 	                	examQuestion.setExhibit(parser.getText());
 	                } else if (start_tag.equalsIgnoreCase(ITEM_CORRECT_ANSWER)) {
 	                	//Log.d(this.getClass().getName(), "parseItem TEXT correct_answer: " + parser.getText());
-	                	examQuestion.addCorrectAnswer(parser.getText());
+	                	examQuestion.addAnswer(parser.getText());
 	                } else if (start_tag.equalsIgnoreCase(ITEM_CHOICE)) {
 	                	//Log.d(this.getClass().getName(), "parseItem TEXT choice: " + parser.getText());
 	                	examQuestion.addChoice(parser.getText());

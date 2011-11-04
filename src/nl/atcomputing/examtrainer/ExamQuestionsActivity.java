@@ -46,6 +46,9 @@ public class ExamQuestionsActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		Intent intent = getIntent();
 
+		//TODO add new exam when questionNumber equals 1
+		//the examId must be used to add answers to AnswersPerExam
+		
 		examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.examDatabaseName);
 		

@@ -111,17 +111,6 @@ public final class ExamTrainer {
     	public static final String COLUMN_NAME_CHOICE = "choice";
     }
     
-    public static final class CorrectAnswers implements BaseColumns {
-
-        // This class cannot be instantiated
-        private CorrectAnswers() {}
-        
-        public static final String TABLE_NAME = "CorrectAnswers";
-
-        public static final String COLUMN_NAME_QUESTION_ID = "question_id";
-        public static final String COLUMN_NAME_ANSWER = "answer";
-    }
-    
     public static final class Answers implements BaseColumns {
 
         // This class cannot be instantiated
@@ -132,6 +121,8 @@ public final class ExamTrainer {
         public static final String COLUMN_NAME_QUESTION_ID = "question_id";
         public static final String COLUMN_NAME_ANSWER = "answer";
     }
+    
+    
     
     public static final class Scores implements BaseColumns {
 
@@ -144,16 +135,27 @@ public final class ExamTrainer {
         public static final String COLUMN_NAME_SCORE = "score";
     }
     
-    public static final class ScoresAnswers implements BaseColumns {
+    public static final class AnswersPerExam implements BaseColumns {
 
         // This class cannot be instantiated
-        private ScoresAnswers() {}
+        private AnswersPerExam() {}
         
-        public static final String TABLE_NAME = "ScoresAnswers";
+        public static final String TABLE_NAME = "AnswersPerExam";
 
         public static final String COLUMN_NAME_EXAM_ID = "exam_id";
         public static final String COLUMN_NAME_QUESTION_ID = "question_id";
         public static final String COLUMN_NAME_ANSWER = "answer";
-        public static final String COLUMN_NAME_ANSWER_CORRECT = "answer_correct";
+    }
+    
+    public static final class ResultPerQuestion implements BaseColumns {
+
+        // This class cannot be instantiated
+        private ResultPerQuestion() {}
+        
+        public static final String TABLE_NAME = "ResultPerQuestion";
+
+        public static final String COLUMN_NAME_EXAM_ID = "exam_id";
+        public static final String COLUMN_NAME_QUESTION_ID = "question_id";
+        public static final String COLUMN_NAME_ANSWER_CORRECT = "answered_correct";
     }
 }

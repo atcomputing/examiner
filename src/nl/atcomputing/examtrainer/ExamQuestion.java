@@ -17,14 +17,14 @@ public class ExamQuestion {
 	private String question;
 	private String exhibit;
 	private String hint;
-	private ArrayList<String> correctAnswers;
+	private ArrayList<String> answers;
 	private ArrayList<String> choices;
 	
 	protected ExamQuestion() {
 		type = null;
 		topic = null;
 		question = null;
-		correctAnswers = new ArrayList<String>();
+		answers = new ArrayList<String>();
 		choices = new ArrayList<String>();
 		hint = null;
 	}
@@ -40,11 +40,11 @@ public class ExamQuestion {
 	 * @param choices
 	 */
 	protected ExamQuestion(String type, String topic, String exhibit, String question, 
-			ArrayList<String> correctAnswers, ArrayList<String> choices, String hint) {
+			ArrayList<String> answers, ArrayList<String> choices, String hint) {
 		this.type = type;
 		this.topic = topic;
 		this.question = question;
-		this.correctAnswers = correctAnswers;
+		this.answers = answers;
 		this.choices = choices;
 		this.hint = hint;
 	}
@@ -71,8 +71,8 @@ public class ExamQuestion {
 		return choices;
 	}
 	
-	protected ArrayList<String> getCorrectAnswers() {
-		return correctAnswers;
+	protected ArrayList<String> getAnswers() {
+		return answers;
 	}
 	
 	protected String getQuestion() {
@@ -100,7 +100,7 @@ public class ExamQuestion {
 	}
 	
 	protected void setCorrectAnswers(ArrayList<String> arrayList) {
-		correctAnswers = arrayList;
+		answers = arrayList;
 	}
 	
 	protected void setQuestion(String str) {
@@ -118,8 +118,8 @@ public class ExamQuestion {
 		choices.add(str);
 	}
 	
-	protected void addCorrectAnswer(String str) {
-		correctAnswers.add(str);
+	protected void addAnswer(String str) {
+		answers.add(str);
 	}
 	
 	protected void addToDatabase(ExaminationDbAdapter examinationDbHelper) {
@@ -131,9 +131,9 @@ public class ExamQuestion {
 			examinationDbHelper.addChoice(questionId, arrayList.get(i));
 		}
 		
-		arrayList = this.getCorrectAnswers();
+		arrayList = this.getAnswers();
 		for( int i = 0; i < arrayList.size(); i++ ) {
-			examinationDbHelper.addCorrectAnswers(questionId, arrayList.get(i));
+			examinationDbHelper.addAnswer(questionId, arrayList.get(i));
 		}
 	}
 }

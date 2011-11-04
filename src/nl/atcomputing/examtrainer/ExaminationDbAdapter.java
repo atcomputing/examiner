@@ -86,12 +86,12 @@ public class ExaminationDbAdapter {
 		return db.insert(ExamTrainer.Choices.TABLE_NAME, null, values);
 	}
 
-	public long addCorrectAnswers(long questionId, String answer) {
+	public long addAnswer(long questionId, String answer) {
 	
 		ContentValues values = new ContentValues();
-		values.put(ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID, questionId);
-		values.put(ExamTrainer.CorrectAnswers.COLUMN_NAME_ANSWER, answer);
-		return db.insert(ExamTrainer.CorrectAnswers.TABLE_NAME, null, values);
+		values.put(ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID, questionId);
+		values.put(ExamTrainer.Answers.COLUMN_NAME_ANSWER, answer);
+		return db.insert(ExamTrainer.Answers.TABLE_NAME, null, values);
 	}
 	
 	public long addScore(String date, int score) {
@@ -104,10 +104,10 @@ public class ExaminationDbAdapter {
 	
 	public long addScoresAnswers(long examId, long questionId, String answer) {
 		ContentValues values = new ContentValues();
-		values.put(ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID, questionId);
-		values.put(ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER, answer);
-		values.put(ExamTrainer.ScoresAnswers.COLUMN_NAME_EXAM_ID, examId);
-		return db.insert(ExamTrainer.ScoresAnswers.TABLE_NAME, null, values);
+		values.put(ExamTrainer.AnswersPerExam.COLUMN_NAME_QUESTION_ID, questionId);
+		values.put(ExamTrainer.AnswersPerExam.COLUMN_NAME_ANSWER, answer);
+		values.put(ExamTrainer.AnswersPerExam.COLUMN_NAME_EXAM_ID, examId);
+		return db.insert(ExamTrainer.AnswersPerExam.TABLE_NAME, null, values);
 	}
 	
 	
@@ -132,8 +132,8 @@ public class ExaminationDbAdapter {
 	 * @return true if rows were deleted, false if nothing was deleted.
 	 */
 	public boolean deleteScore(long id) {
-		int status = db.delete(ExamTrainer.ScoresAnswers.TABLE_NAME, 
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_EXAM_ID + "=" + id, null);
+		int status = db.delete(ExamTrainer.AnswersPerExam.TABLE_NAME, 
+				ExamTrainer.AnswersPerExam.COLUMN_NAME_EXAM_ID + "=" + id, null);
 		//If ScoresAnswers rows were deleted, delete the corresponding Score as well
 		if( status > 0 ) {
 			return db.delete(ExamTrainer.Scores.TABLE_NAME, 
@@ -223,26 +223,12 @@ public class ExaminationDbAdapter {
 	 * row was found for the given questionId. 
 	 * @throws SQLException
 	 */
-	public Cursor getAnswers(long questionId) throws SQLException {
+	public Cursor getAnswers(long questionId) {
 		Cursor mCursor = db.query(true, ExamTrainer.Answers.TABLE_NAME, 
 				new String[] {
 				ExamTrainer.Answers.COLUMN_NAME_ANSWER
 				},
 				ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
-				null, null, null, null, null);
-		
-		if(mCursor.moveToFirst())
-			return mCursor;
-		
-		return null;
-	}
-	
-	public Cursor getCorrectAnswers(long questionId) throws SQLException {
-		Cursor mCursor = db.query(true, ExamTrainer.CorrectAnswers.TABLE_NAME, 
-				new String[] {
-				ExamTrainer.CorrectAnswers.COLUMN_NAME_ANSWER
-				},
-				ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
 				null, null, null, null, null);
 		
 		if(mCursor.moveToFirst())
@@ -266,13 +252,13 @@ public class ExaminationDbAdapter {
 	}
 
 	public Cursor getScoresAnswers(long examId) {
-		Cursor cursor = db.query(true, ExamTrainer.ScoresAnswers.TABLE_NAME, 
+		Cursor cursor = db.query(true, ExamTrainer.AnswersPerExam.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.ScoresAnswers._ID,
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER,
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID
+				ExamTrainer.AnswersPerExam._ID,
+				ExamTrainer.AnswersPerExam.COLUMN_NAME_ANSWER,
+				ExamTrainer.AnswersPerExam.COLUMN_NAME_QUESTION_ID
 				},
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_EXAM_ID + "=" + examId, 
+				ExamTrainer.AnswersPerExam.COLUMN_NAME_EXAM_ID + "=" + examId, 
 				null, null, null, null, null);
 		
 		if(cursor.moveToFirst())
@@ -415,14 +401,14 @@ public class ExaminationDbAdapter {
 	 * @return true if all answers are correct, false otherwise
 	 */
 	public boolean checkOpenAnswer(long questionId, long examId) {
-		String correctAnswersQuestionId = ExamTrainer.CorrectAnswers.TABLE_NAME + "." + ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID;
-		String correctAnswersAnswer = ExamTrainer.CorrectAnswers.TABLE_NAME + "." + ExamTrainer.CorrectAnswers.COLUMN_NAME_ANSWER;
-		String ScoresAnswersQuestionId = ExamTrainer.ScoresAnswers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID;
-		String ScoresAnswersAnswer = ExamTrainer.ScoresAnswers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_ANSWER;
+		String correctAnswersQuestionId = ExamTrainer.Answers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID;
+		String correctAnswersAnswer = ExamTrainer.Answers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_ANSWER;
+		String ScoresAnswersQuestionId = ExamTrainer.AnswersPerExam.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID;
+		String ScoresAnswersAnswer = ExamTrainer.AnswersPerExam.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_ANSWER;
 		String sqlQuery = "SELECT " 
 			+ correctAnswersQuestionId + 
 			" FROM " 
-			+ ExamTrainer.CorrectAnswers.TABLE_NAME + ", " + ExamTrainer.ScoresAnswers.TABLE_NAME +
+			+ ExamTrainer.Answers.TABLE_NAME + ", " + ExamTrainer.AnswersPerExam.TABLE_NAME +
 			" WHERE "
 			+ correctAnswersQuestionId + 
 			" = "
@@ -432,7 +418,7 @@ public class ExaminationDbAdapter {
 			" = "
 			+ ScoresAnswersAnswer +
 			" AND "
-			+ ExamTrainer.ScoresAnswers.COLUMN_NAME_EXAM_ID + " = " + examId
+			+ ExamTrainer.AnswersPerExam.COLUMN_NAME_EXAM_ID + " = " + examId
 			;
 		Cursor mCursor = db.rawQuery(sqlQuery, null);
 		if (mCursor != null) {
@@ -450,23 +436,23 @@ public class ExaminationDbAdapter {
 	 * @param examId  The ID of the score associated with the exam
 	 * @return true if all answers are correct, false otherwise
 	 * 
-	 * SELECT CorrectAnswers.question_id FROM CorrectAnswers, ScoresAnswers 
-	 * WHERE CorrectAnswers.question_id = ScoresAnswers.question_id
+	 * SELECT Answers.question_id FROM Answers, ScoresAnswers 
+	 * WHERE Answers.question_id = ScoresAnswers.question_id
 	 * AND CorrectAnswers.answer =  ScoresAnswers.answer
 	 * AND ScoresAnswers.exam_id = examId;
 	 */
 	public boolean checkMultipleChoiceAnswer(long questionId, long examId) {
 		int answersCount = getAnswers(questionId).getCount();
-		int correctAnswersCount = getCorrectAnswers(questionId).getCount();
+		int correctAnswersCount = getAnswers(questionId).getCount();
 		if ( answersCount == correctAnswersCount ) {
-		String correctAnswersQuestionId = ExamTrainer.CorrectAnswers.TABLE_NAME + "." + ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID;
-		String correctAnswersAnswer = ExamTrainer.CorrectAnswers.TABLE_NAME + "." + ExamTrainer.CorrectAnswers.COLUMN_NAME_ANSWER;
-		String ScoresAnswersQuestionId = ExamTrainer.ScoresAnswers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID;
-		String ScoresAnswersAnswer = ExamTrainer.ScoresAnswers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_ANSWER;
+		String correctAnswersQuestionId = ExamTrainer.Answers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID;
+		String correctAnswersAnswer = ExamTrainer.Answers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_ANSWER;
+		String ScoresAnswersQuestionId = ExamTrainer.AnswersPerExam.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID;
+		String ScoresAnswersAnswer = ExamTrainer.AnswersPerExam.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_ANSWER;
 		String sqlQuery = "SELECT " 
 			+ correctAnswersQuestionId + 
 			" FROM " 
-			+ ExamTrainer.CorrectAnswers.TABLE_NAME + ", " + ExamTrainer.ScoresAnswers.TABLE_NAME +
+			+ ExamTrainer.Answers.TABLE_NAME + ", " + ExamTrainer.AnswersPerExam.TABLE_NAME +
 			" WHERE "
 			+ correctAnswersQuestionId + 
 			" = "
@@ -476,7 +462,7 @@ public class ExaminationDbAdapter {
 			" = "
 			+ ScoresAnswersAnswer +
 			" AND "
-			+ ExamTrainer.ScoresAnswers.COLUMN_NAME_EXAM_ID + " = " + examId
+			+ ExamTrainer.AnswersPerExam.COLUMN_NAME_EXAM_ID + " = " + examId
 			;
 		    Cursor mCursor = db.rawQuery(sqlQuery, null);
 		    int count = mCursor.getCount();
@@ -493,11 +479,11 @@ public class ExaminationDbAdapter {
 	 * @return amount of answers for exam with ID examId
 	 */
 	public int getScoresAnswersCount(long examId) {
-		Cursor mCursor = db.query(true, ExamTrainer.ScoresAnswers.TABLE_NAME, 
+		Cursor mCursor = db.query(true, ExamTrainer.AnswersPerExam.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID
+				ExamTrainer.AnswersPerExam.COLUMN_NAME_QUESTION_ID
 				},
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_EXAM_ID + "=" + examId,
+				ExamTrainer.AnswersPerExam.COLUMN_NAME_EXAM_ID + "=" + examId,
 				null, null, null, null, null);
 		if (mCursor != null) {
 			return mCursor.getCount();
