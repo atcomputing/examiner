@@ -31,9 +31,7 @@ public class ExamResultsActivity extends Activity {
     	
         super.onCreate(savedInstanceState);
         
-        Intent intent = this.getIntent();
-        boolean calculateScore = intent.getBooleanExtra("calculateScore", false);
-        if(calculateScore) {
+        if(ExamTrainer.checkEndOfExam(this.getIntent())) {
         	showDialog(DIALOG_SHOW_SCORE_ID);
         }
         
@@ -97,13 +95,25 @@ public class ExamResultsActivity extends Activity {
 		examinationDbHelper.open(ExamTrainer.examDatabaseName);
     	long examId = examinationDbHelper.addScore(dateFormat.format(date), 0);
     	
-    	//TODO: add all questions to the scoresanswer table first. Because the check...Answer
-    	//methods will check the answers from the scoresanswer table.
     	List<Long> questionIDsList = examinationDbHelper.getAllQuestionIDs();
     	int amountOfQuestions = questionIDsList.size();
     	int answers_correct = 0;
     	for(int i = 0; i < amountOfQuestions; i++) {
     		long questionId = questionIDsList.get(i);
+    		
+    		//Add answer to the ScoresAnswers table
+    		Cursor answerCursor = examinationDbHelper.getAnswers(questionId);
+    		if ( answerCursor != null ) {
+    			int index = answerCursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
+    			do {
+    				String answer = answerCursor.getString(index);
+    				//TODO expand addScoresAnswers to check if answer is correct so that
+    				//we can fill the correct column as well.
+    				examinationDbHelper.addScoresAnswers(examId, questionId, answer);
+    			} while( answerCursor.moveToNext() );
+    			answerCursor.close();
+    		}
+    		
     		String questionType = examinationDbHelper.getQuestionType(questionId);
     		boolean answerCorrect = false;
     		if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
@@ -117,26 +127,9 @@ public class ExamResultsActivity extends Activity {
     			answers_correct++;
     		}
     		
-//    		Cursor answerCursor = examinationDbHelper.getAnswers(questionId);
-//    		if ( answerCursor != null ) {
-//    			int index = answerCursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
-//    			do {
-//    				String answer = answerCursor.getString(index);
-//    				examinationDbHelper.addScoresAnswers(examId, questionId, answer);
-//    				if ( examinationDbHelper.checkAnswer(answer, questionId)) {
-//    					Log.d(this.getClass().getName(), "calculateScore: answer " + answer + " is correct");
-//    					answers_correct++;
-//    				}
-//    				else {
-//    					Log.d(this.getClass().getName(), "calculateScore: answer " + answer + " is wrong");
-//    				}
-//    			} while( answerCursor.moveToNext() );
-//    			answerCursor.close();
-//    		}
     	}
     	
     	examinationDbHelper.updateScore(examId, answers_correct);
-    	
     	return answers_correct;
     }
 }

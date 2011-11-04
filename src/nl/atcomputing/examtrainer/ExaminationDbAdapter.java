@@ -415,22 +415,30 @@ public class ExaminationDbAdapter {
 	 * @return true if all answers are correct, false otherwise
 	 */
 	public boolean checkOpenAnswer(long questionId, long examId) {
+		String correctAnswersQuestionId = ExamTrainer.CorrectAnswers.TABLE_NAME + "." + ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID;
+		String correctAnswersAnswer = ExamTrainer.CorrectAnswers.TABLE_NAME + "." + ExamTrainer.CorrectAnswers.COLUMN_NAME_ANSWER;
+		String ScoresAnswersQuestionId = ExamTrainer.ScoresAnswers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID;
+		String ScoresAnswersAnswer = ExamTrainer.ScoresAnswers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_ANSWER;
 		String sqlQuery = "SELECT " 
-			+ ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID + 
+			+ correctAnswersQuestionId + 
 			" FROM " 
-			+ ExamTrainer.CorrectAnswers.TABLE_NAME + ", " + ExamTrainer.Answers.TABLE_NAME +
+			+ ExamTrainer.CorrectAnswers.TABLE_NAME + ", " + ExamTrainer.ScoresAnswers.TABLE_NAME +
 			" WHERE "
-			+ ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID + 
+			+ correctAnswersQuestionId + 
 			" = "
-			+ ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID +
+			+ ScoresAnswersQuestionId +
 			" AND "
-			+ ExamTrainer.CorrectAnswers.COLUMN_NAME_ANSWER +
+			+ correctAnswersAnswer +
 			" = "
-			+ ExamTrainer.Answers.COLUMN_NAME_ANSWER
+			+ ScoresAnswersAnswer +
+			" AND "
+			+ ExamTrainer.ScoresAnswers.COLUMN_NAME_EXAM_ID + " = " + examId
 			;
 		Cursor mCursor = db.rawQuery(sqlQuery, null);
 		if (mCursor != null) {
-			return mCursor.getCount() > 0;
+			int count = mCursor.getCount();
+			mCursor.close();
+			return count > 0;
 		}
 		return false;
 	}
@@ -441,29 +449,41 @@ public class ExaminationDbAdapter {
 	 * @param questionId ID of the question you want to check the answers for
 	 * @param examId  The ID of the score associated with the exam
 	 * @return true if all answers are correct, false otherwise
+	 * 
+	 * SELECT CorrectAnswers.question_id FROM CorrectAnswers, ScoresAnswers 
+	 * WHERE CorrectAnswers.question_id = ScoresAnswers.question_id
+	 * AND CorrectAnswers.answer =  ScoresAnswers.answer
+	 * AND ScoresAnswers.exam_id = examId;
 	 */
 	public boolean checkMultipleChoiceAnswer(long questionId, long examId) {
+		int answersCount = getAnswers(questionId).getCount();
+		int correctAnswersCount = getCorrectAnswers(questionId).getCount();
+		if ( answersCount == correctAnswersCount ) {
+		String correctAnswersQuestionId = ExamTrainer.CorrectAnswers.TABLE_NAME + "." + ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID;
+		String correctAnswersAnswer = ExamTrainer.CorrectAnswers.TABLE_NAME + "." + ExamTrainer.CorrectAnswers.COLUMN_NAME_ANSWER;
+		String ScoresAnswersQuestionId = ExamTrainer.ScoresAnswers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID;
+		String ScoresAnswersAnswer = ExamTrainer.ScoresAnswers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_ANSWER;
 		String sqlQuery = "SELECT " 
-			+ ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID + 
+			+ correctAnswersQuestionId + 
 			" FROM " 
-			+ ExamTrainer.CorrectAnswers.TABLE_NAME + ", " + ExamTrainer.Answers.TABLE_NAME +
+			+ ExamTrainer.CorrectAnswers.TABLE_NAME + ", " + ExamTrainer.ScoresAnswers.TABLE_NAME +
 			" WHERE "
-			+ ExamTrainer.CorrectAnswers.COLUMN_NAME_QUESTION_ID + 
+			+ correctAnswersQuestionId + 
 			" = "
-			+ ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID +
+			+ ScoresAnswersQuestionId +
 			" AND "
-			+ ExamTrainer.CorrectAnswers.COLUMN_NAME_ANSWER +
+			+ correctAnswersAnswer +
 			" = "
-			+ ExamTrainer.Answers.COLUMN_NAME_ANSWER
+			+ ScoresAnswersAnswer +
+			" AND "
+			+ ExamTrainer.ScoresAnswers.COLUMN_NAME_EXAM_ID + " = " + examId
 			;
-		Cursor mCursor = db.rawQuery(sqlQuery, null);
-		if (mCursor != null) {
-			int answersFound = mCursor.getCount();
-			mCursor = getCorrectAnswers(questionId);
-			if ( mCursor != null ) {
-				return mCursor.getCount() == answersFound;
-			}
+		    Cursor mCursor = db.rawQuery(sqlQuery, null);
+		    int count = mCursor.getCount();
+		    mCursor.close();
+		    return count == correctAnswersCount;
 		}
+		
 		return false;
 	}
 	

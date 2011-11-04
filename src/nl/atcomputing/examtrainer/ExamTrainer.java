@@ -1,5 +1,6 @@
 package nl.atcomputing.examtrainer;
 
+import android.content.Intent;
 import android.provider.BaseColumns;
 
 /**
@@ -11,6 +12,8 @@ public final class ExamTrainer {
 	public static String examTitle = "ExamTrainer";
 	public static String examDatabaseName = null;
 	public static boolean examReview = false;
+	public static final String questionNumber = "questionNumber";
+	public static final String endOfExam = "endOfExam";
 	
     // This class cannot be instantiated
     private ExamTrainer() {
@@ -39,6 +42,24 @@ public final class ExamTrainer {
     public static boolean getExamReview() {
     	return examReview;
     }
+    
+    	
+    	
+    	public static Boolean checkEndOfExam(Intent intent) {
+    		return intent.getBooleanExtra(endOfExam, false);
+    	}
+    	
+    	public static void setEndOfExam(Intent intent) {
+    		intent.putExtra(endOfExam, true);
+    	}
+    	
+    	public static void setQuestionNumber(Intent intent, int number) {
+    		intent.putExtra(questionNumber, number);
+    	}
+    	
+    	public static int getQuestionNumber(Intent intent) {
+    		return intent.getIntExtra(questionNumber, 1);
+    	}
     
     public static final class Exams implements BaseColumns {
     	private Exams() {}
@@ -133,5 +154,6 @@ public final class ExamTrainer {
         public static final String COLUMN_NAME_EXAM_ID = "exam_id";
         public static final String COLUMN_NAME_QUESTION_ID = "question_id";
         public static final String COLUMN_NAME_ANSWER = "answer";
+        public static final String COLUMN_NAME_ANSWER_CORRECT = "answer_correct";
     }
 }

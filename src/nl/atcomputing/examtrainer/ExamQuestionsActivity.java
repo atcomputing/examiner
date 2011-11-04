@@ -49,7 +49,7 @@ public class ExamQuestionsActivity extends Activity {
 		examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.examDatabaseName);
 		
-		questionNumber = intent.getIntExtra("question", 1);
+		questionNumber = ExamTrainer.getQuestionNumber(intent);
 		if ( ( questionNumber < 1 ) || ( ExamTrainer.examDatabaseName == null ) ) {
 			this.finish();
 		}
@@ -157,7 +157,7 @@ public class ExamQuestionsActivity extends Activity {
 	protected void showResults() {
 		Intent intent = new Intent(ExamQuestionsActivity.this, ExamResultsActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		intent.putExtra("calculatescore", true);
+		ExamTrainer.setEndOfExam(intent);
 		startActivity(intent);
 	}
 	
@@ -242,7 +242,7 @@ public class ExamQuestionsActivity extends Activity {
 					examinationDbHelper.setOpenAnswer(questionNumber, editText.getText().toString());
 				}
 				Intent intent = new Intent(ExamQuestionsActivity.this, ExamQuestionsActivity.class);
-				intent.putExtra("question", questionNumber - 1);
+				ExamTrainer.setQuestionNumber(intent, questionNumber - 1);
 				startActivity(intent);
 				finish();
 			}
@@ -259,7 +259,7 @@ public class ExamQuestionsActivity extends Activity {
 				}
 				else {
 					Intent intent = new Intent(ExamQuestionsActivity.this, ExamQuestionsActivity.class);
-					intent.putExtra("question", questionNumber + 1);
+					ExamTrainer.setQuestionNumber(intent, questionNumber + 1);
 					startActivity(intent);
 					finish();
 				}
