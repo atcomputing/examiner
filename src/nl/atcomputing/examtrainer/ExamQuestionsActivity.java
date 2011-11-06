@@ -33,6 +33,7 @@ public class ExamQuestionsActivity extends Activity {
 	private ExaminationDbAdapter examinationDbHelper;
 	private Cursor cursorQuestion;
 	private int questionNumber;
+	private long examId;
 	private String questionType;
 	private EditText editText;
 	
@@ -48,6 +49,8 @@ public class ExamQuestionsActivity extends Activity {
 
 		//TODO add new exam when questionNumber equals 1
 		//the examId must be used to add answers to AnswersPerExam
+		
+		examId = ExamTrainer.getExamId();
 		
 		examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.examDatabaseName);
@@ -177,16 +180,17 @@ public class ExamQuestionsActivity extends Activity {
 				cbox = new CheckBox(this);
 				cbox.setText(choice);
 				
-				if ( examinationDbHelper.answerPresent(questionNumber, choice) ) {
+				if ( examinationDbHelper.scoresAnswerPresent(examId, 
+						questionNumber, choice) ) {
 					cbox.setChecked(true);
 				}
 				
 				cbox.setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
 						if (((CheckBox) v).isChecked()) {
-							examinationDbHelper.setMultipleChoiceAnswer(questionNumber, choice);
+							examinationDbHelper.setScoresAnswersMultipleChoice(examId, questionNumber, choice);
 						} else {
-							examinationDbHelper.deleteAnswer(questionNumber, choice);
+							examinationDbHelper.deleteScoresAnswer(examId, questionNumber, choice);
 						}
 
 					}
@@ -242,7 +246,7 @@ public class ExamQuestionsActivity extends Activity {
 		button_prev_question.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-					examinationDbHelper.setOpenAnswer(questionNumber, editText.getText().toString());
+					examinationDbHelper.setScoresAnswersOpen(examId, questionNumber, editText.getText().toString());
 				}
 				Intent intent = new Intent(ExamQuestionsActivity.this, ExamQuestionsActivity.class);
 				ExamTrainer.setQuestionNumber(intent, questionNumber - 1);
@@ -254,7 +258,7 @@ public class ExamQuestionsActivity extends Activity {
 		button_next_question.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-					examinationDbHelper.setOpenAnswer(questionNumber, editText.getText().toString());
+					examinationDbHelper.setScoresAnswersOpen(examId, questionNumber, editText.getText().toString());
 				}
 				
 				if ( questionNumber >= examinationDbHelper.getQuestionsCount() ) {

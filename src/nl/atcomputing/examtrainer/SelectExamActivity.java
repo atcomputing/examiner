@@ -54,12 +54,10 @@ public class SelectExamActivity extends Activity {
 	  }
 	  
 	  protected void startExam(String examTitle, String dateInstalled) {
-		  ExamTrainer.setExamTitle(examTitle);
-		  ExamTrainer.setExamReview(false);
-    	  ExamTrainer.setExamDatabaseName(examTitle, dateInstalled);
-    	  
-    	  Intent intent = new Intent(SelectExamActivity.this, ExamQuestionsActivity.class);
-    	  intent.putExtra("question", 1);
-		  startActivity(intent);
+		  Intent intent = new Intent(SelectExamActivity.this, ExamQuestionsActivity.class);
+    	  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+    	  long examId = examinationDbHelper.createNewScore();
+    	  ExamTrainer.startNewExam(examId, examTitle, dateInstalled, intent);
+    	  startActivity(intent);
 	  }
 }

@@ -120,10 +120,10 @@ public class ExamReviewActivity extends Activity {
 				
 
 				if( cursor.moveToNext() ) {
-					int index = cursor.getColumnIndex(ExamTrainer.AnswersPerExam.COLUMN_NAME_QUESTION_ID);
+					int index = cursor.getColumnIndex(ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID);
 					questionId = cursor.getLong(index);
 
-					index = cursor.getColumnIndex(ExamTrainer.AnswersPerExam.COLUMN_NAME_ANSWER);
+					index = cursor.getColumnIndex(ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER);
 					String answer = cursor.getString(index);
 //TODO add column to ScoresAnswers table specifying if answer is correct or not to save precious CPU
 //					if ( examinationDbHelper.checkAnswer(answer, questionId) == true ) {

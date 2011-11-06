@@ -87,13 +87,10 @@ public class ExamResultsActivity extends Activity {
 
     private int calculateScore() {
     	
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-    	Date date = new Date();
-    	
     	ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.examDatabaseName);
-    	long examId = examinationDbHelper.addScore(dateFormat.format(date), 0);
+    	
+    	long examId = ExamTrainer.getExamId();
     	
     	List<Long> questionIDsList = examinationDbHelper.getAllQuestionIDs();
     	int amountOfQuestions = questionIDsList.size();
@@ -117,10 +114,10 @@ public class ExamResultsActivity extends Activity {
     		String questionType = examinationDbHelper.getQuestionType(questionId);
     		boolean answerCorrect = false;
     		if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-    			answerCorrect = examinationDbHelper.checkOpenAnswer(questionId, examId);
+    			answerCorrect = examinationDbHelper.checkScoresAnswerOpen(questionId, examId);
     		}
     		else {
-    			answerCorrect = examinationDbHelper.checkMultipleChoiceAnswer(questionId, examId);
+    			answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(questionId, examId);
     		}
     		
     		if ( answerCorrect ) {

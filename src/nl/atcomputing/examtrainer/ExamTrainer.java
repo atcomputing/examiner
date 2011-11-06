@@ -1,5 +1,9 @@
 package nl.atcomputing.examtrainer;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
 import android.content.Intent;
 import android.provider.BaseColumns;
 
@@ -12,6 +16,7 @@ public final class ExamTrainer {
 	public static String examTitle = "ExamTrainer";
 	public static String examDatabaseName = null;
 	public static boolean examReview = false;
+	public static long examId = -1;
 	public static final String questionNumber = "questionNumber";
 	public static final String endOfExam = "endOfExam";
 	
@@ -19,6 +24,22 @@ public final class ExamTrainer {
     private ExamTrainer() {
     }
 
+    public static void startNewExam(long examId, String examTitle, String date, Intent intent) {
+    	setExamDatabaseName(examTitle, date);
+    	setExamTitle(examTitle);
+    	setExamReview(false);
+    	setQuestionNumber(intent, 1);
+    	setExamId(examId);
+    }
+    
+    public static void setExamId(long id) {
+    	examId = id;
+    }
+    
+    public static long getExamId() {
+    	return examId;
+    }
+    
     public static void setExamDatabaseName(String examTitle, String date) {
     	examDatabaseName = examTitle + "-" + date;
     }
@@ -135,10 +156,10 @@ public final class ExamTrainer {
         public static final String COLUMN_NAME_SCORE = "score";
     }
     
-    public static final class AnswersPerExam implements BaseColumns {
+    public static final class ScoresAnswers implements BaseColumns {
 
         // This class cannot be instantiated
-        private AnswersPerExam() {}
+        private ScoresAnswers() {}
         
         public static final String TABLE_NAME = "AnswersPerExam";
 
