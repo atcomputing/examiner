@@ -4,12 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.AdapterView.OnItemClickListener;
 
 /**
  * @author martijn brekhof
@@ -20,6 +19,7 @@ import android.widget.AdapterView.OnItemClickListener;
 //http://www.codemobiles.com/forum/viewtopic.php?t=876
 
 public class SelectExamActivity extends Activity {
+	private final String TAG = this.getClass().getName();
 	  private SelectExamAdapter adap;
 	  private static Cursor cursor;
 	  private ExamTrainerDbAdapter examTrainerDbHelper;
@@ -53,11 +53,5 @@ public class SelectExamActivity extends Activity {
 		  examTrainerDbHelper.close();
 	  }
 	  
-	  protected void startExam(String examTitle, String dateInstalled) {
-		  Intent intent = new Intent(SelectExamActivity.this, ExamQuestionsActivity.class);
-    	  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
-    	  long examId = examinationDbHelper.createNewScore();
-    	  ExamTrainer.startNewExam(examId, examTitle, dateInstalled, intent);
-    	  startActivity(intent);
-	  }
+	  
 }

@@ -4,6 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import android.content.ContentValues;
@@ -103,14 +104,22 @@ public class ExaminationDbAdapter {
 	 * @return _ID of the row that must be used as exam_id in the other tables
 	 */
 	public long createNewScore() {
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-    	String date = dateFormat.format(new Date());
-    	
-		ContentValues values = new ContentValues();
-		values.put(ExamTrainer.Scores.COLUMN_NAME_DATE, date);
-		values.put(ExamTrainer.Scores.COLUMN_NAME_SCORE, 0);
-		return db.insert(ExamTrainer.Scores.TABLE_NAME, null, values);
+		try {
+			String format = new String("yyyy-MM-dd HH:mm");
+			SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.getDefault());
+			dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+	    	String date = dateFormat.format(new Date());
+	    	ContentValues values = new ContentValues();
+			values.put(ExamTrainer.Scores.COLUMN_NAME_DATE, date);
+			values.put(ExamTrainer.Scores.COLUMN_NAME_SCORE, 0);
+			return db.insert(ExamTrainer.Scores.TABLE_NAME, null, values);
+		} catch (NullPointerException e) {
+			Log.d(TAG, "createNewScore null pointer exception: " + e.getMessage());
+			return -1;
+		} catch (IllegalArgumentException e) {
+			Log.d(TAG, "createNewScore Illegal Argument: " + e.getMessage());
+			return -1;
+		}
 	}
 	
 	
@@ -219,13 +228,6 @@ public class ExaminationDbAdapter {
 		return list;
 	}
 	
-	/**
-	 * @brief Retrieves answer from the score table for the given question ID.
-	 * @param questionId The row number of the question in the question table
-	 * @return Cursor that matched the SQL query. Note that Cursor can be null if no 
-	 * row was found for the given questionId. 
-	 * @throws SQLException
-	 */
 	public Cursor getAnswers(long questionId) {
 		Cursor mCursor = db.query(true, ExamTrainer.Answers.TABLE_NAME, 
 				new String[] {
@@ -278,6 +280,22 @@ public class ExaminationDbAdapter {
 		return null;
 	}
 	
+	public Cursor getScoresAnswers(long examId, long questionId) {
+		Cursor cursor = db.query(true, ExamTrainer.ScoresAnswers.TABLE_NAME, 
+				new String[] {
+				ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER
+				},
+				ExamTrainer.ScoresAnswers.COLUMN_NAME_EXAM_ID + "=" + examId
+				+  " AND " +
+				ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
+				null, null, null, null, null);
+		
+		if(cursor.moveToFirst())
+			return cursor;
+		
+		return null;
+	}
+	
 	public Cursor getScores() {
 		Cursor cursor = db.query(true, ExamTrainer.Scores.TABLE_NAME, 
 				new String[] {
@@ -320,14 +338,14 @@ public class ExaminationDbAdapter {
 	 * @throws SQLException
 	 */
 	public boolean scoresAnswerPresent(long examId, long questionId, String answer) {
-		 String whereClause = ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID + "=" + questionId
-				+ " AND " + ExamTrainer.Answers.COLUMN_NAME_ANSWER + "=" + 
-				"\"" + answer + "\""
+		 String whereClause = ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId
+				+ " AND " + ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER + "=" + 
+				"\"" + answer + "\"" + " AND "
 				+ ExamTrainer.ScoresAnswers.COLUMN_NAME_EXAM_ID + "=" + examId;
 			
-		Cursor mCursor = db.query(true, ExamTrainer.Answers.TABLE_NAME, 
+		Cursor mCursor = db.query(true, ExamTrainer.ScoresAnswers.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.Answers.COLUMN_NAME_ANSWER
+				ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER
 				},
 				whereClause, 
 				null, null, null, null, null);
@@ -456,7 +474,7 @@ public class ExaminationDbAdapter {
 	 * AND ScoresAnswers.exam_id = examId;
 	 */
 	public boolean checkScoresAnswersMultipleChoice(long questionId, long examId) {
-		int answersCount = getAnswers(questionId).getCount();
+		int answersCount = getScoresAnswers(examId, questionId).getCount();
 		int correctAnswersCount = getAnswers(questionId).getCount();
 		if ( answersCount == correctAnswersCount ) {
 		String correctAnswersQuestionId = ExamTrainer.Answers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID;

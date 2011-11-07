@@ -51,7 +51,7 @@ public class ExamQuestionsActivity extends Activity {
 		//the examId must be used to add answers to AnswersPerExam
 		
 		examId = ExamTrainer.getExamId();
-		
+		Log.d(TAG, "examId: " + examId);
 		examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.examDatabaseName);
 		
@@ -229,9 +229,9 @@ public class ExamQuestionsActivity extends Activity {
 			v_layout.addView(layout);
 		} else if ( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
 			editText = new EditText(this);
-			Cursor aCursor = examinationDbHelper.getAnswers(questionNumber);
+			Cursor aCursor = examinationDbHelper.getScoresAnswers(examId, questionNumber);
 			if ( aCursor != null ) {
-				index = aCursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
+				index = aCursor.getColumnIndex(ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER);
 				text = aCursor.getString(index);
 				editText.setText(text.toString());
 				aCursor.close();

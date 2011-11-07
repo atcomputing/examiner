@@ -23,14 +23,6 @@ public final class ExamTrainer {
     // This class cannot be instantiated
     private ExamTrainer() {
     }
-
-    public static void startNewExam(long examId, String examTitle, String date, Intent intent) {
-    	setExamDatabaseName(examTitle, date);
-    	setExamTitle(examTitle);
-    	setExamReview(false);
-    	setQuestionNumber(intent, 1);
-    	setExamId(examId);
-    }
     
     public static void setExamId(long id) {
     	examId = id;
@@ -161,7 +153,7 @@ public final class ExamTrainer {
         // This class cannot be instantiated
         private ScoresAnswers() {}
         
-        public static final String TABLE_NAME = "AnswersPerExam";
+        public static final String TABLE_NAME = "ScoresAnswers";
 
         public static final String COLUMN_NAME_EXAM_ID = "exam_id";
         public static final String COLUMN_NAME_QUESTION_ID = "question_id";

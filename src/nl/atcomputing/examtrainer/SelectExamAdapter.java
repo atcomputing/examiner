@@ -3,6 +3,7 @@ package  nl.atcomputing.examtrainer;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +29,7 @@ public class SelectExamAdapter extends CursorAdapter  {
 			    int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
 		        holder.examTitle = cursor.getString(index);
 		        index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
-			    holder.examDate = cursor.getString(index);
+			    holder.examInstallationDate = cursor.getString(index);
 			    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS);
 			    holder.examAmountOfItems = cursor.getInt(index);
 			    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
@@ -40,12 +41,8 @@ public class SelectExamAdapter extends CursorAdapter  {
 			    holder.examTitleView.setText(holder.examTitle);
 			    holder.examStartButton.setOnClickListener(new View.OnClickListener() {
 					
-					public void onClick(View v) {
-						ExamTrainer.setExamTitle(holder.examTitle);
-						  ExamTrainer.setExamReview(false);
-				    	  ExamTrainer.setExamDatabaseName(holder.examTitle, holder.examDate);
-				    	  
-						startExam(myContext);
+					public void onClick(View v) {  
+						startExam(myContext, holder);
 					}
 				});
 			    
@@ -54,7 +51,7 @@ public class SelectExamAdapter extends CursorAdapter  {
 					public void onClick(View v) {
 						Toast.makeText(myContext, holder.examTitle + "\n" +
 								myContext.getString(R.string.installed_on) + 
-								" " + holder.examDate + "\n" +
+								" " + holder.examInstallationDate + "\n" +
 								myContext.getString(R.string.questions) + 
 								": " +  holder.examAmountOfItems + "\n" +
 								myContext.getString(R.string.correct_answer_required_to_pass) +
@@ -73,8 +70,7 @@ public class SelectExamAdapter extends CursorAdapter  {
 		  
 		class ViewHolder {
 			  String examTitle;
-			  long examID;
-			  String examDate;
+			  String examInstallationDate;
 			  String url;
 			  int examAmountOfItems;
 			  int examItemsNeededToPass;
@@ -82,9 +78,20 @@ public class SelectExamAdapter extends CursorAdapter  {
 		      Button examStartButton;
 		    }
 		
-		private void startExam(Context context) {
+		protected void startExam(Context context, ViewHolder holder) {
 			Intent intent = new Intent(context, ExamQuestionsActivity.class);
-	    	intent.putExtra("question", 1);
-			context.startActivity(intent);
+			  ExamTrainer.setExamDatabaseName(holder.examTitle, holder.examInstallationDate);
+	    	  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(context);
+	    	  examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+	    	  long examId = examinationDbHelper.createNewScore();
+	    	  examinationDbHelper.close();
+	    	  if( examId == -1 ) {
+	    		  Log.d(TAG, "Failed to create a new score");
+	    		  Toast.makeText(context, "Failed to create a new score for the exam", Toast.LENGTH_LONG);
+	    	  } else {
+	    		  ExamTrainer.setExamId(examId);
+	    		  ExamTrainer.setQuestionNumber(intent, 1);
+	    		  context.startActivity(intent);
+	    	  }
 		}
 	  }

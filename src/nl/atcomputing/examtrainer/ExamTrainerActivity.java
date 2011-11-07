@@ -21,7 +21,7 @@ public class ExamTrainerActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.main);		
-		
+
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		examTrainerDbHelper.open();
 		examTrainerDbHelper.initialize();
