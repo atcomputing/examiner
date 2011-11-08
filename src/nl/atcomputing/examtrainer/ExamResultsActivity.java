@@ -114,7 +114,7 @@ public class ExamResultsActivity extends Activity {
     		String questionType = examinationDbHelper.getQuestionType(questionId);
     		boolean answerCorrect = false;
     		if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-    			answerCorrect = examinationDbHelper.checkScoresAnswerOpen(questionId, examId);
+    			answerCorrect = examinationDbHelper.checkScoresAnswersOpen(questionId, examId);
     		}
     		else {
     			answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(questionId, examId);
@@ -122,6 +122,10 @@ public class ExamResultsActivity extends Activity {
     		
     		if ( answerCorrect ) {
     			answers_correct++;
+    			examinationDbHelper.addResultPerQuestion(examId, questionId, true);
+    		}
+    		else {
+    			examinationDbHelper.addResultPerQuestion(examId, questionId, false);
     		}
     		
     	}

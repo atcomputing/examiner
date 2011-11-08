@@ -57,7 +57,7 @@ public class ExamReviewActivity extends Activity {
 
 		examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.examDatabaseName);
-		cursor = examinationDbHelper.getScoresAnswers(examId);
+		cursor = examinationDbHelper.getResultPerQuestion(examId);
 
 		Resources res = this.getResources();
 		not_okImage = res.getDrawable(R.drawable.not_ok_48x48);
@@ -72,6 +72,7 @@ public class ExamReviewActivity extends Activity {
 
 	protected void onDestroy() {
 		super.onDestroy();
+		cursor.close();
 		examinationDbHelper.close();
 	}
 
@@ -120,15 +121,14 @@ public class ExamReviewActivity extends Activity {
 				
 
 				if( cursor.moveToNext() ) {
-					int index = cursor.getColumnIndex(ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID);
+					int index = cursor.getColumnIndex(ExamTrainer.ResultPerQuestion.COLUMN_NAME_QUESTION_ID);
 					questionId = cursor.getLong(index);
 
-					index = cursor.getColumnIndex(ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER);
-					String answer = cursor.getString(index);
-//TODO add column to ScoresAnswers table specifying if answer is correct or not to save precious CPU
-//					if ( examinationDbHelper.checkAnswer(answer, questionId) == true ) {
-//						ok_notokImage = okImage;
-//					}
+					index = cursor.getColumnIndex(ExamTrainer.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT);
+					int answer = cursor.getInt(index);
+					if ( answer == 1 ) {
+						ok_notokImage = okImage;
+					}
 				}
 				
 				questionIds.add(questionId);
