@@ -24,6 +24,7 @@ public class ExamTrainerActivity extends Activity {
 
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		examTrainerDbHelper.open();
+		examTrainerDbHelper.upgrade();
 		examTrainerDbHelper.initialize();
 		examTrainerDbHelper.close();
 		

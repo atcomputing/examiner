@@ -50,6 +50,13 @@ public class ExaminationDatabaseHelper extends SQLiteOpenHelper {
 	    + ExamTrainer.Scores.COLUMN_NAME_DATE + " TEXT"
 	    + ");";
 
+	private static final String DATABASE_CREATE_RESULTPERQUESTION_TABLE = "CREATE TABLE " 
+			+ ExamTrainer.ResultPerQuestion.TABLE_NAME + " ("
+			+ ExamTrainer.ResultPerQuestion._ID + " INTEGER PRIMARY KEY,"
+		    + ExamTrainer.ResultPerQuestion.COLUMN_NAME_QUESTION_ID + " INTEGER,"
+		    + ExamTrainer.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT + " INTEGER,"
+		    + ExamTrainer.ResultPerQuestion.COLUMN_NAME_EXAM_ID + " INTEGER"
+		    + ");";
 	
 	public ExaminationDatabaseHelper(Context context, String databaseName) {
 		super(context, databaseName, null, DATABASE_VERSION);
@@ -62,6 +69,7 @@ public class ExaminationDatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL(DATABASE_CREATE_CHOICES_TABLE);
 		db.execSQL(DATABASE_CREATE_SCORESANSWERS_TABLE);
 		db.execSQL(DATABASE_CREATE_SCORES_TABLE);
+		db.execSQL(DATABASE_CREATE_RESULTPERQUESTION_TABLE);
 	}
 
 	@Override
@@ -75,6 +83,7 @@ public class ExaminationDatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.Choices.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.ScoresAnswers.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.Scores.TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.ResultPerQuestion.TABLE_NAME);
 		onCreate(db);	
 	}
 }
