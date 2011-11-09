@@ -42,7 +42,7 @@ public class ExaminationDbAdapter {
 	}
 	
 	public void printCursor(Cursor cursor) {
-		if( cursor != null ) {
+		if( (cursor != null ) && (cursor.getCount() > 0) ) {
 			cursor.moveToFirst();
 			do {
 				String[] columnNames = cursor.getColumnNames();
@@ -497,7 +497,7 @@ public class ExaminationDbAdapter {
 		Cursor mCursor = db.rawQuery(sqlQuery, null);
 		if (mCursor != null) {
 			int count = mCursor.getCount();
-			Log.d(TAG, "checkScoresAnswersOpen: " + sqlQuery);
+			Log.d(TAG, "checkScoresAnswersOpen: count: " + count + "\n" + sqlQuery);
 			printCursor(mCursor);
 		    mCursor.close();
 			return count > 0;
@@ -543,7 +543,8 @@ public class ExaminationDbAdapter {
 			;
 		    Cursor mCursor = db.rawQuery(sqlQuery, null);
 		    int count = mCursor.getCount();
-		    Log.d(TAG, "checkScoresAnswersMultipleChoice: " + sqlQuery);
+		    Log.d(TAG, "checkScoresAnswersMultipleChoice: count: " + count + 
+		    		"correctAnswerCount:" + correctAnswersCount + "\n" + sqlQuery);
 		    printCursor(mCursor);
 		    mCursor.close();
 		    return count == correctAnswersCount;

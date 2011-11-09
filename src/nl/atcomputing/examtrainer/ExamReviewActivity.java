@@ -110,6 +110,7 @@ public class ExamReviewActivity extends Activity {
 			View MyView = convertView;
 			long questionId = 0;
 			
+			Log.d(TAG, "position: "+ position + " convertView: " + convertView );
 			if ( convertView == null )
 			{  
 				Drawable ok_notokImage;
@@ -126,6 +127,7 @@ public class ExamReviewActivity extends Activity {
 
 					index = cursor.getColumnIndex(ExamTrainer.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT);
 					int answer = cursor.getInt(index);
+					Log.d(TAG, "answer: " + answer);
 					if ( answer == 1 ) {
 						ok_notokImage = okImage;
 					}
