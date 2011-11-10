@@ -31,7 +31,8 @@ public class ExamResultsActivity extends Activity {
     	
         super.onCreate(savedInstanceState);
         
-        if(ExamTrainer.checkEndOfExam(this.getIntent())) {
+        if( ( ExamTrainer.checkEndOfExam(this.getIntent()) ) && 
+        		( ! ExamTrainer.getExamReview() )) {
         	showDialog(DIALOG_SHOW_SCORE_ID);
         }
         

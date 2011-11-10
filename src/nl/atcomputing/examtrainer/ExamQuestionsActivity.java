@@ -32,7 +32,7 @@ import android.widget.Toast;
 public class ExamQuestionsActivity extends Activity {
 	private ExaminationDbAdapter examinationDbHelper;
 	private Cursor cursorQuestion;
-	private int questionNumber;
+	private long questionNumber;
 	private long examId;
 	private String questionType;
 	private EditText editText;
@@ -108,7 +108,7 @@ public class ExamQuestionsActivity extends Activity {
 		case DIALOG_ENDOFEXAM_ID:
 			builder = new AlertDialog.Builder(this);
 			int messageId;
-			if(ExamTrainer.examReview) {
+			if(ExamTrainer.getExamReview()) {
 				messageId = R.string.end_of_review_message;
 			} else {
 				messageId = R.string.end_of_exam_message;

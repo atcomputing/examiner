@@ -38,7 +38,7 @@ public class ShowScoresActivity extends Activity {
 		});
 		
 		examinationDbHelper = new ExaminationDbAdapter(this);
-		examinationDbHelper.open(ExamTrainer.examDatabaseName);
+		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		Cursor cursor = examinationDbHelper.getScores();
 		do {
 			Log.d(TAG, "item: " + cursor.getString(cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_DATE)));
@@ -77,7 +77,7 @@ public class ShowScoresActivity extends Activity {
 			.setPositiveButton("Review exam", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					Intent intent = new Intent(ShowScoresActivity.this, ExamReviewActivity.class);
-					intent.putExtra("examId", examId);
+					ExamTrainer.setExamId(examId);
 					startActivity(intent);
 				}
 			})

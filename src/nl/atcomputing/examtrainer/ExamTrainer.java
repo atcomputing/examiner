@@ -66,12 +66,12 @@ public final class ExamTrainer {
     		intent.putExtra(endOfExam, true);
     	}
     	
-    	public static void setQuestionNumber(Intent intent, int number) {
+    	public static void setQuestionNumber(Intent intent, long number) {
     		intent.putExtra(questionNumber, number);
     	}
     	
-    	public static int getQuestionNumber(Intent intent) {
-    		return intent.getIntExtra(questionNumber, 1);
+    	public static long getQuestionNumber(Intent intent) {
+    		return intent.getLongExtra(questionNumber, 1);
     	}
     
     public static final class Exams implements BaseColumns {

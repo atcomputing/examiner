@@ -50,8 +50,7 @@ public class ExamReviewActivity extends Activity {
 			}
 		});
 
-		Intent intent = getIntent();
-		examId = intent.getLongExtra("examId", 1);
+		examId = ExamTrainer.getExamId();
 		
 		Log.d(TAG, "databaseName: " + ExamTrainer.examDatabaseName + "examId: " + examId);
 
@@ -80,10 +79,10 @@ public class ExamReviewActivity extends Activity {
 		scoresGrid.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Log.d(TAG, "Pos: " + position + " QuestionId: " + adapter.getItem(position).toString());
+				Log.d(TAG, "Pos: " + position + " QuestionId: " + adapter.getItemId(position));
 				Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionsActivity.class);
-				intent.putExtra("question", (long) adapter.getItemId(position));
-				ExamTrainer.examReview = true;
+				ExamTrainer.setExamReview(true);
+				ExamTrainer.setQuestionNumber(intent, adapter.getItemId(position));
 				startActivity(intent);
 			}
 		});
@@ -113,25 +112,17 @@ public class ExamReviewActivity extends Activity {
 			Log.d(TAG, "position: "+ position + " convertView: " + convertView );
 			if ( convertView == null )
 			{  
-				Drawable ok_notokImage;
-				ok_notokImage = not_okImage;
+				int answer = 0;
 				
 				LayoutInflater li = getLayoutInflater();
 				MyView = li.inflate(R.layout.review_exam_entry, null);
-
-				
 
 				if( cursor.moveToPosition(position) ) {
 					int index = cursor.getColumnIndex(ExamTrainer.ResultPerQuestion.COLUMN_NAME_QUESTION_ID);
 					questionId = cursor.getLong(index);
 
 					index = cursor.getColumnIndex(ExamTrainer.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT);
-					int answer = cursor.getInt(index);
-					Log.d(TAG, "answer: " + answer);
-					if ( answer == 1 ) {
-						Log.d(TAG, "okImage");
-						ok_notokImage = okImage;
-					}
+					answer = cursor.getInt(index);
 				}
 				
 				questionIds.add(questionId);
@@ -140,18 +131,24 @@ public class ExamReviewActivity extends Activity {
 				tv.setText(Long.toString(questionId));
 				
 				ImageView iv = (ImageView)MyView.findViewById(R.id.reviewExamAnswer);
-				iv.setImageDrawable(ok_notokImage);
+				if( answer == 1 ) {
+					iv.setImageDrawable(okImage);
+				} 
+				else {
+					iv.setImageDrawable(not_okImage);
+				}
+					
 			}
 
 			return MyView;
 		}
 
 		public Object getItem(int position) {
-			return questionIds.get(position);
+			return 0;
 		}
 
 		public long getItemId(int position) {
-			return position;
+			return questionIds.get(position);
 		}
 		
 		
