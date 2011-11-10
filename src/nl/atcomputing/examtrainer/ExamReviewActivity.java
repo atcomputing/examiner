@@ -102,7 +102,7 @@ public class ExamReviewActivity extends Activity {
 		public int getCount() 
 		{
 			/* Set the number of element we want on the grid */
-			return examinationDbHelper.getScoresAnswersCount(examId);
+			return cursor.getCount();
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) 
@@ -121,7 +121,7 @@ public class ExamReviewActivity extends Activity {
 
 				
 
-				if( cursor.moveToNext() ) {
+				if( cursor.moveToPosition(position) ) {
 					int index = cursor.getColumnIndex(ExamTrainer.ResultPerQuestion.COLUMN_NAME_QUESTION_ID);
 					questionId = cursor.getLong(index);
 
@@ -129,6 +129,7 @@ public class ExamReviewActivity extends Activity {
 					int answer = cursor.getInt(index);
 					Log.d(TAG, "answer: " + answer);
 					if ( answer == 1 ) {
+						Log.d(TAG, "okImage");
 						ok_notokImage = okImage;
 					}
 				}
