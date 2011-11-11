@@ -3,6 +3,7 @@ package nl.atcomputing.examtrainer;
 import java.util.ArrayList;
 
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -52,10 +53,10 @@ public class ExamReviewActivity extends Activity {
 
 		examId = ExamTrainer.getExamId();
 		
-		Log.d(TAG, "databaseName: " + ExamTrainer.examDatabaseName + "examId: " + examId);
+		Log.d(TAG, "databaseName: " + ExamTrainer.getExamDatabaseName() + "examId: " + examId);
 
 		examinationDbHelper = new ExaminationDbAdapter(this);
-		examinationDbHelper.open(ExamTrainer.examDatabaseName);
+		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		cursor = examinationDbHelper.getResultPerQuestion(examId);
 
 		Resources res = this.getResources();
@@ -81,7 +82,7 @@ public class ExamReviewActivity extends Activity {
 					int position, long id) {
 				Log.d(TAG, "Pos: " + position + " QuestionId: " + adapter.getItemId(position));
 				Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionsActivity.class);
-				ExamTrainer.setExamReview(true);
+				ExamTrainer.setMode(ExamTrainerMode.REVIEW);
 				ExamTrainer.setQuestionNumber(intent, adapter.getItemId(position));
 				startActivity(intent);
 			}

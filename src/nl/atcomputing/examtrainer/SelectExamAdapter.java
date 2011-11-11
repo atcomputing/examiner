@@ -1,5 +1,6 @@
 package  nl.atcomputing.examtrainer;
 
+import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -38,11 +39,19 @@ public class SelectExamAdapter extends CursorAdapter  {
 			    holder.examTitleView = (TextView) view.findViewById(R.id.selectexamEntryTitle);
 		        holder.examStartButton = (Button) view.findViewById(R.id.selectexamStart);
 		        
+		        if( ExamTrainer.getMode() == ExamTrainerMode.HISTORY ) {
+		        	holder.examStartButton.setText(R.string.history);
+		        }
 			    holder.examTitleView.setText(holder.examTitle);
 			    holder.examStartButton.setOnClickListener(new View.OnClickListener() {
 					
-					public void onClick(View v) {  
-						startExam(myContext, holder);
+					public void onClick(View v) {
+						if( ExamTrainer.getMode() == ExamTrainerMode.HISTORY ) {
+							showHistory(myContext, holder);
+						}
+						else if ( ExamTrainer.getMode() == ExamTrainerMode.EXAM ) {
+							startExam(myContext, holder);
+						}
 					}
 				});
 			    
@@ -78,7 +87,13 @@ public class SelectExamAdapter extends CursorAdapter  {
 		      Button examStartButton;
 		    }
 		
-		protected void startExam(Context context, ViewHolder holder) {
+		private void showHistory(Context context, ViewHolder holder) {
+			Intent intent = new Intent(context, ShowScoresActivity.class);
+			ExamTrainer.setExamDatabaseName(holder.examTitle, holder.examInstallationDate);
+			context.startActivity(intent);
+		}
+		
+		private void startExam(Context context, ViewHolder holder) {
 			Intent intent = new Intent(context, ExamQuestionsActivity.class);
 			  ExamTrainer.setExamDatabaseName(holder.examTitle, holder.examInstallationDate);
 	    	  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(context);
@@ -90,7 +105,6 @@ public class SelectExamAdapter extends CursorAdapter  {
 	    		  Toast.makeText(context, "Failed to create a new score for the exam", Toast.LENGTH_LONG);
 	    	  } else {
 	    		  ExamTrainer.setExamId(examId);
-	    		  ExamTrainer.setExamReview(false);
 	    		  ExamTrainer.setQuestionNumber(intent, 1);
 	    		  context.startActivity(intent);
 	    	  }

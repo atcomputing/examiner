@@ -40,10 +40,6 @@ public class ShowScoresActivity extends Activity {
 		examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		Cursor cursor = examinationDbHelper.getScores();
-		do {
-			Log.d(TAG, "item: " + cursor.getString(cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_DATE)));
-		} while( cursor.moveToNext() );
-		cursor.moveToFirst();
 		adapter = new ShowScoresAdapter(this, R.layout.show_scores_entry, cursor);
 		scoresList.setAdapter(adapter);
 		

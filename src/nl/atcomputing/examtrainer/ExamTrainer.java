@@ -13,12 +13,16 @@ import android.provider.BaseColumns;
  */
 public final class ExamTrainer {
 	
-	public static String examTitle = "ExamTrainer";
-	public static String examDatabaseName = null;
-	public static boolean examReview = false;
-	public static long examId = -1;
-	public static final String questionNumber = "questionNumber";
-	public static final String endOfExam = "endOfExam";
+	public enum ExamTrainerMode {
+	    EXAM, REVIEW, HISTORY
+	}
+	
+	private static String examTitle = "ExamTrainer";
+	private static String examDatabaseName = null;
+	private static ExamTrainerMode mode = ExamTrainerMode.EXAM;
+	private static long examId = -1;
+	private static final String questionNumber = "questionNumber";
+	private static final String endOfExam = "endOfExam";
 	
     // This class cannot be instantiated
     private ExamTrainer() {
@@ -48,16 +52,14 @@ public final class ExamTrainer {
     	return examTitle;
     }
     
-    public static void setExamReview(boolean review) {
-    	examReview = review;
+    public static void setMode(ExamTrainerMode m) {
+    	mode = m;
     }
     
-    public static boolean getExamReview() {
-    	return examReview;
+    public static ExamTrainerMode getMode() {
+    	return mode;
     }
-    
-    	
-    	
+    	 
     	public static Boolean checkEndOfExam(Intent intent) {
     		return intent.getBooleanExtra(endOfExam, false);
     	}

@@ -2,6 +2,8 @@ package nl.atcomputing.examtrainer;
 
 import java.io.IOException;
 
+import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,16 +24,17 @@ public class ExamTrainerActivity extends Activity {
 		
 		setContentView(R.layout.main);		
 
-		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
-		examTrainerDbHelper.open();
-		examTrainerDbHelper.upgrade();
-		examTrainerDbHelper.initialize();
-		examTrainerDbHelper.close();
+//		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+//		examTrainerDbHelper.open();
+//		examTrainerDbHelper.upgrade();
+//		examTrainerDbHelper.initialize();
+//		examTrainerDbHelper.close();
 		
 		Button startExam = (Button) findViewById(R.id.button_select_exam);
 		startExam.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(ExamTrainerActivity.this, SelectExamActivity.class);
+				ExamTrainer.setMode(ExamTrainerMode.EXAM);
 				startActivity(intent);
 			}
 		});
@@ -44,10 +47,11 @@ public class ExamTrainerActivity extends Activity {
 			}
 		});
 		
-		Button reviewPreviousExam = (Button) findViewById(R.id.button_show_results);
+		Button reviewPreviousExam = (Button) findViewById(R.id.button_show_history);
 		reviewPreviousExam.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(ExamTrainerActivity.this, ExamResultsActivity.class);
+				Intent intent = new Intent(ExamTrainerActivity.this, SelectExamActivity.class);
+				ExamTrainer.setMode(ExamTrainerMode.HISTORY);
 				startActivity(intent);
 			}
 		});

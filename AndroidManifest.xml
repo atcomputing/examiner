@@ -14,7 +14,7 @@
 		</activity>
 		<activity android:name=".ExamQuestionsActivity"
 			android:label="@string/app_name" />
-		<activity android:name=".ExamResultsActivity"
+		<activity android:name=".ExamHistoryActivity"
 			android:exported="false" />
 			<activity android:name=".ExamReviewActivity"
 			android:exported="false" />

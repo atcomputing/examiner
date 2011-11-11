@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -39,6 +41,7 @@ public class ExamQuestionsActivity extends Activity {
 	
 	private static final int DIALOG_ENDOFEXAM_ID = 1;
 	private static final int DIALOG_SHOW_HINT_ID = 2;
+	private static final int DIALOG_SHOW_SCORE_ID = 3;
 	
 	private static final String TAG = "ExamQuestionsActivity";
 	
@@ -46,17 +49,14 @@ public class ExamQuestionsActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Intent intent = getIntent();
-
-		//TODO add new exam when questionNumber equals 1
-		//the examId must be used to add answers to AnswersPerExam
 		
 		examId = ExamTrainer.getExamId();
 		Log.d(TAG, "examId: " + examId);
 		examinationDbHelper = new ExaminationDbAdapter(this);
-		examinationDbHelper.open(ExamTrainer.examDatabaseName);
+		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		
 		questionNumber = ExamTrainer.getQuestionNumber(intent);
-		if ( ( questionNumber < 1 ) || ( ExamTrainer.examDatabaseName == null ) ) {
+		if ( ( questionNumber < 1 ) || ( ExamTrainer.getExamDatabaseName() == null ) ) {
 			this.finish();
 		}
 		else {
@@ -103,12 +103,27 @@ public class ExamQuestionsActivity extends Activity {
 
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog = null;
+		String message;
 		AlertDialog.Builder builder;
 		switch(id) {
+		case DIALOG_SHOW_SCORE_ID:
+    		int score = calculateScore();
+    		builder = new AlertDialog.Builder(this);
+    		message = getString(R.string.you_scored) + " " + Integer.toString(score);
+    		builder.setMessage(message)
+    		.setCancelable(false)
+    		.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+    			public void onClick(DialogInterface dialog, int id) {
+    				stopExam();
+    				dialog.dismiss();
+    			}
+    		});
+    		dialog = builder.create();
+    		break;
 		case DIALOG_ENDOFEXAM_ID:
 			builder = new AlertDialog.Builder(this);
 			int messageId;
-			if(ExamTrainer.getExamReview()) {
+			if(ExamTrainer.getMode() == ExamTrainerMode.REVIEW) {
 				messageId = R.string.end_of_review_message;
 			} else {
 				messageId = R.string.end_of_exam_message;
@@ -117,7 +132,12 @@ public class ExamQuestionsActivity extends Activity {
 			.setCancelable(false)
 			.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					showResults();
+					if( ExamTrainer.getMode() == ExamTrainerMode.EXAM ) {
+						showDialog(DIALOG_SHOW_SCORE_ID);
+					} 
+					else {
+						stopExam();
+					}
 					dialog.dismiss();
 				}
 			})
@@ -130,11 +150,11 @@ public class ExamQuestionsActivity extends Activity {
 			break;
 		case DIALOG_SHOW_HINT_ID:
 			builder = new AlertDialog.Builder(this);
-			if(ExamTrainer.examReview) {
+			if(ExamTrainer.getMode() == ExamTrainerMode.REVIEW) {
 				//showAnswers();
 			} 
 			else {
-				String message = examinationDbHelper.getHint(questionNumber);
+				message = examinationDbHelper.getHint(questionNumber);
 				if( message == null ) {
 					message = getString(R.string.hint_not_available);
 				}
@@ -157,13 +177,6 @@ public class ExamQuestionsActivity extends Activity {
 	protected void stopExam() {
 		Intent intent = new Intent(ExamQuestionsActivity.this, ExamTrainerActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
-	}
-
-	protected void showResults() {
-		Intent intent = new Intent(ExamQuestionsActivity.this, ExamResultsActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		ExamTrainer.setEndOfExam(intent);
 		startActivity(intent);
 	}
 	
@@ -210,7 +223,7 @@ public class ExamQuestionsActivity extends Activity {
 		setContentView(R.layout.question);
 
 		TextView title = (TextView) findViewById(R.id.textExamTitle);
-		title.setText(ExamTrainer.examTitle);
+		title.setText(ExamTrainer.getExamTitle());
 		
 		index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT);
 		text = cursorQuestion.getString(index);
@@ -273,4 +286,40 @@ public class ExamQuestionsActivity extends Activity {
 			}
 		});
 	}
+	
+private int calculateScore() {
+    	
+    	ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+    	
+    	long examId = ExamTrainer.getExamId();
+    	
+    	List<Long> questionIDsList = examinationDbHelper.getAllQuestionIDs();
+    	int amountOfQuestions = questionIDsList.size();
+    	int answers_correct = 0;
+    	for(int i = 0; i < amountOfQuestions; i++) {
+    		long questionId = questionIDsList.get(i);
+    		
+    		String questionType = examinationDbHelper.getQuestionType(questionId);
+    		boolean answerCorrect = false;
+    		if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
+    			answerCorrect = examinationDbHelper.checkScoresAnswersOpen(questionId, examId);
+    		}
+    		else {
+    			answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(questionId, examId);
+    		}
+    		
+    		if ( answerCorrect ) {
+    			answers_correct++;
+    			examinationDbHelper.addResultPerQuestion(examId, questionId, true);
+    		}
+    		else {
+    			examinationDbHelper.addResultPerQuestion(examId, questionId, false);
+    		}
+    		
+    	}
+    	
+    	examinationDbHelper.updateScore(examId, answers_correct);
+    	return answers_correct;
+    }
 }
