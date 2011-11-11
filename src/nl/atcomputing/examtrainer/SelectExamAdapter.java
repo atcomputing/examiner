@@ -90,6 +90,7 @@ public class SelectExamAdapter extends CursorAdapter  {
 	    		  Toast.makeText(context, "Failed to create a new score for the exam", Toast.LENGTH_LONG);
 	    	  } else {
 	    		  ExamTrainer.setExamId(examId);
+	    		  ExamTrainer.setExamReview(false);
 	    		  ExamTrainer.setQuestionNumber(intent, 1);
 	    		  context.startActivity(intent);
 	    	  }

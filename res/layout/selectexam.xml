@@ -3,15 +3,15 @@
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
+    <TextView
+    android:id="@+id/selectexam_no_exams_available"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/no_exams_available"/>
     <ListView android:layout_width="fill_parent"
               android:layout_height="wrap_content"
               android:id="@+id/select_exam_list"
               android:layout_weight="1"/>
-    <TextView
-    android:id="@android:id/empty"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/no_exams_available"/>
     <Button android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/selectexam_cancel"

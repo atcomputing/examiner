@@ -1,7 +1,6 @@
 package nl.atcomputing.examtrainer;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,6 +8,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 /**
  * @author martijn brekhof
@@ -38,10 +38,15 @@ public class SelectExamActivity extends Activity {
 	        });
 	    
 	    ListView selectExam = (ListView) this.findViewById(R.id.select_exam_list);
+	    TextView noExamsAvailable = (TextView) this.findViewById(R.id.selectexam_no_exams_available);
 	    examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		examTrainerDbHelper.open();
 		
 		cursor = examTrainerDbHelper.getInstalledExams();
+		if(cursor.getCount() > 0) {
+			//Remove exams not available text when there are exams installed
+			noExamsAvailable.setVisibility(View.GONE);
+		}
 		
 	    adap = new SelectExamAdapter(this, R.layout.selectexam_entry, cursor);
 	    selectExam.setAdapter(adap);
