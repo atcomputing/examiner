@@ -350,6 +350,20 @@ public class ExaminationDbAdapter {
 		return null;
 	}
 	
+	public Cursor getScore(long id) {
+		Cursor cursor = db.query(true, ExamTrainer.Scores.TABLE_NAME, 
+				new String[] {
+				ExamTrainer.Scores._ID,
+				ExamTrainer.Scores.COLUMN_NAME_DATE,
+				ExamTrainer.Scores.COLUMN_NAME_SCORE
+				},
+				ExamTrainer.Scores._ID + "=" + id, null, null, null, null, null);
+		
+		if(cursor.moveToFirst())
+			return cursor;
+		
+		return null;
+	}
 	/**
 	 * Returns the hint if specified for the question
 	 * @param questionId _ID of the question 

@@ -1,5 +1,6 @@
 package  nl.atcomputing.examtrainer;
 
+import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -20,6 +21,7 @@ public class ShowScoresAdapter extends CursorAdapter  {
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
 			    final ViewHolder holder = new ViewHolder();
+				final Context mContext = context;
 				
 		        int index = cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_DATE);
 			    holder.examDate = cursor.getString(index);
@@ -29,7 +31,7 @@ public class ShowScoresAdapter extends CursorAdapter  {
 			    holder.scoreEntryDate = (TextView) view.findViewById(R.id.scoreEntryDate);
 		        holder.scoreEntryDate.setText(holder.examDate);
 		        holder.scoreEntryScore = (TextView) view.findViewById(R.id.scoreEntryScore);
-		        holder.scoreEntryScore.setText(Integer.toString(holder.examScore));      
+		        holder.scoreEntryScore.setText(Integer.toString(holder.examScore));
 		}
 
 		@Override

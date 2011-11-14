@@ -22,8 +22,9 @@ public class ShowScoresActivity extends Activity {
 	private final String TAG = this.getClass().getName();
 	private ShowScoresAdapter adapter;
 	private ExaminationDbAdapter examinationDbHelper;
+	private long examId;
 	private static final int DIALOG_SHOW_EXAM = 1;
-
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_scores);
@@ -46,6 +47,7 @@ public class ShowScoresActivity extends Activity {
 		scoresList.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				examId = id;
 				showDialog(DIALOG_SHOW_EXAM);
 			}
 		});
@@ -61,10 +63,8 @@ public class ShowScoresActivity extends Activity {
 		AlertDialog.Builder builder;
 		switch(id) {
 		case DIALOG_SHOW_EXAM:
-			Cursor cursor = (Cursor) adapter.getCursor();
-			int index = cursor.getColumnIndex(ExamTrainer.Scores._ID);
-			final long examId = cursor.getLong(index);
-			index = cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_DATE);
+			Cursor cursor = examinationDbHelper.getScore(examId);
+			int index = cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_DATE);
 			String examDate = cursor.getString(index);
 			Log.d(TAG, "ExamID: " + examId + " ExamDate: " + examDate);
 			builder = new AlertDialog.Builder(this);
