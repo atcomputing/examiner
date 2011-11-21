@@ -1,12 +1,9 @@
 package nl.atcomputing.examtrainer;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
 import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -25,7 +22,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 /**
  * @author martijn brekhof
@@ -38,7 +34,7 @@ public class ExamQuestionsActivity extends Activity {
 	private long examId;
 	private String questionType;
 	private EditText editText;
-	
+	private ArrayList <CheckBox> cboxes;
 	private static final int DIALOG_ENDOFEXAM_ID = 1;
 	private static final int DIALOG_SHOW_HINT_ID = 2;
 	private static final int DIALOG_SHOW_SCORE_ID = 3;
@@ -79,6 +75,10 @@ public class ExamQuestionsActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.menu, menu);
+		
+		if(ExamTrainer.getMode() == ExamTrainerMode.REVIEW) {
+			menu.getItem(menu.size()-1).setTitle(R.string.show_answers);
+		}
 		return true;
 	}
 
@@ -93,7 +93,12 @@ public class ExamQuestionsActivity extends Activity {
 
 			return true;
 		case R.id.menu_get_hint:
-			showDialog(DIALOG_SHOW_HINT_ID);
+			if(ExamTrainer.getMode() == ExamTrainerMode.REVIEW) {
+				showAnswers();
+			}
+			else {
+				showDialog(DIALOG_SHOW_HINT_ID);
+			}
 			return true;
 
 		default:
@@ -123,11 +128,8 @@ public class ExamQuestionsActivity extends Activity {
 		case DIALOG_ENDOFEXAM_ID:
 			builder = new AlertDialog.Builder(this);
 			int messageId;
-			if(ExamTrainer.getMode() == ExamTrainerMode.REVIEW) {
-				messageId = R.string.end_of_review_message;
-			} else {
-				messageId = R.string.end_of_exam_message;
-			}
+	
+			messageId = R.string.end_of_exam_message;		
 			builder.setMessage(messageId)
 			.setCancelable(false)
 			.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
@@ -150,10 +152,6 @@ public class ExamQuestionsActivity extends Activity {
 			break;
 		case DIALOG_SHOW_HINT_ID:
 			builder = new AlertDialog.Builder(this);
-			if(ExamTrainer.getMode() == ExamTrainerMode.REVIEW) {
-				//showAnswers();
-			} 
-			else {
 				message = examinationDbHelper.getHint(questionNumber);
 				if( message == null ) {
 					message = getString(R.string.hint_not_available);
@@ -165,8 +163,7 @@ public class ExamQuestionsActivity extends Activity {
 						dialog.dismiss();
 					}
 				});
-				dialog = builder.create();
-			}
+			dialog = builder.create();
 			break;
 		default:
 			dialog = null;
@@ -174,14 +171,22 @@ public class ExamQuestionsActivity extends Activity {
 		return dialog;
 	}
 
-	protected void stopExam() {
+	private void showAnswers() {
+		for(int i = 0; i < cboxes.size(); i++) {
+			if(examinationDbHelper.checkAnswer(questionNumber, cboxes.get(i).getText().toString());
+		}
+		
+	}
+	
+	private void stopExam() {
 		Intent intent = new Intent(ExamQuestionsActivity.this, ExamTrainerActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
 	
-	protected LinearLayout createChoices() {
+	private LinearLayout createChoices() {
 		CheckBox cbox; 
+		cboxes = new ArrayList<CheckBox>();
 		LinearLayout v_layout = new LinearLayout(this);
 		v_layout.setOrientation(LinearLayout.VERTICAL);
 		
@@ -210,13 +215,14 @@ public class ExamQuestionsActivity extends Activity {
 				});
 				
 				v_layout.addView(cbox);
+				cboxes.add(cbox);
 			} while( cursor.moveToNext() );
 			cursor.close();
 		}
 		return v_layout;
 	}
 
-	protected void setupLayout() {
+	private void setupLayout() {
 		int index;
 		String text;
 
@@ -275,7 +281,12 @@ public class ExamQuestionsActivity extends Activity {
 				}
 				
 				if ( questionNumber >= examinationDbHelper.getQuestionsCount() ) {
-					showDialog(DIALOG_ENDOFEXAM_ID);
+					if(ExamTrainer.getMode() == ExamTrainerMode.REVIEW) {
+						finish();
+					}
+					else {
+						showDialog(DIALOG_ENDOFEXAM_ID);
+					}
 				}
 				else {
 					Intent intent = new Intent(ExamQuestionsActivity.this, ExamQuestionsActivity.class);
