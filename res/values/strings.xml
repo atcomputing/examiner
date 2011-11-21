@@ -47,4 +47,5 @@
 	<string name="if_available_in_braces">(if available)</string>
 	<string name="start">start</string>
 	<string name="history">history</string>
+	<string name="correct_answers">Correct answers</string>
 </resources>

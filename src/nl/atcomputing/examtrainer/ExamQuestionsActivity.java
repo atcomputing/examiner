@@ -22,6 +22,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @author martijn brekhof
@@ -172,12 +173,37 @@ public class ExamQuestionsActivity extends Activity {
 	}
 
 	private void showAnswers() {
-		for(int i = 0; i < cboxes.size(); i++) {
-			if(examinationDbHelper.checkAnswer(questionNumber, cboxes.get(i).getText().toString());
+		Cursor cursor = examinationDbHelper.getAnswers(questionNumber);
+		if ( cursor == null ) {
+			Log.d(TAG, "Oi, cursor is nulllll");
+			return;
 		}
-		
+		int index = cursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
+
+		if(questionType.equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
+			do {
+				String answer = cursor.getString(index);
+				for(int i = 0; i < cboxes.size(); i++) {
+					if(cboxes.get(i).getText().toString().equals(answer)) {
+						cboxes.get(i).setTextColor(getResources().getColor(
+								R.color.correct_answer));
+					}
+				}
+			} while(cursor.moveToNext());
+		}
+		else {
+			StringBuffer str = new StringBuffer();
+			do {
+				String answer = cursor.getString(index);
+				str.append(answer + "\n");
+			} while(cursor.moveToNext());
+			Toast.makeText(ExamQuestionsActivity.this, 
+					getResources().getString(R.string.correct_answers) + ":\n\n" +
+					str.toString(), Toast.LENGTH_LONG).show();
+		}
+		cursor.close();
 	}
-	
+
 	private void stopExam() {
 		Intent intent = new Intent(ExamQuestionsActivity.this, ExamTrainerActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -299,10 +325,6 @@ public class ExamQuestionsActivity extends Activity {
 	}
 	
 private int calculateScore() {
-    	
-    	ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
-		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-    	
     	long examId = ExamTrainer.getExamId();
     	
     	List<Long> questionIDsList = examinationDbHelper.getAllQuestionIDs();
