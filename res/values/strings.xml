@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="hello">This should be the question</string>
     <string name="exhibit">This should hold a possible exhibit</string>
     <string name="app_name">LPIC 101-102 Exam Trainer</string>
     <string name="ticker_text">Downloading new exam questions</string>
@@ -48,4 +47,10 @@
 	<string name="start">start</string>
 	<string name="history">history</string>
 	<string name="correct_answers">Correct answers</string>
+	<string name="show_history">Show history</string>
+	<string name="close">Close</string>
+	<string name="failed_to_create_a_new_score_for_the_exam">Failed to create a new score for the exam</string>
+	<string name="Exam_date">Exam date</string>
+	<string name="Score">Score</string>
+	<string name="Pass">Pass</string>
 </resources>

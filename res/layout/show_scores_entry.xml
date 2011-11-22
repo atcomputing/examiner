@@ -1,15 +1,20 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
+              android:layout_width="fill_parent"
               android:layout_height="wrap_content">
     <TextView android:id="@+id/scoreEntryDate"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:paddingRight="10px"
-              android:paddingLeft="10px"/>/>
+              android:gravity="center"
+              android:layout_weight="1"/>
     <TextView android:id="@+id/scoreEntryScore"
               android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:paddingRight="0px"
-              android:paddingLeft="10px"/>/>
+              android:gravity="center"
+              android:layout_weight="1"/>
+    <ImageView android:id="@+id/scoreEntryPass"
+    		  android:gravity="center"
+              android:layout_weight="1"
+              android:layout_width="fill_parent"
+              android:layout_height="20px"
+              android:src="@drawable/questionmark"/>
 </LinearLayout>

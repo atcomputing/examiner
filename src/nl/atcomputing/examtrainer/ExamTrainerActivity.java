@@ -51,7 +51,7 @@ public class ExamTrainerActivity extends Activity {
 		reviewPreviousExam.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(ExamTrainerActivity.this, SelectExamActivity.class);
-				ExamTrainer.setMode(ExamTrainerMode.HISTORY);
+				ExamTrainer.setMode(ExamTrainerMode.REVIEW);
 				startActivity(intent);
 			}
 		});

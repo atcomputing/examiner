@@ -60,8 +60,8 @@ public class ExamReviewActivity extends Activity {
 		cursor = examinationDbHelper.getResultPerQuestion(examId);
 
 		Resources res = this.getResources();
-		not_okImage = res.getDrawable(R.drawable.not_ok_48x48);
-		okImage = res.getDrawable(R.drawable.ok_48x48);
+		not_okImage = res.getDrawable(R.drawable.not_ok);
+		okImage = res.getDrawable(R.drawable.ok);
 
 		adapter = new ImageAdapter(this);
 		scoresGrid = (GridView) findViewById(R.id.review_exam_grid);

@@ -14,7 +14,7 @@ import android.provider.BaseColumns;
 public final class ExamTrainer {
 	
 	public enum ExamTrainerMode {
-	    EXAM, REVIEW, HISTORY
+	    EXAM, REVIEW
 	}
 	
 	private static String examTitle = "ExamTrainer";
