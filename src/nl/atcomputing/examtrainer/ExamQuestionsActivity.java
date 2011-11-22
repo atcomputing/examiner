@@ -115,7 +115,8 @@ public class ExamQuestionsActivity extends Activity {
 		case DIALOG_SHOW_SCORE_ID:
     		int score = calculateScore();
     		builder = new AlertDialog.Builder(this);
-    		message = getString(R.string.you_scored) + " " + Integer.toString(score);
+    		
+    		message = getString(R.string.Score) + ": " + Integer.toString(score);
     		builder.setMessage(message)
     		.setCancelable(false)
     		.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {

@@ -6,30 +6,40 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class ShowScoresAdapter extends CursorAdapter  {
 	private final String TAG = this.getClass().getName();
 	private int layout;
+	    private Context context;
 	    
 	    public ShowScoresAdapter(Context context, int layout, Cursor c) {
 	      super(context, c);
 	      this.layout = layout;
+	      this.context = context;
 	    }
 
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
-			    final ViewHolder holder = new ViewHolder();
-				
 		        int index = cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_DATE);
-			    holder.examDate = cursor.getString(index);
+			    String examDate = cursor.getString(index);
 			    index = cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_SCORE);
-			    holder.examScore = cursor.getInt(index);
+			    int examScore = cursor.getInt(index);
 			    
-			    holder.scoreEntryDate = (TextView) view.findViewById(R.id.scoreEntryDate);
-		        holder.scoreEntryDate.setText(holder.examDate);
-		        holder.scoreEntryScore = (TextView) view.findViewById(R.id.scoreEntryScore);
-		        holder.scoreEntryScore.setText(Integer.toString(holder.examScore));
+			    TextView scoreEntryDate = (TextView) view.findViewById(R.id.scoreEntryDate);
+		        scoreEntryDate.setText(examDate);
+		        TextView scoreEntryScore = (TextView) view.findViewById(R.id.scoreEntryScore);
+		        scoreEntryScore.setText(Integer.toString(examScore));
+		        
+		        ImageView scoreEntryImage = (ImageView) view.findViewById(R.id.scoreEntryPass);
+		        
+		        if( examScore >= ExamTrainer.getItemsNeededToPass() ) { 
+		        	scoreEntryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.ok));
+		        } 
+		        else {
+		        	scoreEntryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.not_ok));
+		        }
 		}
 
 		@Override

@@ -21,6 +21,7 @@ public final class ExamTrainer {
 	private static String examDatabaseName = null;
 	private static ExamTrainerMode mode = ExamTrainerMode.EXAM;
 	private static long examId = -1;
+	private static long itemsNeededToPass = 0;
 	private static final String questionNumber = "questionNumber";
 	private static final String endOfExam = "endOfExam";
 	
@@ -34,6 +35,14 @@ public final class ExamTrainer {
     
     public static long getExamId() {
     	return examId;
+    }
+    
+    public static void setItemsNeededToPass(long items) {
+    	itemsNeededToPass = items;
+    }
+    
+    public static long getItemsNeededToPass() {
+    	return itemsNeededToPass;
     }
     
     public static void setExamDatabaseName(String examTitle, String date) {

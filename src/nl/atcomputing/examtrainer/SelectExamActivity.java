@@ -89,7 +89,7 @@ public class SelectExamActivity extends Activity {
 			    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS);
 			    int examAmountOfItems = cursor.getInt(index);
 			    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
-			    int examItemsNeededToPass = cursor.getInt(index);
+			    final int examItemsNeededToPass = cursor.getInt(index);
 				
 			    if( ExamTrainer.getMode() == ExamTrainerMode.REVIEW ) {
 			    	positiveButtonText = this.getString(R.string.show_history);
@@ -110,6 +110,8 @@ public class SelectExamActivity extends Activity {
 				.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						ExamTrainer.setExamDatabaseName(examTitle, examInstallationDate);
+						ExamTrainer.setItemsNeededToPass(examItemsNeededToPass);
+						ExamTrainer.setExamTitle(examTitle);
 						if( ExamTrainer.getMode() == ExamTrainerMode.REVIEW ) {
 							showHistory();
 						}
