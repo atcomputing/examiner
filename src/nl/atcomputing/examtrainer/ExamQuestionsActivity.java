@@ -32,7 +32,6 @@ public class ExamQuestionsActivity extends Activity {
 	private ExaminationDbAdapter examinationDbHelper;
 	private Cursor cursorQuestion;
 	private long questionNumber;
-	private long examId;
 	private String questionType;
 	private EditText editText;
 	private ArrayList <CheckBox> cboxes;
@@ -47,8 +46,6 @@ public class ExamQuestionsActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		Intent intent = getIntent();
 		
-		examId = ExamTrainer.getExamId();
-		Log.d(TAG, "examId: " + examId);
 		examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		
@@ -78,7 +75,8 @@ public class ExamQuestionsActivity extends Activity {
 		inflater.inflate(R.menu.menu, menu);
 		
 		if(ExamTrainer.getMode() == ExamTrainerMode.REVIEW) {
-			menu.getItem(menu.size()-1).setTitle(R.string.show_answers);
+			MenuItem item = menu.findItem(R.id.menu_get_hint);
+			item.setTitle(R.string.show_answers);
 		}
 		return true;
 	}
@@ -88,6 +86,9 @@ public class ExamQuestionsActivity extends Activity {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.menu_stop_exam:
+			if(ExamTrainer.getMode() == ExamTrainerMode.EXAM) {
+				examinationDbHelper.deleteScore(ExamTrainer.getExamId());
+			}
 			stopExam();
 			return true;
 		case R.id.menu_leave_comment:
@@ -225,7 +226,7 @@ public class ExamQuestionsActivity extends Activity {
 				cbox = new CheckBox(this);
 				cbox.setText(choice);
 				
-				if ( examinationDbHelper.scoresAnswerPresent(examId, 
+				if ( examinationDbHelper.scoresAnswerPresent(ExamTrainer.getExamId(), 
 						questionNumber, choice) ) {
 					cbox.setChecked(true);
 				}
@@ -233,9 +234,9 @@ public class ExamQuestionsActivity extends Activity {
 				cbox.setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
 						if (((CheckBox) v).isChecked()) {
-							examinationDbHelper.setScoresAnswersMultipleChoice(examId, questionNumber, choice);
+							examinationDbHelper.setScoresAnswersMultipleChoice(ExamTrainer.getExamId(), questionNumber, choice);
 						} else {
-							examinationDbHelper.deleteScoresAnswer(examId, questionNumber, choice);
+							examinationDbHelper.deleteScoresAnswer(ExamTrainer.getExamId(), questionNumber, choice);
 						}
 
 					}
@@ -275,7 +276,7 @@ public class ExamQuestionsActivity extends Activity {
 			v_layout.addView(layout);
 		} else if ( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
 			editText = new EditText(this);
-			Cursor aCursor = examinationDbHelper.getScoresAnswers(examId, questionNumber);
+			Cursor aCursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getExamId(), questionNumber);
 			if ( aCursor != null ) {
 				index = aCursor.getColumnIndex(ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER);
 				text = aCursor.getString(index);
@@ -292,7 +293,7 @@ public class ExamQuestionsActivity extends Activity {
 		button_prev_question.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-					examinationDbHelper.setScoresAnswersOpen(examId, questionNumber, editText.getText().toString());
+					examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getExamId(), questionNumber, editText.getText().toString());
 				}
 				Intent intent = new Intent(ExamQuestionsActivity.this, ExamQuestionsActivity.class);
 				ExamTrainer.setQuestionNumber(intent, questionNumber - 1);
@@ -304,7 +305,7 @@ public class ExamQuestionsActivity extends Activity {
 		button_next_question.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-					examinationDbHelper.setScoresAnswersOpen(examId, questionNumber, editText.getText().toString());
+					examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getExamId(), questionNumber, editText.getText().toString());
 				}
 				
 				if ( questionNumber >= examinationDbHelper.getQuestionsCount() ) {

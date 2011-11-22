@@ -156,14 +156,10 @@ public class ExaminationDbAdapter {
 	 * @return true if rows were deleted, false if nothing was deleted.
 	 */
 	public boolean deleteScore(long id) {
-		int status = db.delete(ExamTrainer.ScoresAnswers.TABLE_NAME, 
+		db.delete(ExamTrainer.ScoresAnswers.TABLE_NAME, 
 				ExamTrainer.ScoresAnswers.COLUMN_NAME_EXAM_ID + "=" + id, null);
-		//If ScoresAnswers rows were deleted, delete the corresponding Score as well
-		if( status > 0 ) {
-			return db.delete(ExamTrainer.Scores.TABLE_NAME, 
+		return db.delete(ExamTrainer.Scores.TABLE_NAME, 
 				ExamTrainer.Scores._ID + "=" + id, null) > 0;
-		}
-		return status > 0;
 	}
 	
 	public boolean deleteQuestion(long rowId) {

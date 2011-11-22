@@ -65,6 +65,7 @@ public class SelectExamActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				examsRowId = id;
+				Log.d(TAG, "position: " + position + " id: " + id);
 				showDialog(DIALOG_SHOW_EXAM);
 			}
 		});
@@ -80,16 +81,21 @@ public class SelectExamActivity extends Activity {
 			AlertDialog.Builder builder;
 			switch(id) {
 			case DIALOG_SHOW_EXAM:
+				Log.d(TAG, "onCreateDialog examsRowId: " + examsRowId);
 				String positiveButtonText = this.getString(R.string.start_exam);
 				Cursor cursor = examTrainerDbHelper.getExam(examsRowId);
 				int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
-		        final String examTitle = cursor.getString(index);
+		        String examTitle = cursor.getString(index);
 		        index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
-		        final String examInstallationDate = cursor.getString(index);
+		        String examInstallationDate = cursor.getString(index);
 			    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS);
 			    int examAmountOfItems = cursor.getInt(index);
 			    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
-			    final int examItemsNeededToPass = cursor.getInt(index);
+			    int examItemsNeededToPass = cursor.getInt(index);
+				
+			    ExamTrainer.setExamDatabaseName(examTitle, examInstallationDate);
+				ExamTrainer.setItemsNeededToPass(examItemsNeededToPass);
+				ExamTrainer.setExamTitle(examTitle);
 				
 			    if( ExamTrainer.getMode() == ExamTrainerMode.REVIEW ) {
 			    	positiveButtonText = this.getString(R.string.show_history);
@@ -109,9 +115,6 @@ public class SelectExamActivity extends Activity {
 						": " +  examItemsNeededToPass + "\n" )
 				.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						ExamTrainer.setExamDatabaseName(examTitle, examInstallationDate);
-						ExamTrainer.setItemsNeededToPass(examItemsNeededToPass);
-						ExamTrainer.setExamTitle(examTitle);
 						if( ExamTrainer.getMode() == ExamTrainerMode.REVIEW ) {
 							showHistory();
 						}
@@ -123,6 +126,7 @@ public class SelectExamActivity extends Activity {
 				})
 				.setNegativeButton(this.getString(R.string.close), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
+						dialog.cancel();
 						dialog.dismiss();
 					}
 				});			;
