@@ -76,6 +76,37 @@ public class SelectExamActivity extends Activity {
 		  examTrainerDbHelper.close();
 	  }
 	  
+	  protected void onPrepareDialog(int id, Dialog dialog) {
+		switch(id) {
+		case DIALOG_SHOW_EXAM:
+			Log.d(TAG, "onPrepareDialog examsRowId: " + examsRowId);
+			Cursor cursor = examTrainerDbHelper.getExam(examsRowId);
+			int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
+	        String examTitle = cursor.getString(index);
+	        index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
+	        String examInstallationDate = cursor.getString(index);
+		    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS);
+		    int examAmountOfItems = cursor.getInt(index);
+		    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
+		    int examItemsNeededToPass = cursor.getInt(index);
+			
+		    ExamTrainer.setExamDatabaseName(examTitle, examInstallationDate);
+			ExamTrainer.setItemsNeededToPass(examItemsNeededToPass);
+			ExamTrainer.setExamTitle(examTitle);
+			
+			((AlertDialog) dialog).setMessage(examTitle + "\n\n" +
+					this.getString(R.string.installed_on) + 
+					" " + examInstallationDate + "\n" +
+					this.getString(R.string.questions) + 
+					": " +  examAmountOfItems + "\n" +
+					this.getString(R.string.correct_answer_required_to_pass) +
+					": " +  examItemsNeededToPass + "\n" );
+			break;
+			default:
+				break;
+		}
+	  }
+	  
 	  protected Dialog onCreateDialog(int id) {
 			Dialog dialog;
 			AlertDialog.Builder builder;
@@ -83,19 +114,7 @@ public class SelectExamActivity extends Activity {
 			case DIALOG_SHOW_EXAM:
 				Log.d(TAG, "onCreateDialog examsRowId: " + examsRowId);
 				String positiveButtonText = this.getString(R.string.start_exam);
-				Cursor cursor = examTrainerDbHelper.getExam(examsRowId);
-				int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
-		        String examTitle = cursor.getString(index);
-		        index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
-		        String examInstallationDate = cursor.getString(index);
-			    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS);
-			    int examAmountOfItems = cursor.getInt(index);
-			    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
-			    int examItemsNeededToPass = cursor.getInt(index);
 				
-			    ExamTrainer.setExamDatabaseName(examTitle, examInstallationDate);
-				ExamTrainer.setItemsNeededToPass(examItemsNeededToPass);
-				ExamTrainer.setExamTitle(examTitle);
 				
 			    if( ExamTrainer.getMode() == ExamTrainerMode.REVIEW ) {
 			    	positiveButtonText = this.getString(R.string.show_history);
@@ -106,13 +125,7 @@ public class SelectExamActivity extends Activity {
 			    
 				builder = new AlertDialog.Builder(this);
 				builder.setCancelable(true)
-				.setMessage(examTitle + "\n\n" +
-						this.getString(R.string.installed_on) + 
-						" " + examInstallationDate + "\n" +
-						this.getString(R.string.questions) + 
-						": " +  examAmountOfItems + "\n" +
-						this.getString(R.string.correct_answer_required_to_pass) +
-						": " +  examItemsNeededToPass + "\n" )
+				.setMessage("")
 				.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 						if( ExamTrainer.getMode() == ExamTrainerMode.REVIEW ) {
@@ -126,10 +139,9 @@ public class SelectExamActivity extends Activity {
 				})
 				.setNegativeButton(this.getString(R.string.close), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						dialog.cancel();
 						dialog.dismiss();
 					}
-				});			;
+				});
 				dialog = builder.create();
 				break;
 			default:

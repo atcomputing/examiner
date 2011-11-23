@@ -22,7 +22,7 @@
 			android:exported="false" />
 		<activity android:name=".SelectExamActivity"
 			android:exported="false" />
-		<activity android:name=".ConfigureActivity"
+		<activity android:name=".PreferencesActivity"
 			android:exported="false" />
 		<activity android:name=".ManageExamsActivity"
 			android:exported="false" />

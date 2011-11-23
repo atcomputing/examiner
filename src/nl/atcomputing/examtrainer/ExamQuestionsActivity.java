@@ -72,7 +72,7 @@ public class ExamQuestionsActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.menu, menu);
+		inflater.inflate(R.menu.question_menu, menu);
 		
 		if(ExamTrainer.getMode() == ExamTrainerMode.REVIEW) {
 			MenuItem item = menu.findItem(R.id.menu_get_hint);
@@ -258,6 +258,9 @@ public class ExamQuestionsActivity extends Activity {
 
 		TextView title = (TextView) findViewById(R.id.textExamTitle);
 		title.setText(ExamTrainer.getExamTitle());
+		
+		TextView question = (TextView) findViewById(R.id.textQuestionNumber);
+		question.setText(this.getString(R.string.Question) + ": " + Long.toString(questionNumber));
 		
 		index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT);
 		text = cursorQuestion.getString(index);

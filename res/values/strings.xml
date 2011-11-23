@@ -53,4 +53,21 @@
 	<string name="Exam_date">Exam date</string>
 	<string name="Score">Score</string>
 	<string name="Pass">Pass</string>
+	<string name="Use_Timelimits">Use Timelimits</string>
+	<string name="Use_timelimits_during_examination_if_available">Use timelimits during examination\n(if available)</string>
+	<string name="Updates">Updates</string>
+	<string name="Check_for_updates_at_start">Check for updates at start</string>
+	<string name="Set_Updates_URL">Set Updates URL</string>
+	<string name="Sets_the_URL_to_retrieve_updates_from">Sets the URL to retrieve updates from</string>
+	<string name="Enter_URL">Enter URL</string>
+	<string name="ExamTrainer_Preferences">ExamTrainer Preferences</string>
+	<string name="Set_ExamTrainer_Preferences">Set ExamTrainer Preferences</string>
+	<string name="default_update_URL">http://www.atcomputing.nl/ExamTrainer/exams</string>
+	<string name="settings">Settings</string>
+	<string name="Question">Question</string>
+	<!-- KEYS USED PREFERENCES -->
+	<string name="use_timelimits_pref_key">use_timelimits_pref_key</string>
+	<string name="preferences_pref_key">preferences_pref_key</string>
+	<string name="updates_pref_key">updates_pref_key</string>
+	<string name="updates_url_pref_key">updates_url_pref_key</string>
 </resources>

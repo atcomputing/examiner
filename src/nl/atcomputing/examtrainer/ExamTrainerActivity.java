@@ -7,6 +7,9 @@ import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -39,14 +42,6 @@ public class ExamTrainerActivity extends Activity {
 			}
 		});
 		
-		Button configureExamTrainer = (Button) findViewById(R.id.button_configure_examtrainer);
-		configureExamTrainer.setOnClickListener( new View.OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(ExamTrainerActivity.this, ConfigureActivity.class);
-				startActivity(intent);
-			}
-		});
-		
 		Button reviewPreviousExam = (Button) findViewById(R.id.button_show_history);
 		reviewPreviousExam.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
@@ -56,14 +51,32 @@ public class ExamTrainerActivity extends Activity {
 			}
 		});
 		
-		Button quitExamTrainer = (Button) findViewById(R.id.button_quit);
-		quitExamTrainer.setOnClickListener( new View.OnClickListener() {
-			public void onClick(View v) {
-				finish();
-			}
-		});
 		
-		
+	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent;
+		switch (item.getItemId()) {
+		case R.id.main_menu_manage_exams:
+			intent = new Intent(ExamTrainerActivity.this, ManageExamsActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.main_menu_settings:
+			intent = new Intent(ExamTrainerActivity.this, PreferencesActivity.class);
+			startActivity(intent);
+			break;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+		return true;
 	}
 	
 	protected void onDestroy() {
