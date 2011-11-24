@@ -6,12 +6,14 @@
         	<item name="android:textColor">#FFFFFF</item>
         	<item name="android:background">#333333</item>
         	<item name="android:typeface">monospace</item>
+        	<item name="android:padding">10px</item>
         </style>
         <style name="question" parent="@android:style/TextAppearance">
-            <item name="android:layout_width">fill_parent</item>
+            <item name="android:layout_width">wrap_content</item>
         	<item name="android:layout_height">wrap_content</item>
         	<item name="android:textColor">#FFFFFF</item>
         	<item name="android:background">#000000</item>
         	<item name="android:typeface">serif</item>
+        	<item name="android:padding">10px</item>
         </style>
     </resources>

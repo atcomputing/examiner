@@ -215,8 +215,7 @@ public class ExamQuestionsActivity extends Activity {
 	private LinearLayout createChoices() {
 		CheckBox cbox; 
 		cboxes = new ArrayList<CheckBox>();
-		LinearLayout v_layout = new LinearLayout(this);
-		v_layout.setOrientation(LinearLayout.VERTICAL);
+		LinearLayout v_layout = (LinearLayout) findViewById(R.id.checkboxLayout);
 		
 		Cursor cursor = examinationDbHelper.getChoices(questionNumber);
 		if ( cursor != null ) {
@@ -272,11 +271,12 @@ public class ExamQuestionsActivity extends Activity {
 		TextView question_textview = (TextView) findViewById(R.id.textQuestion);
 		question_textview.setText(text);
 
-		LinearLayout v_layout = (LinearLayout) findViewById(R.id.question_layout);
+		//LinearLayout v_layout = (LinearLayout) findViewById(R.id.question_layout);
 
 		if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
-			LinearLayout layout = createChoices();
-			v_layout.addView(layout);
+			createChoices();
+			//LinearLayout layout = createChoices();
+			//v_layout.addView(layout);
 		} else if ( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
 			editText = new EditText(this);
 			Cursor aCursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getExamId(), questionNumber);
@@ -286,11 +286,11 @@ public class ExamQuestionsActivity extends Activity {
 				editText.setText(text.toString());
 				aCursor.close();
 			}
-			v_layout.addView(editText);
+			//v_layout.addView(editText);
 		}
 
-		LayoutInflater li = getLayoutInflater();
-		li.inflate(R.layout.question_prev_next_buttons, v_layout);
+		//LayoutInflater li = getLayoutInflater();
+		//li.inflate(R.layout.question_prev_next_buttons, v_layout);
 
 		Button button_prev_question = (Button) findViewById(R.id.button_prev);
 		button_prev_question.setOnClickListener( new View.OnClickListener() {
