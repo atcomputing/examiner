@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<exams>
+	<exam>
+		<title>LPI 101 Exam</title>
+		<category>LPI</category>
+		<author>AT Computing</author>
+		<numberofitems>65</numberofitems>
+		<itemsneededtopass>44</itemsneededtopass>
+		<url>file:///exam101.xml</url>
+	</exam>
+	<exam>
+		<title>LPI 102 Exam</title>
+		<category>LPI</category>
+		<author>AT Computing</author>
+		<numberofitems>65</numberofitems>
+		<itemsneededtopass>44</itemsneededtopass>
+		<url>file:///exam102.xml</url>
+	</exam>
+	<exam>
+		<title>LPI 102-b Exam</title>
+		<category>LPI</category>
+		<author>AT Computing</author>
+		<numberofitems>65</numberofitems>
+		<itemsneededtopass>44</itemsneededtopass>
+		<url>file:///exam102-b.xml</url>
+	</exam>
+</exams>

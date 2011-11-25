@@ -20,6 +20,9 @@ public abstract class BaseExamParser implements ExamParser {
 	static final String EXAM_TITLE = "title";
 	static final String EXAM_NUMBER_OF_ITEMS = "numberofitems";
 	static final String EXAM_ITEMS_NEEDED_TO_PASS = "itemsneededtopass";
+	static final String EXAM_AUTHOR = "author";
+	static final String EXAM_CATEGORY = "category";
+	static final String EXAM_URL = "url";
 	
 	static final String ITEM = "item";
 	static final String ITEM_TYPE = "type";
