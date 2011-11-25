@@ -68,11 +68,11 @@ public class ManageExamsActivity extends ListActivity {
 					int size = filenames.length;
 					for( file_index = 0; file_index < size; file_index++) {
 						String filename = filenames[file_index];
-						if(filename.matches("exam..*.xml")) {
+						if(filename.matches("list.xml")) {
 							Log.d(TAG, "Found databasefile " + filename);
 							URL url = new URL("file:///"+filename);
 							xmlPullExamParser = new XmlPullExamParser(context, url);
-							xmlPullExamParser.parse();
+							xmlPullExamParser.parseList();
 							if ( ! xmlPullExamParser.checkIfExamInDatabase() ) {
 								Log.d(TAG, "Included Exam not in database:  " + filename);
 								xmlPullExamParser.addExamToExamTrainer();

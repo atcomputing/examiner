@@ -40,7 +40,7 @@ public class ShowScoresActivity extends Activity {
 		
 		examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		Cursor cursor = examinationDbHelper.getScores();
+		Cursor cursor = examinationDbHelper.getScoresReversed();
 		adapter = new ShowScoresAdapter(this, R.layout.show_scores_entry, cursor);
 		scoresList.setAdapter(adapter);
 		

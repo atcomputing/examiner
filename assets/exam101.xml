@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <exam databaseversion="1">
-	<title>LPI 101 Exam</title>
-	<numberofitems>65</numberofitems>
-	<itemsneededtopass>44</itemsneededtopass>
 	<item>
 		<type>multiple choice</type>
 		<topic>Devices, Linux Filesystems, Filesystem Hierarchy Standard</topic>

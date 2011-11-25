@@ -116,7 +116,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			  try {
 				  URL url = new URL(holder.url);
 				  XmlPullExamParser xmlPullFeedParser = new XmlPullExamParser(context, url);
-			      xmlPullFeedParser.parse();
+			      xmlPullFeedParser.parseExam();
 			      xmlPullFeedParser.installExam(holder.examTitle, holder.examDate);
 			  } catch (MalformedURLException e) {
 				  Toast.makeText(context, "Error: URL " + holder.url + " is not correct.", Toast.LENGTH_LONG).show();

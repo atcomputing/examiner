@@ -331,14 +331,14 @@ public class ExaminationDbAdapter {
 		return null;
 	}
 	
-	public Cursor getScores() {
+	public Cursor getScoresReversed() {
 		Cursor cursor = db.query(true, ExamTrainer.Scores.TABLE_NAME, 
 				new String[] {
 				ExamTrainer.Scores._ID,
 				ExamTrainer.Scores.COLUMN_NAME_DATE,
 				ExamTrainer.Scores.COLUMN_NAME_SCORE
 				},
-				null, null, null, null, null, null);
+				null, null, null, null, ExamTrainer.Scores.COLUMN_NAME_DATE + " DESC", null);
 		
 		if(cursor.moveToFirst())
 			return cursor;
@@ -524,8 +524,13 @@ public class ExaminationDbAdapter {
 	 * AND ScoresAnswers.exam_id = examId
 	 */
 	public boolean checkScoresAnswersMultipleChoice(long questionId, long examId) {
-		int answersCount = getScoresAnswers(examId, questionId).getCount();
-		int correctAnswersCount = getAnswers(questionId).getCount();
+		Cursor answersCountCursor = getScoresAnswers(examId, questionId);
+		Cursor correctAnswersCountCursor = getAnswers(questionId);
+		if ( ( answersCountCursor == null ) || ( correctAnswersCountCursor == null ) ) {
+			return false;
+		}
+		int answersCount = answersCountCursor.getCount();
+		int correctAnswersCount = correctAnswersCountCursor.getCount();
 		if ( answersCount == correctAnswersCount ) {
 			String correctAnswersQuestionId = ExamTrainer.Answers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID;
 			String correctAnswersAnswer = ExamTrainer.Answers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_ANSWER;

@@ -7,6 +7,7 @@ import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -16,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -211,10 +213,9 @@ public class ExamQuestionsActivity extends Activity {
 		startActivity(intent);
 	}
 	
-	private LinearLayout createChoices() {
+	private void createChoices(LinearLayout layout) {
 		CheckBox cbox; 
 		cboxes = new ArrayList<CheckBox>();
-		LinearLayout v_layout = (LinearLayout) findViewById(R.id.checkboxLayout);
 		
 		Cursor cursor = examinationDbHelper.getChoices(questionNumber);
 		if ( cursor != null ) {
@@ -240,12 +241,11 @@ public class ExamQuestionsActivity extends Activity {
 					}
 				});
 				
-				v_layout.addView(cbox);
+				layout.addView(cbox);
 				cboxes.add(cbox);
 			} while( cursor.moveToNext() );
 			cursor.close();
 		}
-		return v_layout;
 	}
 
 	private void setupLayout() {
@@ -253,7 +253,9 @@ public class ExamQuestionsActivity extends Activity {
 		String text;
 
 		setContentView(R.layout.question);
-
+		
+		LinearLayout layout = (LinearLayout) findViewById(R.id.question_layout);
+		
 		TextView title = (TextView) findViewById(R.id.textExamTitle);
 		title.setText(ExamTrainer.getExamTitle());
 		
@@ -263,19 +265,22 @@ public class ExamQuestionsActivity extends Activity {
 		index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT);
 		text = cursorQuestion.getString(index);
 		TextView exhibit = (TextView) findViewById(R.id.textExhibit);
-		exhibit.setText(text);
+		if( text != null ) {
+			exhibit.setText(text);
+		} else {
+			layout.removeView(exhibit);
+		}
+		
 
 		index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_QUESTION);
 		text = cursorQuestion.getString(index);
 		TextView question_textview = (TextView) findViewById(R.id.textQuestion);
 		question_textview.setText(text);
-
-		//LinearLayout v_layout = (LinearLayout) findViewById(R.id.question_layout);
-
+		
+		LinearLayout v_layout = (LinearLayout) findViewById(R.id.answerLayout);
+		
 		if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
-			createChoices();
-			//LinearLayout layout = createChoices();
-			//v_layout.addView(layout);
+			createChoices(v_layout);
 		} else if ( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
 			editText = new EditText(this);
 			Cursor aCursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getExamId(), questionNumber);
@@ -285,11 +290,8 @@ public class ExamQuestionsActivity extends Activity {
 				editText.setText(text.toString());
 				aCursor.close();
 			}
-			//v_layout.addView(editText);
+			v_layout.addView(editText);
 		}
-
-		//LayoutInflater li = getLayoutInflater();
-		//li.inflate(R.layout.question_prev_next_buttons, v_layout);
 
 		Button button_prev_question = (Button) findViewById(R.id.button_prev);
 		button_prev_question.setOnClickListener( new View.OnClickListener() {
