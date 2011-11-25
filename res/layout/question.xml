@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView android:id="@+id/ScrollView01"
+
+<ScrollView android:id="@+id/ScrollView"
 			android:layout_width="fill_parent"
 			android:layout_height="fill_parent"
 			android:scrollbars="none"
-			xmlns:android="http://schemas.android.com/apk/res/android">
+			xmlns:android="http://schemas.android.com/apk/res/android"
+			>
 			<HorizontalScrollView android:id="@+id/HorizontalScrollView01" 
                       android:layout_width="fill_parent" 
                       android:layout_height="fill_parent"
@@ -38,7 +40,7 @@
     	android:layout_weight="1"
     	android:textColor="@android:color/black"
     	/>
-    	</LinearLayout>
+    </LinearLayout>
     	
     	<TextView android:id="@+id/textExhibit"
     		android:layout_width="fill_parent"
@@ -58,7 +60,7 @@
         	android:padding="10px">
         			</TextView>
      <LinearLayout
-     	android:id="@+id/checkboxLayout"
+     	android:id="@+id/answerLayout"
      	android:layout_width="fill_parent" 
     	android:layout_height="wrap_content"
      	android:orientation="vertical">
