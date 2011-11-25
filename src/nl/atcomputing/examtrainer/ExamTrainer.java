@@ -95,6 +95,8 @@ public final class ExamTrainer {
     	public static final String COLUMN_NAME_AMOUNTOFITEMS = "amountOfItems";
     	public static final String COLUMN_NAME_INSTALLED = "installed";
     	public static final String COLUMN_NAME_URL = "URL";
+    	public static final String COLUMN_NAME_AUTHOR = "author";
+    	public static final String COLUMN_NAME_CATEGORY = "category";
     }
     
     public static final class Configuration implements BaseColumns {

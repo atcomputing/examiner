@@ -32,7 +32,6 @@ public class RetrieveExamQuestions extends IntentService {
 	 */
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		//examURL = "http://www.watbenjedan.nl/";
 		examURL = "http://10.0.0.1/test.txt";
 		try {
 			String result = fetchExam(examURL);

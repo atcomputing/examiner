@@ -1,6 +1,7 @@
 package nl.atcomputing.examtrainer;
 
 import java.net.URL;
+import java.util.ArrayList;
 
 import android.app.ListActivity;
 import android.content.Context;
@@ -22,15 +23,19 @@ import android.widget.Toast;
 
 public class ManageExamsActivity extends ListActivity {
 	private final String TAG = this.getClass().getName();
-	  private ManageExamsAdapter adap;
-	  
+	private ManageExamsAdapter adap;
+	private ExamTrainerDbAdapter examTrainerDbHelper;
+	
 	  public void onCreate(Bundle savedInstanceState) {
-		ExamTrainerDbAdapter examTrainerDbHelper;
 		super.onCreate(savedInstanceState);
 	    setContentView(R.layout.manageexams);
 	    final Context context = this;
 	    
-	    
+	    examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+		examTrainerDbHelper.open();
+		Cursor cursor = examTrainerDbHelper.getAllExams();
+	    adap = new ManageExamsAdapter(this, R.layout.manageexams_entry, cursor);
+	    setListAdapter(adap);
 	    
 	    Button cancel = (Button) this.findViewById(R.id.manageExams_cancel);
 	    cancel.setOnClickListener(new View.OnClickListener() {
@@ -44,15 +49,15 @@ public class ManageExamsActivity extends ListActivity {
 	    getNewExams.setOnClickListener(new View.OnClickListener() {
 	          public void onClick(View v) {
 	        	  loadLocalExams(context);
+	        	  adap.updateView();
 	          }
 	        });
 		
-	    examTrainerDbHelper = new ExamTrainerDbAdapter(this);
-		examTrainerDbHelper.open();
-		Cursor cursor = examTrainerDbHelper.getAllExams();
-	    adap = new ManageExamsAdapter(this, R.layout.manageexams_entry, cursor);
-	    examTrainerDbHelper.close();
-	    setListAdapter(adap);
+	    
+	  }
+	  
+	  protected void onPause() {
+		  examTrainerDbHelper.close();
 	  }
 	  
 	  private void loadLocalExams(Context context) {
@@ -63,7 +68,7 @@ public class ManageExamsActivity extends ListActivity {
 			
 			if( assetManager != null ) {
 				try {
-					XmlPullExamParser xmlPullExamParser;
+					XmlPullExamListParser xmlPullExamListParser;
 					filenames = assetManager.list("");
 					int size = filenames.length;
 					for( file_index = 0; file_index < size; file_index++) {
@@ -71,15 +76,16 @@ public class ManageExamsActivity extends ListActivity {
 						if(filename.matches("list.xml")) {
 							Log.d(TAG, "Found databasefile " + filename);
 							URL url = new URL("file:///"+filename);
-							xmlPullExamParser = new XmlPullExamParser(context, url);
-							xmlPullExamParser.parseList();
-							if ( ! xmlPullExamParser.checkIfExamInDatabase() ) {
-								Log.d(TAG, "Included Exam not in database:  " + filename);
-								xmlPullExamParser.addExamToExamTrainer();
+							xmlPullExamListParser = new XmlPullExamListParser(context, url);
+							ArrayList<Exam> exams = xmlPullExamListParser.parseList();
+							for ( Exam exam : exams ) {
+								if ( ! examTrainerDbHelper.checkIfExamAlreadyInDatabase(exam) ) {
+									Log.d(TAG, "Included Exam not in database:  " + filename);
+									examTrainerDbHelper.addExam(exam);
+								}
 							}
 						}
 					}
-					adap.updateView();
 				} catch (Exception e) {
 					Log.d(this.getClass().getName() , "Updating exams failed: Error " + e.getMessage());
 					Toast.makeText(this, "Error: updating exam " + filenames[file_index] + " failed.", Toast.LENGTH_LONG).show();

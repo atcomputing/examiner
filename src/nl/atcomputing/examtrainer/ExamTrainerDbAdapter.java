@@ -40,12 +40,12 @@ public class ExamTrainerDbAdapter {
 		dbHelper.close();
 	}
 	
-	public boolean checkIfExamAlreadyInDatabase(String title) {
+	public boolean checkIfExamAlreadyInDatabase(Exam exam) {
 		Cursor cursor = db.query(true, ExamTrainer.Exams.TABLE_NAME, 
 				new String[] {
 				ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE,
 		},
-		ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE + "=" + "\"" + title + "\"", 
+		ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE + "=" + "\"" + exam.getTitle() + "\"", 
 		null, null, null, null, null);
 		if ( cursor != null ) {
 			return cursor.getCount() > 0;
@@ -54,20 +54,15 @@ public class ExamTrainerDbAdapter {
 		}
 	}
 
-	public long addExam(String examTitle, String date, int itemsNeededToPass, 
-			int amountOfItems, boolean installed, String url) {
+	public long addExam(Exam exam) {
 		ContentValues values = new ContentValues();
-		values.put(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE, examTitle);
-		values.put(ExamTrainer.Exams.COLUMN_NAME_DATE, date);
-		values.put(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS, itemsNeededToPass);
-		values.put(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS, amountOfItems);
-		if(installed) {
-			values.put(ExamTrainer.Exams.COLUMN_NAME_INSTALLED, 1);
-		}
-		else {
-			values.put(ExamTrainer.Exams.COLUMN_NAME_INSTALLED, 0);
-		}
-		values.put(ExamTrainer.Exams.COLUMN_NAME_URL, url);
+		values.put(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE, exam.getTitle());
+		values.put(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS, exam.getItemsNeededToPass());
+		values.put(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS, exam.getNumberOfItems());
+		values.put(ExamTrainer.Exams.COLUMN_NAME_AUTHOR, exam.getAuthor());
+		values.put(ExamTrainer.Exams.COLUMN_NAME_CATEGORY, exam.getCategory());
+		values.put(ExamTrainer.Exams.COLUMN_NAME_INSTALLED, 0);
+		values.put(ExamTrainer.Exams.COLUMN_NAME_URL, exam.getURL());
 		return db.insert(ExamTrainer.Exams.TABLE_NAME, null, values);
 	}
 
@@ -76,49 +71,18 @@ public class ExamTrainerDbAdapter {
 				ExamTrainer.Exams._ID + "=" + rowId, null) > 0;
 	}
 
-	public boolean setInstalled(String title, String date, boolean installed) {
+	public boolean setInstalled(long rowId, String date, boolean installed) {
 		ContentValues values = new ContentValues();
-		if ( installed ) {
+		if(installed) {
 			values.put(ExamTrainer.Exams.COLUMN_NAME_INSTALLED, 1);
 		} else {
 			values.put(ExamTrainer.Exams.COLUMN_NAME_INSTALLED, 0);
 		}
 		return db.update(ExamTrainer.Exams.TABLE_NAME, values, 
-				ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE + "=\"" + title + "\" AND " +
+				ExamTrainer.Exams._ID + "=\"" + rowId + "\" AND " +
 						ExamTrainer.Exams.COLUMN_NAME_DATE + "=\"" + date + "\""
 						, null) > 0;
 	}
-	
-	/**
-	 * Updates an already existing exam entry
-	 * @param rowId the row number that should be updated
-	 * @param examTitle the new title or null if examTitle should not be updated
-	 * @param date the new date or null if date should not be updated
-	 * @param itemsNeededToPass the new amount of items needed to pass or negative to not update the amount
-	 * @param amountOfItems the new amount of items in the exam or negative to not update the amount
-	 * @return true if update succeeded, false otherwise
-	 */
-//	public boolean updateExam(long rowId, String examTitle, String date, int itemsNeededToPass, int amountOfItems) {
-//		ContentValues values = new ContentValues();
-//		if ( examTitle != null ) {
-//			values.put(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE, examTitle);
-//		}
-//		if ( date != null ) {
-//			values.put(ExamTrainer.Exams.COLUMN_NAME_DATE, date);
-//		}
-//		if ( itemsNeededToPass >= 0 ) {
-//			values.put(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS, itemsNeededToPass);
-//		}
-//		if ( amountOfItems >= 0 ) {
-//			values.put(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS, amountOfItems);
-//		}
-//		Log.d(TAG, ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE + ":" + examTitle
-//				+ ExamTrainer.Exams.COLUMN_NAME_DATE + ":" + date
-//				+ ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS + ":" + itemsNeededToPass
-//				+ ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS + ":" + amountOfItems);
-//		return db.update(ExamTrainer.Exams.TABLE_NAME, values, 
-//				ExamTrainer.Exams._ID + "=" + rowId, null) > 0;
-//	}
 	
 	public Cursor getExam(long rowId) {
 		Cursor cursor = db.query(true, ExamTrainer.Exams.TABLE_NAME,
@@ -129,7 +93,9 @@ public class ExamTrainerDbAdapter {
 				ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
 				ExamTrainer.Exams.COLUMN_NAME_INSTALLED,
 				ExamTrainer.Exams.COLUMN_NAME_URL,
-				ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS
+				ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS,
+				ExamTrainer.Exams.COLUMN_NAME_AUTHOR,
+				ExamTrainer.Exams.COLUMN_NAME_CATEGORY
 		},
 		ExamTrainer.Exams._ID + "=" + rowId, null, null, null, null, null);
 		if (cursor != null) {
@@ -147,7 +113,9 @@ public class ExamTrainerDbAdapter {
 				ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
 				ExamTrainer.Exams.COLUMN_NAME_INSTALLED,
 				ExamTrainer.Exams.COLUMN_NAME_URL,
-				ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS
+				ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS,
+				ExamTrainer.Exams.COLUMN_NAME_AUTHOR,
+				ExamTrainer.Exams.COLUMN_NAME_CATEGORY
 		}, null, null, null, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -164,7 +132,9 @@ public class ExamTrainerDbAdapter {
 				ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
 				ExamTrainer.Exams.COLUMN_NAME_INSTALLED,
 				ExamTrainer.Exams.COLUMN_NAME_URL,
-				ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS
+				ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS,
+				ExamTrainer.Exams.COLUMN_NAME_AUTHOR,
+				ExamTrainer.Exams.COLUMN_NAME_CATEGORY
 		}, ExamTrainer.Exams.COLUMN_NAME_INSTALLED + "= 1",
 		null, null, null, null, null);
 		if (cursor != null) {

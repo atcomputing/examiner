@@ -1,8 +1,7 @@
 package nl.atcomputing.examtrainer;
 
-import java.util.ArrayList;
+import android.content.Context;
 
-import android.database.sqlite.SQLiteException;
 
 /**
  * @author martijn brekhof
@@ -71,9 +70,5 @@ public class Exam {
 	
 	protected void setItemsNeededToPass( int n ) {
 		this.itemsneededtopass = n;
-	}
-	
-	protected void addToDatabase(ExamTrainerDbAdapter examTrainerDbHelper) {
-		long questionId = examTrainerDbHelper.addExam(title, "", itemsneededtopass, numberofitems, false, URL);
 	}
 }

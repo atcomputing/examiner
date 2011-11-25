@@ -44,11 +44,15 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			    holder.examAmountOfItems = cursor.getInt(index);
 			    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
 			    holder.examItemsNeededToPass = cursor.getInt(index);
+			    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AUTHOR);
+			    holder.author = cursor.getString(index);
 			    
 			    holder.examTitleView = (TextView) view.findViewById(R.id.manageExamsEntryTitle);
-		        holder.installUninstallButton = (Button) view.findViewById(R.id.manageExamsDelete);
-		        holder.examTitleView.setText(holder.examTitle);
-
+			    holder.examTitleView.setText(holder.examTitle);
+			    holder.examAuthorView = (TextView) view.findViewById(R.id.manageExamsEntryAuthor);
+			    holder.examAuthorView.setText(holder.author);
+			    holder.installUninstallButton = (Button) view.findViewById(R.id.manageExamsDelete);
+		        
 		        index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_INSTALLED);
 			    final int installed = cursor.getInt(index);
 			    
@@ -79,7 +83,9 @@ public class ManageExamsAdapter extends CursorAdapter  {
 								myContext.getString(R.string.questions) + 
 								": " +  holder.examAmountOfItems + "\n" +
 								myContext.getString(R.string.correct_answer_required_to_pass) +
-								": " +  holder.examItemsNeededToPass + "\n"
+								": " +  holder.examItemsNeededToPass + "\n" +
+								myContext.getString(R.string.URL) +
+								": " +  holder.url + "\n"
 								, Toast.LENGTH_LONG).show();
 					}
 				});
@@ -117,7 +123,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 				  URL url = new URL(holder.url);
 				  XmlPullExamParser xmlPullFeedParser = new XmlPullExamParser(context, url);
 			      xmlPullFeedParser.parseExam();
-			      xmlPullFeedParser.installExam(holder.examTitle, holder.examDate);
+			      //xmlPullFeedParser.installExam(holder.examTitle, holder.examDate);
 			  } catch (MalformedURLException e) {
 				  Toast.makeText(context, "Error: URL " + holder.url + " is not correct.", Toast.LENGTH_LONG).show();
 			  } catch (SQLiteException e) {
@@ -144,9 +150,11 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			  long examID;
 			  String examDate;
 			  String url;
+			  String author;
 			  int examAmountOfItems;
 			  int examItemsNeededToPass;
 		      TextView examTitleView;
+		      TextView examAuthorView;
 		      Button installUninstallButton;
 		    }
 	  }

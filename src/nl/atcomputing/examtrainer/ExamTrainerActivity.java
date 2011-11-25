@@ -27,11 +27,10 @@ public class ExamTrainerActivity extends Activity {
 		
 		setContentView(R.layout.main);		
 
-//		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
-//		examTrainerDbHelper.open();
-//		examTrainerDbHelper.upgrade();
-//		examTrainerDbHelper.initialize();
-//		examTrainerDbHelper.close();
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+		examTrainerDbHelper.open();
+		examTrainerDbHelper.upgrade();
+		examTrainerDbHelper.close();
 		
 		Button startExam = (Button) findViewById(R.id.button_select_exam);
 		startExam.setOnClickListener( new View.OnClickListener() {
