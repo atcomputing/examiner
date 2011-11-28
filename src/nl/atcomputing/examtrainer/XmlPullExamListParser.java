@@ -20,6 +20,7 @@ import android.util.Xml;
 public class XmlPullExamListParser {
 	private static final String TAG = "XmlPullExamListParser";
 	private Context context;
+	private ArrayList<Exam> exams;
 	final URL url;
 	
 	// names of the XML tags
@@ -62,8 +63,12 @@ public class XmlPullExamListParser {
         }
 	}
 
-	public ArrayList<Exam> parseList() throws RuntimeException {
-		ArrayList<Exam> exams = new ArrayList<Exam>();
+	public ArrayList<Exam> getExamList() {
+		return exams;
+	}
+	
+	public void parse() throws RuntimeException {
+		exams = new ArrayList<Exam>();
         XmlPullParser parser = Xml.newPullParser();
         try {
             parser.setInput(this.getInputStream(), null);
@@ -93,7 +98,6 @@ public class XmlPullExamListParser {
                 eventType = parser.next();
             }
             parser = null;
-            return exams;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

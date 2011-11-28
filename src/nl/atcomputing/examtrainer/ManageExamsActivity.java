@@ -57,6 +57,7 @@ public class ManageExamsActivity extends ListActivity {
 	  }
 	  
 	  protected void onPause() {
+		  super.onPause();
 		  examTrainerDbHelper.close();
 	  }
 	  
@@ -77,11 +78,12 @@ public class ManageExamsActivity extends ListActivity {
 							Log.d(TAG, "Found databasefile " + filename);
 							URL url = new URL("file:///"+filename);
 							xmlPullExamListParser = new XmlPullExamListParser(context, url);
-							ArrayList<Exam> exams = xmlPullExamListParser.parseList();
+							xmlPullExamListParser.parse();
+							ArrayList<Exam> exams = xmlPullExamListParser.getExamList();
 							for ( Exam exam : exams ) {
 								if ( ! examTrainerDbHelper.checkIfExamAlreadyInDatabase(exam) ) {
-									Log.d(TAG, "Included Exam not in database:  " + filename);
-									examTrainerDbHelper.addExam(exam);
+									Log.d(TAG, "Included Exam not in database:  " + exam.getTitle());
+									exam.addToDatabase(this);
 								}
 							}
 						}

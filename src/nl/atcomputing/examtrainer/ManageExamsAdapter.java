@@ -2,6 +2,9 @@ package  nl.atcomputing.examtrainer;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -17,19 +20,18 @@ import android.widget.Toast;
 
 public class ManageExamsAdapter extends CursorAdapter  {
 	private final String TAG = this.getClass().getName();
-	private Context context;
+	private Context gContext;
 	private int layout;
 	    
 	    public ManageExamsAdapter(Context context, int layout, Cursor c) {
 	      super(context, c);
-	      this.context = context;
+	      this.gContext = context;
 	      this.layout = layout;
 	    }
 
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
-			final Context myContext = context;
-		    
+			
 			    final ViewHolder holder = new ViewHolder();
 			    		        
 		        int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
@@ -69,7 +71,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		        		  deleteExam(holder);
 		        	  } 
 		        	  else {
-		        		 installExam(myContext, holder);
+		        		 installExam(holder);
 		        	  }
 		          }
 		        });
@@ -77,14 +79,22 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			    view.setOnClickListener(new View.OnClickListener() {
 					
 					public void onClick(View v) {
-						Toast.makeText(myContext, holder.examTitle + "\n" +
-								myContext.getString(R.string.installed_on) + 
-								" " + holder.examDate + "\n" +
-								myContext.getString(R.string.questions) + 
+						String installedOnMessage;
+						if ( holder.examDate == null ) {
+							installedOnMessage = gContext.getString(R.string.Not_installed);
+						}
+						else {
+							installedOnMessage = gContext.getString(R.string.installed_on) + 
+									" " + holder.examDate;
+						}
+						
+						Toast.makeText(gContext, holder.examTitle + "\n" +
+								installedOnMessage + "\n" +
+								gContext.getString(R.string.questions) + 
 								": " +  holder.examAmountOfItems + "\n" +
-								myContext.getString(R.string.correct_answer_required_to_pass) +
+								gContext.getString(R.string.correct_answer_required_to_pass) +
 								": " +  holder.examItemsNeededToPass + "\n" +
-								myContext.getString(R.string.URL) +
+								gContext.getString(R.string.URL) +
 								": " +  holder.url + "\n"
 								, Toast.LENGTH_LONG).show();
 					}
@@ -103,33 +113,45 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			  Log.d(TAG, "Deleting exam " + holder.examTitle +
 					  " examId " + holder.examID + " examDate " + holder.examDate);
 			  
-			  ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(context);
+			  ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(gContext);
 			  examTrainerDbHelper.open();
-			  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(context);
+			  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(gContext);
 			  if( ! ( (examinationDbHelper.delete(holder.examTitle, holder.examDate) ) && 
 			   examTrainerDbHelper.deleteExam(holder.examID) )  ) {
-					  Toast.makeText(context, "Failed to delete exam " + 
+					  Toast.makeText(gContext, "Failed to delete exam " + 
 							  holder.examTitle, Toast.LENGTH_LONG).show(); 
 			  }
 			  examTrainerDbHelper.close();
 			 updateView();
 		  }
 
-		  
-		  protected void installExam(Context context, ViewHolder holder) {
+		 
+		  protected void installExam(ViewHolder holder) {
 			  Log.d(TAG, "Installing exam " + holder.examTitle +
 					  " examDate " + holder.examDate + " URL " + holder.url);
+			  
+			  holder.examDate = getCurrentDate();
+			  
 			  try {
 				  URL url = new URL(holder.url);
-				  XmlPullExamParser xmlPullFeedParser = new XmlPullExamParser(context, url);
+				  XmlPullExamParser xmlPullFeedParser = new XmlPullExamParser(gContext, url);
 			      xmlPullFeedParser.parseExam();
-			      //xmlPullFeedParser.installExam(holder.examTitle, holder.examDate);
+			      
+			      ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(gContext);
+			      examinationDbHelper.open(holder.examTitle, holder.examDate);
+			      
+			      ArrayList<ExamQuestion> examQuestions = xmlPullFeedParser.getExam();
+			      for( ExamQuestion examQuestion: examQuestions ) {
+			    	  examQuestion.addToDatabase(examinationDbHelper);
+			      }
+			      
+			      examinationDbHelper.close();
 			  } catch (MalformedURLException e) {
-				  Toast.makeText(context, "Error: URL " + holder.url + " is not correct.", Toast.LENGTH_LONG).show();
+				  Toast.makeText(gContext, "Error: URL " + holder.url + " is not correct.", Toast.LENGTH_LONG).show();
 			  } catch (SQLiteException e) {
-				  Toast.makeText(context, "Failed to install exam " + holder.url, Toast.LENGTH_LONG).show();
+				  Toast.makeText(gContext, "Failed to install exam " + holder.url, Toast.LENGTH_LONG).show();
 			  } catch (RuntimeException e) {
-				  Toast.makeText(context, "Error parsing exam at " + holder.url, Toast.LENGTH_LONG).show();
+				  Toast.makeText(gContext, "Error parsing exam at " + holder.url, Toast.LENGTH_LONG).show();
 			  }
 			  
 			  updateView();
@@ -137,7 +159,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		  }
 		  
 		  protected void updateView() {
-			  ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(context);
+			  ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(gContext);
 			  examTrainerDbHelper.open();
 			  Cursor cursor = examTrainerDbHelper.getAllExams();
 			  examTrainerDbHelper.close();
@@ -157,4 +179,9 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		      TextView examAuthorView;
 		      Button installUninstallButton;
 		    }
+		
+		private String getCurrentDate() {
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
+			return sdf.format(new Date());
+		}
 	  }

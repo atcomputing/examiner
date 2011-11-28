@@ -99,16 +99,6 @@ public final class ExamTrainer {
     	public static final String COLUMN_NAME_CATEGORY = "category";
     }
     
-    public static final class Configuration implements BaseColumns {
-    	private Configuration() {}
-    	
-    	public static final String TABLE_NAME = "Configuration";
-    	public static final String COLUMN_NAME_SENDSCORES = "sendScores";
-    	public static final String COLUMN_NAME_CHECKFORUPDATES = "checkForUpdates";
-    	public static final String COLUMN_NAME_USETIMELIMIT = "useTimeLimit";
-    	public static final String COLUMN_NAME_URL = "URL";
-    }
-    
     public static final class Questions implements BaseColumns {
     	
         // This class cannot be instantiated

@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="exhibit">This should hold a possible exhibit</string>
-    <string name="app_name">LPIC 101-102 Exam Trainer</string>
+    <string name="Not_installed">Not installed</string>
+    <string name="app_name">Exam Trainer</string>
     <string name="ticker_text">Downloading new exam questions</string>
     <string name="notification_title">Yoohoo</string>
     <string name="notification_message">Downloading exam</string>

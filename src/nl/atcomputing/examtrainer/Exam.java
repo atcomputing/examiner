@@ -1,5 +1,7 @@
 package nl.atcomputing.examtrainer;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 
 
@@ -70,5 +72,17 @@ public class Exam {
 	
 	protected void setItemsNeededToPass( int n ) {
 		this.itemsneededtopass = n;
+	}
+	
+	protected long addToDatabase(Context context) {
+		
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(context);
+		examTrainerDbHelper.open();
+		
+		long rowId = examTrainerDbHelper.addExam(this);
+
+		examTrainerDbHelper.close();
+		
+		return rowId;
 	}
 }
