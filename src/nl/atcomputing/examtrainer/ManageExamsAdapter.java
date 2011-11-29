@@ -110,8 +110,6 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		}
 		
 		protected void deleteExam(ViewHolder holder) {
-			  Log.d(TAG, "Deleting exam " + holder.examTitle +
-					  " examId " + holder.examID + " examDate " + holder.examDate);
 			  
 			  ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(gContext);
 			  examTrainerDbHelper.open();
@@ -130,8 +128,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			  
 			  holder.examDate = getCurrentDate();
 			  
-			  Log.d(TAG, "Installing exam " + holder.examTitle +
-					  " examDate " + holder.examDate + " URL " + holder.url);
+			  Log.d(TAG, "Installing ExamID: " + holder.examID);
 			  
 			  try {
 				  URL url = new URL(holder.url);
@@ -159,7 +156,9 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			  ExamTrainerDbAdapter examTrainerDbHelperAdapter = new ExamTrainerDbAdapter(gContext);
 			  
 			  examTrainerDbHelperAdapter.open();
-			  examTrainerDbHelperAdapter.setInstalled(holder.examID, holder.examDate, true);
+			  if(! examTrainerDbHelperAdapter.setInstalled(holder.examID, holder.examDate, true)) {
+				  Toast.makeText(gContext, "Failed to set exam " + holder.examTitle + " to installed.", Toast.LENGTH_LONG).show();
+			  }
 			  examTrainerDbHelperAdapter.close();
 			  updateView();
 		  }

@@ -75,11 +75,11 @@ public class XmlPullExamParser {
             while (eventType != XmlPullParser.END_DOCUMENT){
                 switch (eventType){
                     case XmlPullParser.START_TAG:
-                    	Log.d(TAG, "parse: START_TAG " + parser.getName());
+                    	//Log.d(TAG, "parse: START_TAG " + parser.getName());
                         name = parser.getName();
                         break;
                     case XmlPullParser.TEXT:
-                    	Log.d(TAG, "parse: TEXT " + parser.getText());
+                    	//Log.d(TAG, "parse: TEXT " + parser.getText());
                     	if (name.equalsIgnoreCase(ITEM)) {
 		                    ExamQuestion examQuestion = parseItem(parser);
 		                    if ( examQuestion != null ) {
@@ -89,7 +89,7 @@ public class XmlPullExamParser {
                     	name = "";
 		                break;
                     case XmlPullParser.END_TAG:
-                    	Log.d(TAG, "parse: END_TAG " + parser.getName());
+                    	//Log.d(TAG, "parse: END_TAG " + parser.getName());
                     	name = "";
     	        		break;
                 }

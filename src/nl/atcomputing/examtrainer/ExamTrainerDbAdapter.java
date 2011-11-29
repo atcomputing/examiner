@@ -78,10 +78,9 @@ public class ExamTrainerDbAdapter {
 		} else {
 			values.put(ExamTrainer.Exams.COLUMN_NAME_INSTALLED, 0);
 		}
+		values.put(ExamTrainer.Exams.COLUMN_NAME_DATE, date);
 		return db.update(ExamTrainer.Exams.TABLE_NAME, values, 
-				ExamTrainer.Exams._ID + "=\"" + rowId + "\" AND " +
-						ExamTrainer.Exams.COLUMN_NAME_DATE + "=\"" + date + "\""
-						, null) > 0;
+				ExamTrainer.Exams._ID + "=\"" + rowId + "\"", null) > 0;
 	}
 	
 	public Cursor getExam(long rowId) {
