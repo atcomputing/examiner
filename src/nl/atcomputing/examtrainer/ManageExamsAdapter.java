@@ -33,7 +33,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		public void bindView(View view, Context context, Cursor cursor) {
 			
 			    final ViewHolder holder = new ViewHolder();
-			    		        
+			    		       
 		        int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
 		        holder.examTitle = cursor.getString(index);
 		        index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
@@ -127,10 +127,11 @@ public class ManageExamsAdapter extends CursorAdapter  {
 
 		 
 		  protected void installExam(ViewHolder holder) {
-			  Log.d(TAG, "Installing exam " + holder.examTitle +
-					  " examDate " + holder.examDate + " URL " + holder.url);
 			  
 			  holder.examDate = getCurrentDate();
+			  
+			  Log.d(TAG, "Installing exam " + holder.examTitle +
+					  " examDate " + holder.examDate + " URL " + holder.url);
 			  
 			  try {
 				  URL url = new URL(holder.url);
@@ -146,6 +147,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			      }
 			      
 			      examinationDbHelper.close();
+			      
 			  } catch (MalformedURLException e) {
 				  Toast.makeText(gContext, "Error: URL " + holder.url + " is not correct.", Toast.LENGTH_LONG).show();
 			  } catch (SQLiteException e) {
@@ -154,8 +156,12 @@ public class ManageExamsAdapter extends CursorAdapter  {
 				  Toast.makeText(gContext, "Error parsing exam at " + holder.url, Toast.LENGTH_LONG).show();
 			  }
 			  
-			  updateView();
+			  ExamTrainerDbAdapter examTrainerDbHelperAdapter = new ExamTrainerDbAdapter(gContext);
 			  
+			  examTrainerDbHelperAdapter.open();
+			  examTrainerDbHelperAdapter.setInstalled(holder.examID, holder.examDate, true);
+			  examTrainerDbHelperAdapter.close();
+			  updateView();
 		  }
 		  
 		  protected void updateView() {
