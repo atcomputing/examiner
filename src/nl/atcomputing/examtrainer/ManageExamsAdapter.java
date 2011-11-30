@@ -2,6 +2,8 @@ package  nl.atcomputing.examtrainer;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -80,12 +82,21 @@ public class ManageExamsAdapter extends CursorAdapter  {
 					
 					public void onClick(View v) {
 						String installedOnMessage;
+						String localDate;
 						if ( holder.examDate == null ) {
 							installedOnMessage = gContext.getString(R.string.Not_installed);
 						}
 						else {
+							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
+							try {
+								Date date = sdf.parse(holder.examDate);
+								DateFormat df = DateFormat.getDateTimeInstance();
+								localDate = df.format(date);
+							} catch (ParseException e) {
+								localDate = holder.examDate;
+							}
 							installedOnMessage = gContext.getString(R.string.installed_on) + 
-									" " + holder.examDate;
+									" " + localDate;
 						}
 						
 						Toast.makeText(gContext, holder.examTitle + "\n" +
@@ -189,4 +200,5 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
 			return sdf.format(new Date());
 		}
+		
 	  }
