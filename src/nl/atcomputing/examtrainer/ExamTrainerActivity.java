@@ -32,7 +32,7 @@ public class ExamTrainerActivity extends Activity {
 //		examTrainerDbHelper.upgrade();
 //		examTrainerDbHelper.close();
 		
-		Button startExam = (Button) findViewById(R.id.button_select_exam);
+		Button startExam = (Button) findViewById(R.id.button_start);
 		startExam.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(ExamTrainerActivity.this, SelectExamActivity.class);
@@ -41,14 +41,14 @@ public class ExamTrainerActivity extends Activity {
 			}
 		});
 		
-		Button reviewPreviousExam = (Button) findViewById(R.id.button_show_history);
-		reviewPreviousExam.setOnClickListener( new View.OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(ExamTrainerActivity.this, SelectExamActivity.class);
-				ExamTrainer.setMode(ExamTrainerMode.REVIEW);
-				startActivity(intent);
-			}
-		});
+//		Button reviewPreviousExam = (Button) findViewById(R.id.button_show_history);
+//		reviewPreviousExam.setOnClickListener( new View.OnClickListener() {
+//			public void onClick(View v) {
+//				Intent intent = new Intent(ExamTrainerActivity.this, SelectExamActivity.class);
+//				ExamTrainer.setMode(ExamTrainerMode.REVIEW);
+//				startActivity(intent);
+//			}
+//		});
 		
 		
 	}
