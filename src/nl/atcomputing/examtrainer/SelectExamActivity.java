@@ -1,5 +1,7 @@
 package nl.atcomputing.examtrainer;
 
+import java.text.ParseException;
+
 import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -93,12 +95,19 @@ public class SelectExamActivity extends Activity {
 			Cursor cursor = examTrainerDbHelper.getExam(examsRowId);
 			int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
 	        String examTitle = cursor.getString(index);
-	        index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
-	        String examInstallationDate = cursor.getString(index);
 		    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS);
 		    int examAmountOfItems = cursor.getInt(index);
 		    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
 		    int examItemsNeededToPass = cursor.getInt(index);
+			
+		    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
+	        String examInstallationDate = cursor.getString(index);
+	        String localDate;
+		    try {
+				localDate = ExamTrainer.convertUTCtoLocal(examInstallationDate);
+			} catch (ParseException e) {
+				localDate = examInstallationDate;
+			}
 			
 		    ExamTrainer.setExamDatabaseName(examTitle, examInstallationDate);
 			ExamTrainer.setItemsNeededToPass(examItemsNeededToPass);
@@ -106,7 +115,7 @@ public class SelectExamActivity extends Activity {
 			
 			((AlertDialog) dialog).setMessage(examTitle + "\n\n" +
 					this.getString(R.string.installed_on) + 
-					" " + examInstallationDate + "\n" +
+					" " + localDate + "\n" +
 					this.getString(R.string.questions) + 
 					": " +  examAmountOfItems + "\n" +
 					this.getString(R.string.correct_answer_required_to_pass) +
@@ -125,7 +134,7 @@ public class SelectExamActivity extends Activity {
 				builder = new AlertDialog.Builder(this);
 				builder.setCancelable(true)
 				.setMessage("")
-				.setPositiveButton(this.getString(R.string.start_exam), new DialogInterface.OnClickListener() {
+				.setPositiveButton(this.getString(R.string.Start_exam), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
 							startExam();
 					}

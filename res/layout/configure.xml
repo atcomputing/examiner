@@ -95,7 +95,7 @@
     	    android:id="@+id/config_buttonReturnToMain"
     	    android:layout_width="wrap_content"
     	    android:layout_height="wrap_content"
-    	    android:text="@string/return_to_main_menu" 
+    	    android:text="@string/Return_to_main_menu" 
     	   />
 		<Button
     	    android:id="@+id/config_buttonManageExams"

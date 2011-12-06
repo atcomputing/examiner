@@ -1,9 +1,6 @@
 package nl.atcomputing.examtrainer;
 
-import java.io.IOException;
-
 import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 
 /**
  * @author martijn brekhof
@@ -19,7 +17,7 @@ import android.widget.Button;
  */
 public class ExamTrainerActivity extends Activity {
 	private final String TAG = this.getClass().getName();
-	
+	private LinearLayout about_layout;
 	
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -27,11 +25,6 @@ public class ExamTrainerActivity extends Activity {
 		
 		setContentView(R.layout.main);		
 
-//		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
-//		examTrainerDbHelper.open();
-//		examTrainerDbHelper.upgrade();
-//		examTrainerDbHelper.close();
-		
 		Button startExam = (Button) findViewById(R.id.button_start);
 		startExam.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
@@ -41,16 +34,8 @@ public class ExamTrainerActivity extends Activity {
 			}
 		});
 		
-//		Button reviewPreviousExam = (Button) findViewById(R.id.button_show_history);
-//		reviewPreviousExam.setOnClickListener( new View.OnClickListener() {
-//			public void onClick(View v) {
-//				Intent intent = new Intent(ExamTrainerActivity.this, SelectExamActivity.class);
-//				ExamTrainer.setMode(ExamTrainerMode.REVIEW);
-//				startActivity(intent);
-//			}
-//		});
-		
-		
+		about_layout = (LinearLayout) findViewById(R.id.about_window);
+		about_layout.setVisibility(View.INVISIBLE);
 	}
 	
 	@Override
@@ -64,9 +49,12 @@ public class ExamTrainerActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
 		switch (item.getItemId()) {
-		case R.id.main_menu_manage_exams:
-			intent = new Intent(ExamTrainerActivity.this, ManageExamsActivity.class);
-			startActivity(intent);
+		case R.id.main_menu_about:
+			if( about_layout.getVisibility() == View.INVISIBLE ) {
+				about_layout.setVisibility(View.VISIBLE);
+			} else {
+				about_layout.setVisibility(View.INVISIBLE);
+			}
 			break;
 		case R.id.main_menu_settings:
 			intent = new Intent(ExamTrainerActivity.this, PreferencesActivity.class);

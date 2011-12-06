@@ -70,7 +70,7 @@ public class ExamTrainerDbAdapter {
 		return db.delete(ExamTrainer.Exams.TABLE_NAME, 
 				ExamTrainer.Exams._ID + "=" + rowId, null) > 0;
 	}
-
+	
 	public boolean setInstalled(long rowId, String date, boolean installed) {
 		ContentValues values = new ContentValues();
 		if(installed) {

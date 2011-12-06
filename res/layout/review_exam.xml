@@ -17,5 +17,5 @@
             android:layout_height="wrap_content"
             android:id="@+id/review_exam_cancel"
             android:layout_below="@id/review_exam_grid"
-            android:text="@string/cancel"/>
+            android:text="@string/Cancel"/>
 </RelativeLayout>

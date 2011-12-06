@@ -70,7 +70,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			    holder.installUninstallButton.setOnClickListener(new View.OnClickListener() {
 		          public void onClick(View v) {
 		        	  if( installed == 1 ) {
-		        		  deleteExam(holder);
+		        		  uninstallExam(holder);
 		        	  } 
 		        	  else {
 		        		 installExam(holder);
@@ -87,11 +87,8 @@ public class ManageExamsAdapter extends CursorAdapter  {
 							installedOnMessage = gContext.getString(R.string.Not_installed);
 						}
 						else {
-							SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
 							try {
-								Date date = sdf.parse(holder.examDate);
-								DateFormat df = DateFormat.getDateTimeInstance();
-								localDate = df.format(date);
+								localDate = ExamTrainer.convertUTCtoLocal(holder.examDate);
 							} catch (ParseException e) {
 								localDate = holder.examDate;
 							}
@@ -122,18 +119,31 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		
 		protected void deleteExam(ViewHolder holder) {
 			  
+			  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(gContext);
+			  examinationDbHelper.delete(holder.examTitle, holder.examDate);
+			  
 			  ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(gContext);
 			  examTrainerDbHelper.open();
-			  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(gContext);
-			  if( ! ( (examinationDbHelper.delete(holder.examTitle, holder.examDate) ) && 
-			   examTrainerDbHelper.deleteExam(holder.examID) )  ) {
+			  if( ! examTrainerDbHelper.deleteExam(holder.examID) ) {
 					  Toast.makeText(gContext, "Failed to delete exam " + 
 							  holder.examTitle, Toast.LENGTH_LONG).show(); 
 			  }
 			  examTrainerDbHelper.close();
-			 updateView();
+			  updateView();
 		  }
 
+		 protected void uninstallExam(ViewHolder holder) {
+			  ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(gContext);
+			  examTrainerDbHelper.open();
+			  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(gContext);
+			  if( ! ( (examinationDbHelper.delete(holder.examTitle, holder.examDate) ) && 
+			   examTrainerDbHelper.setInstalled(holder.examID, "", false) )  ) {
+					  Toast.makeText(gContext, "Failed to uninstall exam " + 
+							  holder.examTitle, Toast.LENGTH_LONG).show(); 
+			  }
+			  examTrainerDbHelper.close();
+			  updateView();
+		 }
 		 
 		  protected void installExam(ViewHolder holder) {
 			  

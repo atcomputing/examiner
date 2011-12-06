@@ -68,6 +68,7 @@ public class ExaminationDbAdapter {
 
 	/**
 	 * Deletes database file for a specific exam with database name title-date
+	 * Note: deletion does not require the database to be open
 	 * @param title
 	 * @param date
 	 * @return true if database was succesfully removed. False otherwiser

@@ -1,9 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-    	<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
     	android:background="@drawable/kannietbestaatniet"
     	>
+    	<LinearLayout
+    	    	android:id="@+id/about_window"
+    	    	android:layout_width="fill_parent"
+    			android:layout_height="wrap_content"
+    		    android:background="#BB000000"
+    		    android:layout_centerInParent="true"
+    		    android:orientation="vertical"
+    	    >
+    	    <TextView
+    	        android:layout_width="fill_parent"
+    			android:layout_height="wrap_content"
+    	        android:text="@string/app_name"
+    		    android:gravity="center"
+    		    android:padding="10dp">
+    	    </TextView>
+    	    <LinearLayout
+    	    	android:layout_width="wrap_content"
+    			android:layout_height="wrap_content"
+    		    android:layout_centerInParent="true"
+    		    android:orientation="horizontal"
+    		    android:gravity="center"
+    	    	android:padding="10dp">
+    	    	<TextView
+    	        	android:layout_width="wrap_content"
+    				android:layout_height="wrap_content"
+    	       		android:text="@string/Version">
+    	    	</TextView>
+    	    	<TextView
+    	    	    android:id="@+id/about_version_number"
+    	        	android:layout_width="wrap_content"
+    				android:layout_height="wrap_content"
+    	       		android:text="">
+    	    	</TextView>
+    	    </LinearLayout>
+    		<TextView
+    		    android:layout_width="fill_parent"
+    			android:layout_height="wrap_content" 
+    		    android:text="@string/Copyright"
+    		    android:gravity="center"
+    		    android:padding="10dp">
+    		</TextView>
+    		<TextView
+    		    android:layout_width="fill_parent"
+    			android:layout_height="wrap_content" 
+    		    android:text="@string/text_about_atcomputing"
+    		    android:gravity="center"
+    		    android:padding="10dp">
+    		</TextView>
+    		<TextView
+    		    android:layout_width="fill_parent"
+    			android:layout_height="wrap_content" 
+    		    android:text="@string/Visit_atcomputing"
+    		    android:gravity="center">
+    		</TextView>
+    	</LinearLayout>
     	<RelativeLayout 
     	    android:orientation="vertical"
     		android:layout_width="fill_parent"
@@ -15,13 +70,13 @@
     		    android:layout_height="wrap_content"
     		    android:scaleType="centerCrop"
     		    android:id="@+id/logo"
-    		    android:layout_alignParentRight="true"
+    		    android:layout_centerInParent="true"
     		    />
-    		<Button android:text="@string/start_exam" 
+    		<Button android:text="@string/Start" 
     		    android:id="@+id/button_start" 
     		    android:layout_width="fill_parent" 
     		    android:layout_height="wrap_content"
     		    android:layout_below="@id/logo"
     		    ></Button>
-    		</RelativeLayout>
     	</RelativeLayout>
+    </RelativeLayout>

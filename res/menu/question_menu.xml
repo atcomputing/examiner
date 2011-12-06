@@ -2,11 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/menu_stop_exam"
           android:icon="@drawable/icon"
-          android:title="@string/stop_exam" />
+          android:title="@string/Quit" />
     <item android:id="@+id/menu_leave_comment"
           android:icon="@drawable/icon"
-          android:title="@string/leave_comment" />
+          android:title="@string/Comment" />
     <item android:id="@+id/menu_get_hint"
           android:icon="@drawable/icon"
-          android:title="@string/get_hint" />
+          android:title="@string/Hint" />
 </menu>

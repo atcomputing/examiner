@@ -20,17 +20,17 @@
     	<Button android:layout_width="wrap_content"
             	android:layout_height="wrap_content"
             	android:id="@+id/manageExams_deleteAll"
-            	android:text="@string/delete_all"
+            	android:text="@string/Delete_all"
             	android:layout_alignParentLeft="true"/>
     	<Button android:layout_width="fill_parent"
             	android:layout_height="wrap_content"
            	 android:id="@+id/manageExams_getNewExams"
-            	android:text="@string/get_new_exams"
+            	android:text="@string/Get_new_exams"
             	android:layout_toRightOf="@id/manageExams_deleteAll"/>
     	<Button android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/manageExams_cancel"
-            android:text="@string/cancel"
+            android:text="@string/Done"
             android:layout_below="@id/manageExams_deleteAll"/>
     </RelativeLayout>
 </RelativeLayout>

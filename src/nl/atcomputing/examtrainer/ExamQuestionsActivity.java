@@ -77,7 +77,7 @@ public class ExamQuestionsActivity extends Activity {
 		
 		if(ExamTrainer.getMode() == ExamTrainerMode.REVIEW) {
 			MenuItem item = menu.findItem(R.id.menu_get_hint);
-			item.setTitle(R.string.show_answers);
+			item.setTitle(R.string.Show_Answers);
 		}
 		return true;
 	}
