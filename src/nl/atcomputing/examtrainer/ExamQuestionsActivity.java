@@ -55,7 +55,7 @@ public class ExamQuestionsActivity extends Activity {
 			this.finish();
 		}
 		else {
-		cursorQuestion = examinationDbHelper.getQuestion(questionNumber);
+			cursorQuestion = examinationDbHelper.getQuestion(questionNumber);
 		
 			int index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_TYPE);
 			questionType = cursorQuestion.getString(index);
@@ -123,8 +123,9 @@ public class ExamQuestionsActivity extends Activity {
     		.setCancelable(false)
     		.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
     			public void onClick(DialogInterface dialog, int id) {
-    				stopExam();
+    				startShowScores();
     				dialog.dismiss();
+    				finish();
     			}
     		});
     		dialog = builder.create();
@@ -207,6 +208,12 @@ public class ExamQuestionsActivity extends Activity {
 		cursor.close();
 	}
 
+	private void startShowScores() {
+		Intent intent = new Intent(ExamQuestionsActivity.this, ShowScoresActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
+	}
+	
 	private void stopExam() {
 		Intent intent = new Intent(ExamQuestionsActivity.this, ExamTrainerActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -330,7 +337,7 @@ public class ExamQuestionsActivity extends Activity {
 		});
 	}
 	
-private int calculateScore() {
+	private int calculateScore() {
     	long examId = ExamTrainer.getExamId();
     	
     	List<Long> questionIDsList = examinationDbHelper.getAllQuestionIDs();

@@ -12,11 +12,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
 /**
  * @author martijn brekhof
@@ -39,38 +39,49 @@ public class SelectExamActivity extends Activity {
 	    requestWindowFeature(Window.FEATURE_NO_TITLE);
 	    setContentView(R.layout.selectexam);
 	    
-	    Button cancel = (Button) this.findViewById(R.id.selectexam_cancel);
+	    Button cancel = (Button) this.findViewById(R.id.selectexam_manage_exams);
 	    cancel.setOnClickListener(new View.OnClickListener() {
 
 	          public void onClick(View v) {
-	        	  finish();
+	        	  startManageExams();
 	          }
 	        });
 	    
-	    ListView selectExam = (ListView) this.findViewById(R.id.select_exam_list);
-	    TextView noExamsAvailable = (TextView) this.findViewById(R.id.selectexam_no_exams_available);
 	    examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		examTrainerDbHelper.open();
-		
-		cursor = examTrainerDbHelper.getInstalledExams();
-		if(cursor.getCount() > 0) {
-			//Remove exams not available text when there are exams installed
-			noExamsAvailable.setVisibility(View.GONE);
-		}
-		
-	    adap = new SelectExamAdapter(this, R.layout.selectexam_entry, cursor);
-	    selectExam.setAdapter(adap);
 	    
-	    selectExam.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				examsRowId = id;
-				Log.d(TAG, "position: " + position + " id: " + id);
-				showDialog(DIALOG_SHOW_EXAM);
-			}
-		});
 	  }
 
+	  protected void onResume() {
+		  super.onResume();
+		  Log.d(TAG, "onResume");
+		  ListView selectExam = (ListView) this.findViewById(R.id.select_exam_list);
+		    TextView noExamsAvailable = (TextView) this.findViewById(R.id.selectexam_no_exams_available);
+		    TextView clickOnManageExams = (TextView) this.findViewById(R.id.selectexam_click_on_manage_exams);
+		    
+			cursor = examTrainerDbHelper.getInstalledExams();
+			if(cursor.getCount() > 0) {
+				//Remove exams not available text when there are exams installed
+				noExamsAvailable.setVisibility(View.GONE);
+				clickOnManageExams.setVisibility(View.GONE);
+			} else {
+				noExamsAvailable.setVisibility(View.VISIBLE);
+				clickOnManageExams.setVisibility(View.VISIBLE);
+			}
+			
+		    adap = new SelectExamAdapter(this, R.layout.selectexam_entry, cursor);
+		    selectExam.setAdapter(adap);
+		    
+		    selectExam.setOnItemClickListener(new OnItemClickListener() {
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					examsRowId = id;
+					Log.d(TAG, "position: " + position + " id: " + id);
+					showDialog(DIALOG_SHOW_EXAM);
+				}
+			});
+	  }
+	  
 	  protected void onDestroy() {
 		  super.onDestroy();
 		  examTrainerDbHelper.close();
@@ -79,7 +90,6 @@ public class SelectExamActivity extends Activity {
 	  protected void onPrepareDialog(int id, Dialog dialog) {
 		switch(id) {
 		case DIALOG_SHOW_EXAM:
-			Log.d(TAG, "onPrepareDialog examsRowId: " + examsRowId);
 			Cursor cursor = examTrainerDbHelper.getExam(examsRowId);
 			int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
 	        String examTitle = cursor.getString(index);
@@ -111,30 +121,18 @@ public class SelectExamActivity extends Activity {
 			Dialog dialog;
 			AlertDialog.Builder builder;
 			switch(id) {
-			case DIALOG_SHOW_EXAM:
-				Log.d(TAG, "onCreateDialog examsRowId: " + examsRowId);
-				String positiveButtonText = this.getString(R.string.start_exam);
-				
-				
-			    if( ExamTrainer.getMode() == ExamTrainerMode.REVIEW ) {
-			    	positiveButtonText = this.getString(R.string.show_history);
-				}
-				else if ( ExamTrainer.getMode() == ExamTrainerMode.EXAM ) {
-					positiveButtonText = this.getString(R.string.start_exam);
-				}
-			    
+			case DIALOG_SHOW_EXAM: 
 				builder = new AlertDialog.Builder(this);
 				builder.setCancelable(true)
 				.setMessage("")
-				.setPositiveButton(positiveButtonText, new DialogInterface.OnClickListener() {
+				.setPositiveButton(this.getString(R.string.start_exam), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						if( ExamTrainer.getMode() == ExamTrainerMode.REVIEW ) {
-							showHistory();
-						}
-						else if ( ExamTrainer.getMode() == ExamTrainerMode.EXAM ) {
 							startExam();
-						}
-						
+					}
+				})
+				.setNeutralButton(this.getString(R.string.show_history), new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int id) {
+						showHistory();
 					}
 				})
 				.setNegativeButton(this.getString(R.string.close), new DialogInterface.OnClickListener() {
@@ -155,6 +153,11 @@ public class SelectExamActivity extends Activity {
 			startActivity(intent);
 		}
 		
+	  	private void startManageExams() {
+	  		Intent intent = new Intent(this, ManageExamsActivity.class);
+	  		startActivity(intent);
+	  	}
+	  	
 		private void startExam() {
 			Intent intent = new Intent(this, ExamQuestionsActivity.class);
 	    	  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
