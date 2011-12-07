@@ -179,6 +179,7 @@ public class SelectExamActivity extends Activity {
 	    	  } else {
 	    		  ExamTrainer.setExamId(examId);
 	    		  ExamTrainer.setQuestionNumber(intent, 1);
+	    		  ExamTrainer.setMode(ExamTrainer.ExamTrainerMode.EXAM);
 	    		  startActivity(intent);
 	    	  }
 		}
