@@ -36,7 +36,7 @@
 	<string name="ok">ok</string>
 	<string name="hint_not_available">Hint not available</string>
 	<string name="no_exams_available">No exams available</string>
-	<string name="click_on_manage_exams_to_install_one_or_more_exams">Use Manage Exams to install one or more exams</string>
+	<string name="click_on_manage_exams_to_install_one_or_more_exams">Press menu and use Manage Exams to install one or more exams</string>
 	<string name="questions">Questions</string>
 	<string name="installed_on">Installed on</string>
 	<string name="install">Install</string>
@@ -72,12 +72,14 @@
 	<string name="Close">Close</string>
 	<string name="Question">Question</string>
 	<string name="Manage_Exams">Manage Exams</string>
+	<string name="Are_you_sure_you_want_to_delete_all_exams">Are you sure you want to delete all exams?</string>
+	<string name="manageexams_get_exams_explanation">Press menu and use "Get new exams" to load available exams.</string>
 	<!-- KEYS USED IN PREFERENCES -->
 	<string name="use_timelimits_pref_key">use_timelimits_pref_key</string>
 	<string name="preferences_pref_key">preferences_pref_key</string>
 	<string name="updates_pref_key">updates_pref_key</string>
 	<string name="updates_url_pref_key">updates_url_pref_key</string>
-	<!-- Text for about activity -->
+	<!-- Text for about -->
 	<string name="Copyright">(c) Copyright AT Computing 2011</string>
 	<string name="Version">Version</string>
 	<string name="text_about_atcomputing">AT Computing is a team of specialized educators and consultants in Linux, Open Source, UNIX and programming languages.</string>

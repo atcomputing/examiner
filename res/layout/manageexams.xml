@@ -1,36 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
-    <ListView android:layout_width="fill_parent"
-              android:layout_height="wrap_content"
-              android:id="@android:id/list"
-              android:layout_weight="1"/>
     <TextView
-    android:id="@android:id/empty"
+    android:id="@+id/manageexams_no_exams_available"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:text="@string/no_exams_available"/>
-    
-    <RelativeLayout android:orientation="vertical"
-              android:layout_width="fill_parent"
+    <TextView
+    android:id="@+id/manageexams_click_on_manage_exams"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/manageexams_get_exams_explanation"/>
+    <ListView android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:layout_alignParentBottom="true">
-    	<Button android:layout_width="wrap_content"
-            	android:layout_height="wrap_content"
-            	android:id="@+id/manageExams_deleteAll"
-            	android:text="@string/Delete_all"
-            	android:layout_alignParentLeft="true"/>
-    	<Button android:layout_width="fill_parent"
-            	android:layout_height="wrap_content"
-           	 android:id="@+id/manageExams_getNewExams"
-            	android:text="@string/Get_new_exams"
-            	android:layout_toRightOf="@id/manageExams_deleteAll"/>
-    	<Button android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/manageExams_cancel"
-            android:text="@string/Done"
-            android:layout_below="@id/manageExams_deleteAll"/>
-    </RelativeLayout>
-</RelativeLayout>
+              android:id="@android:id/list"/>
+</LinearLayout>

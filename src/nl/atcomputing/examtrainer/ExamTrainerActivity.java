@@ -66,10 +66,6 @@ public class ExamTrainerActivity extends Activity {
 		return true;
 	}
 	
-	protected void onDestroy() {
-		super.onDestroy();
-	} 
-	
 	protected void retrieveExam() {
 		Intent intent = new Intent(this, RetrieveExamQuestions.class);
 		startService(intent);

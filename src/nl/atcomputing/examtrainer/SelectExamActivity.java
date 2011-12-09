@@ -11,6 +11,9 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -38,29 +41,18 @@ public class SelectExamActivity extends Activity {
 	  
 	  public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    requestWindowFeature(Window.FEATURE_NO_TITLE);
+	    //requestWindowFeature(Window.FEATURE_NO_TITLE);
 	    setContentView(R.layout.selectexam);
-	    
-	    Button cancel = (Button) this.findViewById(R.id.selectexam_manage_exams);
-	    cancel.setOnClickListener(new View.OnClickListener() {
-
-	          public void onClick(View v) {
-	        	  startManageExams();
-	          }
-	        });
-	    
-	    examTrainerDbHelper = new ExamTrainerDbAdapter(this);
-		examTrainerDbHelper.open();
-	    
 	  }
 
 	  protected void onResume() {
 		  super.onResume();
-		  Log.d(TAG, "onResume");
 		  ListView selectExam = (ListView) this.findViewById(R.id.select_exam_list);
 		    TextView noExamsAvailable = (TextView) this.findViewById(R.id.selectexam_no_exams_available);
 		    TextView clickOnManageExams = (TextView) this.findViewById(R.id.selectexam_click_on_manage_exams);
 		    
+		    examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+			examTrainerDbHelper.open();
 			cursor = examTrainerDbHelper.getInstalledExams();
 			if(cursor.getCount() > 0) {
 				//Remove exams not available text when there are exams installed
@@ -84,11 +76,35 @@ public class SelectExamActivity extends Activity {
 			});
 	  }
 	  
-	  protected void onDestroy() {
-		  super.onDestroy();
+	  protected void onPause() {
+		  super.onPause();
 		  examTrainerDbHelper.close();
 	  }
 	  
+		@Override
+		public boolean onCreateOptionsMenu(Menu menu) {
+			MenuInflater inflater = getMenuInflater();
+			inflater.inflate(R.menu.selectexam_menu, menu);
+			return true;
+		}
+
+		@Override
+		public boolean onOptionsItemSelected(MenuItem item) {
+			Intent intent;
+			switch (item.getItemId()) {
+			case R.id.selectexam_menu_settings:
+				intent = new Intent(this, PreferencesActivity.class);
+				startActivity(intent);
+				break;
+			case R.id.selectexam_menu_manage:
+				startManageExams();
+				break;
+			default:
+				return super.onOptionsItemSelected(item);
+			}
+			return true;
+		}
+
 	  protected void onPrepareDialog(int id, Dialog dialog) {
 		switch(id) {
 		case DIALOG_SHOW_EXAM:

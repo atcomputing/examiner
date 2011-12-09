@@ -17,8 +17,4 @@
               android:layout_height="wrap_content"
               android:id="@+id/select_exam_list"
               android:layout_weight="1"/>
-    <Button android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/selectexam_manage_exams"
-            android:text="@string/Manage_Exams"/>
 </LinearLayout>

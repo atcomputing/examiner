@@ -3,14 +3,22 @@ package nl.atcomputing.examtrainer;
 import java.net.URL;
 import java.util.ArrayList;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ListActivity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -25,77 +33,161 @@ public class ManageExamsActivity extends ListActivity {
 	private final String TAG = this.getClass().getName();
 	private ManageExamsAdapter adap;
 	private ExamTrainerDbAdapter examTrainerDbHelper;
-	
-	  public void onCreate(Bundle savedInstanceState) {
+	static final int DIALOG_CONFIRMATION_ID = 0;
+	private TextView noExamsAvailable;
+    private TextView clickOnManageExams;
+    
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-	    setContentView(R.layout.manageexams);
-	    final Context context = this;
-	    
-	    examTrainerDbHelper = new ExamTrainerDbAdapter(this);
-		examTrainerDbHelper.open();
-		Cursor cursor = examTrainerDbHelper.getAllExams();
-	    adap = new ManageExamsAdapter(this, R.layout.manageexams_entry, cursor);
-	    setListAdapter(adap);
-	    
-	    Button cancel = (Button) this.findViewById(R.id.manageExams_cancel);
-	    cancel.setOnClickListener(new View.OnClickListener() {
-
-	          public void onClick(View v) {
-	        	  finish();
-	          }
-	        });
-	    
-	    Button getNewExams = (Button) this.findViewById(R.id.manageExams_getNewExams);
-	    getNewExams.setOnClickListener(new View.OnClickListener() {
-	          public void onClick(View v) {
-	        	  loadLocalExams(context);
-	        	  adap.updateView();
-	          }
-	        });
+		setContentView(R.layout.manageexams);
 		
+		noExamsAvailable = (TextView) this.findViewById(R.id.manageexams_no_exams_available);
+	    clickOnManageExams = (TextView) this.findViewById(R.id.manageexams_click_on_manage_exams);
 	    
-	  }
-	  
-	  protected void onPause() {
-		  super.onPause();
-		  examTrainerDbHelper.close();
-	  }
-	  
-	  private void loadLocalExams(Context context) {
-			int file_index = 0;
-			String[] filenames = null;
+		examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+		examTrainerDbHelper.open();
+		
+		adap = new ManageExamsAdapter(this, R.layout.manageexams_entry, null);
+		setListAdapter(adap);
+		updateView();
+	}
 
-			AssetManager assetManager = getAssets();
-			
-			if( assetManager != null ) {
-				try {
-					XmlPullExamListParser xmlPullExamListParser;
-					filenames = assetManager.list("");
-					int size = filenames.length;
-					for( file_index = 0; file_index < size; file_index++) {
-						String filename = filenames[file_index];
-						if(filename.matches("list.xml")) {
-							Log.d(TAG, "Found databasefile " + filename);
-							URL url = new URL("file:///"+filename);
-							xmlPullExamListParser = new XmlPullExamListParser(context, url);
-							xmlPullExamListParser.parse();
-							ArrayList<Exam> exams = xmlPullExamListParser.getExamList();
-							for ( Exam exam : exams ) {
-								if ( ! examTrainerDbHelper.checkIfExamAlreadyInDatabase(exam) ) {
-									Log.d(TAG, "Included Exam not in database:  " + exam.getTitle());
-									exam.addToDatabase(this);
-								}
+	protected void onPause() {
+		super.onPause();
+		examTrainerDbHelper.close();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.manageexam_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Intent intent;
+		switch (item.getItemId()) {
+		case R.id.manageexam_menu_delete_all:
+			showDialog(DIALOG_CONFIRMATION_ID);
+			break;
+		case R.id.manageexam_menu_get_new_exams:
+			loadLocalExams();
+			updateView();
+			break;
+		case R.id.manageexam_menu_settings:
+			intent = new Intent(this, PreferencesActivity.class);
+			startActivity(intent);
+			break;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+		return true;
+	}
+
+	protected Dialog onCreateDialog(int id) {
+		Dialog dialog;
+		AlertDialog.Builder builder;
+	    switch(id) {
+	    case DIALOG_CONFIRMATION_ID:
+	    	builder = new AlertDialog.Builder(this);
+			builder.setMessage(this.getString(R.string.Are_you_sure_you_want_to_delete_all_exams))
+			.setCancelable(false)
+			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					deleteAllExams();
+				}
+			})
+			.setNegativeButton("No", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
+			dialog = builder.create();
+	        break;
+	    default:
+	        dialog = null;
+	    }
+	    return dialog;
+	}
+	
+	private void deleteAllExams() {
+		  int index;
+		  long examId;
+		  String examDate;
+		  String examTitle;
+		  
+		  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+		  Cursor cursor = examTrainerDbHelper.getAllExams();
+		  do {
+			  index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
+			  examTitle = cursor.getString(index);
+			  index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
+			  examDate = cursor.getString(index);
+			  index = cursor.getColumnIndex(ExamTrainer.Exams._ID);
+			  examId = cursor.getLong(index);
+			  
+			  if( ! ( (examinationDbHelper.delete(examTitle, examDate) ) && 
+					   examTrainerDbHelper.deleteExam(examId) )  ) {
+							  Toast.makeText(this, "Failed to delete exam " + 
+									  examTitle, Toast.LENGTH_LONG).show(); 
+					  }
+			  
+		  } while(cursor.moveToNext());
+		  
+		  updateView();
+	}
+
+	private void updateView() {
+		Cursor cursor = examTrainerDbHelper.getAllExams();
+		
+		if(cursor.getCount() > 0) {
+			//Remove exams not available text when there are exams installed
+			noExamsAvailable.setVisibility(View.GONE);
+			clickOnManageExams.setVisibility(View.GONE);
+		} else {
+			noExamsAvailable.setVisibility(View.VISIBLE);
+			clickOnManageExams.setVisibility(View.VISIBLE);
+		}
+		adap.changeCursor(cursor);
+		adap.updateView();
+	}
+	
+	private void loadLocalExams() {
+		int file_index = 0;
+		String[] filenames = null;
+
+		AssetManager assetManager = getAssets();
+
+		if( assetManager != null ) {
+			try {
+				XmlPullExamListParser xmlPullExamListParser;
+				filenames = assetManager.list("");
+				int size = filenames.length;
+				for( file_index = 0; file_index < size; file_index++) {
+					String filename = filenames[file_index];
+					if(filename.matches("list.xml")) {
+						Log.d(TAG, "Found databasefile " + filename);
+						URL url = new URL("file:///"+filename);
+						xmlPullExamListParser = new XmlPullExamListParser(this, url);
+						xmlPullExamListParser.parse();
+						ArrayList<Exam> exams = xmlPullExamListParser.getExamList();
+						for ( Exam exam : exams ) {
+							if ( ! examTrainerDbHelper.checkIfExamAlreadyInDatabase(exam) ) {
+								Log.d(TAG, "Included Exam not in database:  " + exam.getTitle());
+								exam.addToDatabase(this);
 							}
 						}
 					}
-				} catch (Exception e) {
-					Log.d(this.getClass().getName() , "Updating exams failed: Error " + e.getMessage());
-					Toast.makeText(this, "Error: updating exam " + filenames[file_index] + " failed.", Toast.LENGTH_LONG).show();
 				}
+			} catch (Exception e) {
+				Log.d(this.getClass().getName() , "Updating exams failed: Error " + e.getMessage());
+				Toast.makeText(this, "Error: updating exam " + filenames[file_index] + " failed.", Toast.LENGTH_LONG).show();
 			}
 		}
-	  
-	  private void loadRemoteExams() {
+	}
+
+	private void loadRemoteExams() {
 		//retrieveExam();
-	  }
+	}
 }
