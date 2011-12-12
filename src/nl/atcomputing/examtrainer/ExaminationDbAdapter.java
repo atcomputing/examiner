@@ -41,6 +41,11 @@ public class ExaminationDbAdapter {
 		return this;
 	}
 	
+	public ExaminationDbAdapter open(String title, long date) throws SQLiteException {
+		String databaseName = createDataseName(title, date);
+		return this.open(databaseName);
+	}
+	
 	public void printCursor(Cursor cursor) {
 		if( (cursor != null ) && (cursor.getCount() > 0) ) {
 			cursor.moveToFirst();
@@ -52,10 +57,6 @@ public class ExaminationDbAdapter {
 				}
 			} while ( cursor.moveToNext() );
 		}
-	}
-	public ExaminationDbAdapter open(String title, String date) throws SQLiteException {
-		String databaseName = createDataseName(title, date);
-		return this.open(databaseName);
 	}
 	
 	public void upgrade() {
@@ -70,11 +71,11 @@ public class ExaminationDbAdapter {
 	 * Deletes database file for a specific exam with database name title-date
 	 * Note: deletion does not require the database to be open
 	 * @param title
-	 * @param date
+	 * @param date in seconds since 01/01/1970
 	 * @return true if database was succesfully removed. False otherwiser
 	 * @throws RuntimeException if database file does not exist.
 	 */
-	public boolean delete(String title, String date) {
+	public boolean delete(String title, long date) {
 		String databaseName = createDataseName(title, date);
 		if ( databaseExist(databaseName) ) {
 			return context.deleteDatabase(databaseName);
@@ -98,8 +99,6 @@ public class ExaminationDbAdapter {
 		values.put(ExamTrainer.Choices.COLUMN_NAME_CHOICE, choice);
 		values.put(ExamTrainer.Choices.COLUMN_NAME_QUESTION_ID, questionId);
 		
-		//Log.d(this.getClass().getName(), "addChoice: " + values.toString() );
-		
 		return db.insert(ExamTrainer.Choices.TABLE_NAME, null, values);
 	}
 
@@ -118,10 +117,7 @@ public class ExaminationDbAdapter {
 	 */
 	public long createNewScore() {
 		try {
-			String format = new String("yyyy-MM-dd HH:mm");
-			SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.getDefault());
-			dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-	    	String date = dateFormat.format(new Date());
+			long date = System.currentTimeMillis();
 	    	ContentValues values = new ContentValues();
 			values.put(ExamTrainer.Scores.COLUMN_NAME_DATE, date);
 			values.put(ExamTrainer.Scores.COLUMN_NAME_SCORE, 0);
@@ -504,9 +500,7 @@ public class ExaminationDbAdapter {
 		Cursor mCursor = db.rawQuery(sqlQuery, null);
 		if (mCursor != null) {
 			int count = mCursor.getCount();
-			Log.d(TAG, "checkScoresAnswersOpen: count: " + count + "\n" + sqlQuery);
-			printCursor(mCursor);
-		    mCursor.close();
+		  mCursor.close();
 			return count > 0;
 		}
 		return false;
@@ -553,9 +547,6 @@ public class ExaminationDbAdapter {
 			;
 		    Cursor mCursor = db.rawQuery(sqlQuery, null);
 		    int count = mCursor.getCount();
-		    Log.d(TAG, "checkScoresAnswersMultipleChoice: count: " + count + 
-		    		" correctAnswerCount:" + correctAnswersCount + "\n" + sqlQuery);
-		    printCursor(mCursor);
 		    mCursor.close();
 		    return count == correctAnswersCount;
 		}
@@ -581,7 +572,7 @@ public class ExaminationDbAdapter {
 		return 0;
 	}
 	
-	private String createDataseName(String title, String date) {
+	private String createDataseName(String title, long date) {
 		return title +"-"+ date;
 	}
 	

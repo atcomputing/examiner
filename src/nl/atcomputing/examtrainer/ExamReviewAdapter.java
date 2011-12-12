@@ -51,7 +51,10 @@ import android.widget.AdapterView.OnItemClickListener;
 		public int getCount() 
 		{
 			/* Set the number of element we want on the grid */
-			return cursor.getCount();
+			if ( cursor != null ) {
+				return cursor.getCount();
+			}
+			return 0;
 		}
 
 		public Object getItem(int position) {

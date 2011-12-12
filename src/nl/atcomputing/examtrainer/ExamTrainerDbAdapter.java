@@ -71,7 +71,7 @@ public class ExamTrainerDbAdapter {
 				ExamTrainer.Exams._ID + "=" + rowId, null) > 0;
 	}
 	
-	public boolean setInstalled(long rowId, String date, boolean installed) {
+	public boolean setInstalled(long rowId, long date, boolean installed) {
 		ContentValues values = new ContentValues();
 		if(installed) {
 			values.put(ExamTrainer.Exams.COLUMN_NAME_INSTALLED, 1);

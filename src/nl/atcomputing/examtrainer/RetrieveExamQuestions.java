@@ -35,7 +35,6 @@ public class RetrieveExamQuestions extends IntentService {
 		examURL = "http://10.0.0.1/test.txt";
 		try {
 			String result = fetchExam(examURL);
-			Log.d(this.getClass().getSimpleName(), result);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

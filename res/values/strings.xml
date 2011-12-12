@@ -29,6 +29,7 @@
     <string name="Return_to_main_menu">Return to main menu</string>
     <string name="Cancel">Cancel</string>
     <string name="Done">Done</string>
+    <string name="End_exam">End exam</string>
     <string name="end_of_exam_message">This was the last question.\nExiting the exam will calculate your score.\nAre you sure you want to exit?</string>
 	<string name="end_of_review_message">This was the last question.\nAre you sure you want to exit review mode?</string>
 	<string name="yes">yes</string>

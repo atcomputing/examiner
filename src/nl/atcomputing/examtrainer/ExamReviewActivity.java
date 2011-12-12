@@ -38,7 +38,6 @@ public class ExamReviewActivity extends Activity {
 	
 
 	public void onCreate(Bundle savedInstanceState) {
-		Log.d(TAG, "Activity started");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.review_exam);
 
@@ -52,7 +51,6 @@ public class ExamReviewActivity extends Activity {
 
 		examId = ExamTrainer.getExamId();
 		
-		Log.d(TAG, "databaseName: " + ExamTrainer.getExamDatabaseName() + "examId: " + examId);
 
 		examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
@@ -69,7 +67,9 @@ public class ExamReviewActivity extends Activity {
 
 	protected void onDestroy() {
 		super.onDestroy();
-		cursor.close();
+		if( cursor != null ) {
+			cursor.close();
+		}
 		examinationDbHelper.close();
 	}
 

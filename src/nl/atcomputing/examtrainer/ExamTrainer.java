@@ -1,13 +1,8 @@
 package nl.atcomputing.examtrainer;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
-
 import android.content.Intent;
 import android.provider.BaseColumns;
+import android.text.format.Time;
 
 /**
  * @author martijn brekhof
@@ -47,7 +42,7 @@ public final class ExamTrainer {
 		return itemsNeededToPass;
 	}
 
-	public static void setExamDatabaseName(String examTitle, String date) {
+	public static void setExamDatabaseName(String examTitle, long date) {
 		examDatabaseName = examTitle + "-" + date;
 	}
 
@@ -87,17 +82,10 @@ public final class ExamTrainer {
 		return intent.getLongExtra(questionNumber, 1);
 	}
 
-	public static String convertUTCtoLocal(String utcDate) throws ParseException {
-		String localDate;
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-		try {
-			Date date = sdf.parse(utcDate);
-			DateFormat df = DateFormat.getDateTimeInstance();
-			localDate = df.format(date);
-			return localDate;
-		} catch (ParseException e) {
-			throw e;
-		}
+	public static String convertEpochToString(long epoch) {
+		Time time = new Time();
+		time.set(Long.valueOf(epoch));
+		return time.format("%Y-%m-%d %H:%M");
 	}
 	
 	public static final class Exams implements BaseColumns {

@@ -50,11 +50,9 @@ public class XmlPullExamParser {
 	private InputStream getInputStream() {
 		try {
 			if(url.getProtocol().equals("file")) {
-				Log.d(TAG, "getInputStream returning protocol " + url.getProtocol() +" and file "+ url.getFile());
 				return context.getApplicationContext().getAssets().open(url.getFile().replaceFirst("^/", ""));
 			} 
 			else {
-				Log.d(TAG, "getInputStream returning protocol " + url.getProtocol() +" and location "+ url.getFile());
 				return url.openConnection().getInputStream();
 			}
         } catch (IOException e) {
@@ -75,11 +73,9 @@ public class XmlPullExamParser {
             while (eventType != XmlPullParser.END_DOCUMENT){
                 switch (eventType){
                     case XmlPullParser.START_TAG:
-                    	//Log.d(TAG, "parse: START_TAG " + parser.getName());
                         name = parser.getName();
                         break;
                     case XmlPullParser.TEXT:
-                    	//Log.d(TAG, "parse: TEXT " + parser.getText());
                     	if (name.equalsIgnoreCase(ITEM)) {
 		                    ExamQuestion examQuestion = parseItem(parser);
 		                    if ( examQuestion != null ) {
@@ -89,7 +85,6 @@ public class XmlPullExamParser {
                     	name = "";
 		                break;
                     case XmlPullParser.END_TAG:
-                    	//Log.d(TAG, "parse: END_TAG " + parser.getName());
                     	name = "";
     	        		break;
                 }
@@ -113,10 +108,8 @@ public class XmlPullExamParser {
 	        switch (eventType){
 	        	case XmlPullParser.START_TAG:
 	                start_tag = parser.getName();
-	                //Log.d(this.getClass().getName(), "parseItem START_TAG: " + start_tag);
 	                break;
 	        	case XmlPullParser.END_TAG:
-	        		//Log.d(this.getClass().getName(), "parseItem END_TAG: " + parser.getName());
 	        		if (parser.getName().equalsIgnoreCase(ITEM)) {
 	        			return examQuestion;
 	        		}
@@ -124,25 +117,18 @@ public class XmlPullExamParser {
 	        		break;
 	            case XmlPullParser.TEXT:
 	                if (start_tag.equalsIgnoreCase(ITEM_TYPE)) {
-	                	//Log.d(this.getClass().getName(), "parseItem TEXT type: " + parser.getText());
 	                	examQuestion.setType(parser.getText());
 	                } else if (start_tag.equalsIgnoreCase(ITEM_TOPIC)) {
-	                	//Log.d(this.getClass().getName(), "parseItem TEXT topic: " + parser.getText());
 	                	examQuestion.setTopic(parser.getText());
 	                } else if (start_tag.equalsIgnoreCase(ITEM_QUESTION)) {
-	                	//Log.d(this.getClass().getName(), "parseItem TEXT question: " + parser.getText());
 	                	examQuestion.setQuestion(parser.getText());
 	                } else if (start_tag.equalsIgnoreCase(ITEM_EXHIBIT)) {
-	                	//Log.d(this.getClass().getName(), "parseItem TEXT exhibit: " + parser.getText());
 	                	examQuestion.setExhibit(parser.getText());
 	                } else if (start_tag.equalsIgnoreCase(ITEM_CORRECT_ANSWER)) {
-	                	//Log.d(this.getClass().getName(), "parseItem TEXT correct_answer: " + parser.getText());
 	                	examQuestion.addAnswer(parser.getText());
 	                } else if (start_tag.equalsIgnoreCase(ITEM_CHOICE)) {
-	                	//Log.d(this.getClass().getName(), "parseItem TEXT choice: " + parser.getText());
 	                	examQuestion.addChoice(parser.getText());
 	                } else if (start_tag.equalsIgnoreCase(ITEM_HINT)) {
-	                	//Log.d(this.getClass().getName(), "parseItem TEXT hint: " + parser.getText());
 	                	examQuestion.setHint(parser.getText());
 	                }
 	                break;

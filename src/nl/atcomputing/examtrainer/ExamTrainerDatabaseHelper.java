@@ -17,7 +17,7 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 	+ ExamTrainer.Exams.TABLE_NAME + " ("
     + ExamTrainer.Exams._ID + " INTEGER PRIMARY KEY,"
     + ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE + " TEXT,"
-    + ExamTrainer.Exams.COLUMN_NAME_DATE + " TEXT,"
+    + ExamTrainer.Exams.COLUMN_NAME_DATE + " INTEGER,"
     + ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS + " INTEGER,"
     + ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS + " INTEGER,"
     + ExamTrainer.Exams.COLUMN_NAME_INSTALLED + " INTEGER,"

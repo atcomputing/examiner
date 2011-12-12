@@ -58,18 +58,40 @@ public class ShowScoresActivity extends Activity {
 		examinationDbHelper.close();
 	}
 
-	protected Dialog onCreateDialog(int id) {
-		Dialog dialog;
-		AlertDialog.Builder builder;
+	protected void onPrepareDialog(int id, Dialog dialog) {
 		switch(id) {
 		case DIALOG_SHOW_EXAM:
 			Cursor cursor = examinationDbHelper.getScore(examId);
 			int index = cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_DATE);
 			String examDate = cursor.getString(index);
-			Log.d(TAG, "ExamID: " + examId + " ExamDate: " + examDate);
+			index = cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_SCORE);
+		    int examScore = cursor.getInt(index);
+			
+			
+			String pass = this.getResources().getString(R.string.no);
+			if( examScore >= ExamTrainer.getItemsNeededToPass() ) { 
+				pass = this.getResources().getString(R.string.yes);
+			}
+			((AlertDialog) dialog).setMessage("ExamID: "+ examId + "\n" + 
+					"Exam date: " + examDate + "\n" +
+					"Score: " + examScore + "\n" +
+					"Pass: " + pass
+			);
+			break;
+		default:
+			break;
+		}
+		 
+	}
+	
+	protected Dialog onCreateDialog(int id) {
+		Dialog dialog;
+		AlertDialog.Builder builder;
+		switch(id) {
+		case DIALOG_SHOW_EXAM:
 			builder = new AlertDialog.Builder(this);
 			builder.setCancelable(true)
-			.setMessage(examId + " " + examDate )
+			.setMessage("")
 			.setPositiveButton("Review exam", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					Intent intent = new Intent(ShowScoresActivity.this, ExamReviewActivity.class);

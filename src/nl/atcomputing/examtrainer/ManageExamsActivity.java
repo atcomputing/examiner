@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -17,7 +16,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,8 +50,8 @@ public class ManageExamsActivity extends ListActivity {
 		updateView();
 	}
 
-	protected void onPause() {
-		super.onPause();
+	protected void onDestroy() {
+		super.onDestroy();
 		examTrainerDbHelper.close();
 	}
 
@@ -114,7 +112,7 @@ public class ManageExamsActivity extends ListActivity {
 	private void deleteAllExams() {
 		  int index;
 		  long examId;
-		  String examDate;
+		  long examDate;
 		  String examTitle;
 		  
 		  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
@@ -123,7 +121,7 @@ public class ManageExamsActivity extends ListActivity {
 			  index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
 			  examTitle = cursor.getString(index);
 			  index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
-			  examDate = cursor.getString(index);
+			  examDate = cursor.getLong(index);
 			  index = cursor.getColumnIndex(ExamTrainer.Exams._ID);
 			  examId = cursor.getLong(index);
 			  
@@ -167,14 +165,12 @@ public class ManageExamsActivity extends ListActivity {
 				for( file_index = 0; file_index < size; file_index++) {
 					String filename = filenames[file_index];
 					if(filename.matches("list.xml")) {
-						Log.d(TAG, "Found databasefile " + filename);
 						URL url = new URL("file:///"+filename);
 						xmlPullExamListParser = new XmlPullExamListParser(this, url);
 						xmlPullExamListParser.parse();
 						ArrayList<Exam> exams = xmlPullExamListParser.getExamList();
 						for ( Exam exam : exams ) {
 							if ( ! examTrainerDbHelper.checkIfExamAlreadyInDatabase(exam) ) {
-								Log.d(TAG, "Included Exam not in database:  " + exam.getTitle());
 								exam.addToDatabase(this);
 							}
 						}

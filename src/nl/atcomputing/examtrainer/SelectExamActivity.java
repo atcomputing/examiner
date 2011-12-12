@@ -70,7 +70,6 @@ public class SelectExamActivity extends Activity {
 				public void onItemClick(AdapterView<?> parent, View view,
 						int position, long id) {
 					examsRowId = id;
-					Log.d(TAG, "position: " + position + " id: " + id);
 					showDialog(DIALOG_SHOW_EXAM);
 				}
 			});
@@ -117,13 +116,8 @@ public class SelectExamActivity extends Activity {
 		    int examItemsNeededToPass = cursor.getInt(index);
 			
 		    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
-	        String examInstallationDate = cursor.getString(index);
-	        String localDate;
-		    try {
-				localDate = ExamTrainer.convertUTCtoLocal(examInstallationDate);
-			} catch (ParseException e) {
-				localDate = examInstallationDate;
-			}
+	        long examInstallationDate = cursor.getLong(index);
+	        String localDate = ExamTrainer.convertEpochToString(examInstallationDate);
 			
 		    ExamTrainer.setExamDatabaseName(examTitle, examInstallationDate);
 			ExamTrainer.setItemsNeededToPass(examItemsNeededToPass);
@@ -190,7 +184,6 @@ public class SelectExamActivity extends Activity {
 	    	  long examId = examinationDbHelper.createNewScore();
 	    	  examinationDbHelper.close();
 	    	  if( examId == -1 ) {
-	    		  Log.d(TAG, "Failed to create a new score");
 	    		  Toast.makeText(this, this.getString(R.string.failed_to_create_a_new_score_for_the_exam), Toast.LENGTH_LONG);
 	    	  } else {
 	    		  ExamTrainer.setExamId(examId);

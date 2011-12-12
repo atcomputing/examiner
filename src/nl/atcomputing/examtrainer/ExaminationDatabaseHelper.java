@@ -47,7 +47,7 @@ public class ExaminationDatabaseHelper extends SQLiteOpenHelper {
 		+ ExamTrainer.Scores.TABLE_NAME + " ("
 		+ ExamTrainer.Scores._ID + " INTEGER PRIMARY KEY,"
 	    + ExamTrainer.Scores.COLUMN_NAME_SCORE + " INTEGER,"
-	    + ExamTrainer.Scores.COLUMN_NAME_DATE + " TEXT"
+	    + ExamTrainer.Scores.COLUMN_NAME_DATE + " INTEGER"
 	    + ");";
 
 	private static final String DATABASE_CREATE_RESULTPERQUESTION_TABLE = "CREATE TABLE " 

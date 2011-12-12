@@ -2,16 +2,13 @@ package  nl.atcomputing.examtrainer;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
-import android.util.Log;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +36,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		        int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
 		        holder.examTitle = cursor.getString(index);
 		        index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
-			    holder.examDate = cursor.getString(index);
+			    holder.examDate = cursor.getLong(index);
 			    index = cursor.getColumnIndex(ExamTrainer.Exams._ID);
 			    holder.examID = cursor.getLong(index);
 			    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_URL);
@@ -83,15 +80,14 @@ public class ManageExamsAdapter extends CursorAdapter  {
 					public void onClick(View v) {
 						String installedOnMessage;
 						String localDate;
-						if ( holder.examDate == null ) {
+						if ( holder.examDate == 0 ) {
 							installedOnMessage = gContext.getString(R.string.Not_installed);
 						}
 						else {
-							try {
-								localDate = ExamTrainer.convertUTCtoLocal(holder.examDate);
-							} catch (ParseException e) {
-								localDate = holder.examDate;
-							}
+							Time time = new Time();
+							time.set(Long.valueOf(holder.examDate));
+							localDate = time.format("%Y-%m-%d %H:%M");
+							
 							installedOnMessage = gContext.getString(R.string.installed_on) + 
 									" " + localDate;
 						}
@@ -137,7 +133,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			  examTrainerDbHelper.open();
 			  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(gContext);
 			  if( ! ( (examinationDbHelper.delete(holder.examTitle, holder.examDate) ) && 
-			   examTrainerDbHelper.setInstalled(holder.examID, "", false) )  ) {
+			   examTrainerDbHelper.setInstalled(holder.examID, 0, false) )  ) {
 					  Toast.makeText(gContext, "Failed to uninstall exam " + 
 							  holder.examTitle, Toast.LENGTH_LONG).show(); 
 			  }
@@ -147,9 +143,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		 
 		  protected void installExam(ViewHolder holder) {
 			  
-			  holder.examDate = getCurrentDate();
-			  
-			  Log.d(TAG, "Installing ExamID: " + holder.examID);
+			 holder.examDate = System.currentTimeMillis();
 			  
 			  try {
 				  URL url = new URL(holder.url);
@@ -196,7 +190,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		class ViewHolder {
 			  String examTitle;
 			  long examID;
-			  String examDate;
+			  long examDate;
 			  String url;
 			  String author;
 			  int examAmountOfItems;
@@ -205,10 +199,4 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		      TextView examAuthorView;
 		      Button installUninstallButton;
 		    }
-		
-		private String getCurrentDate() {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSSZ");
-			return sdf.format(new Date());
-		}
-		
-	  }
+}
