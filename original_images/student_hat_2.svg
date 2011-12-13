@@ -15,7 +15,10 @@
    id="svg3969"
    version="1.1"
    inkscape:version="0.47 r22583"
-   sodipodi:docname="student_hat_2.svg">
+   sodipodi:docname="student_hat_2.svg"
+   inkscape:export-filename="/home/mbrekhof/projects/ExamTrainer/original_images/student_hat_2.png"
+   inkscape:export-xdpi="68.084549"
+   inkscape:export-ydpi="68.084549">
   <defs
      id="defs3971">
     <inkscape:perspective
@@ -292,7 +295,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
