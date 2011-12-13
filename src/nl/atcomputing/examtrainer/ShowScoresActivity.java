@@ -24,6 +24,7 @@ public class ShowScoresActivity extends Activity {
 	private ExaminationDbAdapter examinationDbHelper;
 	private long examId;
 	private static final int DIALOG_SHOW_EXAM = 1;
+	private static final int DIALOG_CONFIRMATION_ID = 2;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,7 +64,7 @@ public class ShowScoresActivity extends Activity {
 		case DIALOG_SHOW_EXAM:
 			Cursor cursor = examinationDbHelper.getScore(examId);
 			int index = cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_DATE);
-			String examDate = cursor.getString(index);
+			String examDate = ExamTrainer.convertEpochToString(cursor.getLong(index));
 			index = cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_SCORE);
 		    int examScore = cursor.getInt(index);
 			
@@ -72,10 +73,10 @@ public class ShowScoresActivity extends Activity {
 			if( examScore >= ExamTrainer.getItemsNeededToPass() ) { 
 				pass = this.getResources().getString(R.string.yes);
 			}
-			((AlertDialog) dialog).setMessage("ExamID: "+ examId + "\n" + 
-					"Exam date: " + examDate + "\n" +
-					"Score: " + examScore + "\n" +
-					"Pass: " + pass
+			((AlertDialog) dialog).setMessage(this.getString(R.string.ExamID) + ": " + examId + "\n" + 
+					this.getString(R.string.Exam_date) + ": "+ examDate + "\n" +
+					this.getString(R.string.Score) + ": " + examScore + "\n" +
+					this.getString(R.string.Pass) + ": " + pass
 			);
 			break;
 		default:
@@ -88,26 +89,43 @@ public class ShowScoresActivity extends Activity {
 		Dialog dialog;
 		AlertDialog.Builder builder;
 		switch(id) {
+		case DIALOG_CONFIRMATION_ID:
+	    	builder = new AlertDialog.Builder(this);
+			builder.setMessage(this.getString(R.string.Are_you_sure_you_want_to_delete_this_score))
+			.setCancelable(false)
+			.setPositiveButton(this.getString(R.string.Yes), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					examinationDbHelper.deleteScore(examId);
+					adapter.getCursor().requery();
+					adapter.notifyDataSetChanged();
+					dialog.dismiss();
+				}
+			})
+			.setNegativeButton(this.getString(R.string.No), new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.cancel();
+				}
+			});
+			dialog = builder.create();
+	        break;
 		case DIALOG_SHOW_EXAM:
 			builder = new AlertDialog.Builder(this);
 			builder.setCancelable(true)
 			.setMessage("")
-			.setPositiveButton("Review exam", new DialogInterface.OnClickListener() {
+			.setPositiveButton(this.getString(R.string.Review_Exam), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					Intent intent = new Intent(ShowScoresActivity.this, ExamReviewActivity.class);
 					ExamTrainer.setExamId(examId);
 					startActivity(intent);
 				}
 			})
-			.setNeutralButton("Delete exam", new DialogInterface.OnClickListener() {
+			.setNeutralButton(this.getString(R.string.Delete_score), new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int id) {
-						examinationDbHelper.deleteScore(examId);
-						adapter.getCursor().requery();
-						adapter.notifyDataSetChanged();
+						showDialog(DIALOG_CONFIRMATION_ID);
 						dialog.dismiss();
 					}
 			})
-			.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			.setNegativeButton(this.getString(R.string.Cancel), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.dismiss();
 				}

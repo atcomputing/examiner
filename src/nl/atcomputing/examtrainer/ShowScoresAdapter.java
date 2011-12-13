@@ -22,8 +22,9 @@ public class ShowScoresAdapter extends CursorAdapter  {
 
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
+				
 		        int index = cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_DATE);
-			    String examDate = cursor.getString(index);
+			    String examDate = ExamTrainer.convertEpochToString(cursor.getLong(index));
 			    index = cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_SCORE);
 			    int examScore = cursor.getInt(index);
 			    
@@ -48,11 +49,4 @@ public class ShowScoresAdapter extends CursorAdapter  {
 			View view = (View) mInflater.inflate(layout, parent, false);
 			return view;
 		}
-		  
-		class ViewHolder {
-			  int examScore;
-			  String examDate;
-		      TextView scoreEntryDate;
-		      TextView scoreEntryScore;
-		    }
 	  }

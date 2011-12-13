@@ -16,8 +16,11 @@
     <string name="manage_exams">Manage exams</string>
     <string name="configure_examtrainer">Configure ExamTrainer</string>
     <string name="Select_exam">Select exam</string>
-    <string name="Delete_exam">Delete exam</string>    
-    <string name="Delete_all">Delete all</string>    
+    <string name="Delete_exam">Delete exam</string>
+    <string name="Delete_score">Delete score</string>
+    <string name="Delete_all">Delete all</string> 
+    <string name="Are_you_sure_you_want_to_delete_this_score">Are you sure you want to delete this score?</string>
+    <string name="ExamID">ExamID</string>   
     <string name="Get_new_exams">Get new exams</string>    
     <string name="Comment">Comment</string>
     <string name="Hint">Hint</string>
@@ -30,10 +33,13 @@
     <string name="Cancel">Cancel</string>
     <string name="Done">Done</string>
     <string name="End_exam">End exam</string>
+    <string name="End_review">End review</string>
     <string name="end_of_exam_message">This was the last question.\nExiting the exam will calculate your score.\nAre you sure you want to exit?</string>
 	<string name="end_of_review_message">This was the last question.\nAre you sure you want to exit review mode?</string>
 	<string name="yes">yes</string>
 	<string name="no">no</string>
+	<string name="Yes">Yes</string>
+	<string name="No">No</string>
 	<string name="ok">ok</string>
 	<string name="hint_not_available">Hint not available</string>
 	<string name="no_exams_available">No exams available</string>
@@ -85,4 +91,6 @@
 	<string name="Version">Version</string>
 	<string name="text_about_atcomputing">AT Computing is a team of specialized educators and consultants in Linux, Open Source, UNIX and programming languages.</string>
 	<string name="Visit_atcomputing">Visit http://www.atcomputing.nl</string>
+	<!-- Error messages  -->
+	<string name="Failed_to_delete_exam">Failed to delete exam</string>
 </resources>

@@ -91,12 +91,12 @@ public class ManageExamsActivity extends ListActivity {
 	    	builder = new AlertDialog.Builder(this);
 			builder.setMessage(this.getString(R.string.Are_you_sure_you_want_to_delete_all_exams))
 			.setCancelable(false)
-			.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+			.setPositiveButton(this.getString(R.string.Yes), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					deleteAllExams();
 				}
 			})
-			.setNegativeButton("No", new DialogInterface.OnClickListener() {
+			.setNegativeButton(this.getString(R.string.No), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();
 				}
@@ -127,7 +127,7 @@ public class ManageExamsActivity extends ListActivity {
 			  
 			  if( ! ( (examinationDbHelper.delete(examTitle, examDate) ) && 
 					   examTrainerDbHelper.deleteExam(examId) )  ) {
-							  Toast.makeText(this, "Failed to delete exam " + 
+							  Toast.makeText(this, this.getString(R.string.Failed_to_delete_exam) + 
 									  examTitle, Toast.LENGTH_LONG).show(); 
 					  }
 			  

@@ -161,7 +161,7 @@ public final class ExamTrainer {
 
 		public static final String TABLE_NAME = "ScoresAnswers";
 
-		public static final String COLUMN_NAME_EXAM_ID = "exam_id";
+		public static final String COLUMN_NAME_SCORES_ID = "exam_id";
 		public static final String COLUMN_NAME_QUESTION_ID = "question_id";
 		public static final String COLUMN_NAME_ANSWER = "answer";
 	}
@@ -173,7 +173,7 @@ public final class ExamTrainer {
 
 		public static final String TABLE_NAME = "ResultPerQuestion";
 
-		public static final String COLUMN_NAME_EXAM_ID = "exam_id";
+		public static final String COLUMN_NAME_SCORES_ID = "exam_id";
 		public static final String COLUMN_NAME_QUESTION_ID = "question_id";
 		public static final String COLUMN_NAME_ANSWER_CORRECT = "answered_correct";
 	}

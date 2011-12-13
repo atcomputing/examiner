@@ -865,7 +865,7 @@
         </dia:composite>
         <dia:composite type="table_attribute">
           <dia:attribute name="name">
-            <dia:string>#exam_id#</dia:string>
+            <dia:string>#scores_id#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
             <dia:string>#Integer#</dia:string>
@@ -1750,7 +1750,7 @@
         </dia:composite>
         <dia:composite type="table_attribute">
           <dia:attribute name="name">
-            <dia:string>#exam_id#</dia:string>
+            <dia:string>#scores_id#</dia:string>
           </dia:attribute>
           <dia:attribute name="type">
             <dia:string>#Integer#</dia:string>

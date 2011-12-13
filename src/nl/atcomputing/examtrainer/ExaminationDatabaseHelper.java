@@ -38,7 +38,7 @@ public class ExaminationDatabaseHelper extends SQLiteOpenHelper {
 	private static final String DATABASE_CREATE_SCORESANSWERS_TABLE = "CREATE TABLE " 
 		+ ExamTrainer.ScoresAnswers.TABLE_NAME + " ("
 		+ ExamTrainer.ScoresAnswers._ID + " INTEGER PRIMARY KEY,"
-	    + ExamTrainer.ScoresAnswers.COLUMN_NAME_EXAM_ID + " INTEGER,"
+	    + ExamTrainer.ScoresAnswers.COLUMN_NAME_SCORES_ID + " INTEGER,"
 	    + ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID + " INTEGER,"
 	    + ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER + " TEXT"
 	    + ");";
@@ -55,7 +55,7 @@ public class ExaminationDatabaseHelper extends SQLiteOpenHelper {
 			+ ExamTrainer.ResultPerQuestion._ID + " INTEGER PRIMARY KEY,"
 		    + ExamTrainer.ResultPerQuestion.COLUMN_NAME_QUESTION_ID + " INTEGER,"
 		    + ExamTrainer.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT + " INTEGER,"
-		    + ExamTrainer.ResultPerQuestion.COLUMN_NAME_EXAM_ID + " INTEGER"
+		    + ExamTrainer.ResultPerQuestion.COLUMN_NAME_SCORES_ID + " INTEGER"
 		    + ");";
 	
 	public ExaminationDatabaseHelper(Context context, String databaseName) {

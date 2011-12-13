@@ -318,7 +318,11 @@ public class ExamQuestionsActivity extends Activity {
 		}
 		Button button_next_question = (Button) findViewById(R.id.button_next);
 		if( questionNumber >= examinationDbHelper.getQuestionsCount() ) {
-			button_next_question.setText(R.string.End_exam);
+			if (ExamTrainer.getMode() == ExamTrainerMode.REVIEW) {
+				button_next_question.setText(R.string.End_review);
+			} else {
+				button_next_question.setText(R.string.End_exam);
+			}
 		}
 		button_next_question.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {

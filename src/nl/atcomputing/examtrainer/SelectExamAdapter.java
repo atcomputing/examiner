@@ -23,15 +23,19 @@ public class SelectExamAdapter extends CursorAdapter  {
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
 				
-			    int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
-		        String examTitle = cursor.getString(index);
-		        index = cursor.getColumnIndex(ExamTrainer.Exams._ID);
-			    long examId = cursor.getLong(index);
-			    examIds.add(examId);
-			    
-			    TextView examTitleView = (TextView) view.findViewById(R.id.selectexamEntryTitle);
-		        
-			    examTitleView.setText(examTitle);
+			int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
+	        String examTitle = cursor.getString(index);
+		    index = cursor.getColumnIndex(ExamTrainer.Exams._ID);
+		    long examID = cursor.getLong(index);
+		    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AUTHOR);
+		    String author = cursor.getString(index);
+		    
+		    TextView examTitleView = (TextView) view.findViewById(R.id.selectexamEntryTitle);
+		    examTitleView.setText(examTitle);
+		    TextView examAuthorView = (TextView) view.findViewById(R.id.selectexamEntryAuthor);
+		    examAuthorView.setText(author);
+		    
+			examIds.add(examID);
 		}
 
 		@Override

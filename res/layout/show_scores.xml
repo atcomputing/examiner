@@ -41,5 +41,5 @@
     <Button android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:id="@+id/show_scores_cancel"
-            android:text="@string/Cancel"/>
+            android:text="@string/Done"/>
 </LinearLayout>
