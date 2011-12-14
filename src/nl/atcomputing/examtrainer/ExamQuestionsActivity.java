@@ -86,15 +86,6 @@ public class ExamQuestionsActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		case R.id.menu_stop_exam:
-			if(ExamTrainer.getMode() == ExamTrainerMode.EXAM) {
-				examinationDbHelper.deleteScore(ExamTrainer.getExamId());
-			}
-			stopExam();
-			return true;
-		case R.id.menu_leave_comment:
-
-			return true;
 		case R.id.menu_get_hint:
 			if(ExamTrainer.getMode() == ExamTrainerMode.REVIEW) {
 				showAnswers();
