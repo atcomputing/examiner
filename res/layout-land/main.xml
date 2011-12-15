@@ -2,7 +2,7 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
-    	android:background="@drawable/astronaut_port"
+    	android:background="@drawable/astronaut_land"
     	>
     	<TextView
     		android:id="@+id/startscreen_quote"
@@ -11,7 +11,7 @@
     		android:textColor="#FFFFFF"
     		android:textSize="40dp"
     		android:text="@string/startscreen_quote"
-    		android:layout_gravity="center"
+    		android:layout_gravity="right"
     		android:typeface="serif"
     		android:padding="10dp"/>
     	<LinearLayout
@@ -79,6 +79,7 @@
     		    android:layout_width="wrap_content" 
     		    android:layout_height="wrap_content"
     		    android:scaleType="centerCrop"
+    		    android:layout_alignParentRight="true"
     		    android:id="@+id/logo"
     		    android:layout_centerInParent="true"
     		    />
