@@ -2,8 +2,18 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     	android:layout_width="fill_parent"
     	android:layout_height="fill_parent"
-    	android:background="@drawable/kannietbestaatniet"
+    	android:background="@drawable/astronaut"
     	>
+    	<TextView
+    		android:id="@+id/startscreen_quote"
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:textColor="#FFFFFF"
+    		android:textSize="40dp"
+    		android:text="@string/startscreen_quote"
+    		android:layout_gravity="center"
+    		android:typeface="serif"
+    		android:padding="10dp"/>
     	<LinearLayout
     	    	android:id="@+id/about_window"
     	    	android:layout_width="fill_parent"

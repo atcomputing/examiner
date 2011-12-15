@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+	<string name="startscreen_quote">&#8220;Kan niet\n"   "bestaat niet&#8221;</string>
     <string name="ATComputings_ExamTrainer">AT Computing\'s Exam Trainer</string>
     <string name="exhibit">This should hold a possible exhibit</string>
     <string name="Not_installed">Not installed</string>
