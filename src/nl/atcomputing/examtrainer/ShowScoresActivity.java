@@ -1,18 +1,20 @@
 package nl.atcomputing.examtrainer;
 
+import java.util.concurrent.TimeUnit;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.AdapterView.OnItemClickListener;
 
 /**
  * @author martijn brekhof
@@ -29,21 +31,34 @@ public class ShowScoresActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_scores);
-
-		Button cancelButton = (Button) findViewById(R.id.show_scores_cancel);
 		ListView scoresList = (ListView) findViewById(R.id.show_scores_list);
+		
+		final ProgressDialog dialog = new ProgressDialog(this);
+        dialog.setCancelable(true);
+        dialog.setMessage("Loading...");
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.show();
+ 
+        Thread myThread = new Thread(new Runnable() {
+            public void run() {
+            	examinationDbHelper = new ExaminationDbAdapter(ShowScoresActivity.this);
+        		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+        		Cursor cursor = examinationDbHelper.getScoresReversed();
+        		adapter = new ShowScoresAdapter(ShowScoresActivity.this, R.layout.show_scores_entry, cursor);
+                dialog.dismiss();
+            }
+        });
+        myThread.start();
+
+        scoresList.setAdapter(adapter);
+        
+		Button cancelButton = (Button) findViewById(R.id.show_scores_cancel);
 
 		cancelButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				finish();
 			}
 		});
-		
-		examinationDbHelper = new ExaminationDbAdapter(this);
-		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		Cursor cursor = examinationDbHelper.getScoresReversed();
-		adapter = new ShowScoresAdapter(this, R.layout.show_scores_entry, cursor);
-		scoresList.setAdapter(adapter);
 		
 		scoresList.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
