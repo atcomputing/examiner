@@ -8,6 +8,7 @@
     <string name="ticker_text">Downloading new exam questions</string>
     <string name="notification_title">Yoohoo</string>
     <string name="notification_message">Downloading exam</string>
+    <string name="Loading_Please_wait">Loading. Please wait...</string>
     <string name="button_next">Next</string>
     <string name="button_prev">Back</string>
     <string name="Start">Start</string>

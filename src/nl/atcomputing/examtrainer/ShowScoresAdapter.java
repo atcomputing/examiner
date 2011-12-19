@@ -9,6 +9,11 @@ import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+/**
+ * @author martijn brekhof
+ *
+ */
+
 public class ShowScoresAdapter extends CursorAdapter  {
 	private final String TAG = this.getClass().getName();
 	private int layout;

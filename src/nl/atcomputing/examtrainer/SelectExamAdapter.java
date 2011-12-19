@@ -10,6 +10,11 @@ import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
+/**
+ * @author martijn brekhof
+ *
+ */
+
 public class SelectExamAdapter extends CursorAdapter  {
 	private final String TAG = this.getClass().getName();
 	private int layout;

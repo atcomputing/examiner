@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
  * @author martijn brekhof
  *
  */
+
 public class PreferencesActivity extends PreferenceActivity {
 	private final String TAG = this.getClass().getName();
 	private ExamTrainerDbAdapter examTrainerDbHelper;

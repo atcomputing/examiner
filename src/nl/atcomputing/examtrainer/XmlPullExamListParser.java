@@ -15,7 +15,10 @@ import android.database.sqlite.SQLiteException;
 import android.util.Log;
 import android.util.Xml;
 
-//http://www.ibm.com/developerworks/opensource/library/x-android/#download
+/**
+ * @author martijn brekhof
+ *
+ */
 
 public class XmlPullExamListParser {
 	private static final String TAG = "XmlPullExamListParser";

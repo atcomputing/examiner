@@ -1,4 +1,4 @@
-package  nl.atcomputing.examtrainer;
+package nl.atcomputing.examtrainer;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -16,6 +16,11 @@ import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+/**
+ * @author martijn brekhof
+ *
+ */
 
 public class ManageExamsAdapter extends CursorAdapter  {
 	private final String TAG = this.getClass().getName();

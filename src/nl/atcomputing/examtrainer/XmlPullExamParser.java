@@ -11,6 +11,11 @@ import android.content.Context;
 import android.util.Log;
 import android.util.Xml;
 
+/**
+ * @author martijn brekhof
+ *
+ */
+
 public class XmlPullExamParser {
 	private static final String TAG = "XmlPullExamParser";
 	private ArrayList<ExamQuestion> examQuestions = new ArrayList<ExamQuestion>();

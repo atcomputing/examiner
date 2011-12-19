@@ -41,6 +41,8 @@ public class ExamReviewActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.review_exam);
 
+		ExamTrainer.showProgressDialog(this);
+		
 		cancelButton = (Button) findViewById(R.id.review_exam_cancel);
 
 		cancelButton.setOnClickListener(new View.OnClickListener() {
@@ -63,6 +65,7 @@ public class ExamReviewActivity extends Activity {
 		scoresGrid.setAdapter(adapter);
 		
 		setupListener();
+		ExamTrainer.stopProgressDialog();
 	}
 
 	protected void onDestroy() {
