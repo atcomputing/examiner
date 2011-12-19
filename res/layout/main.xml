@@ -30,7 +30,7 @@
     		    android:padding="10dp">
     	    </TextView>
     	    <LinearLayout
-    	    	android:layout_width="wrap_content"
+    	    	android:layout_width="fill_parent"
     			android:layout_height="wrap_content"
     		    android:layout_centerInParent="true"
     		    android:orientation="horizontal"
@@ -39,13 +39,14 @@
     	    	<TextView
     	        	android:layout_width="wrap_content"
     				android:layout_height="wrap_content"
+    				android:paddingRight="10dp"
     	       		android:text="@string/Version">
     	    	</TextView>
     	    	<TextView
     	    	    android:id="@+id/about_version_number"
     	        	android:layout_width="wrap_content"
     				android:layout_height="wrap_content"
-    	       		android:text="">
+    	       		android:text="1.0">
     	    	</TextView>
     	    </LinearLayout>
     		<TextView
@@ -66,7 +67,9 @@
     		    android:layout_width="fill_parent"
     			android:layout_height="wrap_content" 
     		    android:text="@string/Visit_atcomputing"
-    		    android:gravity="center">
+    		    android:autoLink="web"
+    		    android:gravity="center"
+    		    android:paddingBottom="10dp">
     		</TextView>
     	</LinearLayout>
     	<RelativeLayout 

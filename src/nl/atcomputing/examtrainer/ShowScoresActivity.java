@@ -49,14 +49,6 @@ public class ShowScoresActivity extends Activity {
 				showDialog(DIALOG_SHOW_EXAM);
 			}
 		});
-        
-		Button cancelButton = (Button) findViewById(R.id.show_scores_cancel);
-
-		cancelButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				finish();
-			}
-		});
 		
 		ExamTrainer.stopProgressDialog();
 	}

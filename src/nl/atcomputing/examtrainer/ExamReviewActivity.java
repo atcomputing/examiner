@@ -43,22 +43,11 @@ public class ExamReviewActivity extends Activity {
 
 		ExamTrainer.showProgressDialog(this);
 		
-		cancelButton = (Button) findViewById(R.id.review_exam_cancel);
-
-		cancelButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				finish();
-			}
-		});
-
 		examId = ExamTrainer.getExamId();
 		
-
 		examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		cursor = examinationDbHelper.getResultPerQuestion(examId);
-
-		
 
 		adapter = new ExamReviewAdapter(this, R.layout.review_exam_entry, cursor);
 		scoresGrid = (GridView) findViewById(R.id.review_exam_grid);

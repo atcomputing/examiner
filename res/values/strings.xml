@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="startscreen_quote">&#8220;Kan niet\n"   "bestaat niet&#8221;</string>
+	<string name="startscreen_quote">&#8220;Yes,\n"   "you can.&#8221;</string>
     <string name="ATComputings_ExamTrainer">AT Computing\'s Exam Trainer</string>
     <string name="exhibit">This should hold a possible exhibit</string>
     <string name="Not_installed">Not installed</string>
@@ -13,7 +13,6 @@
     <string name="button_prev">Back</string>
     <string name="Start">Start</string>
     <string name="Start_exam">Start exam</string>
-    <string name="get_new_questions">Get new questions</string>
     <string name="show_previous_exams">Show previous exams</string>
     <string name="manage_exams">Manage exams</string>
     <string name="configure_examtrainer">Configure ExamTrainer</string>
@@ -37,7 +36,6 @@
     <string name="End_exam">End exam</string>
     <string name="End_review">End review</string>
     <string name="end_of_exam_message">This was the last question.\nExiting the exam will calculate your score.\nAre you sure you want to exit?</string>
-	<string name="end_of_review_message">This was the last question.\nAre you sure you want to exit review mode?</string>
 	<string name="yes">yes</string>
 	<string name="no">no</string>
 	<string name="Yes">Yes</string>
@@ -54,9 +52,6 @@
 	<string name="correct_answer_required_to_pass">Correct answers required to pass</string>
 	<string name="send_scores_to_at_computing">Send statistics to AT Computing</string>
 	<string name="URL">URL</string>
-	<string name="check_for_updates_at_startup">Check for updates at startup</string>
-	<string name="use_timelimits">Use time limits during exams</string>
-	<string name="if_available_in_braces">(if available)</string>
 	<string name="start">start</string>
 	<string name="history">history</string>
 	<string name="correct_answers">Correct answers</string>
