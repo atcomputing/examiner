@@ -1,41 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="startscreen_quote">&#8220;Yes,\n"   "you can.&#8221;</string>
-    <string name="ATComputings_ExamTrainer">AT Computing\'s Exam Trainer</string>
-    <string name="exhibit">This should hold a possible exhibit</string>
-    <string name="Not_installed">Not installed</string>
-    <string name="app_name">Exam Trainer</string>
-    <string name="ticker_text">Downloading new exam questions</string>
-    <string name="notification_title">Yoohoo</string>
-    <string name="notification_message">Downloading exam</string>
-    <string name="Loading_Please_wait">Loading. Please wait...</string>
-    <string name="button_next">Next</string>
-    <string name="button_prev">Back</string>
-    <string name="Start">Start</string>
-    <string name="Start_exam">Start exam</string>
-    <string name="show_previous_exams">Show previous exams</string>
-    <string name="manage_exams">Manage exams</string>
-    <string name="configure_examtrainer">Configure ExamTrainer</string>
-    <string name="Select_exam">Select exam</string>
-    <string name="Delete_exam">Delete exam</string>
-    <string name="Delete_score">Delete score</string>
-    <string name="Delete_all">Delete all</string> 
-    <string name="Are_you_sure_you_want_to_delete_this_score">Are you sure you want to delete this score?</string>
-    <string name="ExamID">ExamID</string>   
-    <string name="Get_new_exams">Get new exams</string>    
-    <string name="Comment">Comment</string>
-    <string name="Hint">Hint</string>
-    <string name="The_results">The results</string>
-    <string name="Quit">Quit</string>
-    <string name="Show_Scores">Show Scores</string>
-    <string name="Show_Answers">Show Answers</string>
-    <string name="Review_Exam">Review Exam</string>
-    <string name="Return_to_main_menu">Return to main menu</string>
-    <string name="Cancel">Cancel</string>
-    <string name="Done">Done</string>
-    <string name="End_exam">End exam</string>
-    <string name="End_review">End review</string>
-    <string name="end_of_exam_message">This was the last question.\nExiting the exam will calculate your score.\nAre you sure you want to exit?</string>
+	<string name="startscreen_quote">&#8220;Yes,\n"      "you can.&#8221;</string>
+	<string name="Not_installed">Not installed</string>
+	<string name="app_name">Exam Trainer</string>
+	<string name="Loading_Please_wait">Loading. Please wait...</string>
+	<string name="button_next">Next</string>
+	<string name="button_prev">Back</string>
+	<string name="Start">Start</string>
+	<string name="Start_exam">Start exam</string>
+	<string name="Delete_score">Delete score</string>
+	<string name="Delete_all">Delete all</string>
+	<string name="Are_you_sure_you_want_to_delete_this_score">Are you sure you want to delete this score?
+	</string>
+	<string name="ExamID">ExamID</string>
+	<string name="Get_new_exams">Get new exams</string>
+	<string name="Hint">Hint</string>
+	<string name="Show_Answers">Show Answers</string>
+	<string name="Review_Exam">Review Exam</string>
+	<string name="Cancel">Cancel</string>
+	<string name="End_exam">End exam</string>
+	<string name="End_review">End review</string>
+	<string name="end_of_exam_message">This was the last question.\nExiting the exam will
+		calculate your score.\nAre you sure you want to exit?</string>
 	<string name="yes">yes</string>
 	<string name="no">no</string>
 	<string name="Yes">Yes</string>
@@ -43,17 +29,14 @@
 	<string name="ok">ok</string>
 	<string name="hint_not_available">Hint not available</string>
 	<string name="no_exams_available">No exams available</string>
-	<string name="click_on_manage_exams_to_install_one_or_more_exams">Press menu and use Manage Exams to install one or more exams</string>
+	<string name="click_on_manage_exams_to_install_one_or_more_exams">Press menu and use Manage Exams to install one or
+		more exams</string>
 	<string name="questions">Questions</string>
 	<string name="installed_on">Installed on</string>
 	<string name="install">Install</string>
 	<string name="uninstall">Uninstall</string>
-	<string name="you_scored">You scored</string>
 	<string name="correct_answer_required_to_pass">Correct answers required to pass</string>
-	<string name="send_scores_to_at_computing">Send statistics to AT Computing</string>
 	<string name="URL">URL</string>
-	<string name="start">start</string>
-	<string name="history">history</string>
 	<string name="correct_answers">Correct answers</string>
 	<string name="show_history">Show history</string>
 	<string name="close">Close</string>
@@ -62,7 +45,8 @@
 	<string name="Score">Score</string>
 	<string name="Pass">Pass</string>
 	<string name="Use_Timelimits">Use Timelimits</string>
-	<string name="Use_timelimits_during_examination_if_available">Use timelimits during examination\n(if available)</string>
+	<string name="Use_timelimits_during_examination_if_available">Use timelimits during examination\n(if available)
+	</string>
 	<string name="Updates">Updates</string>
 	<string name="Check_for_updates_at_start">Check for updates at start</string>
 	<string name="Set_Updates_URL">Set Updates URL</string>
@@ -70,23 +54,21 @@
 	<string name="Enter_URL">Enter URL</string>
 	<string name="ExamTrainer_Preferences">ExamTrainer Preferences</string>
 	<string name="Set_ExamTrainer_Preferences">Set ExamTrainer Preferences</string>
-	<string name="default_update_URL">http://www.atcomputing.nl/ExamTrainer/exams</string>
+	<string name="default_update_URL">http://www.atcomputing.nl/ExamTrainer/exams
+	</string>
 	<string name="Settings">Settings</string>
 	<string name="About">About</string>
-	<string name="Close">Close</string>
 	<string name="Question">Question</string>
 	<string name="Manage_Exams">Manage Exams</string>
 	<string name="Are_you_sure_you_want_to_delete_all_exams">Are you sure you want to delete all exams?</string>
-	<string name="manageexams_get_exams_explanation">Press menu and use "Get new exams" to load available exams.</string>
-	<!-- KEYS USED IN PREFERENCES -->
-	<string name="use_timelimits_pref_key">use_timelimits_pref_key</string>
-	<string name="preferences_pref_key">preferences_pref_key</string>
-	<string name="updates_pref_key">updates_pref_key</string>
-	<string name="updates_url_pref_key">updates_url_pref_key</string>
+	<string name="manageexams_get_exams_explanation">Press menu and use "Get new exams" to load
+		available exams.</string>
 	<!-- Text for about -->
 	<string name="Copyright">(c) Copyright AT Computing 2011</string>
 	<string name="Version">Version</string>
-	<string name="text_about_atcomputing">AT Computing is a team of specialized educators and consultants in Linux, Open Source, UNIX and programming languages.</string>
+	<string name="text_about_atcomputing">AT Computing is a team of specialized educators and
+		consultants in Linux, Open Source, UNIX and programming languages.
+	</string>
 	<string name="Visit_atcomputing">Visit http://www.atcomputing.nl</string>
 	<!-- Error messages  -->
 	<string name="Failed_to_delete_exam">Failed to delete exam</string>
