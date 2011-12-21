@@ -28,11 +28,11 @@ public class SelectExamAdapter extends CursorAdapter  {
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
 				
-			int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
+			int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
 	        String examTitle = cursor.getString(index);
-		    index = cursor.getColumnIndex(ExamTrainer.Exams._ID);
+		    index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID);
 		    long examID = cursor.getLong(index);
-		    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AUTHOR);
+		    index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR);
 		    String author = cursor.getString(index);
 		    
 		    TextView examTitleView = (TextView) view.findViewById(R.id.selectexamEntryTitle);

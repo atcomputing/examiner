@@ -38,19 +38,19 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			
 			    final ViewHolder holder = new ViewHolder();
 			    		       
-		        int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
+		        int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
 		        holder.examTitle = cursor.getString(index);
-		        index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
+		        index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE);
 			    holder.examDate = cursor.getLong(index);
-			    index = cursor.getColumnIndex(ExamTrainer.Exams._ID);
+			    index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID);
 			    holder.examID = cursor.getLong(index);
-			    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_URL);
+			    index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL);
 			    holder.url = cursor.getString(index);
-			    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS);
+			    index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS);
 			    holder.examAmountOfItems = cursor.getInt(index);
-			    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
+			    index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
 			    holder.examItemsNeededToPass = cursor.getInt(index);
-			    index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AUTHOR);
+			    index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR);
 			    holder.author = cursor.getString(index);
 			    
 			    holder.examTitleView = (TextView) view.findViewById(R.id.manageExamsEntryTitle);
@@ -59,7 +59,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			    holder.examAuthorView.setText(holder.author);
 			    holder.installUninstallButton = (Button) view.findViewById(R.id.manageExamsDelete);
 		        
-		        index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_INSTALLED);
+		        index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED);
 			    final int installed = cursor.getInt(index);
 			    
 			    if( installed == 1 ) {

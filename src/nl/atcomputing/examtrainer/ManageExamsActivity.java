@@ -118,11 +118,11 @@ public class ManageExamsActivity extends ListActivity {
 		  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		  Cursor cursor = examTrainerDbHelper.getAllExams();
 		  do {
-			  index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
+			  index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
 			  examTitle = cursor.getString(index);
-			  index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
+			  index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE);
 			  examDate = cursor.getLong(index);
-			  index = cursor.getColumnIndex(ExamTrainer.Exams._ID);
+			  index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID);
 			  examId = cursor.getLong(index);
 			  
 			  if( ! ( (examinationDbHelper.delete(examTitle, examDate) ) && 

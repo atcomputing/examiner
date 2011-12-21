@@ -28,9 +28,9 @@ public class ShowScoresAdapter extends CursorAdapter  {
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
 				
-		        int index = cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_DATE);
+		        int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_DATE);
 			    String examDate = ExamTrainer.convertEpochToString(cursor.getLong(index));
-			    index = cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_SCORE);
+			    index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE);
 			    int examScore = cursor.getInt(index);
 			    
 			    TextView scoreEntryDate = (TextView) view.findViewById(R.id.scoreEntryDate);

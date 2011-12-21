@@ -24,7 +24,8 @@
 		<activity android:name=".SelectExamActivity"
 			android:exported="false" />
 		<activity android:name=".PreferencesActivity"
-			android:exported="false" />
+			android:exported="false" >
+		</activity>
 		<activity android:name=".ManageExamsActivity"
 			android:exported="false" />
 		<service android:exported="false" android:name=".RetrieveExamQuestions"

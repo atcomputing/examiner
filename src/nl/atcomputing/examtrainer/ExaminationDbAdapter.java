@@ -13,6 +13,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.provider.BaseColumns;
 import android.util.Log;
 
 /**
@@ -24,7 +25,7 @@ public class ExaminationDbAdapter {
 	private final Context context;
 	private SQLiteDatabase db;
 	private ExaminationDatabaseHelper dbHelper;
-
+	
 	public ExaminationDbAdapter(Context context) {
 		this.context = context;
 	}
@@ -86,28 +87,28 @@ public class ExaminationDbAdapter {
 	public long addQuestion(ExamQuestion examQuestion) {
 		
 		ContentValues values = new ContentValues();
-		values.put(ExamTrainer.Questions.COLUMN_NAME_QUESTION, examQuestion.getQuestion());
-		values.put(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT, examQuestion.getExhibit());
-		values.put(ExamTrainer.Questions.COLUMN_NAME_TYPE, examQuestion.getType());
-		values.put(ExamTrainer.Questions.COLUMN_NAME_HINT, examQuestion.getHint());
-		return db.insert(ExamTrainer.Questions.TABLE_NAME, null, values);
+		values.put(ExaminationDatabaseHelper.Questions.COLUMN_NAME_QUESTION, examQuestion.getQuestion());
+		values.put(ExaminationDatabaseHelper.Questions.COLUMN_NAME_EXHIBIT, examQuestion.getExhibit());
+		values.put(ExaminationDatabaseHelper.Questions.COLUMN_NAME_TYPE, examQuestion.getType());
+		values.put(ExaminationDatabaseHelper.Questions.COLUMN_NAME_HINT, examQuestion.getHint());
+		return db.insert(ExaminationDatabaseHelper.Questions.TABLE_NAME, null, values);
 	}
 
 	public long addChoice(long questionId, String choice) {
 		
 		ContentValues values = new ContentValues();
-		values.put(ExamTrainer.Choices.COLUMN_NAME_CHOICE, choice);
-		values.put(ExamTrainer.Choices.COLUMN_NAME_QUESTION_ID, questionId);
+		values.put(ExaminationDatabaseHelper.Choices.COLUMN_NAME_CHOICE, choice);
+		values.put(ExaminationDatabaseHelper.Choices.COLUMN_NAME_QUESTION_ID, questionId);
 		
-		return db.insert(ExamTrainer.Choices.TABLE_NAME, null, values);
+		return db.insert(ExaminationDatabaseHelper.Choices.TABLE_NAME, null, values);
 	}
 
 	public long addAnswer(long questionId, String answer) {
 	
 		ContentValues values = new ContentValues();
-		values.put(ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID, questionId);
-		values.put(ExamTrainer.Answers.COLUMN_NAME_ANSWER, answer);
-		return db.insert(ExamTrainer.Answers.TABLE_NAME, null, values);
+		values.put(ExaminationDatabaseHelper.Answers.COLUMN_NAME_QUESTION_ID, questionId);
+		values.put(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER, answer);
+		return db.insert(ExaminationDatabaseHelper.Answers.TABLE_NAME, null, values);
 	}
 	
 	/**
@@ -119,9 +120,9 @@ public class ExaminationDbAdapter {
 		try {
 			long date = System.currentTimeMillis();
 	    	ContentValues values = new ContentValues();
-			values.put(ExamTrainer.Scores.COLUMN_NAME_DATE, date);
-			values.put(ExamTrainer.Scores.COLUMN_NAME_SCORE, 0);
-			return db.insert(ExamTrainer.Scores.TABLE_NAME, null, values);
+			values.put(ExaminationDatabaseHelper.Scores.COLUMN_NAME_DATE, date);
+			values.put(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE, 0);
+			return db.insert(ExaminationDatabaseHelper.Scores.TABLE_NAME, null, values);
 		} catch (NullPointerException e) {
 			Log.d(TAG, "createNewScore null pointer exception: " + e.getMessage());
 			return -1;
@@ -140,9 +141,9 @@ public class ExaminationDbAdapter {
 	 */
 	public boolean updateScore(long id, int score) {
 		ContentValues values = new ContentValues();
-		values.put(ExamTrainer.Scores.COLUMN_NAME_SCORE, score);
-		return db.update(ExamTrainer.Scores.TABLE_NAME, values, 
-				ExamTrainer.Scores._ID + "=" + id, null) > 0;
+		values.put(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE, score);
+		return db.update(ExaminationDatabaseHelper.Scores.TABLE_NAME, values, 
+				ExaminationDatabaseHelper.Scores._ID + "=" + id, null) > 0;
 	}
 	
 	
@@ -153,31 +154,31 @@ public class ExaminationDbAdapter {
 	 * @return true if rows were deleted, false if nothing was deleted.
 	 */
 	public boolean deleteScore(long id) {
-		db.delete(ExamTrainer.ScoresAnswers.TABLE_NAME, 
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + id, null);
-		db.delete(ExamTrainer.ResultPerQuestion.TABLE_NAME,
-				ExamTrainer.ResultPerQuestion.COLUMN_NAME_SCORES_ID + "=" + id, null);
-		return db.delete(ExamTrainer.Scores.TABLE_NAME, 
-				ExamTrainer.Scores._ID + "=" + id, null) > 0;
+		db.delete(ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, 
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + id, null);
+		db.delete(ExaminationDatabaseHelper.ResultPerQuestion.TABLE_NAME,
+				ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_SCORES_ID + "=" + id, null);
+		return db.delete(ExaminationDatabaseHelper.Scores.TABLE_NAME, 
+				ExaminationDatabaseHelper.Scores._ID + "=" + id, null) > 0;
 	}
 	
 	public boolean deleteQuestion(long rowId) {
-		return db.delete(ExamTrainer.Questions.TABLE_NAME, 
-				ExamTrainer.Questions._ID + "=" + rowId, null) > 0;
+		return db.delete(ExaminationDatabaseHelper.Questions.TABLE_NAME, 
+				ExaminationDatabaseHelper.Questions._ID + "=" + rowId, null) > 0;
 	}
 
 	/**
 	 * Return a Cursor positioned at the defined question
 	 */
 	public Cursor getQuestion(long rowId) throws SQLException {
-		Cursor mCursor = db.query(true, ExamTrainer.Questions.TABLE_NAME, 
+		Cursor mCursor = db.query(true, ExaminationDatabaseHelper.Questions.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.Questions.COLUMN_NAME_QUESTION,
-				ExamTrainer.Questions.COLUMN_NAME_TYPE,
-				ExamTrainer.Questions.COLUMN_NAME_EXHIBIT,
-				ExamTrainer.Questions.COLUMN_NAME_HINT
+				ExaminationDatabaseHelper.Questions.COLUMN_NAME_QUESTION,
+				ExaminationDatabaseHelper.Questions.COLUMN_NAME_TYPE,
+				ExaminationDatabaseHelper.Questions.COLUMN_NAME_EXHIBIT,
+				ExaminationDatabaseHelper.Questions.COLUMN_NAME_HINT
 				},
-				ExamTrainer.Questions._ID + "=" + rowId, null, null, null, null, null);
+				ExaminationDatabaseHelper.Questions._ID + "=" + rowId, null, null, null, null, null);
 		if (mCursor != null) {
 			mCursor.moveToFirst();
 		}
@@ -186,23 +187,23 @@ public class ExaminationDbAdapter {
 	
 	public String getQuestionType(long rowId) throws SQLException {
 		String type = null;
-		Cursor mCursor = db.query(true, ExamTrainer.Questions.TABLE_NAME, 
+		Cursor mCursor = db.query(true, ExaminationDatabaseHelper.Questions.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.Questions.COLUMN_NAME_TYPE
+				ExaminationDatabaseHelper.Questions.COLUMN_NAME_TYPE
 				},
-				ExamTrainer.Questions._ID + "=" + rowId, null, null, null, null, null);
+				ExaminationDatabaseHelper.Questions._ID + "=" + rowId, null, null, null, null, null);
 		if (mCursor != null) {
 			mCursor.moveToFirst();
-			int columnIndex = mCursor.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_TYPE);
+			int columnIndex = mCursor.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_TYPE);
 			type = mCursor.getString(columnIndex);
 		}
 		return type;
 	}
 	
 	public int getQuestionsCount() {
-		Cursor mCursor = db.query(true, ExamTrainer.Questions.TABLE_NAME, 
+		Cursor mCursor = db.query(true, ExaminationDatabaseHelper.Questions.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.Questions.COLUMN_NAME_QUESTION
+				ExaminationDatabaseHelper.Questions.COLUMN_NAME_QUESTION
 				},
 				null, null, null, null, null, null);
 		if (mCursor != null) {
@@ -214,16 +215,16 @@ public class ExaminationDbAdapter {
 	public List<Long> getAllQuestionIDs() throws SQLException {
 		List<Long> list = new ArrayList<Long>();
 		
-		Cursor mCursor = db.query(true, ExamTrainer.Questions.TABLE_NAME, 
+		Cursor mCursor = db.query(true, ExaminationDatabaseHelper.Questions.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.Questions._ID
+				ExaminationDatabaseHelper.Questions._ID
 				},
 				null, null, null, null, null, null);
 		if (mCursor == null) {
 			return null;
 		}
 		
-		int index = mCursor.getColumnIndex(ExamTrainer.Questions._ID);
+		int index = mCursor.getColumnIndex(ExaminationDatabaseHelper.Questions._ID);
 		
 		if(mCursor.moveToFirst()) {
 			do {
@@ -236,11 +237,11 @@ public class ExaminationDbAdapter {
 	}
 	
 	public Cursor getAnswers(long questionId) {
-		Cursor mCursor = db.query(true, ExamTrainer.Answers.TABLE_NAME, 
+		Cursor mCursor = db.query(true, ExaminationDatabaseHelper.Answers.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.Answers.COLUMN_NAME_ANSWER
+				ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER
 				},
-				ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
+				ExaminationDatabaseHelper.Answers.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
 				null, null, null, null, null);
 		
 		if(mCursor.moveToFirst())
@@ -250,11 +251,11 @@ public class ExaminationDbAdapter {
 	}
 	
 	public Cursor getChoices(long questionId) throws SQLException {
-		Cursor mCursor = db.query(true, ExamTrainer.Choices.TABLE_NAME, 
+		Cursor mCursor = db.query(true, ExaminationDatabaseHelper.Choices.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.Choices.COLUMN_NAME_CHOICE
+				ExaminationDatabaseHelper.Choices.COLUMN_NAME_CHOICE
 				},
-				ExamTrainer.Choices.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
+				ExaminationDatabaseHelper.Choices.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
 				null, null, null, null, null);
 		
 		if(mCursor.moveToFirst())
@@ -264,12 +265,12 @@ public class ExaminationDbAdapter {
 	}
 
 	public Cursor getResultPerQuestion(long examId) {
-		Cursor mCursor = db.query(true, ExamTrainer.ResultPerQuestion.TABLE_NAME, 
+		Cursor mCursor = db.query(true, ExaminationDatabaseHelper.ResultPerQuestion.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.ResultPerQuestion.COLUMN_NAME_QUESTION_ID,
-				ExamTrainer.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT,
+				ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_QUESTION_ID,
+				ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT,
 				},
-				ExamTrainer.ResultPerQuestion.COLUMN_NAME_SCORES_ID + "=" + examId, 
+				ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_SCORES_ID + "=" + examId, 
 				null, null, null, null, null);
 		
 		if(mCursor.moveToFirst())
@@ -280,32 +281,32 @@ public class ExaminationDbAdapter {
 	
 	public long addResultPerQuestion(long examId, long questionId, boolean answerCorrect) {
 		ContentValues values = new ContentValues();
-		values.put(ExamTrainer.ResultPerQuestion.COLUMN_NAME_QUESTION_ID, questionId);
-		values.put(ExamTrainer.ResultPerQuestion.COLUMN_NAME_SCORES_ID, examId);
+		values.put(ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_QUESTION_ID, questionId);
+		values.put(ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_SCORES_ID, examId);
 		if ( answerCorrect ) {
-			values.put(ExamTrainer.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT, 1);
+			values.put(ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT, 1);
 		} else {
-			values.put(ExamTrainer.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT, 0);
+			values.put(ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT, 0);
 		}
-		return db.insert(ExamTrainer.ResultPerQuestion.TABLE_NAME, null, values);
+		return db.insert(ExaminationDatabaseHelper.ResultPerQuestion.TABLE_NAME, null, values);
 	}
 	
 	public long addScoresAnswers(long examId, long questionId, String answer) {
 		ContentValues values = new ContentValues();
-		values.put(ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID, questionId);
-		values.put(ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER, answer);
-		values.put(ExamTrainer.ScoresAnswers.COLUMN_NAME_SCORES_ID, examId);
-		return db.insert(ExamTrainer.ScoresAnswers.TABLE_NAME, null, values);
+		values.put(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID, questionId);
+		values.put(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER, answer);
+		values.put(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID, examId);
+		return db.insert(ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, null, values);
 	}
 	
 	public Cursor getScoresAnswers(long examId) {
-		Cursor cursor = db.query(true, ExamTrainer.ScoresAnswers.TABLE_NAME, 
+		Cursor cursor = db.query(true, ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.ScoresAnswers._ID,
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER,
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID
+				ExaminationDatabaseHelper.ScoresAnswers._ID,
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER,
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID
 				},
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId, 
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId, 
 				null, null, null, null, null);
 		
 		if(cursor.moveToFirst())
@@ -315,13 +316,13 @@ public class ExaminationDbAdapter {
 	}
 	
 	public Cursor getScoresAnswers(long examId, long questionId) {
-		Cursor cursor = db.query(true, ExamTrainer.ScoresAnswers.TABLE_NAME, 
+		Cursor cursor = db.query(true, ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER
 				},
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId
 				+  " AND " +
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
 				null, null, null, null, null);
 		
 		if(cursor.moveToFirst())
@@ -331,13 +332,13 @@ public class ExaminationDbAdapter {
 	}
 	
 	public Cursor getScoresReversed() {
-		Cursor cursor = db.query(true, ExamTrainer.Scores.TABLE_NAME, 
+		Cursor cursor = db.query(true, ExaminationDatabaseHelper.Scores.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.Scores._ID,
-				ExamTrainer.Scores.COLUMN_NAME_DATE,
-				ExamTrainer.Scores.COLUMN_NAME_SCORE
+				ExaminationDatabaseHelper.Scores._ID,
+				ExaminationDatabaseHelper.Scores.COLUMN_NAME_DATE,
+				ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE
 				},
-				null, null, null, null, ExamTrainer.Scores.COLUMN_NAME_DATE + " DESC", null);
+				null, null, null, null, ExaminationDatabaseHelper.Scores.COLUMN_NAME_DATE + " DESC", null);
 		
 		if(cursor.moveToFirst())
 			return cursor;
@@ -346,13 +347,13 @@ public class ExaminationDbAdapter {
 	}
 	
 	public Cursor getScore(long id) {
-		Cursor cursor = db.query(true, ExamTrainer.Scores.TABLE_NAME, 
+		Cursor cursor = db.query(true, ExaminationDatabaseHelper.Scores.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.Scores._ID,
-				ExamTrainer.Scores.COLUMN_NAME_DATE,
-				ExamTrainer.Scores.COLUMN_NAME_SCORE
+				ExaminationDatabaseHelper.Scores._ID,
+				ExaminationDatabaseHelper.Scores.COLUMN_NAME_DATE,
+				ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE
 				},
-				ExamTrainer.Scores._ID + "=" + id, null, null, null, null, null);
+				ExaminationDatabaseHelper.Scores._ID + "=" + id, null, null, null, null, null);
 		
 		if(cursor.moveToFirst())
 			return cursor;
@@ -365,14 +366,14 @@ public class ExaminationDbAdapter {
 	 * @return String or null if no hint was not found
 	 */
 	public String getHint(long questionId) {
-		Cursor cursor = db.query(true, ExamTrainer.Questions.TABLE_NAME, 
+		Cursor cursor = db.query(true, ExaminationDatabaseHelper.Questions.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.Questions.COLUMN_NAME_HINT
+				ExaminationDatabaseHelper.Questions.COLUMN_NAME_HINT
 				},
-				ExamTrainer.Questions._ID + "=" + questionId,
+				ExaminationDatabaseHelper.Questions._ID + "=" + questionId,
 				null, null, null, null, null);
 		if(cursor.moveToFirst()) {
-			int index = cursor.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_HINT);
+			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_HINT);
 			return cursor.getString(index);
 		}
 		return null;
@@ -386,14 +387,14 @@ public class ExaminationDbAdapter {
 	 * @throws SQLException
 	 */
 	public boolean scoresAnswerPresent(long examId, long questionId, String answer) {
-		 String whereClause = ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId
-				+ " AND " + ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER + "=" + 
+		 String whereClause = ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId
+				+ " AND " + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER + "=" + 
 				"\"" + answer + "\"" + " AND "
-				+ ExamTrainer.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId;
+				+ ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId;
 			
-		Cursor mCursor = db.query(true, ExamTrainer.ScoresAnswers.TABLE_NAME, 
+		Cursor mCursor = db.query(true, ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER
 				},
 				whereClause, 
 				null, null, null, null, null);
@@ -409,13 +410,13 @@ public class ExaminationDbAdapter {
 	 */
 	public boolean scoresAnswerPresent(long examId, long questionId) {
 	
-		String whereClause = ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "=" + 
-		questionId + " AND " + ExamTrainer.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" +
+		String whereClause = ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "=" + 
+		questionId + " AND " + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" +
 		examId;
 
-		Cursor mCursor = db.query(true, ExamTrainer.ScoresAnswers.TABLE_NAME, 
+		Cursor mCursor = db.query(true, ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER
 				}, whereClause, null, null, null, null, null);
 
 		return mCursor.getCount() > 0;
@@ -423,29 +424,29 @@ public class ExaminationDbAdapter {
 
 	public boolean updateScoresAnswer(long examId, long questionId, String answer) {
 		ContentValues values = new ContentValues();
-		values.put(ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER, answer);
-		return db.update(ExamTrainer.ScoresAnswers.TABLE_NAME, values, 
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId
+		values.put(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER, answer);
+		return db.update(ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, values, 
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId
 				+ " AND " +
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId, null) > 0;
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId, null) > 0;
 	}
 	
 	public boolean insertScoresAnswer(long examId, long questionId, String answer) {
 		ContentValues values = new ContentValues();
-		values.put(ExamTrainer.ScoresAnswers.COLUMN_NAME_SCORES_ID, examId);
-		values.put(ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID, questionId);
-		values.put(ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER, answer);
+		values.put(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID, examId);
+		values.put(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID, questionId);
+		values.put(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER, answer);
 		//Log.d(this.getClass().getName(), "insertAnswer values: "+ values.toString());
-		return db.insert(ExamTrainer.ScoresAnswers.TABLE_NAME, null, values) != -1;
+		return db.insert(ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, null, values) != -1;
 	}
 	
 	public boolean deleteScoresAnswer(long examId, long questionId, String answer) {
-		return db.delete(ExamTrainer.ScoresAnswers.TABLE_NAME, 
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId 
+		return db.delete(ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, 
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId 
 				+ " AND " +
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER + "=" + "\"" + answer + "\""
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER + "=" + "\"" + answer + "\""
 				+ " AND " + 
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId
 				, null) > 0;
 	}
 	
@@ -481,15 +482,15 @@ public class ExaminationDbAdapter {
 	 * @return true if all answers are correct, false otherwise
 	 */
 	public boolean checkScoresAnswersOpen(long questionId, long examId) {
-		String correctAnswersQuestionId = ExamTrainer.Answers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID;
-		String correctAnswersAnswer = ExamTrainer.Answers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_ANSWER;
-		String ScoresAnswersQuestionId = ExamTrainer.ScoresAnswers.TABLE_NAME + "." + ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID;
-		String ScoresAnswersAnswer = ExamTrainer.ScoresAnswers.TABLE_NAME + "." + ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER;
-		String ScoresAnswersExamId = ExamTrainer.ScoresAnswers.TABLE_NAME + "." + ExamTrainer.ScoresAnswers.COLUMN_NAME_SCORES_ID;
+		String correctAnswersQuestionId = ExaminationDatabaseHelper.Answers.TABLE_NAME + "." + ExaminationDatabaseHelper.Answers.COLUMN_NAME_QUESTION_ID;
+		String correctAnswersAnswer = ExaminationDatabaseHelper.Answers.TABLE_NAME + "." + ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER;
+		String ScoresAnswersQuestionId = ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME + "." + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID;
+		String ScoresAnswersAnswer = ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME + "." + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER;
+		String ScoresAnswersExamId = ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME + "." + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID;
 		String sqlQuery = "SELECT " 
 			+ correctAnswersQuestionId + 
 			" FROM " 
-			+ ExamTrainer.Answers.TABLE_NAME + ", " + ExamTrainer.ScoresAnswers.TABLE_NAME +
+			+ ExaminationDatabaseHelper.Answers.TABLE_NAME + ", " + ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME +
 			" WHERE "
 			+ correctAnswersQuestionId + " = " + questionId +
 			" AND "
@@ -529,15 +530,15 @@ public class ExaminationDbAdapter {
 		int answersCount = answersCountCursor.getCount();
 		int correctAnswersCount = correctAnswersCountCursor.getCount();
 		if ( answersCount == correctAnswersCount ) {
-			String correctAnswersQuestionId = ExamTrainer.Answers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_QUESTION_ID;
-			String correctAnswersAnswer = ExamTrainer.Answers.TABLE_NAME + "." + ExamTrainer.Answers.COLUMN_NAME_ANSWER;
-			String ScoresAnswersQuestionId = ExamTrainer.ScoresAnswers.TABLE_NAME + "." + ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID;
-			String ScoresAnswersAnswer = ExamTrainer.ScoresAnswers.TABLE_NAME + "." + ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER;
-			String ScoresAnswersExamId = ExamTrainer.ScoresAnswers.TABLE_NAME + "." + ExamTrainer.ScoresAnswers.COLUMN_NAME_SCORES_ID;
+			String correctAnswersQuestionId = ExaminationDatabaseHelper.Answers.TABLE_NAME + "." + ExaminationDatabaseHelper.Answers.COLUMN_NAME_QUESTION_ID;
+			String correctAnswersAnswer = ExaminationDatabaseHelper.Answers.TABLE_NAME + "." + ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER;
+			String ScoresAnswersQuestionId = ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME + "." + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID;
+			String ScoresAnswersAnswer = ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME + "." + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER;
+			String ScoresAnswersExamId = ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME + "." + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID;
 		String sqlQuery = "SELECT * " + 
 			//correctAnswersQuestionId + 
 			" FROM " 
-			+ ExamTrainer.Answers.TABLE_NAME + ", " + ExamTrainer.ScoresAnswers.TABLE_NAME +
+			+ ExaminationDatabaseHelper.Answers.TABLE_NAME + ", " + ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME +
 			" WHERE "
 			+ correctAnswersQuestionId + " = " + questionId +
 			" AND "
@@ -562,11 +563,11 @@ public class ExaminationDbAdapter {
 	 * @return amount of answers for exam with ID examId
 	 */
 	public int getScoresAnswersCount(long examId) {
-		Cursor mCursor = db.query(true, ExamTrainer.ScoresAnswers.TABLE_NAME, 
+		Cursor mCursor = db.query(true, ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_QUESTION_ID
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID
 				},
-				ExamTrainer.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId,
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId,
 				null, null, null, null, null);
 		if (mCursor != null) {
 			return mCursor.getCount();

@@ -41,11 +41,11 @@ public class ExamTrainerDbAdapter {
 	}
 	
 	public boolean checkIfExamAlreadyInDatabase(Exam exam) {
-		Cursor cursor = db.query(true, ExamTrainer.Exams.TABLE_NAME, 
+		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME, 
 				new String[] {
-				ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE,
 		},
-		ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE + "=" + "\"" + exam.getTitle() + "\"", 
+		ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE + "=" + "\"" + exam.getTitle() + "\"", 
 		null, null, null, null, null);
 		if ( cursor != null ) {
 			return cursor.getCount() > 0;
@@ -56,47 +56,48 @@ public class ExamTrainerDbAdapter {
 
 	public long addExam(Exam exam) {
 		ContentValues values = new ContentValues();
-		values.put(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE, exam.getTitle());
-		values.put(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS, exam.getItemsNeededToPass());
-		values.put(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS, exam.getNumberOfItems());
-		values.put(ExamTrainer.Exams.COLUMN_NAME_AUTHOR, exam.getAuthor());
-		values.put(ExamTrainer.Exams.COLUMN_NAME_CATEGORY, exam.getCategory());
-		values.put(ExamTrainer.Exams.COLUMN_NAME_INSTALLED, 0);
-		values.put(ExamTrainer.Exams.COLUMN_NAME_URL, exam.getURL());
-		return db.insert(ExamTrainer.Exams.TABLE_NAME, null, values);
+		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE, exam.getTitle());
+		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS, exam.getItemsNeededToPass());
+		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS, exam.getNumberOfItems());
+		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR, exam.getAuthor());
+		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_CATEGORY, exam.getCategory());
+		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED, 0);
+		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL, exam.getURL());
+		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT, exam.getTimeLimit());
+		return db.insert(ExamTrainerDatabaseHelper.Exams.TABLE_NAME, null, values);
 	}
 
 	public boolean deleteExam(long rowId) {
-		return db.delete(ExamTrainer.Exams.TABLE_NAME, 
-				ExamTrainer.Exams._ID + "=" + rowId, null) > 0;
+		return db.delete(ExamTrainerDatabaseHelper.Exams.TABLE_NAME, 
+				ExamTrainerDatabaseHelper.Exams._ID + "=" + rowId, null) > 0;
 	}
 	
 	public boolean setInstalled(long rowId, long date, boolean installed) {
 		ContentValues values = new ContentValues();
 		if(installed) {
-			values.put(ExamTrainer.Exams.COLUMN_NAME_INSTALLED, 1);
+			values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED, 1);
 		} else {
-			values.put(ExamTrainer.Exams.COLUMN_NAME_INSTALLED, 0);
+			values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED, 0);
 		}
-		values.put(ExamTrainer.Exams.COLUMN_NAME_DATE, date);
-		return db.update(ExamTrainer.Exams.TABLE_NAME, values, 
-				ExamTrainer.Exams._ID + "=\"" + rowId + "\"", null) > 0;
+		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE, date);
+		return db.update(ExamTrainerDatabaseHelper.Exams.TABLE_NAME, values, 
+				ExamTrainerDatabaseHelper.Exams._ID + "=\"" + rowId + "\"", null) > 0;
 	}
 	
 	public Cursor getExam(long rowId) {
-		Cursor cursor = db.query(true, ExamTrainer.Exams.TABLE_NAME,
+		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
 				new String[] {
-				ExamTrainer.Exams._ID,
-				ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE,
-				ExamTrainer.Exams.COLUMN_NAME_DATE,
-				ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
-				ExamTrainer.Exams.COLUMN_NAME_INSTALLED,
-				ExamTrainer.Exams.COLUMN_NAME_URL,
-				ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS,
-				ExamTrainer.Exams.COLUMN_NAME_AUTHOR,
-				ExamTrainer.Exams.COLUMN_NAME_CATEGORY
+				ExamTrainerDatabaseHelper.Exams._ID,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_CATEGORY
 		},
-		ExamTrainer.Exams._ID + "=" + rowId, null, null, null, null, null);
+		ExamTrainerDatabaseHelper.Exams._ID + "=" + rowId, null, null, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();
 		}
@@ -104,17 +105,17 @@ public class ExamTrainerDbAdapter {
 	}
 
 	public Cursor getAllExams() {
-		Cursor cursor = db.query(true, ExamTrainer.Exams.TABLE_NAME,
+		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
 				new String[] {
-				ExamTrainer.Exams._ID,
-				ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE,
-				ExamTrainer.Exams.COLUMN_NAME_DATE,
-				ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
-				ExamTrainer.Exams.COLUMN_NAME_INSTALLED,
-				ExamTrainer.Exams.COLUMN_NAME_URL,
-				ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS,
-				ExamTrainer.Exams.COLUMN_NAME_AUTHOR,
-				ExamTrainer.Exams.COLUMN_NAME_CATEGORY
+				ExamTrainerDatabaseHelper.Exams._ID,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_CATEGORY
 		}, null, null, null, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -123,18 +124,18 @@ public class ExamTrainerDbAdapter {
 	}
 	
 	public Cursor getInstalledExams() {
-		Cursor cursor = db.query(true, ExamTrainer.Exams.TABLE_NAME,
+		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
 				new String[] {
-				ExamTrainer.Exams._ID,
-				ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE,
-				ExamTrainer.Exams.COLUMN_NAME_DATE,
-				ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
-				ExamTrainer.Exams.COLUMN_NAME_INSTALLED,
-				ExamTrainer.Exams.COLUMN_NAME_URL,
-				ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS,
-				ExamTrainer.Exams.COLUMN_NAME_AUTHOR,
-				ExamTrainer.Exams.COLUMN_NAME_CATEGORY
-		}, ExamTrainer.Exams.COLUMN_NAME_INSTALLED + "= 1",
+				ExamTrainerDatabaseHelper.Exams._ID,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR,
+				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_CATEGORY
+		}, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "= 1",
 		null, null, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();

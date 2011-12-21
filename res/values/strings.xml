@@ -4,6 +4,8 @@
 	<string name="Not_installed">Not installed</string>
 	<string name="app_name">Exam Trainer</string>
 	<string name="Loading_Please_wait">Loading. Please wait...</string>
+	<string name="Time_limit">Time limit</string>
+	<string name="minutes">minutes</string>
 	<string name="button_next">Next</string>
 	<string name="button_prev">Back</string>
 	<string name="Start">Start</string>

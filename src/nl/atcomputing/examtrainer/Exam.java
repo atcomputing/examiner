@@ -16,6 +16,7 @@ public class Exam {
 	private String URL;
 	private int numberofitems;
 	private int itemsneededtopass;
+	private long timelimit;
 	
 	protected Exam() {
 		title = null;
@@ -24,6 +25,7 @@ public class Exam {
 		URL = null;
 		numberofitems = 0;
 		itemsneededtopass = 0;
+		timelimit = 0;
 	}
 	
 	protected String getTitle() {
@@ -50,6 +52,10 @@ public class Exam {
 		return itemsneededtopass;
 	}
 	
+	protected long getTimeLimit() {
+		return timelimit;
+	}
+	
 	protected void setTitle(String title) {
 		this.title = title;
 	}
@@ -72,6 +78,10 @@ public class Exam {
 	
 	protected void setItemsNeededToPass( int n ) {
 		this.itemsneededtopass = n;
+	}
+	
+	protected void setTimeLimit(long t) {
+		this.timelimit = t;
 	}
 	
 	protected long addToDatabase(Context context) {

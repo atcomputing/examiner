@@ -3,6 +3,7 @@ package nl.atcomputing.examtrainer;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.provider.BaseColumns;
 import android.util.Log;
 
 /**
@@ -13,17 +14,33 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 	private static String DATABASE_NAME = "ExamTrainer.db";
 	private static final int DATABASE_VERSION = 1;
 	
+	public static final class Exams implements BaseColumns {
+		private Exams() {}
+
+		public static final String TABLE_NAME = "Exams";
+		public static final String COLUMN_NAME_EXAMTITLE = "examTitle";
+		public static final String COLUMN_NAME_DATE = "date";
+		public static final String COLUMN_NAME_ITEMSNEEDEDTOPASS = "itemsNeededToPass";
+		public static final String COLUMN_NAME_AMOUNTOFITEMS = "amountOfItems";
+		public static final String COLUMN_NAME_INSTALLED = "installed";
+		public static final String COLUMN_NAME_URL = "URL";
+		public static final String COLUMN_NAME_AUTHOR = "author";
+		public static final String COLUMN_NAME_CATEGORY = "category";
+		public static final String COLUMN_NAME_TIMELIMIT = "timelimit";
+	}
+	
 	private static final String DATABASE_CREATE_EXAMS_TABLE = "CREATE TABLE " 
-	+ ExamTrainer.Exams.TABLE_NAME + " ("
-    + ExamTrainer.Exams._ID + " INTEGER PRIMARY KEY,"
-    + ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE + " TEXT,"
-    + ExamTrainer.Exams.COLUMN_NAME_DATE + " INTEGER,"
-    + ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS + " INTEGER,"
-    + ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS + " INTEGER,"
-    + ExamTrainer.Exams.COLUMN_NAME_INSTALLED + " INTEGER,"
-    + ExamTrainer.Exams.COLUMN_NAME_URL + " TEXT,"
-    + ExamTrainer.Exams.COLUMN_NAME_AUTHOR + " TEXT,"
-    + ExamTrainer.Exams.COLUMN_NAME_CATEGORY + " TEXT"
+	+ Exams.TABLE_NAME + " ("
+    + Exams._ID + " INTEGER PRIMARY KEY,"
+    + Exams.COLUMN_NAME_EXAMTITLE + " TEXT,"
+    + Exams.COLUMN_NAME_DATE + " INTEGER,"
+    + Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS + " INTEGER,"
+    + Exams.COLUMN_NAME_AMOUNTOFITEMS + " INTEGER,"
+    + Exams.COLUMN_NAME_INSTALLED + " INTEGER,"
+    + Exams.COLUMN_NAME_URL + " TEXT,"
+    + Exams.COLUMN_NAME_AUTHOR + " TEXT,"
+    + Exams.COLUMN_NAME_CATEGORY + " TEXT,"
+    + Exams.COLUMN_NAME_TIMELIMIT + " INTEGER"
     + ");";
 	
 	public ExamTrainerDatabaseHelper(Context context) {
@@ -38,10 +55,9 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		Log.w(ExamTrainerDatabaseHelper.class.getName(),
-		// TODO Auto-generated method stub
 				"Upgrading database from version " + oldVersion + " to "
 						+ newVersion + ", which will destroy all old data");
-		db.execSQL("DROP TABLE IF EXISTS " + ExamTrainer.Exams.TABLE_NAME);
+		db.execSQL("DROP TABLE IF EXISTS " + Exams.TABLE_NAME);
 		onCreate(db);	
 	}
 	

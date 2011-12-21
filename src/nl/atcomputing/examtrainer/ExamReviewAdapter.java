@@ -78,10 +78,10 @@ import android.widget.AdapterView.OnItemClickListener;
 				int answer = 0;
 
 				if( cursor.moveToPosition(position) ) {
-					int index = cursor.getColumnIndex(ExamTrainer.ResultPerQuestion.COLUMN_NAME_QUESTION_ID);
+					int index = cursor.getColumnIndex(ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_QUESTION_ID);
 					questionId = cursor.getLong(index);
 
-					index = cursor.getColumnIndex(ExamTrainer.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT);
+					index = cursor.getColumnIndex(ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT);
 					answer = cursor.getInt(index);
 				}
 				

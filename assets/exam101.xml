@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <exam databaseversion="1">
+	<timelimit>90</timelimit>
 	<item>
 		<type>multiple choice</type>
 		<topic>Devices, Linux Filesystems, Filesystem Hierarchy Standard</topic>

@@ -3,14 +3,12 @@ package nl.atcomputing.examtrainer;
 import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
 import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 /**
@@ -27,6 +25,11 @@ public class ExamTrainerActivity extends Activity {
 		
 		setContentView(R.layout.main);		
 
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+		examTrainerDbHelper.open();
+		examTrainerDbHelper.upgrade();
+		examTrainerDbHelper.close();
+		
 		about_layout = (LinearLayout) findViewById(R.id.about_window);
 		about_layout.setVisibility(View.INVISIBLE);
 		

@@ -62,9 +62,9 @@ public class ShowScoresActivity extends Activity {
 		switch(id) {
 		case DIALOG_SHOW_EXAM:
 			Cursor cursor = examinationDbHelper.getScore(examId);
-			int index = cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_DATE);
+			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_DATE);
 			String examDate = ExamTrainer.convertEpochToString(cursor.getLong(index));
-			index = cursor.getColumnIndex(ExamTrainer.Scores.COLUMN_NAME_SCORE);
+			index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE);
 		    int examScore = cursor.getInt(index);
 			
 			

@@ -106,28 +106,42 @@ public class SelectExamActivity extends Activity {
 		switch(id) {
 		case DIALOG_SHOW_EXAM:
 			Cursor cursor = examTrainerDbHelper.getExam(examsRowId);
-			int index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_EXAMTITLE);
+			int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
 			String examTitle = cursor.getString(index);
-			index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_AMOUNTOFITEMS);
+			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS);
 			int examAmountOfItems = cursor.getInt(index);
-			index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
+			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
 			int examItemsNeededToPass = cursor.getInt(index);
-
-			index = cursor.getColumnIndex(ExamTrainer.Exams.COLUMN_NAME_DATE);
+			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT);
+			long examTimeLimit = cursor.getLong(index);
+			
+			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE);
 			long examInstallationDate = cursor.getLong(index);
 			String localDate = ExamTrainer.convertEpochToString(examInstallationDate);
 
-			ExamTrainer.setExamDatabaseName(examTitle, examInstallationDate);
-			ExamTrainer.setItemsNeededToPass(examItemsNeededToPass);
-			ExamTrainer.setExamTitle(examTitle);
-
-			((AlertDialog) dialog).setMessage(examTitle + "\n\n" +
+			StringBuffer dialogMessage = new StringBuffer();
+			dialogMessage.append(examTitle + "\n\n" +
 					this.getString(R.string.installed_on) + 
 					" " + localDate + "\n" +
 					this.getString(R.string.questions) + 
 					": " +  examAmountOfItems + "\n" +
 					this.getString(R.string.correct_answer_required_to_pass) +
-					": " +  examItemsNeededToPass + "\n" );
+					": " +  examItemsNeededToPass + "\n");
+			
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+			boolean useTimeLimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
+			
+			if ( useTimeLimit ) {
+				dialogMessage.append(this.getString(R.string.Time_limit) 
+						+ ": " + examTimeLimit + " " + R.string.minutes + "\n");
+			}
+			
+			ExamTrainer.setExamDatabaseName(examTitle, examInstallationDate);
+			ExamTrainer.setItemsNeededToPass(examItemsNeededToPass);
+			ExamTrainer.setExamTitle(examTitle);
+			ExamTrainer.setTimeLimit(examTimeLimit);
+			
+			((AlertDialog) dialog).setMessage( dialogMessage );
 			break;
 		default:
 			break;
@@ -186,7 +200,7 @@ public class SelectExamActivity extends Activity {
 		} else {
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			boolean useTimelimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
-			//ExamTrainer.setUseTimelimit(useTimelimit);
+			ExamTrainer.setTimer();
 			if( useTimelimit ) {
 				//startTimer();
 			}

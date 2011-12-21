@@ -57,7 +57,7 @@ public class ExamQuestionsActivity extends Activity {
 		else {
 			cursorQuestion = examinationDbHelper.getQuestion(questionNumber);
 
-			int index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_TYPE);
+			int index = cursorQuestion.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_TYPE);
 			questionType = cursorQuestion.getString(index);
 
 			setupLayout();
@@ -182,7 +182,7 @@ public class ExamQuestionsActivity extends Activity {
 			Log.d(TAG, "Oi, cursor is nulllll");
 			return;
 		}
-		int index = cursor.getColumnIndex(ExamTrainer.Answers.COLUMN_NAME_ANSWER);
+		int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
 
 		if(questionType.equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
 			do {
@@ -226,7 +226,7 @@ public class ExamQuestionsActivity extends Activity {
 
 		Cursor cursor = examinationDbHelper.getChoices(questionNumber);
 		if ( cursor != null ) {
-			int index = cursor.getColumnIndex(ExamTrainer.Choices.COLUMN_NAME_CHOICE);
+			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Choices.COLUMN_NAME_CHOICE);
 			do {
 				final String choice = cursor.getString(index);
 				cbox = new CheckBox(this);
@@ -269,7 +269,7 @@ public class ExamQuestionsActivity extends Activity {
 		TextView question = (TextView) findViewById(R.id.textQuestionNumber);
 		question.setText(this.getString(R.string.Question) + ": " + Long.toString(questionNumber));
 
-		index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_EXHIBIT);
+		index = cursorQuestion.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_EXHIBIT);
 		text = cursorQuestion.getString(index);
 		TextView exhibit = (TextView) findViewById(R.id.textExhibit);
 		if( text != null ) {
@@ -279,7 +279,7 @@ public class ExamQuestionsActivity extends Activity {
 		}
 
 
-		index = cursorQuestion.getColumnIndex(ExamTrainer.Questions.COLUMN_NAME_QUESTION);
+		index = cursorQuestion.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_QUESTION);
 		text = cursorQuestion.getString(index);
 		TextView question_textview = (TextView) findViewById(R.id.textQuestion);
 		question_textview.setText(text);
@@ -292,7 +292,7 @@ public class ExamQuestionsActivity extends Activity {
 			editText = new EditText(this);
 			Cursor aCursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getExamId(), questionNumber);
 			if ( aCursor != null ) {
-				index = aCursor.getColumnIndex(ExamTrainer.ScoresAnswers.COLUMN_NAME_ANSWER);
+				index = aCursor.getColumnIndex(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER);
 				text = aCursor.getString(index);
 				editText.setText(text.toString());
 				aCursor.close();
