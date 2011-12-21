@@ -1,24 +1,20 @@
 package nl.atcomputing.examtrainer;
 
-import java.text.ParseException;
-
-import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -188,6 +184,12 @@ public class SelectExamActivity extends Activity {
 		if( examId == -1 ) {
 			Toast.makeText(this, this.getString(R.string.failed_to_create_a_new_score_for_the_exam), Toast.LENGTH_LONG);
 		} else {
+			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+			boolean useTimelimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
+			//ExamTrainer.setUseTimelimit(useTimelimit);
+			if( useTimelimit ) {
+				//startTimer();
+			}
 			ExamTrainer.setExamId(examId);
 			ExamTrainer.setQuestionNumber(intent, 1);
 			ExamTrainer.setMode(ExamTrainer.ExamTrainerMode.EXAM);

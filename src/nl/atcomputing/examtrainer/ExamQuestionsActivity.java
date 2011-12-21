@@ -70,6 +70,15 @@ public class ExamQuestionsActivity extends Activity {
 		examinationDbHelper.close();
 	}
 
+	protected void onResume() {
+		super.onResume();
+		/*if ( ExamTrainer.useTimeLimit ) {
+			//show time in title bar
+		} else {
+			//hide time in title bar
+		}*/
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
