@@ -17,6 +17,19 @@ public class ExamTrainerDbAdapter {
 	private SQLiteDatabase db;
 	private ExamTrainerDatabaseHelper dbHelper;
 
+	private String[] allRows = new String[] {
+			ExamTrainerDatabaseHelper.Exams._ID,
+			ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE,
+			ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE,
+			ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
+			ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED,
+			ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL,
+			ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS,
+			ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR,
+			ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_CATEGORY,
+			ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT
+			};
+	
 	public ExamTrainerDbAdapter(Context context) {
 		this.context = context;
 	}
@@ -86,17 +99,7 @@ public class ExamTrainerDbAdapter {
 	
 	public Cursor getExam(long rowId) {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
-				new String[] {
-				ExamTrainerDatabaseHelper.Exams._ID,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_CATEGORY
-		},
+				allRows,
 		ExamTrainerDatabaseHelper.Exams._ID + "=" + rowId, null, null, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();
@@ -106,17 +109,7 @@ public class ExamTrainerDbAdapter {
 
 	public Cursor getAllExams() {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
-				new String[] {
-				ExamTrainerDatabaseHelper.Exams._ID,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_CATEGORY
-		}, null, null, null, null, null, null);
+				allRows, null, null, null, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();
 		}
@@ -125,17 +118,7 @@ public class ExamTrainerDbAdapter {
 	
 	public Cursor getInstalledExams() {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
-				new String[] {
-				ExamTrainerDatabaseHelper.Exams._ID,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR,
-				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_CATEGORY
-		}, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "= 1",
+				allRows, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "= 1",
 		null, null, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();

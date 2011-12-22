@@ -52,6 +52,8 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			    holder.examItemsNeededToPass = cursor.getInt(index);
 			    index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR);
 			    holder.author = cursor.getString(index);
+			    index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT);
+			    holder.timeLimit = cursor.getLong(index);
 			    
 			    holder.examTitleView = (TextView) view.findViewById(R.id.manageExamsEntryTitle);
 			    holder.examTitleView.setText(holder.examTitle);
@@ -81,31 +83,38 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		        });
 			    
 			    view.setOnClickListener(new View.OnClickListener() {
-					
 					public void onClick(View v) {
-						String installedOnMessage;
-						String localDate;
+						StringBuffer strBuf = new StringBuffer();
+						
+						strBuf.append(holder.examTitle + "\n");
+						
 						if ( holder.examDate == 0 ) {
-							installedOnMessage = gContext.getString(R.string.Not_installed);
+							strBuf.append(gContext.getString(R.string.Not_installed) + "\n");
 						}
 						else {
 							Time time = new Time();
 							time.set(Long.valueOf(holder.examDate));
-							localDate = time.format("%Y-%m-%d %H:%M");
+							String localDate = time.format("%Y-%m-%d %H:%M");
 							
-							installedOnMessage = gContext.getString(R.string.installed_on) + 
-									" " + localDate;
+							strBuf.append(gContext.getString(R.string.installed_on) + 
+									" " + localDate + "\n");
 						}
 						
-						Toast.makeText(gContext, holder.examTitle + "\n" +
-								installedOnMessage + "\n" +
-								gContext.getString(R.string.questions) + 
+						strBuf.append(gContext.getString(R.string.questions) + 
 								": " +  holder.examAmountOfItems + "\n" +
 								gContext.getString(R.string.correct_answer_required_to_pass) +
 								": " +  holder.examItemsNeededToPass + "\n" +
 								gContext.getString(R.string.URL) +
-								": " +  holder.url + "\n"
-								, Toast.LENGTH_LONG).show();
+								": " +  holder.url + "\n");
+						
+						if ( holder.timeLimit == 0 ) {
+							strBuf.append(gContext.getString(R.string.No_time_limit));
+						} else {
+							strBuf.append(gContext.getString(R.string.Time_limit) + ": " + holder.timeLimit
+									+ " " + gContext.getString(R.string.minutes));
+						}
+						
+						Toast.makeText(gContext,  strBuf.toString(), Toast.LENGTH_LONG).show();
 					}
 				});
 		        
@@ -200,6 +209,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			  String author;
 			  int examAmountOfItems;
 			  int examItemsNeededToPass;
+			  long timeLimit;
 		      TextView examTitleView;
 		      TextView examAuthorView;
 		      Button installUninstallButton;

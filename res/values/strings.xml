@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="startscreen_quote">&#8220;Yes,\n"      "you can.&#8221;</string>
+	<string name="No_question_available">No question available.</string>
 	<string name="Not_installed">Not installed</string>
 	<string name="app_name">Exam Trainer</string>
 	<string name="Loading_Please_wait">Loading. Please wait...</string>
+	<string name="No_time_limit">No time limit</string>
 	<string name="Time_limit">Time limit</string>
 	<string name="minutes">minutes</string>
 	<string name="button_next">Next</string>

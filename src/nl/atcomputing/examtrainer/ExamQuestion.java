@@ -2,7 +2,7 @@ package nl.atcomputing.examtrainer;
 
 import java.util.ArrayList;
 
-import android.database.sqlite.SQLiteException;
+import android.content.Context;
 
 /**
  * @author martijn brekhof
@@ -20,13 +20,14 @@ public class ExamQuestion {
 	private ArrayList<String> answers;
 	private ArrayList<String> choices;
 	
-	protected ExamQuestion() {
-		type = null;
+	protected ExamQuestion(Context context) {
+		type = TYPE_MULTIPLE_CHOICE;
 		topic = null;
-		question = null;
+		question = context.getString(R.string.No_question_available);
 		answers = new ArrayList<String>();
 		choices = new ArrayList<String>();
-		hint = null;
+		hint = context.getString(R.string.hint_not_available);
+		exhibit = null;
 	}
 	
 	
@@ -47,6 +48,7 @@ public class ExamQuestion {
 		this.answers = answers;
 		this.choices = choices;
 		this.hint = hint;
+		this.exhibit = exhibit;
 	}
 	
 	protected String convertArrayListToString(ArrayList<String> choices) {

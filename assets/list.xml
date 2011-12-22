@@ -7,6 +7,7 @@
 		<numberofitems>2</numberofitems>
 		<itemsneededtopass>2</itemsneededtopass>
 		<url>file:///exam101.xml</url>
+		<timelimit>90</timelimit>
 	</exam>
 	<exam>
 		<title>LPI 102 Exam</title>

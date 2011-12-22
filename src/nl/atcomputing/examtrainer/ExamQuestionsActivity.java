@@ -7,7 +7,6 @@ import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -17,10 +16,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -63,8 +62,14 @@ public class ExamQuestionsActivity extends Activity {
 			setupLayout();
 			cursorQuestion.close();
 		}
+		examinationDbHelper.close();
 	}
 
+	protected void onPause() {
+		super.onDestroy();
+		examinationDbHelper.close();
+	}
+	
 	protected void onDestroy() {
 		super.onDestroy();
 		examinationDbHelper.close();
@@ -72,6 +77,7 @@ public class ExamQuestionsActivity extends Activity {
 
 	protected void onResume() {
 		super.onResume();
+		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		/*if ( ExamTrainer.useTimeLimit ) {
 			//show time in title bar
 		} else {
@@ -271,11 +277,12 @@ public class ExamQuestionsActivity extends Activity {
 
 		index = cursorQuestion.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_EXHIBIT);
 		text = cursorQuestion.getString(index);
-		TextView exhibit = (TextView) findViewById(R.id.textExhibit);
 		if( text != null ) {
+			TextView exhibit = (TextView) findViewById(R.id.textExhibit);
 			exhibit.setText(text);
 		} else {
-			layout.removeView(exhibit);
+			HorizontalScrollView viewExhibit = (HorizontalScrollView) findViewById(R.id.horizontalScrollViewExhibit);
+			layout.removeView(viewExhibit);
 		}
 
 

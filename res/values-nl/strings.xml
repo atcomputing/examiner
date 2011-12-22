@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="startscreen_quote">&#8220;Kan niet\n"   "bestaat niet&#8221;</string>
+	<string name="No_question_available">Vraag niet beschikbaar.</string>
     <string name="Not_installed">Niet geïnstalleerd</string>
     <string name="app_name">Exam Trainer</string>
     <string name="Loading_Please_wait">Even geduld...</string>
+    <string name="No_time_limit">Geen tijdslimiet</string>
     <string name="Time_limit">Tijdslimiet</string>
 	<string name="minutes">minuten</string>
     <string name="button_next">Volgende</string>

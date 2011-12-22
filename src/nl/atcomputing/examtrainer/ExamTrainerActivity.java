@@ -22,13 +22,13 @@ public class ExamTrainerActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		
+
 		setContentView(R.layout.main);		
 
-		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
-		examTrainerDbHelper.open();
-		examTrainerDbHelper.upgrade();
-		examTrainerDbHelper.close();
+//		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+//		examTrainerDbHelper.open();
+//		examTrainerDbHelper.upgrade();
+//		examTrainerDbHelper.close();
 		
 		about_layout = (LinearLayout) findViewById(R.id.about_window);
 		about_layout.setVisibility(View.INVISIBLE);

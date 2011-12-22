@@ -133,7 +133,7 @@ public class SelectExamActivity extends Activity {
 			
 			if ( useTimeLimit ) {
 				dialogMessage.append(this.getString(R.string.Time_limit) 
-						+ ": " + examTimeLimit + " " + R.string.minutes + "\n");
+						+ ": " + examTimeLimit + " " + this.getString(R.string.minutes) + "\n");
 			}
 			
 			ExamTrainer.setExamDatabaseName(examTitle, examInstallationDate);

@@ -96,7 +96,7 @@ public class XmlPullExamParser {
 	
 	private ExamQuestion parseItem(XmlPullParser parser) throws Exception {
 		
-		ExamQuestion examQuestion = new ExamQuestion();
+		ExamQuestion examQuestion = new ExamQuestion(context);
 		String start_tag = "";
 		
 		int eventType = parser.getEventType();
