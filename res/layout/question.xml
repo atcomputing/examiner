@@ -1,22 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    	android:layout_width="fill_parent"
-    	android:layout_height="fill_parent"
-    	android:orientation="vertical"
-    	>
-<LinearLayout android:layout_width="fill_parent"
-    	android:layout_height="wrap_content">    	
-<ScrollView android:id="@+id/ScrollView"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:scrollbars="none"
-			>
-<LinearLayout 	android:id="@+id/question_layout" 
-    			android:layout_width="fill_parent" 
-    			android:layout_height="wrap_content"
-    			android:orientation="vertical"
-    			>
-    <LinearLayout android:id="@+id/titleBar" 
+    android:orientation="vertical"
+    android:layout_height="fill_parent" android:layout_width="fill_parent">
+<LinearLayout android:id="@+id/titleBar" 
     	android:layout_width="fill_parent" 
     				android:layout_height="wrap_content"
     				android:orientation="horizontal"
@@ -41,7 +27,20 @@
     	android:layout_weight="1"
     	android:textColor="@android:color/black"
     	/>
-    </LinearLayout>
+    </LinearLayout>  	
+<ScrollView 
+    android:layout_marginBottom="50dip" 
+    android:layout_below="@id/titleBar" 
+    android:id="@+id/ScrollView" 
+    android:layout_height="wrap_content" 
+    android:layout_width="fill_parent">
+			>
+<LinearLayout 	android:id="@+id/question_layout" 
+    			android:layout_width="fill_parent" 
+    			android:layout_height="wrap_content"
+    			android:orientation="vertical"
+    			>
+    
     	
 			<HorizontalScrollView android:id="@+id/horizontalScrollViewExhibit"
                       android:layout_width="fill_parent" 
@@ -49,11 +48,11 @@
                       android:scrollbars="none"
                       android:background="#333333">
     	<TextView android:id="@+id/textExhibit"
-    		android:layout_width="fill_parent"
+    		android:layout_width="wrap_content"
         	android:layout_height="wrap_content"
         	android:textColor="#FFFFFF"
         	android:typeface="monospace"
-        	android:padding="10px"
+        	android:padding="10dp"
         android:focusable="true"
         android:focusableInTouchMode="true" 
         android:scrollHorizontally="true"/>
@@ -64,7 +63,7 @@
         	android:textColor="#CCCCCC"
         	android:background="#000000"
         	android:typeface="serif"
-        	android:padding="10px">
+        	android:padding="10dp">
         			</TextView>
      <LinearLayout
      	android:id="@+id/answerLayout"
@@ -74,22 +73,25 @@
      </LinearLayout>
 </LinearLayout>
 </ScrollView>
-</LinearLayout>
-	<LinearLayout 
-    	android:id="@+id/linearLayout1" 
-    	android:layout_width="fill_parent" 
+<LinearLayout 
+    	android:layout_width="fill_parent"
     	android:layout_height="wrap_content"
     	android:layout_alignParentBottom="true"
+    	android:orientation="horizontal"
     	>
         <Button android:text="@string/button_prev" 
         		android:id="@+id/button_prev" 
+        		android:layout_gravity="left"
+        		android:layout_weight="1"
         		android:layout_width="wrap_content" 
         		android:layout_height="wrap_content"
-        		android:layout_gravity="left"></Button>
+        		></Button>
         <Button android:text="@string/button_next" 
-        		android:id="@+id/button_next" 
+        		android:id="@+id/button_next"
+        		android:layout_gravity="right"
+        		android:layout_weight="1"
         		android:layout_width="wrap_content" 
         		android:layout_height="wrap_content"
-        		android:layout_gravity="right"></Button>
-    </LinearLayout>
+        		></Button>
+</LinearLayout>
 </RelativeLayout>
