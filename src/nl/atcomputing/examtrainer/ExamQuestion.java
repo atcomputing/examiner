@@ -3,6 +3,7 @@ package nl.atcomputing.examtrainer;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.database.DatabaseUtils;
 
 /**
  * @author martijn brekhof
@@ -95,14 +96,6 @@ public class ExamQuestion {
 	
 	protected void setTopic(String str) {
 		topic = str;
-	}
-	
-	protected void setChoices(ArrayList<String> arrayList) {
-		choices = arrayList;
-	}
-	
-	protected void setCorrectAnswers(ArrayList<String> arrayList) {
-		answers = arrayList;
 	}
 	
 	protected void setQuestion(String str) {

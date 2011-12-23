@@ -39,9 +39,10 @@ public class ExamReviewActivity extends Activity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.review_exam);
 
 		ExamTrainer.showProgressDialog(this);
+		
+		setContentView(R.layout.review_exam);
 		
 		examId = ExamTrainer.getExamId();
 		
@@ -69,7 +70,6 @@ public class ExamReviewActivity extends Activity {
 		scoresGrid.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Log.d(TAG, "Pos: " + position + " QuestionId: " + adapter.getItemId(position));
 				Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionsActivity.class);
 				ExamTrainer.setMode(ExamTrainerMode.REVIEW);
 				ExamTrainer.setQuestionNumber(intent, adapter.getItemId(position));

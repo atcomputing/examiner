@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="startscreen_quote">&#8220;Yes,\n"      "you can.&#8221;</string>
+	<string name="Error">Error</string>
+	<string name="Could_not_open_exam_database_file">Could not open exam database file.</string>
+	<string name="Try_reinstalling_the_exam">Try reinstalling the exam.</string>
+	<string name="Exam_is_empty">Exam is empty.</string>
+	<string name="Could_not_remove_exam_database_file">Could not remove exam database file.</string>
+	<string name="Failed_to_uninstall_exam">Failed to uninstall exam.</string>
 	<string name="No_question_available">No question available.</string>
 	<string name="Not_installed">Not installed</string>
 	<string name="app_name">Exam Trainer</string>

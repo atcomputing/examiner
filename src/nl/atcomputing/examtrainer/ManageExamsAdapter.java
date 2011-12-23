@@ -146,10 +146,14 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			  ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(gContext);
 			  examTrainerDbHelper.open();
 			  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(gContext);
-			  if( ! ( (examinationDbHelper.delete(holder.examTitle, holder.examDate) ) && 
-			   examTrainerDbHelper.setInstalled(holder.examID, 0, false) )  ) {
-					  Toast.makeText(gContext, "Failed to uninstall exam " + 
-							  holder.examTitle, Toast.LENGTH_LONG).show(); 
+			  if( examinationDbHelper.delete(holder.examTitle, holder.examDate) )  {
+				  if( ! examTrainerDbHelper.setInstalled(holder.examID, 0, false) ) {
+					  Toast.makeText(gContext, gContext.getString(R.string.Failed_to_uninstall_exam) + 
+							  holder.examTitle, Toast.LENGTH_LONG).show();
+				  }
+			  } else {
+				  Toast.makeText(gContext, gContext.getString(R.string.Could_not_remove_exam_database_file) + 
+						  holder.examTitle, Toast.LENGTH_LONG).show();
 			  }
 			  examTrainerDbHelper.close();
 			  updateView();

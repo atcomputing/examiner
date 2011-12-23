@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 	<string name="startscreen_quote">&#8220;Kan niet\n"   "bestaat niet&#8221;</string>
+	<string name="Error">Fout</string>
+	<string name="Could_not_open_exam_database_file">Kan het examen niet openen.</string>
+	<string name="Try_reinstalling_the_exam">Probeer het examen opnieuw te installeren.</string>
+	<string name="Exam_is_empty">Examen is leeg.</string>
+	<string name="Could_not_remove_exam_database_file">Kan het examen bestand niet verwijderen.</string>
+	<string name="Failed_to_uninstall_exam">Kan het examen niet deïnstalleren.</string>
 	<string name="No_question_available">Vraag niet beschikbaar.</string>
     <string name="Not_installed">Niet geïnstalleerd</string>
     <string name="app_name">Exam Trainer</string>

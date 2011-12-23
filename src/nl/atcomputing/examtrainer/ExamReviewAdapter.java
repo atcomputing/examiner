@@ -74,7 +74,7 @@ import android.widget.AdapterView.OnItemClickListener;
 			{  
 				final LayoutInflater mInflater = LayoutInflater.from(context);
 				view = (View) mInflater.inflate(layout, parent, false);
-				
+			}
 				int answer = 0;
 
 				if( cursor.moveToPosition(position) ) {
@@ -97,7 +97,6 @@ import android.widget.AdapterView.OnItemClickListener;
 				else {
 					iv.setImageDrawable(not_okImage);
 				}
-			}
 			return view;
 		}
 

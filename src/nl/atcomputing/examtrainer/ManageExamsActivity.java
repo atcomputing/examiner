@@ -125,12 +125,15 @@ public class ManageExamsActivity extends ListActivity {
 			  index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID);
 			  examId = cursor.getLong(index);
 			  
-			  if( ! ( (examinationDbHelper.delete(examTitle, examDate) ) && 
-					   examTrainerDbHelper.deleteExam(examId) )  ) {
-							  Toast.makeText(this, this.getString(R.string.Failed_to_delete_exam) + 
-									  examTitle, Toast.LENGTH_LONG).show(); 
-					  }
-			  
+			  if( examinationDbHelper.delete(examTitle, examDate) )  {
+				  if( ! examTrainerDbHelper.deleteExam(examId) ) {
+					  Toast.makeText(this, this.getString(R.string.Failed_to_delete_exam) + 
+							  examTitle, Toast.LENGTH_LONG).show();
+				  }
+			  } else {
+				  Toast.makeText(this, this.getString(R.string.Could_not_remove_exam_database_file) + 
+						  examTitle, Toast.LENGTH_LONG).show();
+			  }
 		  } while(cursor.moveToNext());
 		  
 		  updateView();

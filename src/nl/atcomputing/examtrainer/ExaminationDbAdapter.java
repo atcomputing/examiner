@@ -31,7 +31,6 @@ public class ExaminationDbAdapter {
 	}
 	
 	public ExaminationDbAdapter open(String databaseName) throws SQLiteException {
-		Log.d(TAG, "Opening " + databaseName);
 		dbHelper = new ExaminationDatabaseHelper(context, databaseName);
 		try {
 			db = dbHelper.getWritableDatabase();
@@ -44,7 +43,13 @@ public class ExaminationDbAdapter {
 	
 	public ExaminationDbAdapter open(String title, long date) throws SQLiteException {
 		String databaseName = createDataseName(title, date);
-		return this.open(databaseName);
+		ExaminationDbAdapter db = null;
+		try {
+			db = this.open(databaseName);
+		} catch (SQLiteException e) {
+			throw(e);
+		}
+		return db;
 	}
 	
 	public void printCursor(Cursor cursor) {
@@ -78,7 +83,7 @@ public class ExaminationDbAdapter {
 	 */
 	public boolean delete(String title, long date) {
 		String databaseName = createDataseName(title, date);
-		if ( databaseExist(databaseName) ) {
+		if( databaseExist(databaseName) ) {
 			return context.deleteDatabase(databaseName);
 		}
 		return true;
@@ -143,7 +148,8 @@ public class ExaminationDbAdapter {
 		ContentValues values = new ContentValues();
 		values.put(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE, score);
 		return db.update(ExaminationDatabaseHelper.Scores.TABLE_NAME, values, 
-				ExaminationDatabaseHelper.Scores._ID + "=" + id, null) > 0;
+				ExaminationDatabaseHelper.Scores._ID + "= ?", 
+				new String[] { Long.toString(id) }) > 0;
 	}
 	
 	
@@ -155,16 +161,20 @@ public class ExaminationDbAdapter {
 	 */
 	public boolean deleteScore(long id) {
 		db.delete(ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, 
-				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + id, null);
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "= ?",
+				new String[] { Long.toString(id) });
 		db.delete(ExaminationDatabaseHelper.ResultPerQuestion.TABLE_NAME,
-				ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_SCORES_ID + "=" + id, null);
+				ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_SCORES_ID + "= ?",
+				new String[] { Long.toString(id) });
 		return db.delete(ExaminationDatabaseHelper.Scores.TABLE_NAME, 
-				ExaminationDatabaseHelper.Scores._ID + "=" + id, null) > 0;
+				ExaminationDatabaseHelper.Scores._ID + "= ?",
+				new String[] { Long.toString(id) }) > 0;
 	}
 	
 	public boolean deleteQuestion(long rowId) {
 		return db.delete(ExaminationDatabaseHelper.Questions.TABLE_NAME, 
-				ExaminationDatabaseHelper.Questions._ID + "=" + rowId, null) > 0;
+				ExaminationDatabaseHelper.Questions._ID + "= ?", 
+				new String[] { Long.toString(rowId) }) > 0;
 	}
 
 	/**
@@ -178,7 +188,8 @@ public class ExaminationDbAdapter {
 				ExaminationDatabaseHelper.Questions.COLUMN_NAME_EXHIBIT,
 				ExaminationDatabaseHelper.Questions.COLUMN_NAME_HINT
 				},
-				ExaminationDatabaseHelper.Questions._ID + "=" + rowId, null, null, null, null, null);
+				ExaminationDatabaseHelper.Questions._ID + "= ?", 
+				new String[] { Long.toString(rowId) }, null, null, null, null);
 		if (mCursor != null) {
 			mCursor.moveToFirst();
 		}
@@ -191,7 +202,8 @@ public class ExaminationDbAdapter {
 				new String[] {
 				ExaminationDatabaseHelper.Questions.COLUMN_NAME_TYPE
 				},
-				ExaminationDatabaseHelper.Questions._ID + "=" + rowId, null, null, null, null, null);
+				ExaminationDatabaseHelper.Questions._ID + "= ?",
+				new String[] { Long.toString(rowId) }, null, null, null, null);
 		if (mCursor != null) {
 			mCursor.moveToFirst();
 			int columnIndex = mCursor.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_TYPE);
@@ -241,8 +253,9 @@ public class ExaminationDbAdapter {
 				new String[] {
 				ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER
 				},
-				ExaminationDatabaseHelper.Answers.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
-				null, null, null, null, null);
+				ExaminationDatabaseHelper.Answers.COLUMN_NAME_QUESTION_ID + "= ?",
+				new String[] { Long.toString(questionId) }, 
+				null, null, null, null);
 		
 		if(mCursor.moveToFirst())
 			return mCursor;
@@ -255,8 +268,9 @@ public class ExaminationDbAdapter {
 				new String[] {
 				ExaminationDatabaseHelper.Choices.COLUMN_NAME_CHOICE
 				},
-				ExaminationDatabaseHelper.Choices.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
-				null, null, null, null, null);
+				ExaminationDatabaseHelper.Choices.COLUMN_NAME_QUESTION_ID + "= ?",
+				new String[] { Long.toString(questionId) }, 
+				null, null, null, null);
 		
 		if(mCursor.moveToFirst())
 			return mCursor;
@@ -270,8 +284,9 @@ public class ExaminationDbAdapter {
 				ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_QUESTION_ID,
 				ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT,
 				},
-				ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_SCORES_ID + "=" + examId, 
-				null, null, null, null, null);
+				ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_SCORES_ID + "= ?",
+				new String[] { Long.toString(examId) }, 
+				null, null, null, null);
 		
 		if(mCursor.moveToFirst())
 			return mCursor;
@@ -306,8 +321,9 @@ public class ExaminationDbAdapter {
 				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER,
 				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID
 				},
-				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId, 
-				null, null, null, null, null);
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "= ?",
+				new String[] { Long.toString(examId)}, 
+				null, null, null, null);
 		
 		if(cursor.moveToFirst())
 			return cursor;
@@ -320,10 +336,11 @@ public class ExaminationDbAdapter {
 				new String[] {
 				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER
 				},
-				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "= ?"
 				+  " AND " +
-				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId, 
-				null, null, null, null, null);
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "= ?", 
+				new String[] { Long.toString(examId), Long.toString(questionId) },
+				null, null, null, null);
 		
 		if(cursor.moveToFirst())
 			return cursor;
@@ -353,7 +370,8 @@ public class ExaminationDbAdapter {
 				ExaminationDatabaseHelper.Scores.COLUMN_NAME_DATE,
 				ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE
 				},
-				ExaminationDatabaseHelper.Scores._ID + "=" + id, null, null, null, null, null);
+				ExaminationDatabaseHelper.Scores._ID + "= ?" , 
+				new String[] { Long.toString(id) }, null, null, null, null);
 		
 		if(cursor.moveToFirst())
 			return cursor;
@@ -370,8 +388,9 @@ public class ExaminationDbAdapter {
 				new String[] {
 				ExaminationDatabaseHelper.Questions.COLUMN_NAME_HINT
 				},
-				ExaminationDatabaseHelper.Questions._ID + "=" + questionId,
-				null, null, null, null, null);
+				ExaminationDatabaseHelper.Questions._ID + "= ?",
+				new String[] { Long.toString(questionId) },
+				null, null, null, null);
 		if(cursor.moveToFirst()) {
 			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_HINT);
 			return cursor.getString(index);
@@ -387,17 +406,18 @@ public class ExaminationDbAdapter {
 	 * @throws SQLException
 	 */
 	public boolean scoresAnswerPresent(long examId, long questionId, String answer) {
-		 String whereClause = ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId
-				+ " AND " + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER + "=" + 
-				"\"" + answer + "\"" + " AND "
-				+ ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId;
-			
+		 String selection = ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "= ?"
+				+ " AND " + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER + "= ?" 
+				+ " AND " + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "= ?";
+		 
+		 String[] selectionArgs = new String[] { Long.toString(questionId), answer, Long.toString(examId) };
+		 
 		Cursor mCursor = db.query(true, ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, 
 				new String[] {
 				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER
 				},
-				whereClause, 
-				null, null, null, null, null);
+				selection, selectionArgs, 
+				null, null, null, null);
 		
 		return mCursor.getCount() > 0;
 	}
@@ -409,15 +429,14 @@ public class ExaminationDbAdapter {
 	 * @throws SQLException
 	 */
 	public boolean scoresAnswerPresent(long examId, long questionId) {
-	
-		String whereClause = ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "=" + 
-		questionId + " AND " + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" +
-		examId;
-
+		String selection = ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "= ?" 
+		+ " AND " + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "= ?";
+		String[] selectionArgs = new String[] { Long.toString(questionId), Long.toString(examId) };
+		
 		Cursor mCursor = db.query(true, ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, 
 				new String[] {
 				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER
-				}, whereClause, null, null, null, null, null);
+				}, selection, selectionArgs, null, null, null, null);
 
 		return mCursor.getCount() > 0;
 	}
@@ -426,9 +445,10 @@ public class ExaminationDbAdapter {
 		ContentValues values = new ContentValues();
 		values.put(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER, answer);
 		return db.update(ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, values, 
-				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "= ?"
 				+ " AND " +
-				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId, null) > 0;
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "= ?", 
+				new String[] { Long.toString(questionId), Long.toString(examId) } ) > 0;
 	}
 	
 	public boolean insertScoresAnswer(long examId, long questionId, String answer) {
@@ -442,12 +462,12 @@ public class ExaminationDbAdapter {
 	
 	public boolean deleteScoresAnswer(long examId, long questionId, String answer) {
 		return db.delete(ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, 
-				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "=" + questionId 
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID + "= ?"
 				+ " AND " +
-				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER + "=" + "\"" + answer + "\""
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER + "= ?"
 				+ " AND " + 
-				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId
-				, null) > 0;
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "= ?"
+				, new String[] {Long.toString(questionId), answer, Long.toString(examId) } ) > 0;
 	}
 	
 	/**
@@ -465,8 +485,6 @@ public class ExaminationDbAdapter {
 	}
 	
 	public boolean setScoresAnswersOpen(long examId, long questionId, String answer) {
-		//Log.d(this.getClass().getName(), "setOpenAnswer: questionId=" + questionId + 
-		//		" answer=" + answer);
 		if( scoresAnswerPresent(examId, questionId) ) {
 			return updateScoresAnswer(examId, questionId, answer);
 		} else {	
@@ -492,15 +510,17 @@ public class ExaminationDbAdapter {
 			" FROM " 
 			+ ExaminationDatabaseHelper.Answers.TABLE_NAME + ", " + ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME +
 			" WHERE "
-			+ correctAnswersQuestionId + " = " + questionId +
+			+ correctAnswersQuestionId + " = ?" +
 			" AND "
-			+ ScoresAnswersQuestionId + " = " + questionId +
+			+ ScoresAnswersQuestionId + " = ?" +
 			" AND "
-			+ ScoresAnswersExamId + " = " + examId +
+			+ ScoresAnswersExamId + " = ?" +
 			" AND "
 			+ correctAnswersAnswer + " = " + ScoresAnswersAnswer			
 			;
-		Cursor mCursor = db.rawQuery(sqlQuery, null);
+		String[] sqlArgs = new String[] { Long.toString(questionId), Long.toString(questionId)
+				, Long.toString(examId) };
+		Cursor mCursor = db.rawQuery(sqlQuery, sqlArgs);
 		if (mCursor != null) {
 			int count = mCursor.getCount();
 		  mCursor.close();
@@ -535,20 +555,22 @@ public class ExaminationDbAdapter {
 			String ScoresAnswersQuestionId = ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME + "." + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID;
 			String ScoresAnswersAnswer = ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME + "." + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER;
 			String ScoresAnswersExamId = ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME + "." + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID;
-		String sqlQuery = "SELECT * " + 
-			//correctAnswersQuestionId + 
-			" FROM " 
-			+ ExaminationDatabaseHelper.Answers.TABLE_NAME + ", " + ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME +
-			" WHERE "
-			+ correctAnswersQuestionId + " = " + questionId +
-			" AND "
-			+ ScoresAnswersQuestionId + " = " + questionId +
-			" AND "
-			+ ScoresAnswersExamId + " = " + examId +
-			" AND "
-			+ correctAnswersAnswer + " = " + ScoresAnswersAnswer			
-			;
-		    Cursor mCursor = db.rawQuery(sqlQuery, null);
+		String sqlQuery =  "SELECT * " + 
+				//correctAnswersQuestionId + 
+				" FROM " 
+				+ ExaminationDatabaseHelper.Answers.TABLE_NAME + ", " + ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME +
+				" WHERE "
+				+ correctAnswersQuestionId + " = ?" +
+				" AND "
+				+ ScoresAnswersQuestionId + " = ?" +
+				" AND "
+				+ ScoresAnswersExamId + " = ?" +
+				" AND "
+				+ correctAnswersAnswer + " = " + ScoresAnswersAnswer			
+				;
+			String[] sqlArgs = new String[] { Long.toString(questionId), Long.toString(questionId)
+					, Long.toString(examId) };
+		    Cursor mCursor = db.rawQuery(sqlQuery, sqlArgs);
 		    int count = mCursor.getCount();
 		    mCursor.close();
 		    return count == correctAnswersCount;
@@ -567,8 +589,9 @@ public class ExaminationDbAdapter {
 				new String[] {
 				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID
 				},
-				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "=" + examId,
-				null, null, null, null, null);
+				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "= ?",
+				new String[] { Long.toString(examId) },
+				null, null, null, null);
 		if (mCursor != null) {
 			return mCursor.getCount();
 		}
@@ -580,14 +603,12 @@ public class ExaminationDbAdapter {
 	}
 	
 	private boolean databaseExist(String name ) {
-		SQLiteDatabase checkDB = null;
-	    try {
-	        checkDB = SQLiteDatabase.openDatabase(name, null,
-	                SQLiteDatabase.OPEN_READONLY);
-	        checkDB.close();
-	    } catch (SQLiteException e) {
-	        // database doesn't exist yet.
-	    }
-	    return checkDB != null ? true : false;
+		String[] databases = context.databaseList();
+		for( int i =  0; i < databases.length; i++ ) {
+			if( databases[i].contentEquals(name) ) {
+				return true;
+			}
+		}
+	    return false;
 	}
 }

@@ -1,9 +1,11 @@
 package nl.atcomputing.examtrainer;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.provider.BaseColumns;
 import android.text.format.Time;
 import android.util.Log;
 
@@ -139,7 +141,20 @@ public final class ExamTrainer {
 		KEEP_PROGRESS_DIALOG_RUNNING = false;
 	}
 	
-	
-
+	public static void showError(Activity activity, String msg) {
+		final Activity act = activity;
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+		builder.setMessage(activity.getResources().getString(R.string.Error) + ": " + msg)
+		       .setCancelable(false)
+		       .setPositiveButton(activity.getResources().getString(R.string.ok), 
+		    		   new DialogInterface.OnClickListener() {
+		           public void onClick(DialogInterface dialog, int id) {
+		        	   dialog.cancel();
+		        	   act.finish();
+		           }
+		       });
+		AlertDialog alert = builder.create();
+		alert.show();
+	}
 	
 }

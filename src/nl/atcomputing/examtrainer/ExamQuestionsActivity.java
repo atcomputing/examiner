@@ -10,13 +10,13 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -48,7 +48,13 @@ public class ExamQuestionsActivity extends Activity {
 		Intent intent = getIntent();
 
 		examinationDbHelper = new ExaminationDbAdapter(this);
-		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+		try {
+			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+		} catch (SQLiteException e) {
+			ExamTrainer.showError(this, 
+					this.getResources().getString(R.string.Could_not_open_exam_database_file) + "\n" +
+							this.getResources().getString(R.string.Try_reinstalling_the_exam));
+		}
 
 		questionNumber = ExamTrainer.getQuestionNumber(intent);
 		if ( ( questionNumber < 1 ) || ( ExamTrainer.getExamDatabaseName() == null ) ) {
@@ -56,12 +62,18 @@ public class ExamQuestionsActivity extends Activity {
 		}
 		else {
 			cursorQuestion = examinationDbHelper.getQuestion(questionNumber);
-
+			if ( cursorQuestion.getCount() < 1 ) {
+				ExamTrainer.showError(this, this.getResources().getString(R.string.Exam_is_empty) + "\n" +
+						this.getResources().getString(R.string.Try_reinstalling_the_exam));
+				cursorQuestion.close();
+			} else {
+			
 			int index = cursorQuestion.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_TYPE);
 			questionType = cursorQuestion.getString(index);
 
 			setupLayout();
 			cursorQuestion.close();
+			}
 		}
 		examinationDbHelper.close();
 	}

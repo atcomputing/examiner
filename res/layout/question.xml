@@ -48,7 +48,7 @@
                       android:scrollbars="none"
                       android:background="#333333">
     	<TextView android:id="@+id/textExhibit"
-    		android:layout_width="wrap_content"
+    		android:layout_width="fill_parent"
         	android:layout_height="wrap_content"
         	android:textColor="#FFFFFF"
         	android:typeface="monospace"
@@ -58,7 +58,7 @@
         android:scrollHorizontally="true"/>
         </HorizontalScrollView>
         <TextView android:id="@+id/textQuestion"
-        	android:layout_width="wrap_content"
+        	android:layout_width="fill_parent"
         	android:layout_height="wrap_content"
         	android:textColor="#CCCCCC"
         	android:background="#000000"

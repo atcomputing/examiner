@@ -29,11 +29,12 @@ public class ShowScoresActivity extends Activity {
 	private static final int DIALOG_CONFIRMATION_ID = 2;
 	
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.show_scores);        
+		super.onCreate(savedInstanceState);        
         
 		ExamTrainer.showProgressDialog(this);
         
+		setContentView(R.layout.show_scores);
+		
         examinationDbHelper = new ExaminationDbAdapter(ShowScoresActivity.this);
         examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
         Cursor cursor = examinationDbHelper.getScoresReversed();
