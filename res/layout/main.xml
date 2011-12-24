@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:id="@+id/startscreen"
     android:background="@drawable/astronaut_port" >
 
     <TextView
@@ -99,7 +100,8 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/logo"
-            android:text="@string/Start" >
+            android:text="@string/Start"
+            android:background="@drawable/progress_circular">
         </Button>
     </RelativeLayout>
 

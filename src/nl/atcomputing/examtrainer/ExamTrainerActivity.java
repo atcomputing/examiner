@@ -3,13 +3,17 @@ package nl.atcomputing.examtrainer;
 import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 /**
  * @author martijn brekhof
@@ -32,12 +36,18 @@ public class ExamTrainerActivity extends Activity {
 		
 		about_layout = (LinearLayout) findViewById(R.id.about_window);
 		about_layout.setVisibility(View.INVISIBLE);
-		
+		  
 		Button startExam = (Button) findViewById(R.id.button_start);
+		AnimationDrawable anim = (AnimationDrawable) startExam.getBackground();
+		anim.start();
+		
 		startExam.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(ExamTrainerActivity.this, SelectExamActivity.class);
 				ExamTrainer.setMode(ExamTrainerMode.EXAM);
+				RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.startscreen);
+				Animation hyperspaceJumpAnimation = AnimationUtils.loadAnimation(ExamTrainerActivity.this, R.anim.hyperspace_jump);
+				mainLayout.startAnimation(hyperspaceJumpAnimation);
 				startActivity(intent);
 			}
 		});

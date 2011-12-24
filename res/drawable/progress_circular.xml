@@ -1,0 +1,14 @@
+
+ <animation-list 
+     xmlns:android="http://schemas.android.com/apk/res/android" 
+     android:id="@+id/progress_circular" 
+     android:oneshot="false">
+    <item android:drawable="@drawable/progress_circular_1" android:duration="100" />
+    <item android:drawable="@drawable/progress_circular_2" android:duration="100" />
+    <item android:drawable="@drawable/progress_circular_3" android:duration="100" />
+    <item android:drawable="@drawable/progress_circular_4" android:duration="100" />
+    <item android:drawable="@drawable/progress_circular_5" android:duration="100" />
+    <item android:drawable="@drawable/progress_circular_6" android:duration="100" />
+    <item android:drawable="@drawable/progress_circular_7" android:duration="100" />
+    <item android:drawable="@drawable/progress_circular_8" android:duration="100" />
+ </animation-list>
