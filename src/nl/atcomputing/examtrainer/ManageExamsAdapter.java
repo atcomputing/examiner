@@ -2,12 +2,12 @@ package nl.atcomputing.examtrainer;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.ParseException;
 import java.util.ArrayList;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
+import android.os.AsyncTask;
 import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,10 +74,10 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			    holder.installUninstallButton.setOnClickListener(new View.OnClickListener() {
 		          public void onClick(View v) {
 		        	  if( installed == 1 ) {
-		        		  uninstallExam(holder);
+		        		  new UninstallExam(holder).execute();
 		        	  } 
 		        	  else {
-		        		 installExam(holder);
+		        		  new InstallExam(holder).execute();
 		        	  }
 		          }
 		        });
@@ -142,24 +142,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			  updateView();
 		  }
 
-		 protected void uninstallExam(ViewHolder holder) {
-			  ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(gContext);
-			  examTrainerDbHelper.open();
-			  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(gContext);
-			  if( examinationDbHelper.delete(holder.examTitle, holder.examDate) )  {
-				  if( ! examTrainerDbHelper.setInstalled(holder.examID, 0, false) ) {
-					  Toast.makeText(gContext, gContext.getString(R.string.Failed_to_uninstall_exam) + 
-							  holder.examTitle, Toast.LENGTH_LONG).show();
-				  }
-			  } else {
-				  Toast.makeText(gContext, gContext.getString(R.string.Could_not_remove_exam_database_file) + 
-						  holder.examTitle, Toast.LENGTH_LONG).show();
-			  }
-			  examTrainerDbHelper.close();
-			  updateView();
-		 }
-		 
-		  protected void installExam(ViewHolder holder) {
+		protected void installExam(ViewHolder holder) {
 			  
 			 holder.examDate = System.currentTimeMillis();
 			  
@@ -193,8 +176,24 @@ public class ManageExamsAdapter extends CursorAdapter  {
 				  Toast.makeText(gContext, "Failed to set exam " + holder.examTitle + " to installed.", Toast.LENGTH_LONG).show();
 			  }
 			  examTrainerDbHelperAdapter.close();
-			  updateView();
 		  }
+		
+		 protected void uninstallExam(ViewHolder holder) {
+			  ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(gContext);
+			  examTrainerDbHelper.open();
+			  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(gContext);
+			  if( examinationDbHelper.delete(holder.examTitle, holder.examDate) )  {
+				  if( ! examTrainerDbHelper.setInstalled(holder.examID, 0, false) ) {
+					  Toast.makeText(gContext, gContext.getString(R.string.Failed_to_uninstall_exam) + 
+							  holder.examTitle, Toast.LENGTH_LONG).show();
+				  }
+			  } else {
+				  Toast.makeText(gContext, gContext.getString(R.string.Could_not_remove_exam_database_file) + 
+						  holder.examTitle, Toast.LENGTH_LONG).show();
+			  }
+			  examTrainerDbHelper.close();
+		 }
+		 
 		  
 		  protected void updateView() {
 			  ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(gContext);
@@ -218,4 +217,56 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		      TextView examAuthorView;
 		      Button installUninstallButton;
 		    }
+		
+		private class InstallExam extends AsyncTask<ViewHolder, Integer, Boolean> {
+			ViewHolder holder;
+			public InstallExam(ViewHolder viewHolder) {
+				super();
+				holder = viewHolder;
+			}
+			
+			protected void onPreExecute() {
+				holder.installUninstallButton.setEnabled(false);
+			}
+			
+		     protected Boolean doInBackground(ViewHolder... holders) {
+		             installExam(holder);
+		             return true;
+		     }
+
+		     protected void onProgressUpdate(Integer... progress) {
+		         //setProgressPercent(progress[0]);
+		     }
+
+		     protected void onPostExecute(Boolean result) {
+		    	 holder.installUninstallButton.setEnabled(true);
+		    	 updateView();
+		     }
+		 }
+		
+		private class UninstallExam extends AsyncTask<ViewHolder, Integer, Boolean> {
+			ViewHolder holder;
+			public UninstallExam(ViewHolder viewHolder) {
+				super();
+				holder = viewHolder;
+			}
+			
+			protected void onPreExecute() {
+				holder.installUninstallButton.setEnabled(false);
+			}
+			
+		     protected Boolean doInBackground(ViewHolder... holders) {
+		             uninstallExam(holder);
+		             return true;
+		     }
+
+		     protected void onProgressUpdate(Integer... progress) {
+		         //setProgressPercent(progress[0]);
+		     }
+
+		     protected void onPostExecute(Boolean result) {
+		    	 holder.installUninstallButton.setEnabled(true);
+		    	 updateView();
+		     }
+		 }
 }
