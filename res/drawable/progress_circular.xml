@@ -1,14 +1,12 @@
-
- <animation-list 
-     xmlns:android="http://schemas.android.com/apk/res/android" 
-     android:id="@+id/progress_circular" 
-     android:oneshot="false">
-    <item android:drawable="@drawable/progress_circular_1" android:duration="100" />
-    <item android:drawable="@drawable/progress_circular_2" android:duration="100" />
-    <item android:drawable="@drawable/progress_circular_3" android:duration="100" />
-    <item android:drawable="@drawable/progress_circular_4" android:duration="100" />
-    <item android:drawable="@drawable/progress_circular_5" android:duration="100" />
-    <item android:drawable="@drawable/progress_circular_6" android:duration="100" />
-    <item android:drawable="@drawable/progress_circular_7" android:duration="100" />
-    <item android:drawable="@drawable/progress_circular_8" android:duration="100" />
+<?xml version="1.0" encoding="utf-8"?>
+ <animation-list xmlns:android="http://schemas.android.com/apk/res/android" 
+     android:id="@+id/selected" android:oneshot="false">
+    <item android:drawable="@drawable/progress_circular_1" android:duration="50" />
+    <item android:drawable="@drawable/progress_circular_2" android:duration="50" />
+    <item android:drawable="@drawable/progress_circular_3" android:duration="50" />
+    <item android:drawable="@drawable/progress_circular_4" android:duration="50" />
+    <item android:drawable="@drawable/progress_circular_5" android:duration="50" />
+    <item android:drawable="@drawable/progress_circular_6" android:duration="50" />
+    <item android:drawable="@drawable/progress_circular_7" android:duration="50" />
+    <item android:drawable="@drawable/progress_circular_8" android:duration="50" />
  </animation-list>

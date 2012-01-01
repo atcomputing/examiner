@@ -95,13 +95,19 @@
             android:scaleType="centerCrop"
             android:src="@drawable/atlogo" />
 
+        <ImageView
+            android:id="@+id/testView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_above="@id/logo"/>
+        
         <Button
             android:id="@+id/button_start"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/logo"
-            android:text="@string/Start"
-            android:background="@drawable/progress_circular">
+            android:text="@string/Start">
         </Button>
     </RelativeLayout>
 

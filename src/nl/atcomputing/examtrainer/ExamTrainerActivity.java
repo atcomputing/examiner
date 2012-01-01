@@ -4,6 +4,7 @@ import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -23,6 +24,11 @@ public class ExamTrainerActivity extends Activity {
 	private final String TAG = this.getClass().getName();
 	private LinearLayout about_layout;
 	
+	AnimationDrawable mFrameAnimation = null;
+	Button startExam;
+	
+    boolean mbUpdating = false;
+    
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
@@ -36,11 +42,8 @@ public class ExamTrainerActivity extends Activity {
 		
 		about_layout = (LinearLayout) findViewById(R.id.about_window);
 		about_layout.setVisibility(View.INVISIBLE);
-		  
-		Button startExam = (Button) findViewById(R.id.button_start);
-		AnimationDrawable anim = (AnimationDrawable) startExam.getBackground();
-		anim.start();
-		
+
+		startExam = (Button) findViewById(R.id.button_start);
 		startExam.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(ExamTrainerActivity.this, SelectExamActivity.class);
@@ -51,6 +54,8 @@ public class ExamTrainerActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+		
+		
 	}
 	
 	@Override
@@ -85,6 +90,4 @@ public class ExamTrainerActivity extends Activity {
 		Intent intent = new Intent(this, RetrieveExamQuestions.class);
 		startService(intent);
 	}
-	
-	
 }
