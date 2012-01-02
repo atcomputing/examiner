@@ -33,12 +33,12 @@ public class HistoryActivity extends Activity {
         
 		ExamTrainer.showProgressDialog(this);
         
-		setContentView(R.layout.show_scores);
+		setContentView(R.layout.history);
 		
         examinationDbHelper = new ExaminationDbAdapter(HistoryActivity.this);
         examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
         Cursor cursor = examinationDbHelper.getScoresReversed();
-        adapter = new HistoryAdapter(HistoryActivity.this, R.layout.show_scores_entry, cursor);
+        adapter = new HistoryAdapter(HistoryActivity.this, R.layout.history_entry, cursor);
 
         ListView scoresList = (ListView) findViewById(R.id.show_scores_list);
         scoresList.setAdapter(adapter);

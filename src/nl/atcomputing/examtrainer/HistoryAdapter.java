@@ -33,12 +33,12 @@ public class HistoryAdapter extends CursorAdapter  {
 			    index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE);
 			    int examScore = cursor.getInt(index);
 			    
-			    TextView scoreEntryDate = (TextView) view.findViewById(R.id.scoreEntryDate);
+			    TextView scoreEntryDate = (TextView) view.findViewById(R.id.historyEntryDate);
 		        scoreEntryDate.setText(examDate);
-		        TextView scoreEntryScore = (TextView) view.findViewById(R.id.scoreEntryScore);
+		        TextView scoreEntryScore = (TextView) view.findViewById(R.id.historyEntryScore);
 		        scoreEntryScore.setText(Integer.toString(examScore));
 		        
-		        ImageView scoreEntryImage = (ImageView) view.findViewById(R.id.scoreEntryPass);
+		        ImageView scoreEntryImage = (ImageView) view.findViewById(R.id.historyEntryPass);
 		        
 		        if( examScore >= ExamTrainer.getItemsNeededToPass() ) { 
 		        	scoreEntryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.ok));
