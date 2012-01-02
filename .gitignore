@@ -1,5 +1,7 @@
 .classpath
 .project
+build.properties
 bin/
 *~
 gen/
+META-INF/
