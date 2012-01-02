@@ -14,11 +14,11 @@
    height="64px"
    id="svg3969"
    version="1.1"
-   inkscape:version="0.47 r22583"
+   inkscape:version="0.48.2 r9819"
    sodipodi:docname="student_hat_2.svg"
-   inkscape:export-filename="/home/mbrekhof/projects/ExamTrainer/original_images/student_hat_2.png"
-   inkscape:export-xdpi="68.084549"
-   inkscape:export-ydpi="68.084549">
+   inkscape:export-filename="/home/martijn/Projects/ExamTrainer/res/drawable/student_hat_port.png"
+   inkscape:export-xdpi="449.35803"
+   inkscape:export-ydpi="449.35803">
   <defs
      id="defs3971">
     <inkscape:perspective
@@ -276,7 +276,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="15.556349"
-     inkscape:cx="27.641909"
+     inkscape:cx="15.396105"
      inkscape:cy="26.403562"
      inkscape:current-layer="layer1"
      showgrid="true"
@@ -304,7 +304,7 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer">
     <path
-       style="fill:url(#linearGradient4342);fill-opacity:1;fill-rule:nonzero;stroke:#d3d3d3;stroke-width:0.24052618;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       style="fill:url(#linearGradient4342);fill-opacity:1;fill-rule:nonzero;stroke:#d3d3d3;stroke-width:0.24052618000000001;stroke-miterlimit:4;stroke-opacity:0.11872146;stroke-dasharray:none"
        d="m 17.445341,21.080536 28.996764,0 1.622501,15.16442 c -0.206556,2.587507 -0.30578,2.671433 -1.83104,3.822101 -1.875687,1.114063 -4.148209,1.702889 -6.216918,2.123088 C 34.826936,43.244287 29.093894,43.237194 22.17548,40.914827 19.920664,40.206038 18.915483,37.09694 19.067842,35.819762 L 17.445341,21.080536 z"
        id="rect3761-0"
        sodipodi:nodetypes="ccccsccc" />
