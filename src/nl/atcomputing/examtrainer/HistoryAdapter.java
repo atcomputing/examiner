@@ -14,12 +14,12 @@ import android.widget.TextView;
  *
  */
 
-public class ShowScoresAdapter extends CursorAdapter  {
+public class HistoryAdapter extends CursorAdapter  {
 	private final String TAG = this.getClass().getName();
 	private int layout;
 	    private Context context;
 	    
-	    public ShowScoresAdapter(Context context, int layout, Cursor c) {
+	    public HistoryAdapter(Context context, int layout, Cursor c) {
 	      super(context, c);
 	      this.layout = layout;
 	      this.context = context;

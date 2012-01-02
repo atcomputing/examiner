@@ -180,7 +180,7 @@ public class SelectExamActivity extends Activity {
 	}
 
 	private void showHistory() {
-		Intent intent = new Intent(this, ShowScoresActivity.class);
+		Intent intent = new Intent(this, HistoryActivity.class);
 		startActivity(intent);
 	}
 

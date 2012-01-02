@@ -228,7 +228,7 @@ public class ExamQuestionsActivity extends Activity {
 	}
 
 	private void startShowScores() {
-		Intent intent = new Intent(ExamQuestionsActivity.this, ShowScoresActivity.class);
+		Intent intent = new Intent(ExamQuestionsActivity.this, HistoryActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}

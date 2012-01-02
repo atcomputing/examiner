@@ -18,11 +18,11 @@ import android.widget.AdapterView.OnItemClickListener;
 /**
  * @author martijn brekhof
  *
+ * TODO FIX: Second item in list points to first question
  */
-
-public class ShowScoresActivity extends Activity {
+public class HistoryActivity extends Activity {
 	private final String TAG = this.getClass().getName();
-	private ShowScoresAdapter adapter;
+	private HistoryAdapter adapter;
 	private ExaminationDbAdapter examinationDbHelper;
 	private long examId;
 	private static final int DIALOG_SHOW_EXAM = 1;
@@ -35,10 +35,10 @@ public class ShowScoresActivity extends Activity {
         
 		setContentView(R.layout.show_scores);
 		
-        examinationDbHelper = new ExaminationDbAdapter(ShowScoresActivity.this);
+        examinationDbHelper = new ExaminationDbAdapter(HistoryActivity.this);
         examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
         Cursor cursor = examinationDbHelper.getScoresReversed();
-        adapter = new ShowScoresAdapter(ShowScoresActivity.this, R.layout.show_scores_entry, cursor);
+        adapter = new HistoryAdapter(HistoryActivity.this, R.layout.show_scores_entry, cursor);
 
         ListView scoresList = (ListView) findViewById(R.id.show_scores_list);
         scoresList.setAdapter(adapter);
@@ -114,7 +114,7 @@ public class ShowScoresActivity extends Activity {
 			.setMessage("")
 			.setPositiveButton(this.getString(R.string.Review_Exam), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					Intent intent = new Intent(ShowScoresActivity.this, ExamReviewActivity.class);
+					Intent intent = new Intent(HistoryActivity.this, ExamReviewActivity.class);
 					ExamTrainer.setExamId(examId);
 					startActivity(intent);
 				}
