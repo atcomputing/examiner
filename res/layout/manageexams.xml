@@ -1,8 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+  <ImageView 
+android:layout_width="fill_parent" android:layout_height="fill_parent"
+android:src="@drawable/nicubunu_tools_320" android:scaleType="fitCenter" />
+  
+	<LinearLayout
               android:orientation="vertical"
               android:layout_width="fill_parent"
-              android:layout_height="fill_parent">
+              android:layout_height="fill_parent"
+              android:background="#80000000">
     <TextView
     android:id="@+id/manageexams_no_exams_available"
     android:layout_width="fill_parent"
@@ -15,5 +23,7 @@
     android:text="@string/manageexams_get_exams_explanation"/>
     <ListView android:layout_width="fill_parent"
               android:layout_height="wrap_content"
-              android:id="@android:id/list"/>
-</LinearLayout>
+              android:id="@android:id/list"
+              android:background="@android:color/transparent"/>
+	</LinearLayout>
+</FrameLayout>

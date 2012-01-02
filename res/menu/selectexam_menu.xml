@@ -4,6 +4,6 @@
           android:icon="@drawable/menu_preferences"
           android:title="@string/Settings" />
     <item android:id="@+id/selectexam_menu_manage"
-          android:icon="@drawable/menu_manage_exams"
+          android:icon="@drawable/nicubunu_tools_48"
           android:title="@string/Manage_Exams" />
 </menu>

@@ -42,6 +42,8 @@
 	<string name="click_on_manage_exams_to_install_one_or_more_exams">Press menu and use Manage Exams to install one or
 		more exams</string>
 	<string name="questions">Questions</string>
+	<string name="Uninstalling_exam">Uninstalling exam</string>
+	<string name="Installing_exam">Installing exam</string>
 	<string name="installed_on">Installed on</string>
 	<string name="install">Install</string>
 	<string name="uninstall">Uninstall</string>

@@ -227,6 +227,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			
 			protected void onPreExecute() {
 				holder.installUninstallButton.setEnabled(false);
+				holder.installUninstallButton.setText(R.string.Installing_exam);
 			}
 			
 		     protected Boolean doInBackground(ViewHolder... holders) {
