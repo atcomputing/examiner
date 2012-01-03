@@ -1,18 +1,3 @@
-/*
- * Copyright (C) 2007 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 
 package nl.atcomputing.examtrainer;
 
@@ -35,12 +20,14 @@ import android.widget.TextView;
 public class ShowScoreView extends ShowScoreBalloonView {
 
     private static final String TAG = "ShowScoreBalloonView";
-
     private static final int DELAY = 100;
     
     private int currentMode = RUNNING;
-    public static final int PAUSE = 0;
-    public static final int RUNNING = 1;
+    protected static final int PAUSE = 0;
+    protected static final int RUNNING = 1;
+    
+    private final int RED_BALLOON = 0;
+    private final int BLUE_BALLOON = 1;
 
     private TextView textView;
 
@@ -70,8 +57,13 @@ public class ShowScoreView extends ShowScoreBalloonView {
     private void init() {
     	Resources r = this.getContext().getResources();
         
-        loadBalloon(0, r.getDrawable(R.drawable.aj_balloon_blue_64));
-        loadBalloon(1, r.getDrawable(R.drawable.aj_balloon_red_64));
+        loadBalloon(BLUE_BALLOON, r.getDrawable(R.drawable.aj_balloon_blue_64));
+        loadBalloon(RED_BALLOON, r.getDrawable(R.drawable.aj_balloon_red_64));
+        
+        addBalloon(RED_BALLOON);
+        addBalloon(BLUE_BALLOON);
+        
+        setBalloonCoords();
     }
 
     protected Bundle saveState() {
