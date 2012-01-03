@@ -16,6 +16,10 @@
 
 package nl.atcomputing.examtrainer;
 
+import java.util.ArrayList;
+
+import com.example.android.snake.SnakeView.Coordinate;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -25,11 +29,17 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
 
+/**
+ * @author martijn brekhof
+ *
+ */
+
 public class ShowScoreBalloonView extends View {
 
-	class Coordinates {
+	class Balloon {
 		int x;
 		int y;
+		int balloonArrayIndex;
 	}
 
 	protected static int balloonSize;
@@ -41,19 +51,9 @@ public class ShowScoreBalloonView extends View {
 	//Holds references to the Drawables.
 	private Bitmap[] balloonArray; 
 
-	private Coordinates[] balloonCoordinates;
+	private ArrayList<Balloon> balloons = new ArrayList<Balloon>();
 
 	private final Paint paint = new Paint();
-
-	public ShowScoreBalloonView(Context context, AttributeSet attrs, int defStyle) {
-		super(context, attrs, defStyle);
-
-		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BalloonView);
-
-		balloonSize = a.getInt(R.styleable.BalloonView_balloonSize, 12);
-
-		a.recycle();
-	}
 
 	public ShowScoreBalloonView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -65,18 +65,27 @@ public class ShowScoreBalloonView extends View {
 		a.recycle();
 	}
 
-	public void loadBalloon(int key, Drawable Balloon) {
+	public void loadBalloon(int balloonKey, Drawable Balloon) {
 		Bitmap bitmap = Bitmap.createBitmap(balloonSize, balloonSize, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
 		Balloon.setBounds(0, 0, balloonSize, balloonSize);
 		Balloon.draw(canvas);
 
-		balloonArray[key] = bitmap;
+		balloonArray[balloonKey] = bitmap;
 	}
 
-	public void setBalloonCoords(int index, int x, int y) {
-		balloonCoordinates[index].x = x;
-		balloonCoordinates[index].y = y;
+	protected int addBalloon(int balloonKey) {
+		Balloon b = new Balloon();
+		b.x = 0;
+		b.y = 0;
+		b.balloonArrayIndex = balloonKey;
+		balloons.add(b);
+	}
+	
+	public void setBalloonCoords(int balloonNumber, int x, int y) {
+		Balloon b = balloons.get(balloonNumber);
+		b.x = x;
+		b.y = y;
 	}
 
 

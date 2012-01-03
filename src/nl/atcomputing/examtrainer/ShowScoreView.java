@@ -16,14 +16,21 @@
 
 package nl.atcomputing.examtrainer;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.widget.TextView;
+
+/**
+ * @author martijn brekhof
+ *
+ */
 
 public class ShowScoreView extends ShowScoreBalloonView {
 
@@ -38,7 +45,7 @@ public class ShowScoreView extends ShowScoreBalloonView {
     private TextView textView;
 
     private static final Random randomNumberGenerator = new Random();
-
+    
     private RefreshHandler redrawHandler = new RefreshHandler();
 
     class RefreshHandler extends Handler {
@@ -61,7 +68,10 @@ public class ShowScoreView extends ShowScoreBalloonView {
    }
 
     private void init() {
-    	
+    	Resources r = this.getContext().getResources();
+        
+        loadBalloon(0, r.getDrawable(R.drawable.aj_balloon_blue_64));
+        loadBalloon(1, r.getDrawable(R.drawable.aj_balloon_red_64));
     }
 
     protected Bundle saveState() {
@@ -82,15 +92,15 @@ public class ShowScoreView extends ShowScoreBalloonView {
     	currentMode = mode;
     }
     
-    /**
-     * Handles the basic update loop, checking to see if we are in the running
-     * state, determining if a move should be made, updating the snake's location.
-     */
     protected void update() {
         if (currentMode == RUNNING) {
-
+        	updateBalloons();
             redrawHandler.sleep(DELAY);
         }
 
+    }
+    
+    private void updateBalloons() {
+    	//update coordinate of balloons
     }
 }
