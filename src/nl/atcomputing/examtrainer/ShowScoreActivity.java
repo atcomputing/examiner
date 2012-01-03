@@ -10,7 +10,6 @@ import android.widget.TextView;
  */
 
 public class ShowScoreActivity extends Activity {
-	private String KEY = "showscore-key";
 	private ShowScoreView showScoreView;
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -20,34 +19,17 @@ public class ShowScoreActivity extends Activity {
 
         showScoreView = (ShowScoreView) findViewById(R.id.show_score);
         showScoreView.setTextView((TextView) findViewById(R.id.show_score_text));
-
-        if (savedInstanceState == null) {
-        	//Ah we are a new activity. We should
-        	//calculate the score and show it
-        } else {
-            Bundle map = savedInstanceState.getBundle(KEY);
-            if (map != null) {
-            	showScoreView.restoreState(map);
-            } else {
-            	showScoreView.setMode(ShowScoreView.PAUSE);
-            }
-            showScoreView.setMode(ShowScoreView.RUNNING);
-        }
+        
+        showScoreView.update();
     }
 	
-	@Override
-	protected void onRestart() {
+	public void onPause() {
+		super.onPause();
+		showScoreView.setMode(ShowScoreView.PAUSE);
+	}
+	
+	public void onResume() {
+		super.onResume();
 		showScoreView.setMode(ShowScoreView.RUNNING);
 	}
-
-    @Override
-    protected void onStop() {
-        super.onPause();
-        showScoreView.setMode(ShowScoreView.PAUSE);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putBundle(KEY, showScoreView.saveState());
-    }
 }

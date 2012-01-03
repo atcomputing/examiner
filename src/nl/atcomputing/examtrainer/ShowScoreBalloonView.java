@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -18,21 +19,12 @@ import android.view.View;
  */
 
 public class ShowScoreBalloonView extends View {
-
-	class Balloon {
-		int x;
-		int y;
-		int balloonArrayIndex;
-	}
-
+	private static final String TAG = "ShowScoreBalloonView";
 	protected static int balloonSize;
 
 	//Convenience variable to prevent calculating
 	//length of balloonArray
 	protected static int balloonCount;
-
-	//Holds references to the Drawables.
-	private Bitmap[] balloonArray; 
 
 	private ArrayList<Balloon> balloons = new ArrayList<Balloon>();
 
@@ -43,41 +35,35 @@ public class ShowScoreBalloonView extends View {
 
 		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BalloonView);
 
-		balloonSize = a.getInt(R.styleable.BalloonView_balloonSize, 12);
+		balloonSize = a.getInt(R.styleable.BalloonView_balloonSize, 24);
 
 		a.recycle();
 	}
 
-	public Bitmap loadBalloon(int balloonKey, Drawable Balloon) {
-		Bitmap bitmap = Bitmap.createBitmap(balloonSize, balloonSize, Bitmap.Config.ARGB_8888);
+	public Bitmap createBitmap(Drawable Balloon) {
+		Bitmap bitmap = Bitmap.createBitmap(balloonSize, balloonSize * 2, Bitmap.Config.ARGB_8888);
 		Canvas canvas = new Canvas(bitmap);
-		Balloon.setBounds(0, 0, balloonSize, balloonSize);
+		Balloon.setBounds(0, 0, balloonSize, balloonSize * 2);
 		Balloon.draw(canvas);
-
+		return bitmap;
 	}
 
-	protected void addBalloon(int balloonKey) {
-		Balloon b = new Balloon();
-		b.x = 0;
-		b.y = 0;
-		b.balloonArrayIndex = balloonKey;
+	protected void addBalloon(Balloon b) {
 		balloons.add(b);
 	}
-	
-	public void setBalloonCoords(int balloonNumber, int x, int y) {
-		Balloon b = balloons.get(balloonNumber);
-		b.x = x;
-		b.y = y;
-	}
 
+	public void moveBalloon(int balloonNumber, int moveX, int moveY) {
+		Balloon b = balloons.get(balloonNumber);
+		b.move(moveX, moveY);
+	}
 
 	@Override
 	public void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		for ( Balloon b : balloons ) {
-			canvas.drawBitmap(balloonArray[b.balloonArrayIndex],
-					b.x * balloonSize,
-					b.y * balloonSize,
+			canvas.drawBitmap(b.getBitmap(),
+					b.getX(),
+					b.getY(),
 					paint);
 		}
 	}

@@ -33,6 +33,11 @@ public class Balloon  {
 		this.y = y;
 	}
 	
+	protected void move(int x, int y) {
+		this.x += x;
+		this.y += y;
+	}
+	
 	protected int getX() {
 		return this.x;
 	}
@@ -41,7 +46,7 @@ public class Balloon  {
 		return this.y;
 	}
 	
-	protected Bitmap getDrawable() {
+	protected Bitmap getBitmap() {
 		return bitmap;
 	}
 }

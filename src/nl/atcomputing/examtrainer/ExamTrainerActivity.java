@@ -46,7 +46,8 @@ public class ExamTrainerActivity extends Activity {
 		startExam = (Button) findViewById(R.id.button_start);
 		startExam.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(ExamTrainerActivity.this, SelectExamActivity.class);
+				//Intent intent = new Intent(ExamTrainerActivity.this, SelectExamActivity.class);
+				Intent intent = new Intent(ExamTrainerActivity.this, ShowScoreActivity.class);
 				ExamTrainer.setMode(ExamTrainerMode.EXAM);
 				RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.startscreen);
 				Animation hyperspaceJumpAnimation = AnimationUtils.loadAnimation(ExamTrainerActivity.this, R.anim.hyperspace_jump);

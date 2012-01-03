@@ -1,98 +1,114 @@
-
 package nl.atcomputing.examtrainer;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.os.Bundle;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.Display;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 /**
  * @author martijn brekhof
- *
+ * 
  */
 
 public class ShowScoreView extends ShowScoreBalloonView {
 
-    private static final String TAG = "ShowScoreBalloonView";
-    private static final int DELAY = 100;
-    
-    private int currentMode = RUNNING;
-    protected static final int PAUSE = 0;
-    protected static final int RUNNING = 1;
-    
-    private final int RED_BALLOON = 0;
-    private final int BLUE_BALLOON = 1;
+	private static final String TAG = "ShowScoreView";
+	private static final int DELAY = 100;
 
-    private TextView textView;
+	private int mode = RUNNING;
+	protected static final int RUNNING = 0;
+	protected static final int PAUSE = 1;
+	
+	private int displayWidth;
+	private int displayHeight;
 
-    private static final Random randomNumberGenerator = new Random();
-    
-    private RefreshHandler redrawHandler = new RefreshHandler();
+	private int amountOfBalloons;
+	private int amountOfBalloonBitmaps;
+	private Bitmap[] balloonBitmaps;
+	
+	private static final Random randomNumberGenerator = new Random();
 
-    class RefreshHandler extends Handler {
+	private RefreshHandler redrawHandler = new RefreshHandler();
 
-        @Override
-        public void handleMessage(Message msg) {
-            ShowScoreView.this.update();
-            ShowScoreView.this.invalidate();
-        }
+	class RefreshHandler extends Handler {
 
-        public void sleep(long delayMillis) {
-        	this.removeMessages(0);
-            sendMessageDelayed(obtainMessage(0), delayMillis);
-        }
-    };
+		@Override
+		public void handleMessage(Message msg) {
+			ShowScoreView.this.update();
+			ShowScoreView.this.invalidate();
+		}
 
-    public ShowScoreView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init();
-   }
+		public void sleep(long delayMillis) {
+			this.removeMessages(0);
+			sendMessageDelayed(obtainMessage(0), delayMillis);
+		}
+	};
 
-    private void init() {
+	public ShowScoreView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+
+		Display display = ((WindowManager) context
+				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		displayWidth = display.getWidth();
+		displayHeight = display.getHeight();
+
+		init();
+	}
+
+	private void init() {
     	Resources r = this.getContext().getResources();
+    	
+    	amountOfBalloonBitmaps = 2;
+    	
+    	balloonBitmaps = new Bitmap[amountOfBalloonBitmaps];
+    	
+        balloonBitmaps[0] = createBitmap(r.getDrawable(R.drawable.aj_balloon_blue_64));
+        balloonBitmaps[1] = createBitmap(r.getDrawable(R.drawable.aj_balloon_red_64));
         
-        loadBalloon(BLUE_BALLOON, r.getDrawable(R.drawable.aj_balloon_blue_64));
-        loadBalloon(RED_BALLOON, r.getDrawable(R.drawable.aj_balloon_red_64));
+        amountOfBalloons = 2;
         
-        addBalloon(RED_BALLOON);
-        addBalloon(BLUE_BALLOON);
-        
-        setBalloonCoords();
-    }
-
-    protected Bundle saveState() {
-    	Bundle bundle = new Bundle();
-    	return bundle;
-    }
-    
-    protected void restoreState(Bundle bundle) {
-        //We are restored from stopped state
-    	//We need to get the balloon coordinates from the bundle
-    }
-    
-    protected void setTextView(TextView view) {
-        textView = view;
-    }
-
-    protected void setMode(int mode) {
-    	currentMode = mode;
-    }
-    
-    protected void update() {
-        if (currentMode == RUNNING) {
-        	updateBalloons();
-            redrawHandler.sleep(DELAY);
+        for(int i = 0; i < amountOfBalloons; i++) {
+        	Bitmap bitmap = balloonBitmaps[randomNumberGenerator.nextInt(2)];
+        	int x = randomNumberGenerator.nextInt(displayWidth);
+        	int y = randomNumberGenerator.nextInt(displayHeight);
+        	Log.d(TAG, "Balloon: " + x + "," + y );
+        	Balloon b = new Balloon(x, y, bitmap);
+        	addBalloon(b);
         }
+    }
 
-    }
-    
-    private void updateBalloons() {
-    	//update coordinate of balloons
-    }
+	protected void setTextView(TextView view) {
+		//textView = view;
+	}
+
+	protected void setMode(int mode) {
+		this.mode = mode;
+	}
+	
+	protected void update() {
+		if( mode == RUNNING ) {
+			updateBalloons();
+			redrawHandler.sleep(DELAY);
+		}
+	}
+
+	private void updateBalloons() {
+		
+		// update coordinate of balloons
+		for(int i = 0; i < amountOfBalloons; i++) {
+			//Range from -2 to +2
+        	int x = randomNumberGenerator.nextInt(11) - 5;
+        	int y = randomNumberGenerator.nextInt(11) - 5;
+        	Log.d(TAG, "updateBalloons: " + x + "," + y);
+        	this.moveBalloon(i, x, y);
+        }
+	}
 }
