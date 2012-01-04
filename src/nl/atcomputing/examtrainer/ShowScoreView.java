@@ -31,14 +31,6 @@ public class ShowScoreView extends View {
 
 	private static int balloonSizeX;
 	private static int balloonSizeY;
-	
-	private static int windSpeedHorizontal = 0;
-	private static final double windFactorHorizontal = 0.1;
-	private static final double windFactorVertical = 0.1;
-	
-	//Convenience variable to prevent calculating
-	//length of balloonArray
-	private static int balloonCount;
 
 	private ArrayList<Balloon> balloons = new ArrayList<Balloon>();
 
@@ -59,6 +51,8 @@ public class ShowScoreView extends View {
 
 	private RefreshHandler redrawHandler = new RefreshHandler();
 
+	private Wind wind = new Wind();
+	
 	class RefreshHandler extends Handler {
 
 		@Override
@@ -122,70 +116,25 @@ public class ShowScoreView extends View {
 	
 	protected void update() {
 		if( mode == RUNNING ) {
-			updateWind();
 			updateBalloons();
 			redrawHandler.sleep(DELAY);
 		}
 	}
 
-	private void updateWind() {
-		/**
-		Randomly determine if a breeze comes up
-			if so 
-				set breeze to true
-				determine randomly direction
-				determine randomly duration
-				determine randomly maxWindSpeed
-				calculate incrementFactor
-				calculate decrementFactor
-		If breeze
-				if ( windSpeed < maxWindSpeed )
-					windSpeed = windSpeed * incrementFactor;
-				else if ( duration < 0 )
-					windSpeed = windSpeed * decrementFactor;
-					if ( windSpeed == 0 )
-						breeze = false;
-			
-		*/
-		
-		if((randomNumberGenerator.nextInt(10) > 7) && (!wind)) {
-			wind = true;
-			if(randomNumberGenerator.nextBool()) {
-				windDirection = -1;
-			} else {
-				windDirection = 1;
-			}
-			
-			
-			maxWindSpeed = randomNumberGenerator.nextInt(MAX_WIND_SPEED);
-			
-			int incrementPeriod = randomNumberGenerator.nextInt(MAX_INCREMENT_PERIOD);
-			incrementFactor = maxWindSpeed / incrementPeriod;
-			
-			int decrementPeriod = randomNumberGenerator.nextInt(MAX_INCREMENT_PERIOD);
-			decrementFactor = maxWindSpeed / decrementPeriod;
-			
-			//in milliseconds
-			windDuration = randomNumberGenerator.nextInt(MAX_WIND_DURATION) + 
-					incrementPeriod + decrementPeriod;
-		}
-		
-		if ( wind ) {
-			if ( windSpeedHorizontal < maxWindSpeed )
-				windSpeedHorizontal = windSpeed * incrementFactor;
-			else if ( duration < 0 )
-				windSpeedHorizontal = windSpeed * decrementFactor;
-				if ( windSpeed == 0 )
-					wind = false;
-		}
-	}
+	
 	
 	private void updateBalloons() {
+		
+		int windSpeedHorizontal = wind.getWind();
+		if(wind.getDirection() == Wind.Direction.LEFT ) {
+			windSpeedHorizontal = -windSpeedHorizontal;
+		}
 		
 		// update coordinate of balloons
 		for(int i = 0; i < amountOfBalloons; i++) {
 			//Range from -2 to +2
-        	int y = -20 + randomNumberGenerator.nextInt(5);
+        	//int y = -10 + randomNumberGenerator.nextInt(5);
+			int y = -2;
         	this.moveBalloon(i, windSpeedHorizontal, y);
         }
 	}
@@ -205,6 +154,14 @@ public class ShowScoreView extends View {
 	public void moveBalloon(int balloonNumber, int moveX, int moveY) {
 		Balloon b = balloons.get(balloonNumber);
 		b.move(moveX, moveY);
+		if(b.getY() < 0) {
+			b.setCoords(b.getX(), this.displayHeight);
+		}
+		if(Math.abs(b.getX()) > 1000) {
+			Log.d(TAG, "Resetting balloon");
+			b.setCoords(100, b.getY());
+		}
+		Log.d(TAG, "Balloon at "+b.getX()+","+b.getY());
 	}
 
 	@Override
