@@ -2,6 +2,10 @@
 <resources>
 	<string name="startscreen_quote">&#8220;Kan niet\n"   "bestaat niet&#8221;</string>
 	<string name="Error">Fout</string>
+	<string name="Calculating_your_score">Score berekenen</string>
+	<string name="You_passed">Geslaagd</string>
+	<string name="You_failed">Gezakt</string>
+	<string name="Gongratulations">Gefeliciteerd</string>
 	<string name="Could_not_open_exam_database_file">Kan het examen niet openen.</string>
 	<string name="Try_reinstalling_the_exam">Probeer het examen opnieuw te installeren.</string>
 	<string name="Exam_is_empty">Examen is leeg.</string>

@@ -20,7 +20,7 @@ public class ShowScoreActivity extends Activity {
         showScoreView = (ShowScoreView) findViewById(R.id.show_score);
         showScoreView.setTextView((TextView) findViewById(R.id.show_score_text));
         
-        showScoreView.update();
+        showScoreView.start();
     }
 	
 	public void onPause() {

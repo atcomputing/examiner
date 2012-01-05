@@ -138,10 +138,10 @@ public class Wind  {
 					this.speedHorizontal += this.incrementSteps;
 				}
 			}
-			Log.d(TAG, "Blowing: speed="+this.speedHorizontal);
+			//Log.d(TAG, "Blowing: speed="+this.speedHorizontal);
 			return (int) this.speedHorizontal;
 		} else {
-			Log.d(TAG, "Not blowing");
+			//Log.d(TAG, "Not blowing");
 			//No wind? Not possible so we return a small random speed
 			return randomNumberGenerator.nextInt(3) + 1;
 		}
