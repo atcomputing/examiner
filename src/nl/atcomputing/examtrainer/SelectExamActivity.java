@@ -38,9 +38,9 @@ public class SelectExamActivity extends Activity {
 		setContentView(R.layout.selectexam);
 	}
 
-	protected void onResume() {
+		protected void onResume() {
 		super.onResume();
-		ExamTrainer.showProgressDialog(this);
+		ExamTrainer.showProgressDialog(this, this.getString(R.string.Loading_Please_wait));
 		
 		ListView selectExam = (ListView) this.findViewById(R.id.select_exam_list);
 		TextView noExamsAvailable = (TextView) this.findViewById(R.id.selectexam_no_exams_available);

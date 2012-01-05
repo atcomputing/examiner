@@ -75,7 +75,6 @@ public class ExamQuestionsActivity extends Activity {
 			cursorQuestion.close();
 			}
 		}
-		examinationDbHelper.close();
 	}
 
 	protected void onPause() {
@@ -133,22 +132,6 @@ public class ExamQuestionsActivity extends Activity {
 		String message;
 		AlertDialog.Builder builder;
 		switch(id) {
-		case DIALOG_SHOW_SCORE_ID:
-			int score = calculateScore();
-			builder = new AlertDialog.Builder(this);
-
-			message = getString(R.string.Score) + ": " + Integer.toString(score);
-			builder.setMessage(message)
-			.setCancelable(false)
-			.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					startShowScores();
-					dialog.dismiss();
-					finish();
-				}
-			});
-			dialog = builder.create();
-			break;
 		case DIALOG_ENDOFEXAM_ID:
 			builder = new AlertDialog.Builder(this);
 			int messageId;
@@ -159,7 +142,7 @@ public class ExamQuestionsActivity extends Activity {
 			.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					if( ExamTrainer.getMode() == ExamTrainerMode.EXAM ) {
-						showDialog(DIALOG_SHOW_SCORE_ID);
+						startShowScoreActivity();
 					} 
 					else {
 						stopExam();
@@ -227,8 +210,8 @@ public class ExamQuestionsActivity extends Activity {
 		cursor.close();
 	}
 
-	private void startShowScores() {
-		Intent intent = new Intent(ExamQuestionsActivity.this, HistoryActivity.class);
+	private void startShowScoreActivity() {
+		Intent intent = new Intent(ExamQuestionsActivity.this, ShowScoreActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
@@ -368,35 +351,4 @@ public class ExamQuestionsActivity extends Activity {
 		});
 	}
 
-	private int calculateScore() {
-		long examId = ExamTrainer.getExamId();
-
-		List<Long> questionIDsList = examinationDbHelper.getAllQuestionIDs();
-		int amountOfQuestions = questionIDsList.size();
-		int answers_correct = 0;
-		for(int i = 0; i < amountOfQuestions; i++) {
-			long questionId = questionIDsList.get(i);
-
-			String questionType = examinationDbHelper.getQuestionType(questionId);
-			boolean answerCorrect = false;
-			if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-				answerCorrect = examinationDbHelper.checkScoresAnswersOpen(questionId, examId);
-			}
-			else {
-				answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(questionId, examId);
-			}
-
-			if ( answerCorrect ) {
-				answers_correct++;
-				examinationDbHelper.addResultPerQuestion(examId, questionId, true);
-			}
-			else {
-				examinationDbHelper.addResultPerQuestion(examId, questionId, false);
-			}
-
-		}
-
-		examinationDbHelper.updateScore(examId, answers_correct);
-		return answers_correct;
-	}
 }

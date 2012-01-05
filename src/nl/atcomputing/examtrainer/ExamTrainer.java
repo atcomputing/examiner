@@ -1,11 +1,14 @@
 package nl.atcomputing.examtrainer;
 
+import java.util.List;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteException;
 import android.text.format.Time;
 import android.util.Log;
 
@@ -24,6 +27,7 @@ public final class ExamTrainer {
 	private static ExamTrainerMode mode = ExamTrainerMode.EXAM;
 	private static long examId = -1;
 	private static long itemsNeededToPass = 0;
+	private static long totalAmountOfItems = 0;
 	private static final String questionNumber = "questionNumber";
 	private static final String endOfExam = "endOfExam";
 	private static boolean KEEP_PROGRESS_DIALOG_RUNNING = false;
@@ -74,6 +78,14 @@ public final class ExamTrainer {
 		return examDatabaseName;
 	}
 
+	public static void setAmountOfItems(long n) {
+		totalAmountOfItems = n;
+	}
+	
+	public static long getAmountOfItems() {
+		return totalAmountOfItems;
+	}
+	
 	public static void setExamTitle(String title) {
 		examTitle = title;
 	}
@@ -112,15 +124,15 @@ public final class ExamTrainer {
 		return time.format("%Y-%m-%d %H:%M");
 	}
 	
-	public static void showProgressDialog(Context context) {
+	public static void showProgressDialog(Context context, String message) {
 		if( KEEP_PROGRESS_DIALOG_RUNNING == true ) {
 			//Only one Progress Dialog is allowed to run simultaneously
-			Log.d(TAG, "Another Progress Dialog still seems to be active.\nForgot to call ExamTrainer.stopDialog()?");
+			Log.d(TAG, "Another Progress Dialog still seems to be active.\nForgot to call ExamTrainer.stopProgressDialog()?");
 			return;
 		}
 		KEEP_PROGRESS_DIALOG_RUNNING = true;
 		final ProgressDialog dialog = ProgressDialog.show(context, "", 
-				context.getString(R.string.Loading_Please_wait), true, false);
+				message, true, false);
         Thread thread = new Thread(new Runnable() {
             public void run() {
                 while( KEEP_PROGRESS_DIALOG_RUNNING == true ) {
@@ -157,4 +169,43 @@ public final class ExamTrainer {
 		alert.show();
 	}
 	
+	public static long calculateScore(Context context) throws SQLiteException {
+		ExaminationDbAdapter examinationDbHelper;
+		
+		examinationDbHelper = new ExaminationDbAdapter(context);
+		try {
+			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+		} catch (SQLiteException e) {
+			throw(e);
+		}
+		
+		List<Long> questionIDsList = examinationDbHelper.getAllQuestionIDs();
+		int amountOfQuestions = questionIDsList.size();
+		long answers_correct = 0;
+		for(int i = 0; i < amountOfQuestions; i++) {
+			long questionId = questionIDsList.get(i);
+
+			String questionType = examinationDbHelper.getQuestionType(questionId);
+			boolean answerCorrect = false;
+			if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
+				answerCorrect = examinationDbHelper.checkScoresAnswersOpen(questionId, examId);
+			}
+			else {
+				answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(questionId, examId);
+			}
+
+			if ( answerCorrect ) {
+				answers_correct++;
+				examinationDbHelper.addResultPerQuestion(examId, questionId, true);
+			}
+			else {
+				examinationDbHelper.addResultPerQuestion(examId, questionId, false);
+			}
+
+		}
+
+		examinationDbHelper.updateScore(examId, answers_correct);
+		examinationDbHelper.close();
+		return answers_correct;
+	}
 }

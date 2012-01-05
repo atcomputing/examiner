@@ -31,7 +31,7 @@ public class HistoryActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);        
         
-		ExamTrainer.showProgressDialog(this);
+		ExamTrainer.showProgressDialog(this, this.getString(R.string.Loading_Please_wait));
         
 		setContentView(R.layout.history);
 		

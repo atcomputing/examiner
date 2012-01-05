@@ -6,6 +6,7 @@ import java.util.Random;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -13,7 +14,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -26,6 +26,10 @@ import android.widget.TextView;
 
 public class ShowScoreView extends View {
 
+	private Context context;
+	
+	private TextView textView;
+	
 	private static final String TAG = "ShowScoreView";
 	private static final int DELAY = 50;
 
@@ -51,7 +55,7 @@ public class ShowScoreView extends View {
 
 	private RefreshHandler redrawHandler = new RefreshHandler();
 
-	private Wind wind = new Wind();
+	private Wind wind;
 	
 	class RefreshHandler extends Handler {
 
@@ -70,8 +74,10 @@ public class ShowScoreView extends View {
 	public ShowScoreView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
-		Display display = ((WindowManager) context
-				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+		this.context = context;
+		
+		Display display = ((WindowManager) 
+				context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
 		displayWidth = display.getWidth();
 		displayHeight = display.getHeight();
 
@@ -81,33 +87,67 @@ public class ShowScoreView extends View {
 		balloonSizeY = a.getInt(R.styleable.BalloonView_balloonSizeY, 113);
 		
 		a.recycle();
-		
-		init();
-	}
-
-	private void init() {
-    	Resources r = this.getContext().getResources();
+	
+    	ExamTrainer.showProgressDialog(context, context.getString(R.string.Calculating_your_score));
+    	long score = 0;
     	
-    	amountOfBalloonBitmaps = 2;
+    	try{
+    		score = ExamTrainer.calculateScore(context);
+    	} catch (SQLiteException e) {
+    		//Oops failed to calculate score
+    	}
     	
-    	balloonBitmaps = new Bitmap[amountOfBalloonBitmaps];
+    	this.amountOfBalloons = 0;
+    	long scoreNeededToPass = ExamTrainer.getItemsNeededToPass();
     	
-        balloonBitmaps[0] = createBitmap(r.getDrawable(R.drawable.aj_balloon_blue_64));
-        balloonBitmaps[1] = createBitmap(r.getDrawable(R.drawable.aj_balloon_red_64));
-        
-        amountOfBalloons = 2;
-        
-        for(int i = 0; i < amountOfBalloons; i++) {
-        	Bitmap bitmap = balloonBitmaps[randomNumberGenerator.nextInt(2)];
-        	int x = randomNumberGenerator.nextInt(displayWidth);
-        	int y = displayHeight;
-        	Balloon b = new Balloon(x, y, bitmap);
-        	addBalloon(b);
-        }
+    	if( score >= scoreNeededToPass ) {
+    		textView.setText(this.getResources().getString(R.string.Gongratulations) + "\n" + 
+    				this.getResources().getString(R.string.You_passed));
+    		//determine amount of balloons
+    		long totalAmountOfItems = ExamTrainer.getAmountOfItems();
+    		long amountOfWrongAnswers = totalAmountOfItems - score;
+    		if ( amountOfWrongAnswers < 1 ) {
+    			amountOfWrongAnswers = 1;
+    		}
+    		this.amountOfBalloons = Math.round((totalAmountOfItems - scoreNeededToPass) / amountOfWrongAnswers);
+    	
+    		setupWind();
+    		setupBalloons();
+    		
+    	} else {
+    		textView.setText(this.getResources().getString(R.string.You_failed));
+    	}
+    	
+    	ExamTrainer.stopProgressDialog();
+    	textView.setVisibility(View.VISIBLE);
     }
 
+	private void setupWind() {
+		//setup wind
+		this.wind = new Wind();
+		this.wind.setWindSpeedUpperLimit(10);
+		this.wind.setWindChance(4);
+	}
+	
+	private void setupBalloons() {
+		Resources r = this.getContext().getResources();
+    	
+		this.balloonBitmaps = new Bitmap[amountOfBalloonBitmaps];
+	
+		this.balloonBitmaps[0] = createBitmap(r.getDrawable(R.drawable.aj_balloon_blue_64));
+		this.balloonBitmaps[1] = createBitmap(r.getDrawable(R.drawable.aj_balloon_red_64));
+    
+		for(int i = 0; i < amountOfBalloons; i++) {
+			Bitmap bitmap = balloonBitmaps[randomNumberGenerator.nextInt(2)];
+			int x = randomNumberGenerator.nextInt(displayWidth);
+			int y = displayHeight + randomNumberGenerator.nextInt(20);;
+			Balloon b = new Balloon(x, y, bitmap);
+			this.balloons.add(b);
+		}
+	}
+	
 	protected void setTextView(TextView view) {
-		//textView = view;
+		textView = view;
 	}
 
 	protected void setMode(int mode) {
@@ -147,21 +187,20 @@ public class ShowScoreView extends View {
 		return bitmap;
 	}
 
-	protected void addBalloon(Balloon b) {
-		balloons.add(b);
-	}
-
 	public void moveBalloon(int balloonNumber, int moveX, int moveY) {
 		Balloon b = balloons.get(balloonNumber);
 		b.move(moveX, moveY);
-		if(b.getY() < 0) {
-			b.setCoords(b.getX(), this.displayHeight);
-		}
-		if(Math.abs(b.getX()) > 1000) {
-			Log.d(TAG, "Resetting balloon");
-			b.setCoords(100, b.getY());
-		}
-		Log.d(TAG, "Balloon at "+b.getX()+","+b.getY());
+//		if(( b.getY() + balloonSizeY ) < 0) {
+//			b.setCoords(b.getX(), this.displayHeight);
+//		}
+//		
+//		if(( b.getX() + balloonSizeX ) < 0) {
+//			b.setCoords(this.displayWidth + balloonSizeX, b.getY());
+//		}
+//		else if(b.getX() > this.displayWidth) {
+//			b.setCoords(0 - balloonSizeX, b.getY());
+//		}
+		//Log.d(TAG, "Balloon at "+b.getX()+","+b.getY());
 	}
 
 	@Override

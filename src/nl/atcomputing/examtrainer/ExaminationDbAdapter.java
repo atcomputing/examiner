@@ -144,7 +144,7 @@ public class ExaminationDbAdapter {
 	 * @param score the score for the specific exam
 	 * @return boolean true if update was succesful, false otherwise
 	 */
-	public boolean updateScore(long id, int score) {
+	public boolean updateScore(long id, long score) {
 		ContentValues values = new ContentValues();
 		values.put(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE, score);
 		return db.update(ExaminationDatabaseHelper.Scores.TABLE_NAME, values, 
