@@ -94,8 +94,8 @@ public class ShowScoreView extends View {
 
 	private void setupWind() {
 		//setup wind
-		this.wind = new Wind();
-		this.wind.setWindSpeedUpperLimit(5);
+		this.wind = new Wind(this.context);
+		this.wind.setWindSpeedUpperLimit(20);
 		this.wind.setWindChance(4);
 	}
 	
@@ -169,6 +169,7 @@ public class ShowScoreView extends View {
 		if( mode == RUNNING ) {
 			if( balloons.size() > 0 ) {
 				updateBalloons();
+				wind.update();
 			}
 			redrawHandler.sleep(DELAY);
 		}
@@ -178,19 +179,10 @@ public class ShowScoreView extends View {
 	
 	private void updateBalloons() {
 		
-		int windSpeedHorizontal;
-		
 		int size = balloons.size();
-		// update coordinate of balloons
 		for(int i = 0; i < size; i++) {
-			windSpeedHorizontal = wind.getWind();
-			if(wind.getDirection() == Wind.Direction.LEFT ) {
-				windSpeedHorizontal = -windSpeedHorizontal;
-			}
-			//Range from -2 to +2
-        	//int y = -10 + randomNumberGenerator.nextInt(5);
-			int y = -6;
-        	if( ! this.moveBalloon(i, windSpeedHorizontal, y) ) {
+			
+        	if( ! this.moveBalloon(i) ) {
         		this.balloons.remove(i);
         		i--;
         		size--;
@@ -212,7 +204,7 @@ public class ShowScoreView extends View {
 	 * @param moveY
 	 * @return true if balloon was moved, false if balloon reached top of screen
 	 */
-	public boolean moveBalloon(int balloonNumber, int moveX, int moveY) {
+	public boolean moveBalloon(int balloonNumber) {
 		Balloon b = balloons.get(balloonNumber);
 		
 		if(( b.getY() + balloonSizeY ) < 0) {
@@ -223,7 +215,16 @@ public class ShowScoreView extends View {
                 b.setCoords(0 - balloonSizeX, b.getY());
         }
 
-		b.move(moveX, moveY);
+		//Range from -2 to +2
+    	//int y = -10 + randomNumberGenerator.nextInt(5);
+		int yIncrement = -6;
+		
+		int windSpeedHorizontal = wind.getWind(this.displayHeight - (b.getY() + yIncrement));
+		if(wind.getDirection() == Wind.Direction.LEFT ) {
+			windSpeedHorizontal = -windSpeedHorizontal;
+		}
+		
+		b.move(windSpeedHorizontal, yIncrement);
 		return true;
 		//Log.d(TAG, "Balloon at "+b.getX()+","+b.getY());
 	}
