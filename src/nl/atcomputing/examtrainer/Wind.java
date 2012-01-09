@@ -17,9 +17,9 @@ public class Wind  {
 	private static final String TAG = "Wind";
 	
 	//Times are in milliseconds
-	private static final int MAX_INCREMENT_PERIOD = 20;
-	private static final int MAX_DECREMENT_PERIOD = 40;
-	private static final int MAX_WIND_PERIOD = 1000;
+	private static final int MAX_INCREMENT_PERIOD = 10;
+	private static final int MAX_DECREMENT_PERIOD = 10;
+	private static final int MAX_WIND_PERIOD = 50;
 	
 	protected enum Direction {
 		LEFT, RIGHT
@@ -33,9 +33,11 @@ public class Wind  {
 	private double maxSpeed;
 	private double incrementSteps;
 	private double decrementSteps;
+	private int windIterations;
 	private double speedHorizontal;
 	private int chance;
 	private int speedUpperLimit;
+	private boolean buildingUp;
 	private int displayHeight;
 	private int windIncreaseFactor;
 	
@@ -113,14 +115,17 @@ public class Wind  {
 				direction = Wind.Direction.RIGHT;
 			}
 			
-			int incrementPeriod = randomNumberGenerator.nextInt(MAX_INCREMENT_PERIOD) + 1;
+			//int incrementPeriod = randomNumberGenerator.nextInt(MAX_INCREMENT_PERIOD) + 1;
+			int incrementPeriod = MAX_INCREMENT_PERIOD;
 			this.incrementSteps = this.maxSpeed / incrementPeriod;
 			
-			int decrementPeriod = randomNumberGenerator.nextInt(MAX_DECREMENT_PERIOD) + 1;
+			//int decrementPeriod = randomNumberGenerator.nextInt(MAX_DECREMENT_PERIOD) + 1;
+			int decrementPeriod = MAX_DECREMENT_PERIOD;
 			this.decrementSteps = this.maxSpeed / decrementPeriod;
 			
-			int blowPeriod = randomNumberGenerator.nextInt(MAX_WIND_PERIOD) + 
+			int blowPeriod = MAX_WIND_PERIOD + 
 					incrementPeriod + decrementPeriod;
+			windIterations = MAX_WIND_PERIOD;
 			
 			Log.d(TAG, "blowPeriod: "+ blowPeriod +
 					"\nmaxSpeed: " + this.maxSpeed +
@@ -131,43 +136,40 @@ public class Wind  {
 					"\ndirection: " + this.direction
 					);
 			
-			//We setup a timer for the blowPeriod
-			setBlowPeriodPassed(false);
-			new CountDownTimer(blowPeriod, blowPeriod) {
-				
-				public void onTick(long millisUntilFinished) {
-			    }
-				
-			     public void onFinish() {
-			    	 setBlowPeriodPassed(true);
-			     }
-			  }.start();
-			  
+			  this.speedHorizontal = 0.0;
+			  this.buildingUp = true;
 		} else {
-			if (this.blowPeriodPassed ) {
+			//first build up to max wind
+			if ( (this.speedHorizontal < this.maxSpeed) && this.buildingUp ){
+				Log.d(TAG, "Incrementing speed="+this.speedHorizontal);
+				this.speedHorizontal += this.incrementSteps;
+			} else {
+				this.buildingUp = false;
+				//maintain max wind for windIterations
+				if (this.windIterations < 0)
 				this.speedHorizontal -= decrementSteps;
 				Log.d(TAG, "Decrementing speed="+this.speedHorizontal);
 				if ( this.speedHorizontal < 0.0 ) {
 					this.speedHorizontal = 0.0;
 					this.blowing = false;
+				} else {
+					this.windIterations--;
 				}
-			} else {
 				
-				if ( this.speedHorizontal < this.maxSpeed) {
-					Log.d(TAG, "Incrementing speed="+this.speedHorizontal);
-					this.speedHorizontal += this.incrementSteps;
-				}
 			}
+			
 		}
 	}
 	
 	protected int getWind(int height) {
-		int normalizedHeightFactor = (int) ((height/(double) this.displayHeight) 
-				* this.windIncreaseFactor);
-		int relativeSpeedHorizontal = ((int) this.speedHorizontal) + normalizedHeightFactor;
+		double normalizedHeightFactor = height/(double) this.displayHeight;
+		int relativeSpeedHorizontal = (int) (Math.round(this.speedHorizontal) * normalizedHeightFactor);
 		
-		//Log.d(TAG, "Blowing: height: " + height + " speed="+this.speedHorizontal);
+//		Log.d(TAG, "Blowing: height: " + height + " speed="+this.speedHorizontal
+//				+" normalizedHeightFactor=" + normalizedHeightFactor
+//				+" relative speed="+relativeSpeedHorizontal);
 		return relativeSpeedHorizontal;
+//		return (int) Math.round(this.speedHorizontal);
 	}
 	
 	private void setBlowPeriodPassed(boolean b) {

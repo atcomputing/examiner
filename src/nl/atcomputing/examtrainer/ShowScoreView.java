@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -96,7 +97,7 @@ public class ShowScoreView extends View {
 		//setup wind
 		this.wind = new Wind(this.context);
 		this.wind.setWindSpeedUpperLimit(20);
-		this.wind.setWindChance(4);
+		this.wind.setWindChance(100);
 	}
 	
 	private void setupBalloons() {
