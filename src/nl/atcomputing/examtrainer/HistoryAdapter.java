@@ -15,14 +15,11 @@ import android.widget.TextView;
  */
 
 public class HistoryAdapter extends CursorAdapter  {
-	private final String TAG = this.getClass().getName();
 	private int layout;
-	    private Context context;
 	    
 	    public HistoryAdapter(Context context, int layout, Cursor c) {
 	      super(context, c);
 	      this.layout = layout;
-	      this.context = context;
 	    }
 
 		@Override

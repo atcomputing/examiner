@@ -23,7 +23,6 @@ import android.widget.Toast;
  */
 
 public class ManageExamsAdapter extends CursorAdapter  {
-	private final String TAG = this.getClass().getName();
 	private Context gContext;
 	private int layout;
 	    

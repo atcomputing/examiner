@@ -3,7 +3,6 @@
 package nl.atcomputing.examtrainer;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 
 /**
  * @author martijn brekhof

@@ -3,8 +3,6 @@ package nl.atcomputing.examtrainer;
 import java.util.Random;
 
 import android.content.Context;
-import android.os.CountDownTimer;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -123,32 +121,30 @@ public class Wind  {
 			int decrementPeriod = MAX_DECREMENT_PERIOD;
 			this.decrementSteps = this.maxSpeed / decrementPeriod;
 			
-			int blowPeriod = MAX_WIND_PERIOD + 
-					incrementPeriod + decrementPeriod;
 			windIterations = MAX_WIND_PERIOD;
 			
-			Log.d(TAG, "blowPeriod: "+ blowPeriod +
-					"\nmaxSpeed: " + this.maxSpeed +
-					"\nincrementPeriod: " + incrementPeriod +
-					"\ndecrementPeriod: " + decrementPeriod +
-					"\nincrementFactor: " + this.incrementSteps +
-					"\ndecrementFactor: " + this.decrementSteps +
-					"\ndirection: " + this.direction
-					);
+//			Log.d(TAG, "blowPeriod: "+ blowPeriod +
+//					"\nmaxSpeed: " + this.maxSpeed +
+//					"\nincrementPeriod: " + incrementPeriod +
+//					"\ndecrementPeriod: " + decrementPeriod +
+//					"\nincrementFactor: " + this.incrementSteps +
+//					"\ndecrementFactor: " + this.decrementSteps +
+//					"\ndirection: " + this.direction
+//					);
 			
 			  this.speedHorizontal = 0.0;
 			  this.buildingUp = true;
 		} else {
 			//first build up to max wind
 			if ( (this.speedHorizontal < this.maxSpeed) && this.buildingUp ){
-				Log.d(TAG, "Incrementing speed="+this.speedHorizontal);
+//				Log.d(TAG, "Incrementing speed="+this.speedHorizontal);
 				this.speedHorizontal += this.incrementSteps;
 			} else {
 				this.buildingUp = false;
 				//maintain max wind for windIterations
 				if (this.windIterations < 0)
 				this.speedHorizontal -= decrementSteps;
-				Log.d(TAG, "Decrementing speed="+this.speedHorizontal);
+//				Log.d(TAG, "Decrementing speed="+this.speedHorizontal);
 				if ( this.speedHorizontal < 0.0 ) {
 					this.speedHorizontal = 0.0;
 					this.blowing = false;
@@ -170,10 +166,5 @@ public class Wind  {
 //				+" relative speed="+relativeSpeedHorizontal);
 		return relativeSpeedHorizontal;
 //		return (int) Math.round(this.speedHorizontal);
-	}
-	
-	private void setBlowPeriodPassed(boolean b) {
-		this.blowPeriodPassed = b;
-		Log.d(TAG, "blow period passed");
 	}
 }

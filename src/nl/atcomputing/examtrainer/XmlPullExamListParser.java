@@ -3,16 +3,11 @@ package nl.atcomputing.examtrainer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.TimeZone;
 
 import org.xmlpull.v1.XmlPullParser;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteException;
-import android.util.Log;
 import android.util.Xml;
 
 /**
@@ -21,7 +16,6 @@ import android.util.Xml;
  */
 
 public class XmlPullExamListParser {
-	private static final String TAG = "XmlPullExamListParser";
 	private Context context;
 	private ArrayList<Exam> exams;
 	final URL url;

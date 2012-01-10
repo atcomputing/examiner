@@ -28,31 +28,22 @@ import android.widget.Toast;
 //http://www.codemobiles.com/forum/viewtopic.php?t=876
 
 public class ManageExamsActivity extends ListActivity {
-	private final String TAG = this.getClass().getName();
 	private ManageExamsAdapter adap;
-	private ExamTrainerDbAdapter examTrainerDbHelper;
 	static final int DIALOG_CONFIRMATION_ID = 0;
 	private TextView noExamsAvailable;
-    private TextView clickOnManageExams;
-    
+	private TextView clickOnManageExams;
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d("trace", "ManageExamsActivity created");
 		setContentView(R.layout.manageexams);
-		
+
 		noExamsAvailable = (TextView) this.findViewById(R.id.manageexams_no_exams_available);
-	    clickOnManageExams = (TextView) this.findViewById(R.id.manageexams_click_on_manage_exams);
-	    
-		examTrainerDbHelper = new ExamTrainerDbAdapter(this);
-		examTrainerDbHelper.open();
-		
+		clickOnManageExams = (TextView) this.findViewById(R.id.manageexams_click_on_manage_exams);		
+
 		adap = new ManageExamsAdapter(this, R.layout.manageexams_entry, null);
 		setListAdapter(adap);
 		updateView();
-	}
-
-	protected void onDestroy() {
-		super.onDestroy();
-		examTrainerDbHelper.close();
 	}
 
 	@Override
@@ -86,9 +77,9 @@ public class ManageExamsActivity extends ListActivity {
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog;
 		AlertDialog.Builder builder;
-	    switch(id) {
-	    case DIALOG_CONFIRMATION_ID:
-	    	builder = new AlertDialog.Builder(this);
+		switch(id) {
+		case DIALOG_CONFIRMATION_ID:
+			builder = new AlertDialog.Builder(this);
 			builder.setMessage(this.getString(R.string.Are_you_sure_you_want_to_delete_all_exams))
 			.setCancelable(false)
 			.setPositiveButton(this.getString(R.string.Yes), new DialogInterface.OnClickListener() {
@@ -102,62 +93,73 @@ public class ManageExamsActivity extends ListActivity {
 				}
 			});
 			dialog = builder.create();
-	        break;
-	    default:
-	        dialog = null;
-	    }
-	    return dialog;
+			break;
+		default:
+			dialog = null;
+		}
+		return dialog;
 	}
-	
+
 	private void deleteAllExams() {
-		  int index;
-		  long examId;
-		  long examDate;
-		  String examTitle;
-		  
-		  ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
-		  Cursor cursor = examTrainerDbHelper.getAllExams();
-		  do {
-			  index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
-			  examTitle = cursor.getString(index);
-			  index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE);
-			  examDate = cursor.getLong(index);
-			  index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID);
-			  examId = cursor.getLong(index);
-			  
-			  if( examinationDbHelper.delete(examTitle, examDate) )  {
-				  if( ! examTrainerDbHelper.deleteExam(examId) ) {
-					  Toast.makeText(this, this.getString(R.string.Failed_to_delete_exam) + 
-							  examTitle, Toast.LENGTH_LONG).show();
-				  }
-			  } else {
-				  Toast.makeText(this, this.getString(R.string.Could_not_remove_exam_database_file) + 
-						  examTitle, Toast.LENGTH_LONG).show();
-			  }
-		  } while(cursor.moveToNext());
-		  
-		  updateView();
+		int index;
+		long examId;
+		long examDate;
+		String examTitle;
+
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+		Cursor cursor = examTrainerDbHelper.getAllExams();
+		do {
+			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
+			examTitle = cursor.getString(index);
+			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE);
+			examDate = cursor.getLong(index);
+			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID);
+			examId = cursor.getLong(index);
+
+			if( examinationDbHelper.delete(examTitle, examDate) )  {
+				if( ! examTrainerDbHelper.deleteExam(examId) ) {
+					Toast.makeText(this, this.getString(R.string.Failed_to_delete_exam) + 
+							examTitle, Toast.LENGTH_LONG).show();
+				}
+			} else {
+				Toast.makeText(this, this.getString(R.string.Could_not_remove_exam_database_file) + 
+						examTitle, Toast.LENGTH_LONG).show();
+			}
+		} while(cursor.moveToNext());
+
+		cursor.close();
+		examinationDbHelper.close();
+		examTrainerDbHelper.close();
+		updateView();
 	}
 
 	private void updateView() {
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+		examTrainerDbHelper.open();
 		Cursor cursor = examTrainerDbHelper.getAllExams();
 		
-		if(cursor.getCount() > 0) {
+		if ( (cursor == null) || (cursor.getCount() == 0) ) {
+			noExamsAvailable.setVisibility(View.VISIBLE);
+			clickOnManageExams.setVisibility(View.VISIBLE);
+
+		} else {
 			//Remove exams not available text when there are exams installed
 			noExamsAvailable.setVisibility(View.GONE);
 			clickOnManageExams.setVisibility(View.GONE);
-		} else {
-			noExamsAvailable.setVisibility(View.VISIBLE);
-			clickOnManageExams.setVisibility(View.VISIBLE);
+			cursor.close();
 		}
-		adap.changeCursor(cursor);
+		
+		examTrainerDbHelper.close();
 		adap.updateView();
 	}
-	
+
 	private void loadLocalExams() {
 		int file_index = 0;
 		String[] filenames = null;
 
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+		examTrainerDbHelper.open();
 		AssetManager assetManager = getAssets();
 
 		if( assetManager != null ) {
@@ -184,6 +186,7 @@ public class ManageExamsActivity extends ListActivity {
 				Toast.makeText(this, "Error: updating exam " + filenames[file_index] + " failed.", Toast.LENGTH_LONG).show();
 			}
 		}
+		examTrainerDbHelper.close();
 	}
 
 	private void loadRemoteExams() {

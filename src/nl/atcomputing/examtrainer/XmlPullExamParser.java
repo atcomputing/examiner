@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import org.xmlpull.v1.XmlPullParser;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.Xml;
 
 /**
@@ -17,7 +16,6 @@ import android.util.Xml;
  */
 
 public class XmlPullExamParser {
-	private static final String TAG = "XmlPullExamParser";
 	private ArrayList<ExamQuestion> examQuestions = new ArrayList<ExamQuestion>();
 	private Context context;
 	final URL url;

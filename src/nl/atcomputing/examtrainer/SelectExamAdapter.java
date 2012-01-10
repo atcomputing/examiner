@@ -16,7 +16,6 @@ import android.widget.TextView;
  */
 
 public class SelectExamAdapter extends CursorAdapter  {
-	private final String TAG = this.getClass().getName();
 	private int layout;
 	    private ArrayList<Long> examIds;
 	    public SelectExamAdapter(Context context, int layout, Cursor c) {

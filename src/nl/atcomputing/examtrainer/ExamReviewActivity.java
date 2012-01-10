@@ -1,27 +1,14 @@
 package nl.atcomputing.examtrainer;
 
-import java.util.ArrayList;
-
-import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.database.Cursor;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.GridView;
 
 /**
  * @author martijn brekhof
@@ -33,13 +20,13 @@ public class ExamReviewActivity extends Activity {
 	private GridView scoresGrid;
 	private ExamReviewAdapter adapter; 
 	private Cursor cursor;
-	private Button cancelButton;
 	private long examId;
 	
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		Log.d("trace", "ExamReviewActivity created");
+		
 		ExamTrainer.showProgressDialog(this, this.getString(R.string.Loading_Please_wait));
 		
 		setContentView(R.layout.review_exam);
@@ -60,6 +47,7 @@ public class ExamReviewActivity extends Activity {
 
 	protected void onDestroy() {
 		super.onDestroy();
+		Log.d("trace", "ExamReviewActivity destroyed");
 		if( cursor != null ) {
 			cursor.close();
 		}
@@ -70,8 +58,8 @@ public class ExamReviewActivity extends Activity {
 		scoresGrid.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionsActivity.class);
-				ExamTrainer.setMode(ExamTrainerMode.REVIEW);
+				Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionActivity.class);
+				ExamTrainer.setReview();
 				ExamTrainer.setQuestionNumber(intent, adapter.getItemId(position));
 				startActivity(intent);
 			}

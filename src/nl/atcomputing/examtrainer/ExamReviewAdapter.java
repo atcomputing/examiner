@@ -1,27 +1,16 @@
 package nl.atcomputing.examtrainer;
 
-import java.util.ArrayList;
-
-import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.AdapterView.OnItemClickListener;
 
 /**
  * @author martijn brekhof
@@ -33,7 +22,6 @@ import android.widget.AdapterView.OnItemClickListener;
 		public static final String TAG = "ExamReviewAdapter";
 		private Context context;
 		private Cursor cursor;
-		private ArrayList<Long> questionIds = new ArrayList<Long>();
 		private Drawable not_okImage;
 		private Drawable okImage;
 		private int layout;
@@ -62,7 +50,12 @@ import android.widget.AdapterView.OnItemClickListener;
 		}
 
 		public long getItemId(int position) {
-			return questionIds.get(position);
+			long questionId = 0;
+			if( cursor.moveToPosition(position) ) {
+				int index = cursor.getColumnIndex(ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_QUESTION_ID);
+				questionId = cursor.getLong(index);
+			}
+			return questionId;
 		}
 		
 		public View getView(int position, View view, ViewGroup parent) 
@@ -84,8 +77,6 @@ import android.widget.AdapterView.OnItemClickListener;
 					index = cursor.getColumnIndex(ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT);
 					answer = cursor.getInt(index);
 				}
-				
-				questionIds.add(questionId);
 				
 				TextView tv = (TextView)view.findViewById(R.id.reviewExamQuestionID);
 				tv.setText(Long.toString(questionId));

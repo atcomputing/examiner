@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,30 +26,30 @@ import android.widget.Toast;
  */
 
 public class SelectExamActivity extends Activity {
-	private final String TAG = this.getClass().getName();
 	private SelectExamAdapter adap;
 	private static Cursor cursor;
 	private ExamTrainerDbAdapter examTrainerDbHelper;
 	private long examsRowId;
 	private static final int DIALOG_SHOW_EXAM = 0;
-
+	private TextView clickOnManageExams;
+	private TextView noExamsAvailable;
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		Log.d("trace", "SelectExamActivity created");
 		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.selectexam);
-	}
-
-		protected void onResume() {
-		super.onResume();
-		ExamTrainer.showProgressDialog(this, this.getString(R.string.Loading_Please_wait));
 		
+		ExamTrainer.showProgressDialog(this, this.getString(R.string.Loading_Please_wait));
+
 		ListView selectExam = (ListView) this.findViewById(R.id.select_exam_list);
-		TextView noExamsAvailable = (TextView) this.findViewById(R.id.selectexam_no_exams_available);
-		TextView clickOnManageExams = (TextView) this.findViewById(R.id.selectexam_click_on_manage_exams);
+		noExamsAvailable = (TextView) this.findViewById(R.id.selectexam_no_exams_available);
+		clickOnManageExams = (TextView) this.findViewById(R.id.selectexam_click_on_manage_exams);
 
 		examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		examTrainerDbHelper.open();
 		cursor = examTrainerDbHelper.getInstalledExams();
+		examTrainerDbHelper.close();
 		if(cursor.getCount() > 0) {
 			//Remove exams not available text when there are exams installed
 			noExamsAvailable.setVisibility(View.GONE);
@@ -68,14 +69,34 @@ public class SelectExamActivity extends Activity {
 				showDialog(DIALOG_SHOW_EXAM);
 			}
 		});
-		
 		ExamTrainer.stopProgressDialog();
-		
+	}
+
+	protected void onResume() {
+		super.onResume();
+		Log.d("trace", "SelectExamActivity resumed");
+		examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+		examTrainerDbHelper.open();
+		cursor = examTrainerDbHelper.getInstalledExams();
+		examTrainerDbHelper.close();
+		if(cursor.getCount() > 0) {
+			//Remove exams not available text when there are exams installed
+			noExamsAvailable.setVisibility(View.GONE);
+			clickOnManageExams.setVisibility(View.GONE);
+		} else {
+			noExamsAvailable.setVisibility(View.VISIBLE);
+			clickOnManageExams.setVisibility(View.VISIBLE);
+		}
+		adap.changeCursor(cursor);
+		adap.notifyDataSetChanged();
 	}
 
 	protected void onPause() {
 		super.onPause();
-		examTrainerDbHelper.close();
+		Log.d("trace", "SelectExamActivity paused");
+		if ( cursor != null ) {
+			cursor.close();
+		}
 	}
 
 	@Override
@@ -114,7 +135,7 @@ public class SelectExamActivity extends Activity {
 			int examItemsNeededToPass = cursor.getInt(index);
 			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT);
 			long examTimeLimit = cursor.getLong(index);
-			
+
 			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE);
 			long examInstallationDate = cursor.getLong(index);
 			String localDate = ExamTrainer.convertEpochToString(examInstallationDate);
@@ -127,20 +148,20 @@ public class SelectExamActivity extends Activity {
 					": " +  examAmountOfItems + "\n" +
 					this.getString(R.string.correct_answer_required_to_pass) +
 					": " +  examItemsNeededToPass + "\n");
-			
+
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			boolean useTimeLimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
-			
+
 			if ( useTimeLimit ) {
 				dialogMessage.append(this.getString(R.string.Time_limit) 
 						+ ": " + examTimeLimit + " " + this.getString(R.string.minutes) + "\n");
 			}
-			
+
 			ExamTrainer.setExamDatabaseName(examTitle, examInstallationDate);
 			ExamTrainer.setItemsNeededToPass(examItemsNeededToPass);
 			ExamTrainer.setExamTitle(examTitle);
 			ExamTrainer.setTimeLimit(examTimeLimit);
-			
+
 			((AlertDialog) dialog).setMessage( dialogMessage );
 			break;
 		default:
@@ -190,7 +211,7 @@ public class SelectExamActivity extends Activity {
 	}
 
 	private void startExam() {
-		Intent intent = new Intent(this, ExamQuestionsActivity.class);
+		Intent intent = new Intent(this, ExamQuestionActivity.class);
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		long examId = examinationDbHelper.createNewScore();
@@ -206,7 +227,7 @@ public class SelectExamActivity extends Activity {
 			}
 			ExamTrainer.setExamId(examId);
 			ExamTrainer.setQuestionNumber(intent, 1);
-			ExamTrainer.setMode(ExamTrainer.ExamTrainerMode.EXAM);
+			ExamTrainer.setStartExam();
 			startActivity(intent);
 		}
 	}

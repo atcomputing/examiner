@@ -13,7 +13,7 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".ExamQuestionsActivity" 
+		<activity android:name=".ExamQuestionActivity"
 		    android:exported="false"/>
 		<activity android:name=".ExamHistoryActivity"
 			android:exported="false" />

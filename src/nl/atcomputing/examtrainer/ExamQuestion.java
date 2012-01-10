@@ -3,7 +3,6 @@ package nl.atcomputing.examtrainer;
 import java.util.ArrayList;
 
 import android.content.Context;
-import android.database.DatabaseUtils;
 
 /**
  * @author martijn brekhof

@@ -1,11 +1,10 @@
 package nl.atcomputing.examtrainer;
 
-import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,7 +20,6 @@ import android.widget.RelativeLayout;
  *
  */
 public class ExamTrainerActivity extends Activity {
-	private final String TAG = this.getClass().getName();
 	private LinearLayout about_layout;
 	
 	AnimationDrawable mFrameAnimation = null;
@@ -32,7 +30,8 @@ public class ExamTrainerActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-
+		Log.d("trace", "ExamTrainerActivity created");
+		
 		setContentView(R.layout.main);		
 
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
@@ -46,9 +45,9 @@ public class ExamTrainerActivity extends Activity {
 		startExam = (Button) findViewById(R.id.button_start);
 		startExam.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
-				//Intent intent = new Intent(ExamTrainerActivity.this, SelectExamActivity.class);
-				Intent intent = new Intent(ExamTrainerActivity.this, ShowScoreActivity.class);
-				ExamTrainer.setMode(ExamTrainerMode.EXAM);
+				Intent intent = new Intent(ExamTrainerActivity.this, SelectExamActivity.class);
+				//Intent intent = new Intent(ExamTrainerActivity.this, ShowScoreActivity.class);
+				ExamTrainer.setStartExam();
 				RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.startscreen);
 				Animation hyperspaceJumpAnimation = AnimationUtils.loadAnimation(ExamTrainerActivity.this, R.anim.hyperspace_jump);
 				mainLayout.startAnimation(hyperspaceJumpAnimation);

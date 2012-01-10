@@ -18,7 +18,7 @@ import android.util.Log;
 public final class ExamTrainer {
 
 	public enum ExamTrainerMode {
-		EXAM, REVIEW
+		EXAM, REVIEW, ENDOFEXAM
 	}
 
 	private static String TAG = "ExamTrainer";
@@ -29,7 +29,6 @@ public final class ExamTrainer {
 	private static long itemsNeededToPass = 0;
 	private static long totalAmountOfItems = 0;
 	private static final String questionNumber = "questionNumber";
-	private static final String endOfExam = "endOfExam";
 	private static boolean KEEP_PROGRESS_DIALOG_RUNNING = false;
 	private static long timeLimit = 0;
 	private static long timerStart; 
@@ -93,23 +92,31 @@ public final class ExamTrainer {
 	public static String getExamTitle() {
 		return examTitle;
 	}
-
-	public static void setMode(ExamTrainerMode m) {
-		mode = m;
+	
+	public static void setEndOfExam() {
+		mode = ExamTrainerMode.ENDOFEXAM;
 	}
-
-	public static ExamTrainerMode getMode() {
-		return mode;
+	
+	public static boolean endOfExam() {
+		return mode == ExamTrainerMode.ENDOFEXAM;
 	}
-
-	public static Boolean checkEndOfExam(Intent intent) {
-		return intent.getBooleanExtra(endOfExam, false);
+	
+	public static void setReview() {
+		mode = ExamTrainerMode.REVIEW;
 	}
-
-	public static void setEndOfExam(Intent intent) {
-		intent.putExtra(endOfExam, true);
+	
+	public static boolean review() {
+		return mode == ExamTrainerMode.REVIEW;
 	}
-
+	
+	public static void setStartExam() {
+		mode = ExamTrainerMode.EXAM;
+	}
+	
+	public static boolean startExam() {
+		return mode == ExamTrainerMode.EXAM;
+	}
+	
 	public static void setQuestionNumber(Intent intent, long number) {
 		intent.putExtra(questionNumber, number);
 	}

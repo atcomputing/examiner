@@ -3,7 +3,6 @@ package nl.atcomputing.examtrainer;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -11,9 +10,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ListView;
 
 /**
  * @author martijn brekhof
@@ -21,23 +19,24 @@ import android.widget.AdapterView.OnItemClickListener;
  * TODO FIX: Second item in list points to first question
  */
 public class HistoryActivity extends Activity {
-	private final String TAG = this.getClass().getName();
 	private HistoryAdapter adapter;
 	private ExaminationDbAdapter examinationDbHelper;
+	private Cursor cursor;
 	private long examId;
 	private static final int DIALOG_SHOW_EXAM = 1;
 	private static final int DIALOG_CONFIRMATION_ID = 2;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);        
-        
+		Log.d("trace", "HistoryActivity created");
+		
 		ExamTrainer.showProgressDialog(this, this.getString(R.string.Loading_Please_wait));
         
 		setContentView(R.layout.history);
 		
         examinationDbHelper = new ExaminationDbAdapter(HistoryActivity.this);
         examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-        Cursor cursor = examinationDbHelper.getScoresReversed();
+        cursor = examinationDbHelper.getScoresReversed();
         adapter = new HistoryAdapter(HistoryActivity.this, R.layout.history_entry, cursor);
 
         ListView scoresList = (ListView) findViewById(R.id.show_scores_list);
@@ -53,12 +52,13 @@ public class HistoryActivity extends Activity {
 		
 		ExamTrainer.stopProgressDialog();
 	}
-	
-	protected void onDestroy() {
+
+	protected void onPause() {
 		super.onDestroy();
+		Log.d("trace", "HistoryActivity paused");
 		examinationDbHelper.close();
 	}
-
+	
 	protected void onPrepareDialog(int id, Dialog dialog) {
 		switch(id) {
 		case DIALOG_SHOW_EXAM:
