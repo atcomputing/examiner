@@ -5,6 +5,9 @@
 	<string name="You_passed">You passed</string>
 	<string name="You_failed">You failed</string>
 	<string name="Gongratulations">Gongratulations</string>
+	<string name="You_scored">You scored</string>
+	<string name="out_of">out of</string>
+	<string name="but_you_needed">but you needed</string>
 	<string name="Error">Error</string>
 	<string name="Could_not_open_exam_database_file">Could not open exam database file.</string>
 	<string name="Try_reinstalling_the_exam">Try reinstalling the exam.</string>
@@ -88,4 +91,5 @@
 	<string name="Visit_atcomputing">Visit http://www.atcomputing.nl</string>
 	<!-- Error messages  -->
 	<string name="Failed_to_delete_exam">Failed to delete exam</string>
+	<string name="Failed_to_calculate_score">Failed to calculate score</string>
 </resources>

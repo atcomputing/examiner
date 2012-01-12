@@ -150,7 +150,7 @@ public class SelectExamActivity extends Activity {
 			ExamTrainer.setItemsNeededToPass(examItemsNeededToPass);
 			ExamTrainer.setExamTitle(examTitle);
 			ExamTrainer.setTimeLimit(examTimeLimit);
-
+			ExamTrainer.setAmountOfItems(examAmountOfItems);
 			((AlertDialog) dialog).setMessage( dialogMessage );
 			cursor.close();
 			break;

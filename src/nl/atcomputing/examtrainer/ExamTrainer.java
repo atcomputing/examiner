@@ -176,43 +176,5 @@ public final class ExamTrainer {
 		alert.show();
 	}
 	
-	public static long calculateScore(Context context) throws SQLiteException {
-		ExaminationDbAdapter examinationDbHelper;
-		
-		examinationDbHelper = new ExaminationDbAdapter(context);
-		try {
-			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		} catch (SQLiteException e) {
-			throw(e);
-		}
-		
-		List<Long> questionIDsList = examinationDbHelper.getAllQuestionIDs();
-		int amountOfQuestions = questionIDsList.size();
-		long answers_correct = 0;
-		for(int i = 0; i < amountOfQuestions; i++) {
-			long questionId = questionIDsList.get(i);
-
-			String questionType = examinationDbHelper.getQuestionType(questionId);
-			boolean answerCorrect = false;
-			if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-				answerCorrect = examinationDbHelper.checkScoresAnswersOpen(questionId, examId);
-			}
-			else {
-				answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(questionId, examId);
-			}
-
-			if ( answerCorrect ) {
-				answers_correct++;
-				examinationDbHelper.addResultPerQuestion(examId, questionId, true);
-			}
-			else {
-				examinationDbHelper.addResultPerQuestion(examId, questionId, false);
-			}
-
-		}
-
-		examinationDbHelper.updateScore(examId, answers_correct);
-		examinationDbHelper.close();
-		return answers_correct;
-	}
+	
 }
