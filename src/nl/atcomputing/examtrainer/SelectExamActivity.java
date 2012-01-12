@@ -28,7 +28,6 @@ import android.widget.Toast;
 public class SelectExamActivity extends Activity {
 	private SelectExamAdapter adap;
 	private static Cursor cursor;
-	private ExamTrainerDbAdapter examTrainerDbHelper;
 	private long examsRowId;
 	private static final int DIALOG_SHOW_EXAM = 0;
 	private TextView clickOnManageExams;
@@ -46,20 +45,7 @@ public class SelectExamActivity extends Activity {
 		noExamsAvailable = (TextView) this.findViewById(R.id.selectexam_no_exams_available);
 		clickOnManageExams = (TextView) this.findViewById(R.id.selectexam_click_on_manage_exams);
 
-		examTrainerDbHelper = new ExamTrainerDbAdapter(this);
-		examTrainerDbHelper.open();
-		cursor = examTrainerDbHelper.getInstalledExams();
-		examTrainerDbHelper.close();
-		if(cursor.getCount() > 0) {
-			//Remove exams not available text when there are exams installed
-			noExamsAvailable.setVisibility(View.GONE);
-			clickOnManageExams.setVisibility(View.GONE);
-		} else {
-			noExamsAvailable.setVisibility(View.VISIBLE);
-			clickOnManageExams.setVisibility(View.VISIBLE);
-		}
-
-		adap = new SelectExamAdapter(this, R.layout.selectexam_entry, cursor);
+		adap = new SelectExamAdapter(this, R.layout.selectexam_entry, null);
 		selectExam.setAdapter(adap);
 
 		selectExam.setOnItemClickListener(new OnItemClickListener() {
@@ -69,15 +55,15 @@ public class SelectExamActivity extends Activity {
 				showDialog(DIALOG_SHOW_EXAM);
 			}
 		});
-		ExamTrainer.stopProgressDialog();
 	}
 
 	protected void onResume() {
 		super.onResume();
 		Log.d("trace", "SelectExamActivity resumed");
-		examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		examTrainerDbHelper.open();
 		cursor = examTrainerDbHelper.getInstalledExams();
+		Log.d("SelectExamActivity","Cursor: " + cursor);
 		examTrainerDbHelper.close();
 		if(cursor.getCount() > 0) {
 			//Remove exams not available text when there are exams installed
@@ -89,16 +75,15 @@ public class SelectExamActivity extends Activity {
 		}
 		adap.changeCursor(cursor);
 		adap.notifyDataSetChanged();
+		ExamTrainer.stopProgressDialog();
 	}
 
 	protected void onPause() {
 		super.onPause();
 		Log.d("trace", "SelectExamActivity paused");
-		if ( cursor != null ) {
-			cursor.close();
-		}
+		cursor.close();
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -126,7 +111,11 @@ public class SelectExamActivity extends Activity {
 	protected void onPrepareDialog(int id, Dialog dialog) {
 		switch(id) {
 		case DIALOG_SHOW_EXAM:
+			ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+			examTrainerDbHelper.open();
 			Cursor cursor = examTrainerDbHelper.getExam(examsRowId);
+		Log.d("SelectExamActivity","Cursor: " + cursor);
+			examTrainerDbHelper.close();
 			int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
 			String examTitle = cursor.getString(index);
 			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS);
@@ -163,6 +152,7 @@ public class SelectExamActivity extends Activity {
 			ExamTrainer.setTimeLimit(examTimeLimit);
 
 			((AlertDialog) dialog).setMessage( dialogMessage );
+			cursor.close();
 			break;
 		default:
 			break;

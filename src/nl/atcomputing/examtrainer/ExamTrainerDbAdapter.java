@@ -60,8 +60,11 @@ public class ExamTrainerDbAdapter {
 		},
 		ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE + "=" + "\"" + exam.getTitle() + "\"", 
 		null, null, null, null, null);
+		Log.d("ExamTrainedDbAdapter", "Cursor: "+ cursor);
 		if ( cursor != null ) {
-			return cursor.getCount() > 0;
+			boolean res = cursor.getCount() > 0;
+			cursor.close();
+			return res;
 		} else {
 			return false;
 		}
@@ -101,6 +104,7 @@ public class ExamTrainerDbAdapter {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
 				allRows,
 		ExamTrainerDatabaseHelper.Exams._ID + "=" + rowId, null, null, null, null, null);
+		Log.d("ExamTrainedDbAdapter", "Cursor: "+ cursor);
 		if (cursor != null) {
 			cursor.moveToFirst();
 		}
@@ -110,6 +114,7 @@ public class ExamTrainerDbAdapter {
 	public Cursor getAllExams() {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
 				allRows, null, null, null, null, null, null);
+		Log.d("ExamTrainedDbAdapter", "Cursor: "+ cursor);
 		if (cursor != null) {
 			cursor.moveToFirst();
 		}
@@ -120,6 +125,7 @@ public class ExamTrainerDbAdapter {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
 				allRows, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "= 1",
 		null, null, null, null, null);
+		Log.d("ExamTrainedDbAdapter", "Cursor: "+ cursor);
 		if (cursor != null) {
 			cursor.moveToFirst();
 		}

@@ -46,6 +46,11 @@ public class ManageExamsActivity extends ListActivity {
 		updateView();
 	}
 
+	protected void onDestroy() {
+		super.onDestroy();
+		adap.getCursor().close();
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -109,6 +114,7 @@ public class ManageExamsActivity extends ListActivity {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		Cursor cursor = examTrainerDbHelper.getAllExams();
+		Log.d("ManageExamsActivity", "Cursor: "+ cursor);
 		do {
 			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
 			examTitle = cursor.getString(index);
@@ -138,6 +144,7 @@ public class ManageExamsActivity extends ListActivity {
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		examTrainerDbHelper.open();
 		Cursor cursor = examTrainerDbHelper.getAllExams();
+		Log.d("ManageExamsActivity", "Cursor: "+ cursor);
 		
 		if ( (cursor == null) || (cursor.getCount() == 0) ) {
 			noExamsAvailable.setVisibility(View.VISIBLE);
@@ -147,9 +154,12 @@ public class ManageExamsActivity extends ListActivity {
 			//Remove exams not available text when there are exams installed
 			noExamsAvailable.setVisibility(View.GONE);
 			clickOnManageExams.setVisibility(View.GONE);
-			cursor.close();
 		}
 		
+		if(cursor != null) {
+			cursor.close();
+		}
+
 		examTrainerDbHelper.close();
 		adap.updateView();
 	}

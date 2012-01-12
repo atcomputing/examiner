@@ -44,6 +44,10 @@ import android.widget.TextView;
 			}
 			return 0;
 		}
+	
+		public Cursor getCursor() {
+			return cursor;
+		}	
 
 		public Object getItem(int position) {
 			return null;

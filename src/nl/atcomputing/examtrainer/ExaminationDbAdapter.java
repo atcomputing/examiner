@@ -199,11 +199,11 @@ public class ExaminationDbAdapter {
 				},
 				ExaminationDatabaseHelper.Questions._ID + "= ?",
 				new String[] { Long.toString(rowId) }, null, null, null, null);
-		if (mCursor != null) {
-			mCursor.moveToFirst();
+		if (mCursor.moveToFirst()) {
 			int columnIndex = mCursor.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_TYPE);
 			type = mCursor.getString(columnIndex);
 		}
+		mCursor.close();
 		return type;
 	}
 	
@@ -213,10 +213,9 @@ public class ExaminationDbAdapter {
 				ExaminationDatabaseHelper.Questions.COLUMN_NAME_QUESTION
 				},
 				null, null, null, null, null, null);
-		if (mCursor != null) {
-			return mCursor.getCount();
-		}
-		return 0;
+		int count = mCursor.getCount();
+		mCursor.close();
+		return count;
 	}
 	
 	public List<Long> getAllQuestionIDs() throws SQLException {
@@ -227,19 +226,16 @@ public class ExaminationDbAdapter {
 				ExaminationDatabaseHelper.Questions._ID
 				},
 				null, null, null, null, null, null);
-		if (mCursor == null) {
-			return null;
-		}
-		
-		int index = mCursor.getColumnIndex(ExaminationDatabaseHelper.Questions._ID);
 		
 		if(mCursor.moveToFirst()) {
 			do {
+				int index = mCursor.getColumnIndex(ExaminationDatabaseHelper.Questions._ID);
 				long questionId = mCursor.getLong(index);
 				list.add(questionId);
 			} while (mCursor.moveToNext());
 		}
 		
+		mCursor.close();
 		return list;
 	}
 	
@@ -319,7 +315,7 @@ public class ExaminationDbAdapter {
 				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "= ?",
 				new String[] { Long.toString(examId)}, 
 				null, null, null, null);
-		
+		Log.d("ExaminationDbAdapter getScoresAnswers", "Cursor: " + cursor);	
 		if(cursor.moveToFirst())
 			return cursor;
 		
@@ -337,10 +333,9 @@ public class ExaminationDbAdapter {
 				new String[] { Long.toString(examId), Long.toString(questionId) },
 				null, null, null, null);
 		
-		if(cursor.moveToFirst())
-			return cursor;
-		
-		return null;
+		Log.d("ExaminationDbAdapter getScoresAnswers", "Cursor: " + cursor);	
+		cursor.moveToFirst();
+		return cursor;
 	}
 	
 	public Cursor getScoresReversed() {
@@ -352,6 +347,7 @@ public class ExaminationDbAdapter {
 				},
 				null, null, null, null, ExaminationDatabaseHelper.Scores.COLUMN_NAME_DATE + " DESC", null);
 		
+		Log.d("ExaminationDbAdapter getScoresReversed", "Cursor: " + cursor);	
 		if(cursor.moveToFirst())
 			return cursor;
 		
@@ -368,6 +364,7 @@ public class ExaminationDbAdapter {
 				ExaminationDatabaseHelper.Scores._ID + "= ?" , 
 				new String[] { Long.toString(id) }, null, null, null, null);
 		
+		Log.d("ExaminationDbAdapter getScore", "Cursor: " + cursor);	
 		if(cursor.moveToFirst())
 			return cursor;
 		
@@ -386,9 +383,12 @@ public class ExaminationDbAdapter {
 				ExaminationDatabaseHelper.Questions._ID + "= ?",
 				new String[] { Long.toString(questionId) },
 				null, null, null, null);
+		Log.d("ExaminationDbAdapter getHint", "Cursor: " + cursor);	
 		if(cursor.moveToFirst()) {
 			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_HINT);
-			return cursor.getString(index);
+			String hint = cursor.getString(index);
+			cursor.close();
+			return hint;
 		}
 		return null;
 	}
@@ -413,8 +413,9 @@ public class ExaminationDbAdapter {
 				},
 				selection, selectionArgs, 
 				null, null, null, null);
-		
-		return mCursor.getCount() > 0;
+		boolean res = mCursor.getCount() > 0;
+		mCursor.close();
+		return res;
 	}
 	
 	/**
@@ -432,8 +433,9 @@ public class ExaminationDbAdapter {
 				new String[] {
 				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER
 				}, selection, selectionArgs, null, null, null, null);
-
-		return mCursor.getCount() > 0;
+		boolean res = mCursor.getCount() > 0;
+		mCursor.close();
+		return res;
 	}
 
 	public boolean updateScoresAnswer(long examId, long questionId, String answer) {
@@ -587,10 +589,9 @@ public class ExaminationDbAdapter {
 				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "= ?",
 				new String[] { Long.toString(examId) },
 				null, null, null, null);
-		if (mCursor != null) {
-			return mCursor.getCount();
-		}
-		return 0;
+		int count = mCursor.getCount();
+		mCursor.close();
+		return count;
 	}
 	
 	private String createDataseName(String title, long date) {

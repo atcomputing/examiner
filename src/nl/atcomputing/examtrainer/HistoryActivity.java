@@ -20,8 +20,6 @@ import android.widget.ListView;
  */
 public class HistoryActivity extends Activity {
 	private HistoryAdapter adapter;
-	private ExaminationDbAdapter examinationDbHelper;
-	private Cursor cursor;
 	private long examId;
 	private static final int DIALOG_SHOW_EXAM = 1;
 	private static final int DIALOG_CONFIRMATION_ID = 2;
@@ -34,9 +32,11 @@ public class HistoryActivity extends Activity {
         
 		setContentView(R.layout.history);
 		
-        examinationDbHelper = new ExaminationDbAdapter(HistoryActivity.this);
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(HistoryActivity.this);
         examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-        cursor = examinationDbHelper.getScoresReversed();
+        Cursor cursor = examinationDbHelper.getScoresReversed();
+        Log.d("HistoryActivity", "Cursor: " + cursor);
+        examinationDbHelper.close();
         adapter = new HistoryAdapter(HistoryActivity.this, R.layout.history_entry, cursor);
 
         ListView scoresList = (ListView) findViewById(R.id.show_scores_list);
@@ -53,21 +53,28 @@ public class HistoryActivity extends Activity {
 		ExamTrainer.stopProgressDialog();
 	}
 
-	protected void onPause() {
+	protected void onDestroy() {
 		super.onDestroy();
-		Log.d("trace", "HistoryActivity paused");
-		examinationDbHelper.close();
+		Log.d("trace", "HistoryActivity destroyed");
+		Cursor cursor = adapter.getCursor();
+		if ( cursor != null ) {
+			cursor.close();
+		}
 	}
 	
 	protected void onPrepareDialog(int id, Dialog dialog) {
 		switch(id) {
 		case DIALOG_SHOW_EXAM:
+			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(HistoryActivity.this);
+        	examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 			Cursor cursor = examinationDbHelper.getScore(examId);
+	Log.d("HistoryActivity", "Cursor: " + cursor);
+			examinationDbHelper.close();
 			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_DATE);
 			String examDate = ExamTrainer.convertEpochToString(cursor.getLong(index));
 			index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE);
-		    int examScore = cursor.getInt(index);
-			
+		    	int examScore = cursor.getInt(index);
+			cursor.close();	
 			
 			String pass = this.getResources().getString(R.string.no);
 			if( examScore >= ExamTrainer.getItemsNeededToPass() ) { 
@@ -95,7 +102,10 @@ public class HistoryActivity extends Activity {
 			.setCancelable(false)
 			.setPositiveButton(this.getString(R.string.Yes), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
+					ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(HistoryActivity.this);
+			        examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 					examinationDbHelper.deleteScore(examId);
+					examinationDbHelper.close();
 					adapter.getCursor().requery();
 					adapter.notifyDataSetChanged();
 					dialog.dismiss();

@@ -28,8 +28,8 @@ import android.widget.Toast;
  *
  */
 public class ExamQuestionActivity extends Activity {
-	private ExaminationDbAdapter examinationDbHelper;
-	private Cursor cursorQuestion;
+	//private ExaminationDbAdapter examinationDbHelper;
+	//private Cursor cursorQuestion;
 	private long questionNumber;
 	private String questionType;
 	private EditText editText;
@@ -37,7 +37,7 @@ public class ExamQuestionActivity extends Activity {
 	private static final int DIALOG_ENDOFEXAM_ID = 1;
 	private static final int DIALOG_SHOW_HINT_ID = 2;
 
-	private static final String TAG = "ExamQuestionsActivity";
+	private static final String TAG = "ExamQuestionActivity";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -49,13 +49,14 @@ public class ExamQuestionActivity extends Activity {
 		
 		Intent intent = getIntent();
 
-		examinationDbHelper = new ExaminationDbAdapter(this);
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		try {
 			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		} catch (SQLiteException e) {
 			ExamTrainer.showError(this, 
 					this.getResources().getString(R.string.Could_not_open_exam_database_file) + "\n" +
 							this.getResources().getString(R.string.Try_reinstalling_the_exam));
+			this.finish();
 		}
 
 		questionNumber = ExamTrainer.getQuestionNumber(intent);
@@ -63,40 +64,21 @@ public class ExamQuestionActivity extends Activity {
 			this.finish();
 		}
 		else {
-			cursorQuestion = examinationDbHelper.getQuestion(questionNumber);
-			if ( cursorQuestion.getCount() < 1 ) {
+			Cursor cursor = examinationDbHelper.getQuestion(questionNumber);
+			Log.d("ExamQuestionActivity onCreate","Cursor: " + cursor);
+			if ( cursor.getCount() < 1 ) {
 				ExamTrainer.showError(this, this.getResources().getString(R.string.Exam_is_empty) + "\n" +
 						this.getResources().getString(R.string.Try_reinstalling_the_exam));
-				cursorQuestion.close();
 			} else {
 
-				int index = cursorQuestion.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_TYPE);
-				questionType = cursorQuestion.getString(index);
+				int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_TYPE);
+				questionType = cursor.getString(index);
 
 				setupLayout();
-				cursorQuestion.close();
 			}
+			cursor.close();
 		}
-	}
-
-	protected void onPause() {
-		super.onDestroy();
-		Log.d("trace", "ExamQuestionActivity paused for "+ this.questionNumber);
 		examinationDbHelper.close();
-	}
-
-	protected void onResume() {
-		super.onResume();
-		Log.d("trace", "ExamQuestionActivity resumed for "+ this.questionNumber);
-		if ( ExamTrainer.endOfExam() ) {
-			finish();
-		}
-		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		/*if ( ExamTrainer.useTimeLimit ) {
-			//show time in title bar
-		} else {
-			//hide time in title bar
-		}*/
 	}
 
 	public void onBackPressed() {
@@ -172,7 +154,10 @@ public class ExamQuestionActivity extends Activity {
 			break;
 		case DIALOG_SHOW_HINT_ID:
 			builder = new AlertDialog.Builder(this);
+			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 			message = examinationDbHelper.getHint(questionNumber);
+			examinationDbHelper.close();
 			if( message == null ) {
 				message = getString(R.string.hint_not_available);
 			}
@@ -192,7 +177,11 @@ public class ExamQuestionActivity extends Activity {
 	}
 
 	private void showAnswers() {
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		Cursor cursor = examinationDbHelper.getAnswers(questionNumber);
+			Log.d("ExamQuestionActivity showAnswers","Cursor: " + cursor);
+		examinationDbHelper.close();
 		if ( cursor == null ) {
 			Log.d(TAG, "Oi, cursor is nulllll");
 			return;
@@ -238,8 +227,10 @@ public class ExamQuestionActivity extends Activity {
 	private void createChoices(LinearLayout layout) {
 		CheckBox cbox; 
 		cboxes = new ArrayList<CheckBox>();
-
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		Cursor cursor = examinationDbHelper.getChoices(questionNumber);
+			Log.d("ExamQuestionActivity createChoices","Cursor: " + cursor);
 		if ( cursor != null ) {
 			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Choices.COLUMN_NAME_CHOICE);
 			do {
@@ -255,9 +246,16 @@ public class ExamQuestionActivity extends Activity {
 				cbox.setOnClickListener(new View.OnClickListener() {
 					public void onClick(View v) {
 						if (((CheckBox) v).isChecked()) {
+							ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
+							examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 							examinationDbHelper.setScoresAnswersMultipleChoice(ExamTrainer.getExamId(), questionNumber, choice);
+							examinationDbHelper.close();
+							
 						} else {
+							ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
+							examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 							examinationDbHelper.deleteScoresAnswer(ExamTrainer.getExamId(), questionNumber, choice);
+							examinationDbHelper.close();
 						}
 
 					}
@@ -270,7 +268,7 @@ public class ExamQuestionActivity extends Activity {
 		} else {
 			Log.d("ExamQuestionActivity", "cursor is null");
 		}
-		
+		examinationDbHelper.close();
 	}
 
 	private void setupLayout() {
@@ -287,8 +285,15 @@ public class ExamQuestionActivity extends Activity {
 		TextView question = (TextView) findViewById(R.id.textQuestionNumber);
 		question.setText(this.getString(R.string.Question) + ": " + Long.toString(questionNumber));
 
-		index = cursorQuestion.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_EXHIBIT);
-		text = cursorQuestion.getString(index);
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+		Cursor cursor = examinationDbHelper.getQuestion(questionNumber);
+		Log.d("ExamQuestionActivity setupLayout", "Cursor: "+ cursor);
+		examinationDbHelper.close();
+		
+		if( cursor != null ) {
+		index = cursor.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_EXHIBIT);
+		text = cursor.getString(index);
 		if( text != null ) {
 			TextView exhibit = (TextView) findViewById(R.id.textExhibit);
 			exhibit.setText(text);
@@ -298,24 +303,30 @@ public class ExamQuestionActivity extends Activity {
 		}
 
 
-		index = cursorQuestion.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_QUESTION);
-		text = cursorQuestion.getString(index);
+		index = cursor.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_QUESTION);
+		text = cursor.getString(index);
 		TextView question_textview = (TextView) findViewById(R.id.textQuestion);
 		question_textview.setText(text);
-
+		cursor.close();
+		}
+		
 		LinearLayout v_layout = (LinearLayout) findViewById(R.id.answerLayout);
 
 		if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
 			createChoices(v_layout);
 		} else if ( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
 			editText = new EditText(this);
-			Cursor aCursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getExamId(), questionNumber);
-			if ( aCursor != null ) {
-				index = aCursor.getColumnIndex(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER);
-				text = aCursor.getString(index);
+			examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
+			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+			cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getExamId(), questionNumber);
+			Log.d("ExamQuestionActivity setupLayout", "Cursor: "+ cursor);
+			examinationDbHelper.close();
+			if ( cursor.getCount() > 0 ) {
+				index = cursor.getColumnIndex(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER);
+				text = cursor.getString(index);
 				editText.setText(text.toString());
-				aCursor.close();
 			}
+			cursor.close();
 			v_layout.addView(editText);
 		}
 
@@ -326,7 +337,10 @@ public class ExamQuestionActivity extends Activity {
 			button_prev_question.setOnClickListener( new View.OnClickListener() {
 				public void onClick(View v) {
 					if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
+						ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
+						examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 						examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getExamId(), questionNumber, editText.getText().toString());
+						examinationDbHelper.close();
 					}
 					Intent intent = new Intent(ExamQuestionActivity.this, ExamQuestionActivity.class);
 					ExamTrainer.setQuestionNumber(intent, questionNumber - 1);
@@ -335,7 +349,11 @@ public class ExamQuestionActivity extends Activity {
 			});
 		}
 		Button button_next_question = (Button) findViewById(R.id.button_next);
-		if( questionNumber >= examinationDbHelper.getQuestionsCount() ) {
+		examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
+		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+		int questionsTotal = examinationDbHelper.getQuestionsCount();
+		examinationDbHelper.close();
+		if( questionNumber >= questionsTotal ) {
 			if (ExamTrainer.review()) {
 				button_next_question.setText(R.string.End_review);
 			} else {
@@ -344,11 +362,17 @@ public class ExamQuestionActivity extends Activity {
 		}
 		button_next_question.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
+				ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
+				examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+				int questionsTotal = examinationDbHelper.getQuestionsCount();
+				
 				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
 					examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getExamId(), questionNumber, editText.getText().toString());
 				}
-
-				if ( questionNumber >= examinationDbHelper.getQuestionsCount() ) {
+				
+				examinationDbHelper.close();
+				
+				if ( questionNumber >= questionsTotal ) {
 					if(ExamTrainer.review()) {
 						finish();
 					}

@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.text.format.Time;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -198,6 +199,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			  ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(gContext);
 			  examTrainerDbHelper.open();
 			  Cursor cursor = examTrainerDbHelper.getAllExams();
+			  Log.d("ManageExamsAdapter", "Cursor: "+cursor);
 			  examTrainerDbHelper.close();
 			  this.changeCursor(cursor);
 		      this.notifyDataSetChanged();
