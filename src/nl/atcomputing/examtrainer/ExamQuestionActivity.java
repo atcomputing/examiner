@@ -81,18 +81,13 @@ public class ExamQuestionActivity extends Activity {
 		examinationDbHelper.close();
 	}
 
-	public void onBackPressed() {
-		if( this.questionNumber == 1 ) {
-			showDialog(DIALOG_ENDOFEXAM_ID);
-			Intent intent = new Intent(ExamQuestionActivity.this, SelectExamActivity.class);
-			startActivity(intent);
-			finish();
-		}
-		else {
+	protected void onResume() {
+		super.onResume();
+		if ( ExamTrainer.endOfExam() ) {
 			finish();
 		}
 	}
-
+	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.question_menu, menu);

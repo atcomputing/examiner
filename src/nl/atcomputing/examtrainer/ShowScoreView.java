@@ -30,8 +30,9 @@ public class ShowScoreView extends View {
 
 	private Context context;
 
-	private TextView textView;
-
+	private TextView showScoreTextView;
+	private TextView calculateScoreTextView;
+	
 	private static final int DELAY = 50;
 
 	private static int balloonSizeX;
@@ -46,6 +47,8 @@ public class ShowScoreView extends View {
 	protected static final int RUNNING = 1;
 	protected static final int CALCULATING = 2;
 
+	private int score;
+	
 	private int displayWidth;
 	private int displayHeight;
 
@@ -75,7 +78,7 @@ public class ShowScoreView extends View {
 
 	public ShowScoreView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-
+		
 		this.context = context;
 
 		Display display = ((WindowManager) 
@@ -88,117 +91,104 @@ public class ShowScoreView extends View {
 		balloonSizeX = a.getInt(R.styleable.BalloonView_balloonSizeX, 64);
 		balloonSizeY = a.getInt(R.styleable.BalloonView_balloonSizeY, 113);
 
+		this.score = 0;
+		
 		a.recycle();
 	}
 
-	private void setupWind() {
-		//setup wind
-		this.wind = new Wind(this.context);
-		this.wind.setWindSpeedUpperLimit(20);
-		this.wind.setWindChance(100);
-	}
-
-	private void setupBalloons() {
+	private void initBalloons() {
 		Resources r = this.getContext().getResources();
 		amountOfBalloonBitmaps = 2;
 		this.balloonBitmaps = new Bitmap[amountOfBalloonBitmaps];
 
 		this.balloonBitmaps[0] = createBitmap(r.getDrawable(R.drawable.aj_balloon_blue_64));
 		this.balloonBitmaps[1] = createBitmap(r.getDrawable(R.drawable.aj_balloon_red_64));
-
-		int verticalRange = amountOfBalloons * 10;
-		for(int i = 0; i < amountOfBalloons; i++) {
-			Bitmap bitmap = balloonBitmaps[randomNumberGenerator.nextInt(2)];
-			int x = randomNumberGenerator.nextInt(displayWidth);
-			int y = displayHeight + randomNumberGenerator.nextInt(verticalRange);;
-			Balloon b = new Balloon(x, y, bitmap);
-			this.balloons.add(b);
-		}
 	}
 
-	protected void setTextView(TextView view) {
-		this.textView = view;
+	protected void addBalloon() {
+		Bitmap bitmap = balloonBitmaps[randomNumberGenerator.nextInt(2)];
+		int x = randomNumberGenerator.nextInt(displayWidth);
+		Balloon b = new Balloon(x, this.displayHeight, bitmap);
+		this.balloons.add(b);
+		this.amountOfBalloons++;
+	}
+	
+	protected void popBalloon() {
+		this.balloons.remove(0);
+		//make popping sound?
+	}
+	
+	protected int getAmountOfBalloons() {
+		return this.amountOfBalloons;
+	}
+	
+	protected void setShowScoreTextView(TextView view) {
+		this.showScoreTextView = view;
 	}
 
+	protected TextView getShowScoreTextView() {
+		return this.showScoreTextView;
+	}
+	
+	protected void setCalculateScoreTextView(TextView view) {
+		this.calculateScoreTextView = view;
+	}
+	
+	protected TextView getCalculateScoreTextView() {
+		return this.calculateScoreTextView;
+	}
+	
 	protected void setMode(int mode) {
 		this.mode = mode;
 	}
 
 	protected void start() {
-		long score = 0;
-
-		calculateScore();
-
-		try{
-			//score = ExamTrainer.calculateScore(context);
-		} catch (SQLiteException e) {
-			//Oops failed to calculate score
-		}
-
-		score = 15;
-
 		this.amountOfBalloons = 0;
-		
-			
+		initBalloons();
+		//setup wind
+				this.wind = new Wind(this.context);
+				this.wind.setWindSpeedUpperLimit(20);
+				this.wind.setWindChance(100);
+				
 		update();
 	}
 
-	protected void calculateScore() {
-
-		ExaminationDbAdapter examinationDbHelper;
-		examinationDbHelper = new ExaminationDbAdapter(context);
-		try {
-			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		} catch (SQLiteException e) {
-			throw(e);
-		}
-		
-		List<Long> questionIDsList = examinationDbHelper.getAllQuestionIDs();
-		
-		CalculateScore task = new CalculateScore();
-		task.execute(questionIDsList.toArray());
-		
-		try {
-			long answersCorrect = task.get();
-			examinationDbHelper.updateScore(ExamTrainer.getExamId(), answersCorrect);
-			
+	protected void setScore(int score) {
+		this.score = score;
+	}
+	
+	protected void calculateAmountOfBalloons() {
 			long totalAmountOfItems = ExamTrainer.getAmountOfItems();
 			long itemsRequiredToPass = ExamTrainer.getItemsNeededToPass();
-			
-			if( answersCorrect >= itemsRequiredToPass) {
-				textView.setText(this.getResources().getString(R.string.Gongratulations) + "\n" + 
-						this.getResources().getString(R.string.You_passed));
-				
-				//determine amount of balloons
-				long amountOfWrongAnswers = totalAmountOfItems - answersCorrect;
-				if ( amountOfWrongAnswers < 1 ) {
-					amountOfWrongAnswers = 1;
-				}
-				this.amountOfBalloons = Math.round((totalAmountOfItems - itemsRequiredToPass) / amountOfWrongAnswers) * 2;
-			} else {
-				Resources r = this.getResources();
-				String text = r.getString(R.string.You_failed) + "\n" +
-				r.getString(R.string.You_scored) + " " + answersCorrect + " " +
-				r.getString(R.string.out_of) + " " + totalAmountOfItems + " " +
-				r.getString(R.string.but_you_needed) + " " + itemsRequiredToPass;
-						
-				textView.setText(text);
+			//determine amount of balloons
+			long amountOfWrongAnswers = totalAmountOfItems - score;
+			if ( amountOfWrongAnswers < 1 ) {
+				amountOfWrongAnswers = 1;
 			}
-			
-			textView.setVisibility(View.VISIBLE);
-			setupWind();
-			setupBalloons();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			textView.setText(this.getResources().getString(R.string.Failed_to_calculate_score));
-		}
-		
-		
-		examinationDbHelper.close();
+			this.amountOfBalloons = Math.round((totalAmountOfItems - itemsRequiredToPass) / amountOfWrongAnswers) * 2;
 	}
 
-
+	protected void showResult() {
+		long totalAmountOfItems = ExamTrainer.getAmountOfItems();
+		long itemsRequiredToPass = ExamTrainer.getItemsNeededToPass();
+		
+		if( score >= itemsRequiredToPass) {
+			showScoreTextView.setText(this.getResources().getString(R.string.Gongratulations) + "\n" + 
+					this.getResources().getString(R.string.You_passed));
+			
+					} else {
+			Resources r = this.getResources();
+			String text = r.getString(R.string.You_failed) + "\n" +
+			r.getString(R.string.You_scored) + " " + score + " " +
+			r.getString(R.string.out_of) + " " + totalAmountOfItems + " " +
+			r.getString(R.string.but_you_needed) + " " + itemsRequiredToPass;
+					
+			showScoreTextView.setText(text);
+		}
+		
+		showScoreTextView.setVisibility(View.VISIBLE);
+	}
+	
 	protected void update() {
 		if( mode == RUNNING ) {
 			if( balloons.size() > 0 ) {
@@ -273,43 +263,6 @@ public class ShowScoreView extends View {
 					paint);
 		}
 	}
-
-	private class CalculateScore extends AsyncTask<Object, Integer, Long> {
-
-		protected Long doInBackground(Object... questionIds) {
-
-			ExaminationDbAdapter examinationDbHelper;
-			examinationDbHelper = new ExaminationDbAdapter(context);
-			try {
-				examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-			} catch (SQLiteException e) {
-				throw(e);
-			}
-
-			int amountOfQuestions = questionIds.length;
-			long answers_correct = 0;
-
-			for(int i = 0; i < amountOfQuestions; i++) {
-				long questionId = (Long) questionIds[i];
-
-				String questionType = examinationDbHelper.getQuestionType(questionId);
-				boolean answerCorrect = false;
-				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-					answerCorrect = examinationDbHelper.checkScoresAnswersOpen(questionId, ExamTrainer.getExamId());
-				}
-				else {
-					answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(questionId, ExamTrainer.getExamId());
-				}
-
-				if ( answerCorrect ) {
-					answers_correct++;
-					examinationDbHelper.addResultPerQuestion(ExamTrainer.getExamId(), questionId, true);
-				}
-				else {
-					examinationDbHelper.addResultPerQuestion(ExamTrainer.getExamId(), questionId, false);
-				}
-			}
-			return answers_correct;
-		}
-	}
+	
+	
 }
