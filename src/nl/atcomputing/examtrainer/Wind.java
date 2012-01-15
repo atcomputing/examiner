@@ -120,7 +120,10 @@ public class Wind  {
 			//int decrementPeriod = randomNumberGenerator.nextInt(MAX_DECREMENT_PERIOD) + 1;
 			int decrementPeriod = MAX_DECREMENT_PERIOD;
 			this.decrementSteps = this.maxSpeed / decrementPeriod;
-			
+
+			int blowPeriod = MAX_WIND_PERIOD + 
+ 					incrementPeriod + decrementPeriod;	
+
 			windIterations = MAX_WIND_PERIOD;
 			
 //			Log.d(TAG, "blowPeriod: "+ blowPeriod +
