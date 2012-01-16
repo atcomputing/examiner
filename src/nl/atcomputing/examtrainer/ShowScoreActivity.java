@@ -59,10 +59,10 @@ public class ShowScoreActivity extends Activity {
 		}
 		
 		List<Long> questionIDsList = examinationDbHelper.getAllQuestionIDs();
+		examinationDbHelper.close();
 		
 		CalculateScore task = new CalculateScore(this, showScoreView);
 		task.execute(questionIDsList.toArray());
-		
 		
 	}
 
