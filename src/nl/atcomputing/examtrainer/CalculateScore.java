@@ -125,6 +125,8 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 			 *	}
 			 * }
 			 * 
+			 * gnuplot function:
+			 * plot [x=1:65] f(x) = x*(65/44) - 65 + x, f(x), g(x) = x*(65/44), g(x), h(x) = (x*44)/65, h(x)
 			 */
 			
 			int itemsNeeded = (int) ExamTrainer.getItemsNeededToPass();
