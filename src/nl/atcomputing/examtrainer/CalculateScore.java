@@ -101,32 +101,30 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 		
 		protected void updateText(int score) {
 			/**
-			 * percNeeded = ExamTrainer.getItemsNeededToPass() / ExamTrainer.getAmountOfItems()
-			 * baseLinePass = percNeeded * itemsCalculated;
-			 * if( score >= baseLinePass ) {
-			 * 	if ( percCalculated > 80% ) {
-			 * 		msg = "I am so confident you will pass I'll give you a balloon right now"
-			 *	} else if ( percCalculated > 60% ) {
-			 *		msg = "This is really looking good"
-			 *	} else if ( percCalculated > 40% ) {
-			 *		msg = "Looking good"
-			 *	} else if ( percCalculated > 20% ) {
-			 *		msg = "At this rate you will pass"
-			 *	}
-			 * } else {
-			 * 	if ( percCalculated > 80% ) {
-			 * 		msg = "This is bad. You will need a miracle to pass."
-			 *	} else if ( percCalculated > 60% ) {
-			 *		msg = "Not looking good at all."
-			 *	} else if ( percCalculated > 40% ) {
-			 *		msg = "Not looking good."
-			 *	} else if ( percCalculated > 20% ) {
-			 *		msg = "It's gonna be exciting"
-			 *	}
-			 * }
-			 * 
 			 * gnuplot function:
-			 * plot [x=1:65] f(x) = x*(65/44) - 65 + x, f(x), g(x) = x*(65/44), g(x), h(x) = (x*44)/65, h(x)
+			 * itemsNeededToPass = 44
+			 * amountOfItems = 65
+			 * plot [x=1:65] f(x) = ((x*44)/65) - 65 + x, f(x), g(x) = x*(65/44), g(x), h(x) = (x*44)/65, h(x)
+			 * 
+			 * f(x): bottom line below which it will be impossible to pass
+			 * h(x): top line above which you possible may pass
+			 * g(x): best case scenario, all questions correct 
+			 * 
+			 * Class A: score > itemsNeededToPass
+			 * 			msg = "You are gonna make it."
+			 * Class B: ( score - h(x) ) > ( g(x) - score )
+			 * 			msg="This is really looking good."
+			 * Class C: ( score - h(x) ) < ( g(x) - score )
+			 * 			msg="It is going to be close."
+			 * Class D: ( score - f(x) ) > ( h(x) - score )
+			 * 			msg="You might just make it."
+			 * Class E: ( score - f(x) ) < ( h(x) - score )
+			 * 			msg="Not looking good."
+			 * Class F:  score < f(x)
+			 * 			msg = "No, you are not going to make it."
+			 *
+			 * 
+			 * 
 			 */
 			
 			int itemsNeeded = (int) ExamTrainer.getItemsNeededToPass();

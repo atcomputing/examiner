@@ -1,0 +1,25 @@
+
+    <resources>
+        <string-array name="class_A">
+            <item>I cannot hold back anymore. Gongratulations, you did it.</item>
+        </string-array>
+        <string-array name="class_B">
+            <item>This is looking good.</item>
+            <item>Still going strong.</item>
+            <item>I think you are going to make it.</item>
+            <item>Yes, you are definitely going to make it.</item>
+        </string-array>
+        <string-array name="class_C">
+            <item>If we keep this up you will pass.</item>
+            <item></item>
+        </string-array>
+        <string-array name="class_D">
+            <item></item>
+        </string-array>
+        <string-array name="class_E">
+            <item></item>
+        </string-array>
+        <string-array name="class_F">
+            <item></item>
+        </string-array>
+    </resources>
