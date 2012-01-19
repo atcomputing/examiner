@@ -49,7 +49,7 @@ public class ShowScoreView extends View {
 	private int displayWidth;
 	private int displayHeight;
 
-	private int amountOfBalloons;
+	//private int amountOfBalloons;
 	private int amountOfBalloonBitmaps;
 	private Bitmap[] balloonBitmaps;
 
@@ -95,7 +95,7 @@ public class ShowScoreView extends View {
 
 	private void initBalloons() {
 		Resources r = this.getContext().getResources();
-		amountOfBalloonBitmaps = 2;
+		this.amountOfBalloonBitmaps = 2;
 		this.balloonBitmaps = new Bitmap[amountOfBalloonBitmaps];
 
 		this.balloonBitmaps[0] = createBitmap(r.getDrawable(R.drawable.aj_balloon_blue_64));
@@ -103,12 +103,13 @@ public class ShowScoreView extends View {
 	}
 
 	protected void addBalloon() {
-		Bitmap bitmap = balloonBitmaps[randomNumberGenerator.nextInt(2)];
+		Bitmap bitmap = balloonBitmaps[randomNumberGenerator.nextInt(this.amountOfBalloonBitmaps)];
 		int x = randomNumberGenerator.nextInt(displayWidth);
-		Balloon b = new Balloon(x, this.displayHeight, bitmap);
+		int y = this.displayHeight + randomNumberGenerator.nextInt(20);
+		Balloon b = new Balloon(x, y, bitmap);
 		this.balloons.add(b);
-		this.amountOfBalloons++;
 	}
+	
 	
 	protected void popBalloon() {
 		this.balloons.remove(0);
@@ -116,7 +117,7 @@ public class ShowScoreView extends View {
 	}
 	
 	protected int getAmountOfBalloons() {
-		return this.amountOfBalloons;
+		return this.balloons.size();
 	}
 	
 	protected void setShowScoreTextView(TextView view) {
@@ -140,12 +141,11 @@ public class ShowScoreView extends View {
 	}
 
 	protected void start() {
-		this.amountOfBalloons = 0;
 		initBalloons();
 		//setup wind
 				this.wind = new Wind(this.context);
 				this.wind.setWindSpeedUpperLimit(20);
-				this.wind.setWindChance(100);
+				this.wind.setWindChance(40);
 				
 		update();
 	}
@@ -154,7 +154,7 @@ public class ShowScoreView extends View {
 		this.score = score;
 	}
 	
-	protected void calculateAmountOfBalloons() {
+	protected int calculateAmountOfBalloons() {
 			long totalAmountOfItems = ExamTrainer.getAmountOfItems();
 			long itemsRequiredToPass = ExamTrainer.getItemsNeededToPass();
 			//determine amount of balloons
@@ -162,28 +162,34 @@ public class ShowScoreView extends View {
 			if ( amountOfWrongAnswers < 1 ) {
 				amountOfWrongAnswers = 1;
 			}
-			this.amountOfBalloons = Math.round((totalAmountOfItems - itemsRequiredToPass) / amountOfWrongAnswers) * 2;
+			return Math.round((totalAmountOfItems - itemsRequiredToPass) / amountOfWrongAnswers) * 2;
 	}
 
 	protected void showResult() {
 		long totalAmountOfItems = ExamTrainer.getAmountOfItems();
 		long itemsRequiredToPass = ExamTrainer.getItemsNeededToPass();
+		Resources r = this.getResources();
+		String text = "";
 		
 		if( score >= itemsRequiredToPass) {
-			showScoreTextView.setText(this.getResources().getString(R.string.Gongratulations) + "\n" + 
-					this.getResources().getString(R.string.You_passed));
-			
+			text = r.getString(R.string.Gongratulations) + "\n" + 
+					r.getString(R.string.You_passed) + "\n" +
+					r.getString(R.string.You_scored) + " " + score + " " +
+					r.getString(R.string.out_of) + " " + totalAmountOfItems;
 					} else {
-			Resources r = this.getResources();
-			String text = r.getString(R.string.You_failed) + "\n" +
+			text = r.getString(R.string.You_failed) + "\n" +
 			r.getString(R.string.You_scored) + " " + score + " " +
 			r.getString(R.string.out_of) + " " + totalAmountOfItems + " " +
 			r.getString(R.string.but_you_needed) + " " + itemsRequiredToPass;
-					
-			showScoreTextView.setText(text);
 		}
-		
+		showScoreTextView.setText(text);
 		showScoreTextView.setVisibility(View.VISIBLE);
+		
+		int amountOfBalloons = calculateAmountOfBalloons();
+		
+		for(int i = getAmountOfBalloons(); i < amountOfBalloons; i++) {
+			this.addBalloon();
+		}
 	}
 	
 	protected void update() {

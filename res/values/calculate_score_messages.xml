@@ -5,21 +5,23 @@
         </string-array>
         <string-array name="class_B">
             <item>This is looking good.</item>
-            <item>Still going strong.</item>
             <item>I think you are going to make it.</item>
-            <item>Yes, you are definitely going to make it.</item>
         </string-array>
         <string-array name="class_C">
-            <item>If we keep this up you will pass.</item>
-            <item></item>
+            <item>If you keep this up you will pass.</item>
+            <item>Still looking good.</item>
+            <item>It is going to be a close call.</item>
         </string-array>
         <string-array name="class_D">
-            <item></item>
+            <item>Not a great start but still a lot of questions to check.</item>
+            <item>I hope you score better at the end of the exam.</item>
+            <item>This is really exciting. It is going to be a close call.</item>
         </string-array>
         <string-array name="class_E">
-            <item></item>
+            <item>This looks bad but there is still a chance.</item>
+            <item>You might still pass but it is going to be tough.</item>
         </string-array>
         <string-array name="class_F">
-            <item></item>
+            <item>Hmmm, this does not look good.</item>
         </string-array>
     </resources>

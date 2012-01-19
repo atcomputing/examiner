@@ -1,5 +1,7 @@
 package nl.atcomputing.examtrainer;
 
+import java.util.Random;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.database.sqlite.SQLiteException;
@@ -10,6 +12,16 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 		private Context context;
 		private ShowScoreView showScoreView;
 		private ProgressDialog dialog;
+		private String[] messagesClassA;
+		private String[] messagesClassB;
+		private String[] messagesClassC;
+		private String[] messagesClassD;
+		private String[] messagesClassE;
+		private String[] messagesClassF;
+		private static final Random randomNumberGenerator = new Random();
+		
+		private int itemsNeededToPass;
+		private int amountOfItems;
 		
 		CalculateScore(Context context, ShowScoreView showScoreView) {
 			this.context = context;
@@ -17,13 +29,25 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 		}
 		
 		protected void onPreExecute() {
+//			itemsNeededToPass = (int) ExamTrainer.getItemsNeededToPass();
+//			amountOfItems = (int) ExamTrainer.getAmountOfItems();
+			
+			itemsNeededToPass = 44;
+			amountOfItems = 65;
+			
 			dialog = new ProgressDialog(context);
 			dialog.setMessage(context.getResources().getString(R.string.Calculating_your_score));
-			//dialog.setMax((int) ExamTrainer.getAmountOfItems());
-			dialog.setMax(100);
+			dialog.setMax(amountOfItems);
 			dialog.setProgress(0);
 			dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			dialog.show();
+			
+			messagesClassA = context.getResources().getStringArray(R.array.class_A);
+			messagesClassB = context.getResources().getStringArray(R.array.class_B);
+			messagesClassC = context.getResources().getStringArray(R.array.class_C);
+			messagesClassD = context.getResources().getStringArray(R.array.class_D);
+			messagesClassE = context.getResources().getStringArray(R.array.class_E);
+			messagesClassF = context.getResources().getStringArray(R.array.class_F);
 		}
 		
 		protected Integer doInBackground(Object... questionIds) {
@@ -59,13 +83,14 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 					examinationDbHelper.addResultPerQuestion(ExamTrainer.getExamId(), questionId, false);
 				}
 				
-				//publishProgress(answers_correct);
+				
+				//publishProgress(i, answers_correct);
 				
 			}
-			for (int i = 0; i < 100; i++) {
-				publishProgress(i);
+			for (int i = 0; i < amountOfItems; i++) {
+				publishProgress(i, i-randomNumberGenerator.nextInt(30));
 				try {
-					Thread.sleep(100);
+					Thread.sleep((long) (100 + ((i/(double) amountOfItems) * 200)));
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -75,9 +100,11 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 			return answers_correct;
 		}
 		
-		protected void onProgressUpdate(Integer... score) {
+		protected void onProgressUpdate(Integer... progress) {
 			dialog.incrementProgressBy(1);
-			updateText(score[0]);
+			if ( progress[0] % 10 == 0 ) {
+				updateText(progress[0], progress[1]);
+			}
 	     }
 		
 		protected void onPostExecute(Integer answersCorrect) {
@@ -99,7 +126,7 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 			this.showScoreView.showResult();
 		}
 		
-		protected void updateText(int score) {
+		protected void updateText(int itemsCalculated, int score) {
 			/**
 			 * gnuplot function:
 			 * itemsNeededToPass = 44
@@ -107,29 +134,47 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 			 * plot [x=1:65] f(x) = ((x*44)/65) - 65 + x, f(x), g(x) = x*(65/44), g(x), h(x) = (x*44)/65, h(x)
 			 * 
 			 * f(x): bottom line below which it will be impossible to pass
-			 * h(x): top line above which you possible may pass
+			 * h(x): line above which you may pass
 			 * g(x): best case scenario, all questions correct 
 			 * 
 			 * Class A: score > itemsNeededToPass
-			 * 			msg = "You are gonna make it."
+			 * 			messagesClassA[ x / ((amountOfItems / amountOfMessagesInClassA) + 1)  ]
 			 * Class B: ( score - h(x) ) > ( g(x) - score )
-			 * 			msg="This is really looking good."
+			 * 			messagesClassB[ x / ((amountOfItems / amountOfMessagesInClassB) + 1)  ]
 			 * Class C: ( score - h(x) ) < ( g(x) - score )
-			 * 			msg="It is going to be close."
+			 * 			messagesClassC[ x / ((amountOfItems / amountOfMessagesInClassC) + 1)  ]
 			 * Class D: ( score - f(x) ) > ( h(x) - score )
-			 * 			msg="You might just make it."
+			 * 			messagesClassD[ x / ((amountOfItems / amountOfMessagesInClassD) + 1)  ]
 			 * Class E: ( score - f(x) ) < ( h(x) - score )
-			 * 			msg="Not looking good."
+			 * 			messagesClassE[ x / ((amountOfItems / amountOfMessagesInClassE) + 1)  ]
 			 * Class F:  score < f(x)
-			 * 			msg = "No, you are not going to make it."
-			 *
-			 * 
-			 * 
+			 * 			messagesClassF[ x / ((amountOfItems / amountOfMessagesInClassF) + 1)  ]
 			 */
 			
-			int itemsNeeded = (int) ExamTrainer.getItemsNeededToPass();
-			if( score > itemsNeeded ) {
-				
+			String message = "";
+			
+			int fx = ((itemsCalculated * itemsNeededToPass) / amountOfItems) - amountOfItems + itemsCalculated;
+			int gx = itemsCalculated * (amountOfItems/itemsNeededToPass);
+			int hx = (itemsCalculated * itemsNeededToPass) / amountOfItems;
+			
+			if( score > hx ) {
+				if( score > itemsNeededToPass ) {
+					message = messagesClassA[ itemsCalculated / ((amountOfItems / messagesClassA.length) + 1)  ];
+				} else if ( ( score - hx ) > ( gx - score ) ) {
+					message = messagesClassB[ itemsCalculated / ((amountOfItems / messagesClassB.length) + 1)  ];
+				} else {
+					message = messagesClassC[ itemsCalculated / ((amountOfItems / messagesClassC.length) + 1)  ];
+				}
+			} else {
+				if ( score < fx ) {
+					message = messagesClassF[ itemsCalculated / ((amountOfItems / messagesClassF.length) + 1)  ];
+				} else if ( ( score - fx ) > ( hx - score ) ) {
+					message = messagesClassD[ itemsCalculated / ((amountOfItems / messagesClassD.length) + 1)  ];
+				} else {
+					message = messagesClassE[ itemsCalculated / ((amountOfItems / messagesClassE.length) + 1)  ];
+				}
 			}
+			
+			dialog.setMessage(message);
 		}
 	}
