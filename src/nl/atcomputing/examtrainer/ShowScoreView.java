@@ -89,7 +89,7 @@ public class ShowScoreView extends View {
 		balloonSizeY = a.getInt(R.styleable.BalloonSize_height, 113);
 		this.score = 0;
 		
-		//a.recycle();
+		a.recycle();
 	}
 
 	private void initBalloons() {
