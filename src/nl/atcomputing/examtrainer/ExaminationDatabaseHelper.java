@@ -161,6 +161,6 @@ public class ExaminationDatabaseHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + ScoresAnswers.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + Scores.TABLE_NAME);
 		db.execSQL("DROP TABLE IF EXISTS " + ResultPerQuestion.TABLE_NAME);
-		onCreate(db);	
+		this.onCreate(db);	
 	}
 }

@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
@@ -83,14 +84,12 @@ public class ShowScoreView extends View {
 		displayWidth = display.getWidth();
 		displayHeight = display.getHeight();
 
-		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BalloonView);
-
-		balloonSizeX = a.getInt(R.styleable.BalloonView_balloonSizeX, 64);
-		balloonSizeY = a.getInt(R.styleable.BalloonView_balloonSizeY, 113);
-
+		TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.BalloonSize);
+		balloonSizeX = a.getInt(R.styleable.BalloonSize_width, 64);
+		balloonSizeY = a.getInt(R.styleable.BalloonSize_height, 113);
 		this.score = 0;
 		
-		a.recycle();
+		//a.recycle();
 	}
 
 	private void initBalloons() {

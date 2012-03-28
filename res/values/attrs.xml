@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <declare-styleable name="BalloonView">
-    <attr name="balloonSizeX" format="integer" />
-    <attr name="balloonSizeY" format="integer" />
+  <declare-styleable name="BalloonSize">
+    <attr name="width" format="integer">
+        <enum name="ldpi" value="64"/>
+        <enum name="mdpi" value="64"/>
+        <enum name="hdpi" value="96"/>
+        <enum name="xhdpi" value="144"/>
+    </attr>
+    <attr name="height" format="integer">
+        <enum name="ldpi" value="113"/>
+        <enum name="mdpi" value="113"/>
+        <enum name="hdpi" value="169"/>
+        <enum name="xhdpi" value="254"/>
+    </attr>
   </declare-styleable>
 </resources>
 
