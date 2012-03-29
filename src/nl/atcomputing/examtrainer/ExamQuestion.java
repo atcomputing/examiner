@@ -3,6 +3,9 @@ package nl.atcomputing.examtrainer;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteException;
+import android.util.Log;
 
 /**
  * @author martijn brekhof
@@ -19,6 +22,7 @@ public class ExamQuestion {
 	private String hint;
 	private ArrayList<String> answers;
 	private ArrayList<String> choices;
+	private Context context;
 	
 	protected ExamQuestion(Context context) {
 		type = TYPE_MULTIPLE_CHOICE;
@@ -28,8 +32,9 @@ public class ExamQuestion {
 		choices = new ArrayList<String>();
 		hint = context.getString(R.string.hint_not_available);
 		exhibit = null;
+		
+		this.context = context;
 	}
-	
 	
 	/**
 	 * @brief Creates a new ExamQuestion object
@@ -129,5 +134,54 @@ public class ExamQuestion {
 		for( int i = 0; i < arrayList.size(); i++ ) {
 			examinationDbHelper.addAnswer(questionId, arrayList.get(i));
 		}
+	}
+	
+	protected void updateQuestionInDatabase(String databaseName, long questionNumber) {
+		
+	}
+	
+	protected ExamQuestion fillFromDatabase(String databaseName, long questionNumber) 
+			throws SQLiteException {
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this.context);
+		try {
+			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+		} catch (SQLiteException e) {
+			throw e;
+		}
+		
+		Cursor cursor = examinationDbHelper.getQuestion(questionNumber);
+		if( ( cursor == null ) || ( cursor.getCount() < 1 ) ) {
+			return null;
+		}
+		
+		int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_TYPE);
+		this.type = cursor.getString(index);
+		index = cursor.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_EXHIBIT);
+		this.exhibit = cursor.getString(index);
+		index = cursor.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_QUESTION);
+		this.question = cursor.getString(index);
+		
+		cursor.close();
+		
+		cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getExamId(), questionNumber);
+		if ( cursor.getCount() > 0 ) {
+			index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
+			this.answers.add(cursor.getString(index));
+		}
+		
+		if( this.type == TYPE_MULTIPLE_CHOICE ) {
+			cursor = examinationDbHelper.getChoices(questionNumber);
+			if ( cursor != null ) {
+				index = cursor.getColumnIndex(ExaminationDatabaseHelper.Choices.COLUMN_NAME_CHOICE);
+				do {
+					this.choices.add(cursor.getString(index));
+				} while( cursor.moveToNext() );
+			}
+		}
+		cursor.close();
+		
+		examinationDbHelper.close();
+		
+		return this;
 	}
 }

@@ -31,13 +31,14 @@ public class ExamQuestionActivity extends Activity {
 	//private ExaminationDbAdapter examinationDbHelper;
 	//private Cursor cursorQuestion;
 	private long questionNumber;
-	private String questionType;
 	private EditText editText;
 	private ArrayList <CheckBox> cboxes;
 	private static final int DIALOG_ENDOFEXAM_ID = 1;
 	private static final int DIALOG_SHOW_HINT_ID = 2;
 
 	private static final String TAG = "ExamQuestionActivity";
+
+	private ExamQuestion examQuestion;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -46,39 +47,22 @@ public class ExamQuestionActivity extends Activity {
 		if ( ExamTrainer.endOfExam() ) {
 			finish();
 		}
-		
-		Intent intent = getIntent();
 
-		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
-		try {
-			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		} catch (SQLiteException e) {
-			ExamTrainer.showError(this, 
-					this.getResources().getString(R.string.Could_not_open_exam_database_file) + "\n" +
-							this.getResources().getString(R.string.Try_reinstalling_the_exam));
-			this.finish();
-		}
+		Intent intent = getIntent();
 
 		questionNumber = ExamTrainer.getQuestionNumber(intent);
 		if ( ( questionNumber < 1 ) || ( ExamTrainer.getExamDatabaseName() == null ) ) {
 			this.finish();
 		}
-		else {
-			Cursor cursor = examinationDbHelper.getQuestion(questionNumber);
-			Log.d("ExamQuestionActivity onCreate","Cursor: " + cursor);
-			if ( cursor.getCount() < 1 ) {
-				ExamTrainer.showError(this, this.getResources().getString(R.string.Exam_is_empty) + "\n" +
-						this.getResources().getString(R.string.Try_reinstalling_the_exam));
-			} else {
 
-				int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_TYPE);
-				questionType = cursor.getString(index);
-
-				setupLayout();
-			}
-			cursor.close();
+		this.examQuestion = new ExamQuestion(this);
+		try {
+			this.examQuestion.fillFromDatabase(ExamTrainer.getExamDatabaseName(), questionNumber);
+		} catch (SQLiteException e) {
+			ExamTrainer.showError(this, this.getResources().getString(R.string.Exam_is_empty) + "\n" +
+					this.getResources().getString(R.string.Try_reinstalling_the_exam));
 		}
-		examinationDbHelper.close();
+		setupLayout();
 	}
 
 	protected void onResume() {
@@ -87,7 +71,7 @@ public class ExamQuestionActivity extends Activity {
 			finish();
 		}
 	}
-	
+
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.question_menu, menu);
@@ -175,7 +159,7 @@ public class ExamQuestionActivity extends Activity {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		Cursor cursor = examinationDbHelper.getAnswers(questionNumber);
-			Log.d("ExamQuestionActivity showAnswers","Cursor: " + cursor);
+		Log.d("ExamQuestionActivity showAnswers","Cursor: " + cursor);
 		examinationDbHelper.close();
 		if ( cursor == null ) {
 			Log.d(TAG, "Oi, cursor is nulllll");
@@ -183,7 +167,7 @@ public class ExamQuestionActivity extends Activity {
 		}
 		int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
 
-		if(questionType.equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
+		if(examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
 			do {
 				String answer = cursor.getString(index);
 				for(int i = 0; i < cboxes.size(); i++) {
@@ -219,55 +203,49 @@ public class ExamQuestionActivity extends Activity {
 		startActivity(intent);
 	}
 
-	private void createChoices(LinearLayout layout) {
+	private void createChoicesLayout(LinearLayout layout) {
 		CheckBox cbox; 
 		cboxes = new ArrayList<CheckBox>();
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		Cursor cursor = examinationDbHelper.getChoices(questionNumber);
-			Log.d("ExamQuestionActivity createChoices","Cursor: " + cursor);
-		if ( cursor != null ) {
-			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Choices.COLUMN_NAME_CHOICE);
-			do {
-				final String choice = cursor.getString(index);
-				cbox = new CheckBox(this);
-				cbox.setText(choice);
 
-				if ( examinationDbHelper.scoresAnswerPresent(ExamTrainer.getExamId(), 
-						questionNumber, choice) ) {
-					cbox.setChecked(true);
-				}
+		ArrayList<String> choices = this.examQuestion.getChoices();
+		for( String choice : choices ) {
+			cbox = new CheckBox(this);
+			cbox.setText(choice);
 
-				cbox.setOnClickListener(new View.OnClickListener() {
-					public void onClick(View v) {
-						if (((CheckBox) v).isChecked()) {
-							ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
-							examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-							examinationDbHelper.setScoresAnswersMultipleChoice(ExamTrainer.getExamId(), questionNumber, choice);
-							examinationDbHelper.close();
-							
-						} else {
-							ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
-							examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-							examinationDbHelper.deleteScoresAnswer(ExamTrainer.getExamId(), questionNumber, choice);
-							examinationDbHelper.close();
-						}
+			if ( examinationDbHelper.scoresAnswerPresent(ExamTrainer.getExamId(), 
+					questionNumber, choice) ) {
+				cbox.setChecked(true);
+			}
 
+			final String answer = choice;
+			cbox.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					if (((CheckBox) v).isChecked()) {
+						ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
+						examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+						examinationDbHelper.setScoresAnswersMultipleChoice(ExamTrainer.getExamId(), questionNumber, answer);
+						examinationDbHelper.close();
+
+					} else {
+						ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
+						examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+						examinationDbHelper.deleteScoresAnswer(ExamTrainer.getExamId(), questionNumber, answer);
+						examinationDbHelper.close();
 					}
-				});
 
-				layout.addView(cbox);
-				cboxes.add(cbox);
-			} while( cursor.moveToNext() );
-			cursor.close();
-		} else {
-			Log.d("ExamQuestionActivity", "cursor is null");
+				}
+			});
+
+			layout.addView(cbox);
+			cboxes.add(cbox);
 		}
 		examinationDbHelper.close();
 	}
 
+
 	private void setupLayout() {
-		int index;
 		String text;
 
 		setContentView(R.layout.question);
@@ -280,15 +258,7 @@ public class ExamQuestionActivity extends Activity {
 		TextView question = (TextView) findViewById(R.id.textQuestionNumber);
 		question.setText(this.getString(R.string.Question) + ": " + Long.toString(questionNumber));
 
-		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
-		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		Cursor cursor = examinationDbHelper.getQuestion(questionNumber);
-		Log.d("ExamQuestionActivity setupLayout", "Cursor: "+ cursor);
-		examinationDbHelper.close();
-		
-		if( cursor != null ) {
-		index = cursor.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_EXHIBIT);
-		text = cursor.getString(index);
+		text = this.examQuestion.getExhibit();
 		if( text != null ) {
 			TextView exhibit = (TextView) findViewById(R.id.textExhibit);
 			exhibit.setText(text);
@@ -298,30 +268,17 @@ public class ExamQuestionActivity extends Activity {
 		}
 
 
-		index = cursor.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_QUESTION);
-		text = cursor.getString(index);
+		text = this.examQuestion.getQuestion();
 		TextView question_textview = (TextView) findViewById(R.id.textQuestion);
 		question_textview.setText(text);
-		cursor.close();
-		}
-		
+
 		LinearLayout v_layout = (LinearLayout) findViewById(R.id.answerLayout);
 
-		if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
-			createChoices(v_layout);
-		} else if ( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
+		if( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
+			createChoicesLayout(v_layout);
+		} else if ( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
 			editText = new EditText(this);
-			examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
-			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-			cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getExamId(), questionNumber);
-			Log.d("ExamQuestionActivity setupLayout", "Cursor: "+ cursor);
-			examinationDbHelper.close();
-			if ( cursor.getCount() > 0 ) {
-				index = cursor.getColumnIndex(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER);
-				text = cursor.getString(index);
-				editText.setText(text.toString());
-			}
-			cursor.close();
+			editText.setText(this.examQuestion.getAnswers().get(0));
 			v_layout.addView(editText);
 		}
 
@@ -331,10 +288,11 @@ public class ExamQuestionActivity extends Activity {
 		} else {
 			button_prev_question.setOnClickListener( new View.OnClickListener() {
 				public void onClick(View v) {
-					if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
+					if( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
 						ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
 						examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-						examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getExamId(), questionNumber, editText.getText().toString());
+						examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getExamId(), questionNumber,
+								editText.getText().toString());
 						examinationDbHelper.close();
 					}
 					Intent intent = new Intent(ExamQuestionActivity.this, ExamQuestionActivity.class);
@@ -343,31 +301,27 @@ public class ExamQuestionActivity extends Activity {
 				}
 			});
 		}
+
 		Button button_next_question = (Button) findViewById(R.id.button_next);
-		examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
-		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		int questionsTotal = examinationDbHelper.getQuestionsCount();
-		examinationDbHelper.close();
-		if( questionNumber >= questionsTotal ) {
+		if( questionNumber >= ExamTrainer.getAmountOfItems() ) {
 			if (ExamTrainer.review()) {
 				button_next_question.setText(R.string.End_review);
 			} else {
 				button_next_question.setText(R.string.End_exam);
 			}
 		}
+
 		button_next_question.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
-				ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
-				examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-				int questionsTotal = examinationDbHelper.getQuestionsCount();
-				
-				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-					examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getExamId(), questionNumber, editText.getText().toString());
+				if( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
+					ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
+					examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+					examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getExamId(), questionNumber,
+							editText.getText().toString());
+					examinationDbHelper.close();
 				}
-				
-				examinationDbHelper.close();
-				
-				if ( questionNumber >= questionsTotal ) {
+
+				if ( questionNumber >= ExamTrainer.getAmountOfItems() ) {
 					if(ExamTrainer.review()) {
 						finish();
 					}
