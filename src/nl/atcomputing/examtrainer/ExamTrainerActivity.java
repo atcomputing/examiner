@@ -2,7 +2,6 @@ package nl.atcomputing.examtrainer;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -12,6 +11,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -22,11 +22,6 @@ import android.widget.RelativeLayout;
 public class ExamTrainerActivity extends Activity {
 	private LinearLayout about_layout;
 	
-	AnimationDrawable mFrameAnimation = null;
-	Button startExam;
-	
-    boolean mbUpdating = false;
-    
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
@@ -39,10 +34,10 @@ public class ExamTrainerActivity extends Activity {
 //		examTrainerDbHelper.upgrade();
 //		examTrainerDbHelper.close();
 		
-		about_layout = (LinearLayout) findViewById(R.id.about_window);
-		about_layout.setVisibility(View.INVISIBLE);
+		this.about_layout = (LinearLayout) findViewById(R.id.about_window);
+		this.about_layout.setVisibility(View.INVISIBLE);
 
-		startExam = (Button) findViewById(R.id.button_start);
+		Button startExam = (Button) findViewById(R.id.button_start);
 		startExam.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(ExamTrainerActivity.this, SelectExamActivity.class);
@@ -55,7 +50,13 @@ public class ExamTrainerActivity extends Activity {
 			}
 		});
 		
-		
+		ImageView logo = (ImageView) findViewById(R.id.logo);
+		logo.setOnClickListener( new View.OnClickListener() {
+			
+			public void onClick(View v) {
+				showHideInfo();	
+			}
+		});
 	}
 	
 	@Override
@@ -67,18 +68,9 @@ public class ExamTrainerActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
 		switch (item.getItemId()) {
 		case R.id.main_menu_about:
-			if( about_layout.getVisibility() == View.INVISIBLE ) {
-				about_layout.setVisibility(View.VISIBLE);
-			} else {
-				about_layout.setVisibility(View.INVISIBLE);
-			}
-			break;
-		case R.id.main_menu_settings:
-			intent = new Intent(ExamTrainerActivity.this, PreferencesActivity.class);
-			startActivity(intent);
+			showHideInfo();
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -89,5 +81,13 @@ public class ExamTrainerActivity extends Activity {
 	protected void retrieveExam() {
 		Intent intent = new Intent(this, RetrieveExamQuestions.class);
 		startService(intent);
+	}
+	
+	private void showHideInfo() {
+		if( this.about_layout.getVisibility() == View.INVISIBLE ) {
+			this.about_layout.setVisibility(View.VISIBLE);
+		} else {
+			this.about_layout.setVisibility(View.INVISIBLE);
+		}
 	}
 }

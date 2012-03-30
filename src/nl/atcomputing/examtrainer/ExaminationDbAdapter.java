@@ -305,6 +305,11 @@ public class ExaminationDbAdapter {
 		return db.insert(ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, null, values);
 	}
 	
+	/**
+	 * Returns the answers a user previously provided for the given exam
+	 * @param examId the identifier for the exam you want the answers from
+	 * @return Cursor containing the rows with answers for the given exam
+	 */
 	public Cursor getScoresAnswers(long examId) {
 		Cursor cursor = db.query(true, ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, 
 				new String[] {
@@ -322,6 +327,12 @@ public class ExaminationDbAdapter {
 		return null;
 	}
 	
+	/**
+	 * Returns the answers a user previously provided for the given exam for a specific question
+	 * @param examId the identifier for the exam you want the answers from
+	 * @param questionId the identifier for the question you want the answers from
+	 * @return Cursor containing the rows with answers for the given exam and question
+	 */
 	public Cursor getScoresAnswers(long examId, long questionId) {
 		Cursor cursor = db.query(true, ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, 
 				new String[] {

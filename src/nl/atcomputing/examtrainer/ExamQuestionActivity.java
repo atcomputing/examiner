@@ -210,7 +210,9 @@ public class ExamQuestionActivity extends Activity {
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 
 		ArrayList<String> choices = this.examQuestion.getChoices();
+		Log.d("ExamQuestionActivity", "choices.size()"+choices.size());
 		for( String choice : choices ) {
+			Log.d("ExamQuestionActivity", "choice: "+ choice);
 			cbox = new CheckBox(this);
 			cbox.setText(choice);
 
@@ -245,6 +247,19 @@ public class ExamQuestionActivity extends Activity {
 	}
 
 
+	private void createOpenQuestionLayout(LinearLayout layout) {
+		this.editText = new EditText(this);
+		
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+		Cursor cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getExamId(), questionNumber);
+		if ( cursor.getCount() > 0 ) {
+			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
+			editText.setText(cursor.getString(index));
+		}
+		layout.addView(editText);
+	}
+	
 	private void setupLayout() {
 		String text;
 
@@ -274,12 +289,10 @@ public class ExamQuestionActivity extends Activity {
 
 		LinearLayout v_layout = (LinearLayout) findViewById(R.id.answerLayout);
 
-		if( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
+		if( this.examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
 			createChoicesLayout(v_layout);
 		} else if ( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
-			editText = new EditText(this);
-			editText.setText(this.examQuestion.getAnswers().get(0));
-			v_layout.addView(editText);
+			createOpenQuestionLayout(v_layout);
 		}
 
 		Button button_prev_question = (Button) findViewById(R.id.button_prev);
@@ -323,6 +336,9 @@ public class ExamQuestionActivity extends Activity {
 
 				if ( questionNumber >= ExamTrainer.getAmountOfItems() ) {
 					if(ExamTrainer.review()) {
+						Intent intent = new Intent(ExamQuestionActivity.this, HistoryActivity.class);
+						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+						startActivity(intent);
 						finish();
 					}
 					else {

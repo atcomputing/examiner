@@ -1,5 +1,7 @@
 package nl.atcomputing.examtrainer;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -28,14 +30,11 @@ public class HistoryActivity extends Activity {
 		super.onCreate(savedInstanceState);        
 		Log.d("trace", "HistoryActivity created");
 		
-		ExamTrainer.showProgressDialog(this, this.getString(R.string.Loading_Please_wait));
-        
 		setContentView(R.layout.history);
 		
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(HistoryActivity.this);
         examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
         Cursor cursor = examinationDbHelper.getScoresReversed();
-        Log.d("HistoryActivity", "Cursor: " + cursor);
         examinationDbHelper.close();
         adapter = new HistoryAdapter(HistoryActivity.this, R.layout.history_entry, cursor);
 
@@ -49,8 +48,6 @@ public class HistoryActivity extends Activity {
 				showDialog(DIALOG_SHOW_EXAM);
 			}
 		});
-		
-		ExamTrainer.stopProgressDialog();
 	}
 
 	protected void onDestroy() {
@@ -68,12 +65,11 @@ public class HistoryActivity extends Activity {
 			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(HistoryActivity.this);
         	examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 			Cursor cursor = examinationDbHelper.getScore(examId);
-	Log.d("HistoryActivity", "Cursor: " + cursor);
 			examinationDbHelper.close();
 			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_DATE);
 			String examDate = ExamTrainer.convertEpochToString(cursor.getLong(index));
 			index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE);
-		    	int examScore = cursor.getInt(index);
+		    int examScore = cursor.getInt(index);
 			cursor.close();	
 			
 			String pass = this.getResources().getString(R.string.no);
@@ -105,8 +101,9 @@ public class HistoryActivity extends Activity {
 					ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(HistoryActivity.this);
 			        examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 					examinationDbHelper.deleteScore(examId);
+			        Cursor cursor = examinationDbHelper.getScoresReversed();
 					examinationDbHelper.close();
-					adapter.getCursor().requery();
+					adapter.changeCursor(cursor);
 					adapter.notifyDataSetChanged();
 					dialog.dismiss();
 				}
@@ -146,5 +143,10 @@ public class HistoryActivity extends Activity {
 			dialog = null;
 		}
 		return dialog;
+	}
+	
+	private void deleteSelected() {
+		ArrayList<Integer> examIdsSelected = this.adapter.getExamIdsSelected();
+		...
 	}
 }

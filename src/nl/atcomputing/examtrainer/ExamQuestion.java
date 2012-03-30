@@ -15,20 +15,42 @@ public class ExamQuestion {
 	public static final String TYPE_OPEN = "open";
 	public static final String TYPE_MULTIPLE_CHOICE = "multiple choice";
 	
+	/**
+	 * Specifies the type of this question
+	 */
 	private String type;
+	/**
+	 * Specifies the category this question belongs to
+	 */
 	private String topic;
+	/**
+	 * The actual question
+	 */
 	private String question;
+	/**
+	 * A possible example the question refers too
+	 */
 	private String exhibit;
+	/**
+	 * A hint for the user regarding the question 
+	 */
 	private String hint;
+	/**
+	 * Correct answers to the question
+	 */
 	private ArrayList<String> answers;
+	/**
+	 * The choices when type is multiple choice
+	 */
 	private ArrayList<String> choices;
+	
 	private Context context;
 	
 	protected ExamQuestion(Context context) {
 		type = TYPE_MULTIPLE_CHOICE;
 		topic = null;
 		question = context.getString(R.string.No_question_available);
-		answers = new ArrayList<String>();
+		answers = new ArrayList<String>();	//
 		choices = new ArrayList<String>();
 		hint = context.getString(R.string.hint_not_available);
 		exhibit = null;
@@ -38,12 +60,13 @@ public class ExamQuestion {
 	
 	/**
 	 * @brief Creates a new ExamQuestion object
-	 * @param type
-	 * @param topic
-	 * @param exhibit
-	 * @param question
-	 * @param correct_answer
-	 * @param choices
+	 * @param type Specifies the type of this question
+	 * @param topic Specifies the category this question belongs to
+	 * @param exhibit A possible example the question refers too
+	 * @param question The actual question
+	 * @param answers Correct answers to the question
+	 * @param choices The choices when type is multiple choice
+	 * @param hint A hint for the user regarding the question 
 	 */
 	protected ExamQuestion(String type, String topic, String exhibit, String question, 
 			ArrayList<String> answers, ArrayList<String> choices, String hint) {
@@ -78,6 +101,9 @@ public class ExamQuestion {
 		return choices;
 	}
 	
+	/**
+	 * @return the list of correct answers to this question
+	 */
 	protected ArrayList<String> getAnswers() {
 		return answers;
 	}
@@ -144,7 +170,7 @@ public class ExamQuestion {
 			throws SQLiteException {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this.context);
 		try {
-			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+			examinationDbHelper.open(databaseName);
 		} catch (SQLiteException e) {
 			throw e;
 		}
@@ -163,14 +189,11 @@ public class ExamQuestion {
 		
 		cursor.close();
 		
-		cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getExamId(), questionNumber);
-		if ( cursor.getCount() > 0 ) {
-			index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
-			this.answers.add(cursor.getString(index));
-		}
 		
-		if( this.type == TYPE_MULTIPLE_CHOICE ) {
+		
+		if( this.type.equalsIgnoreCase(TYPE_MULTIPLE_CHOICE) ) {
 			cursor = examinationDbHelper.getChoices(questionNumber);
+			Log.d("ExamQuestion", "cursor.getCount(): "+cursor.getCount());
 			if ( cursor != null ) {
 				index = cursor.getColumnIndex(ExaminationDatabaseHelper.Choices.COLUMN_NAME_CHOICE);
 				do {
@@ -182,6 +205,11 @@ public class ExamQuestion {
 		
 		examinationDbHelper.close();
 		
+		Log.d("ExamQuestion", "type: " +this.type + 
+				"\nexhibit: " +this.exhibit + 
+				"\nquestion: " +this.question + 
+				"\nanswers: " +this.answers.toString() + 
+				"\nchoices: " +this.choices.toString());
 		return this;
 	}
 }

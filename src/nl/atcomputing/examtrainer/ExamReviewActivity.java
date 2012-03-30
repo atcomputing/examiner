@@ -22,9 +22,7 @@ public class ExamReviewActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d("trace", "ExamReviewActivity created");
-		
-		ExamTrainer.showProgressDialog(this, this.getString(R.string.Loading_Please_wait));
-		
+			
 		setContentView(R.layout.review_exam);
 		
 		long examId = ExamTrainer.getExamId();
@@ -48,8 +46,6 @@ public class ExamReviewActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-		
-		ExamTrainer.stopProgressDialog();
 	}
 
 	protected void onDestroy() {

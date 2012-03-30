@@ -131,35 +131,6 @@ public final class ExamTrainer {
 		return time.format("%Y-%m-%d %H:%M");
 	}
 	
-	public static void showProgressDialog(Context context, String message) {
-		if( KEEP_PROGRESS_DIALOG_RUNNING == true ) {
-			//Only one Progress Dialog is allowed to run simultaneously
-			Log.d(TAG, "Another Progress Dialog still seems to be active.\nForgot to call ExamTrainer.stopProgressDialog()?");
-			return;
-		}
-		KEEP_PROGRESS_DIALOG_RUNNING = true;
-		final ProgressDialog dialog = ProgressDialog.show(context, "", 
-				message, true, false);
-        Thread thread = new Thread(new Runnable() {
-            public void run() {
-                while( KEEP_PROGRESS_DIALOG_RUNNING == true ) {
-                	try {
-						Thread.sleep(100);
-					} catch (InterruptedException e) {
-						Log.d(TAG, "InterruptedException " + e.getMessage());
-						KEEP_PROGRESS_DIALOG_RUNNING = false;
-					}
-                }
-                dialog.dismiss();
-            }
-        });
-        thread.start();
-	}
-	
-	public static void stopProgressDialog() {
-		KEEP_PROGRESS_DIALOG_RUNNING = false;
-	}
-	
 	public static void showError(Activity activity, String msg) {
 		final Activity act = activity;
 		AlertDialog.Builder builder = new AlertDialog.Builder(activity);

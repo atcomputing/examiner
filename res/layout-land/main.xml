@@ -20,6 +20,28 @@
     		android:typeface="serif"
     		android:padding="10dp"/>
     	</LinearLayout>
+    	
+    	<RelativeLayout 
+    	    android:orientation="vertical"
+    		android:layout_width="fill_parent"
+    		android:layout_height="wrap_content"
+    		android:layout_alignParentBottom="true"
+    	>
+    		<ImageView android:src="@drawable/atlogo"
+    		    android:layout_width="wrap_content" 
+    		    android:layout_height="wrap_content"
+    		    android:scaleType="centerCrop"
+    		    android:layout_alignParentRight="true"
+    		    android:id="@+id/logo"
+    		    android:layout_centerInParent="true"
+    		    />
+    		<Button android:text="@string/Start" 
+    		    android:id="@+id/button_start" 
+    		    android:layout_width="fill_parent" 
+    		    android:layout_height="wrap_content"
+    		    android:layout_below="@id/logo"
+    		    ></Button>
+    	</RelativeLayout>
     	<LinearLayout
     	    	android:id="@+id/about_window"
     	    	android:layout_width="fill_parent"
@@ -72,28 +94,9 @@
     		    android:layout_width="fill_parent"
     			android:layout_height="wrap_content" 
     		    android:text="@string/Visit_atcomputing"
-    		    android:gravity="center">
+    		    android:gravity="center"
+    		    android:autoLink="web"
+    		    >
     		</TextView>
     	</LinearLayout>
-    	<RelativeLayout 
-    	    android:orientation="vertical"
-    		android:layout_width="fill_parent"
-    		android:layout_height="wrap_content"
-    		android:layout_alignParentBottom="true"
-    	>
-    		<ImageView android:src="@drawable/atlogo"
-    		    android:layout_width="wrap_content" 
-    		    android:layout_height="wrap_content"
-    		    android:scaleType="centerCrop"
-    		    android:layout_alignParentRight="true"
-    		    android:id="@+id/logo"
-    		    android:layout_centerInParent="true"
-    		    />
-    		<Button android:text="@string/Start" 
-    		    android:id="@+id/button_start" 
-    		    android:layout_width="fill_parent" 
-    		    android:layout_height="wrap_content"
-    		    android:layout_below="@id/logo"
-    		    ></Button>
-    	</RelativeLayout>
     </RelativeLayout>

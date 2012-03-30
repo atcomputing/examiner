@@ -39,8 +39,6 @@ public class SelectExamActivity extends Activity {
 		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.selectexam);
 		
-		ExamTrainer.showProgressDialog(this, this.getString(R.string.Loading_Please_wait));
-
 		ListView selectExam = (ListView) this.findViewById(R.id.select_exam_list);
 		noExamsAvailable = (TextView) this.findViewById(R.id.selectexam_no_exams_available);
 		clickOnManageExams = (TextView) this.findViewById(R.id.selectexam_click_on_manage_exams);
@@ -75,7 +73,6 @@ public class SelectExamActivity extends Activity {
 		}
 		adap.changeCursor(cursor);
 		adap.notifyDataSetChanged();
-		ExamTrainer.stopProgressDialog();
 	}
 
 	protected void onPause() {
