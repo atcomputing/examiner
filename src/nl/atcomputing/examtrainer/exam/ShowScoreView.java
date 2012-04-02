@@ -103,15 +103,15 @@ public class ShowScoreView extends View {
 		this.amountOfBalloonBitmaps = 2;
 		this.balloonBitmaps = new Bitmap[amountOfBalloonBitmaps];
 
-		this.balloonBitmaps[0] = createBitmap(r.getDrawable(R.drawable.aj_balloon_blue_64));
-		this.balloonBitmaps[1] = createBitmap(r.getDrawable(R.drawable.aj_balloon_red_64));
+		this.balloonBitmaps[0] = createBitmap(r.getDrawable(R.drawable.aj_balloon_blue));
+		this.balloonBitmaps[1] = createBitmap(r.getDrawable(R.drawable.aj_balloon_red));
 	}
 
 	protected void addBalloon() {
 		Bitmap bitmap = balloonBitmaps[randomNumberGenerator.nextInt(this.amountOfBalloonBitmaps)];
 		int x = randomNumberGenerator.nextInt(displayWidth);
 		int y = this.displayHeight + randomNumberGenerator.nextInt(20);
-		Balloon b = new Balloon(x, y, bitmap);
+		Balloon b = new Balloon(this.context, Balloon.TYPE_BLUE, texture, pixel_width, pixel_height)
 		this.balloons.add(b);
 	}
 	
