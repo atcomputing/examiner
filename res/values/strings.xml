@@ -92,4 +92,5 @@
 	<!-- Error messages  -->
 	<string name="Failed_to_delete_exam">Failed to delete exam</string>
 	<string name="Failed_to_calculate_score">Failed to calculate score</string>
+	<string name="Delete_selected_scores">Delete selected scores</string>
 </resources>

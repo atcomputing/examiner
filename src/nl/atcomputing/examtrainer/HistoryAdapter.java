@@ -4,9 +4,11 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -21,17 +23,16 @@ import android.widget.TextView;
 
 public class HistoryAdapter extends CursorAdapter  {
 	private int layout;
-	    
-	private ArrayList<Integer> examIdsSelected;
+	private HistoryActivity activity;
 	
-	    public HistoryAdapter(Context context, int layout, Cursor c) {
-	      super(context, c);
+	    public HistoryAdapter(HistoryActivity activity, int layout, Cursor c, Button deleteScoresButton) {
+	      super(activity, c);
 	      this.layout = layout;
-	      this.examIdsSelected = new ArrayList<Integer>();
+	      this.activity = activity;
 	    }
 
 		@Override
-		public void bindView(View view, Context context, Cursor cursor) {			
+		public void bindView(View view, Context context, Cursor cursor) {
 		        int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_DATE);
 			    String examDate = ExamTrainer.convertEpochToString(cursor.getLong(index));
 			    index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE);
@@ -54,12 +55,15 @@ public class HistoryAdapter extends CursorAdapter  {
 		        index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores._ID);
 			    final int examId = cursor.getInt(index);
 			    
-		        CheckBox cbox = new CheckBox(context);
+		        CheckBox cbox = (CheckBox) view.findViewById(R.id.historyCheckBox);
+		        cbox.setChecked(false);
 		        cbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					
 					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 						if( isChecked ) {
-							examIdsSelected.add(examId);
+							activity.addSelectionToList(examId);
+						} else {
+							activity.removeSelectionFromList(examId);
 						}
 					}
 				});
@@ -70,9 +74,5 @@ public class HistoryAdapter extends CursorAdapter  {
 			final LayoutInflater mInflater = LayoutInflater.from(context);
 			View view = (View) mInflater.inflate(layout, parent, false);
 			return view;
-		}
-		
-		public ArrayList<Integer> getExamIdsSelected() {
-			return this.examIdsSelected;
 		}
 	  }
