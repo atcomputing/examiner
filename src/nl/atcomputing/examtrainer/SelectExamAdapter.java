@@ -2,6 +2,10 @@ package  nl.atcomputing.examtrainer;
 
 import java.util.ArrayList;
 
+import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.R.id;
+import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;

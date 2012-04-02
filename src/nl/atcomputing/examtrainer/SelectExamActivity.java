@@ -1,5 +1,17 @@
 package nl.atcomputing.examtrainer;
 
+import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.R.id;
+import nl.atcomputing.examtrainer.R.layout;
+import nl.atcomputing.examtrainer.R.menu;
+import nl.atcomputing.examtrainer.R.string;
+import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
+import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
+import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
+import nl.atcomputing.examtrainer.exam.ExamQuestionActivity;
+import nl.atcomputing.examtrainer.manage.ManageExamsActivity;
+import nl.atcomputing.examtrainer.manage.PreferencesActivity;
+import nl.atcomputing.examtrainer.review.HistoryActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
