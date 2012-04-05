@@ -13,25 +13,23 @@
 				<category android:name="android.intent.category.LAUNCHER" />
 			</intent-filter>
 		</activity>
-		<activity android:name=".exam.ExamQuestionActivity"
-		    android:exported="false"/>
-		<activity android:name=".ExamHistoryActivity"
-			android:exported="false" />
-			<activity android:name=".ExamReviewActivity"
-			android:exported="false" />
-		<activity android:name=".HistoryActivity"
-			android:exported="false" />
 		<activity android:name=".SelectExamActivity"
 			android:exported="false" />
-		<activity android:name=".PreferencesActivity"
-			android:exported="false" >
-		</activity>
-		<activity android:name=".ShowScoreActivity"
-			android:exported="false" >
-		</activity>
-		<activity android:name=".ManageExamsActivity"
+		<activity android:name=".review.ExamReviewActivity"
 			android:exported="false" />
-		<service android:exported="false" android:name=".RetrieveExamQuestions"
+		<activity android:name=".review.HistoryActivity"
+			android:exported="false" />
+		<activity android:name=".exam.ExamQuestionActivity"
+		    android:exported="false"/>
+		<activity android:name=".exam.ShowScoreActivity"
+			android:exported="false" >
+		</activity>
+		<activity android:name=".manage.ManageExamsActivity"
+			android:exported="false" />
+		<activity android:name=".manage.PreferencesActivity"
+			android:exported="false" >
+		<service android:exported="false" android:name=".manage.RetrieveExamQuestions"
 			android:label="@string/app_name" />
+		</activity>
 	</application>
 </manifest>

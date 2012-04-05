@@ -74,7 +74,7 @@ public class ExaminationDbAdapter {
 	 * Note: deletion does not require the database to be open
 	 * @param title
 	 * @param date in seconds since 01/01/1970
-	 * @return true if database was succesfully removed. False otherwiser
+	 * @return true if database was successfully removed. False otherwise
 	 * @throws RuntimeException if database file does not exist.
 	 */
 	public boolean delete(String title, long date) {

@@ -61,7 +61,6 @@ public class ExamTrainerDbAdapter {
 		},
 		ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE + "=" + "\"" + exam.getTitle() + "\"", 
 		null, null, null, null, null);
-		Log.d("ExamTrainedDbAdapter", "Cursor: "+ cursor);
 		if ( cursor != null ) {
 			boolean res = cursor.getCount() > 0;
 			cursor.close();
@@ -103,9 +102,8 @@ public class ExamTrainerDbAdapter {
 	
 	public Cursor getExam(long rowId) {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
-				allRows,
+				this.allRows,
 		ExamTrainerDatabaseHelper.Exams._ID + "=" + rowId, null, null, null, null, null);
-		Log.d("ExamTrainedDbAdapter", "Cursor: "+ cursor);
 		if (cursor != null) {
 			cursor.moveToFirst();
 		}
@@ -114,8 +112,7 @@ public class ExamTrainerDbAdapter {
 
 	public Cursor getAllExams() {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
-				allRows, null, null, null, null, null, null);
-		Log.d("ExamTrainedDbAdapter", "Cursor: "+ cursor);
+				this.allRows, null, null, null, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();
 		}
@@ -124,9 +121,8 @@ public class ExamTrainerDbAdapter {
 	
 	public Cursor getInstalledExams() {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
-				allRows, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "= 1",
+				this.allRows, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "= 1",
 		null, null, null, null, null);
-		Log.d("ExamTrainedDbAdapter", "Cursor: "+ cursor);
 		if (cursor != null) {
 			cursor.moveToFirst();
 		}

@@ -39,6 +39,7 @@
 	<string name="End_review">End review</string>
 	<string name="end_of_exam_message">This was the last question.\nExiting the exam will
 		calculate your score.\nAre you sure you want to exit?</string>
+	<string name="quit_exam_message">Are you sure you want to quit the current exam?</string>
 	<string name="yes">yes</string>
 	<string name="no">no</string>
 	<string name="Yes">Yes</string>

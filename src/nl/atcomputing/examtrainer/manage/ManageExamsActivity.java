@@ -123,8 +123,14 @@ public class ManageExamsActivity extends ListActivity {
 
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+		
+		examTrainerDbHelper.open();
 		Cursor cursor = examTrainerDbHelper.getAllExams();
-		Log.d("ManageExamsActivity", "Cursor: "+ cursor);
+		examTrainerDbHelper.close();
+		
+		if( cursor == null )
+			return;
+		
 		do {
 			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
 			examTitle = cursor.getString(index);
@@ -145,8 +151,7 @@ public class ManageExamsActivity extends ListActivity {
 		} while(cursor.moveToNext());
 
 		cursor.close();
-		examinationDbHelper.close();
-		examTrainerDbHelper.close();
+		
 		updateView();
 	}
 

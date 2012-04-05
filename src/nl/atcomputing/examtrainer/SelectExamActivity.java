@@ -73,7 +73,6 @@ public class SelectExamActivity extends Activity {
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		examTrainerDbHelper.open();
 		cursor = examTrainerDbHelper.getInstalledExams();
-		Log.d("SelectExamActivity","Cursor: " + cursor);
 		examTrainerDbHelper.close();
 		if(cursor.getCount() > 0) {
 			//Remove exams not available text when there are exams installed
@@ -123,7 +122,6 @@ public class SelectExamActivity extends Activity {
 			ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 			examTrainerDbHelper.open();
 			Cursor cursor = examTrainerDbHelper.getExam(examsRowId);
-		Log.d("SelectExamActivity","Cursor: " + cursor);
 			examTrainerDbHelper.close();
 			int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
 			String examTitle = cursor.getString(index);
@@ -160,6 +158,7 @@ public class SelectExamActivity extends Activity {
 			ExamTrainer.setExamTitle(examTitle);
 			ExamTrainer.setTimeLimit(examTimeLimit);
 			ExamTrainer.setAmountOfItems(examAmountOfItems);
+			Log.d("SelectExamActivity", "examAmountOfItems " + examAmountOfItems);
 			((AlertDialog) dialog).setMessage( dialogMessage );
 			cursor.close();
 			break;

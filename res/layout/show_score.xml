@@ -4,7 +4,7 @@
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
 	
-	<nl.atcomputing.examtrainer.ShowScoreView
+	<nl.atcomputing.examtrainer.exam.ShowScoreView
 	    xmlns:examtrainer="http://schemas.android.com/apk/res/nl.atcomputing.examtrainer"
 	 android:id="@+id/show_score"
 		android:layout_width="fill_parent"

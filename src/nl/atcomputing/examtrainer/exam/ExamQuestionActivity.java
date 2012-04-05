@@ -47,7 +47,8 @@ public class ExamQuestionActivity extends Activity {
 	private ArrayList <CheckBox> cboxes;
 	private static final int DIALOG_ENDOFEXAM_ID = 1;
 	private static final int DIALOG_SHOW_HINT_ID = 2;
-
+	private static final int DIALOG_QUITEXAM_ID = 3;
+	
 	private static final String TAG = "ExamQuestionActivity";
 
 	private ExamQuestion examQuestion;
@@ -89,7 +90,7 @@ public class ExamQuestionActivity extends Activity {
 		inflater.inflate(R.menu.question_menu, menu);
 
 		if( ExamTrainer.review() ) {
-			MenuItem item = menu.findItem(R.id.menu_get_hint);
+			MenuItem item = menu.findItem(R.id.question_menu_get_hint);
 			item.setTitle(R.string.Show_Answers);
 		}
 		return true;
@@ -99,7 +100,7 @@ public class ExamQuestionActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		case R.id.menu_get_hint:
+		case R.id.question_menu_get_hint:
 			if(ExamTrainer.review()) {
 				showAnswers();
 			}
@@ -107,7 +108,9 @@ public class ExamQuestionActivity extends Activity {
 				showDialog(DIALOG_SHOW_HINT_ID);
 			}
 			return true;
-
+		case R.id.question_menu_quit_exam:
+			showDialog(DIALOG_QUITEXAM_ID);
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -116,12 +119,11 @@ public class ExamQuestionActivity extends Activity {
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog = null;
 		String message;
+		int messageId;
 		AlertDialog.Builder builder;
 		switch(id) {
 		case DIALOG_ENDOFEXAM_ID:
 			builder = new AlertDialog.Builder(this);
-			int messageId;
-
 			messageId = R.string.end_of_exam_message;		
 			builder.setMessage(messageId)
 			.setCancelable(false)
@@ -133,6 +135,24 @@ public class ExamQuestionActivity extends Activity {
 					else {
 						stopExam();
 					}
+					dialog.dismiss();
+				}
+			})
+			.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					dialog.dismiss();
+				}
+			});
+			dialog = builder.create();
+			break;
+		case DIALOG_QUITEXAM_ID:
+			builder = new AlertDialog.Builder(this);
+			messageId = R.string.quit_exam_message;		
+			builder.setMessage(messageId)
+			.setCancelable(false)
+			.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					stopExam();
 					dialog.dismiss();
 				}
 			})
