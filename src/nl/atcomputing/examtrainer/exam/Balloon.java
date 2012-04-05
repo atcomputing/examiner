@@ -1,51 +1,145 @@
-
-
 package nl.atcomputing.examtrainer.exam;
 
-import android.graphics.Bitmap;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
+import javax.microedition.khronos.opengles.GL10;
+
+import nl.popdaballoons.R;
+import nl.popdaballoons.R.drawable;
+
+import android.content.Context;
+import android.content.res.TypedArray;
+import android.util.AttributeSet;
+import android.util.Log;
 
 /**
+ * Based on code from http://insanitydesign.com/wp/projects/nehe-android-ports/
  * @author martijn brekhof
- *
+ * 
  */
 
 public class Balloon  {
 
-	private int x;
-	private int y;
-	private Bitmap bitmap;
+	public static final int AMOUNT_OF_TYPES = 3;
+	public static final int TYPE_BLUE = 0;
+	public static final int TYPE_RED = 1;
+	public static final int TYPE_ARROW = 2;
 	
-	public Balloon(int xCoordinate, int yCoordinate, Bitmap b) {
-		this.x = xCoordinate;
-		this.y = yCoordinate;
-		this.bitmap = b;
+	public float x;
+	public float y;
+	public int pixel_width;
+	public int pixel_height;
+	
+	public float liftPercentage; 
+	
+	public boolean popped = false; 
+
+	
+	private int texture;
+	private int type;
+	private Context context;
+	
+	/** The buffer holding the vertices */
+	private FloatBuffer vertexBuffer;
+	/** The buffer holding the texture coordinates */
+	private FloatBuffer textureBuffer;
+
+	/** The initial vertex definition */
+	private float vertices[] = {
+								-1.0f, -1.0f, 0.0f, 	//Bottom Left
+								1.0f, -1.0f, 0.0f, 		//Bottom Right
+								-1.0f, 1.0f, 0.0f,	 	//Top Left
+								1.0f, 1.0f, 0.0f 		//Top Right
+													};
+	
+	/** The initial texture coordinates (u, v) */	
+	private float textureCoords[] = {
+								0.0f, 0.0f, 
+								1.0f, 0.0f, 
+								0.0f, 1.0f, 
+								1.0f, 1.0f,
+											};
+
+	
+	public Balloon(Context context, int balloon_type, int texture, 
+			int pixel_width, int pixel_height) {
+		
+		this.type = balloon_type;
+		
+		this.texture = texture;
+		double ratio = pixel_height / (double) pixel_width;
+		
+		vertices[1] *= ratio; 
+		vertices[4] *= ratio;
+		vertices[7] *= ratio; 
+		vertices[10] *= ratio;
+		
+		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
+		byteBuf.order(ByteOrder.nativeOrder());
+		vertexBuffer = byteBuf.asFloatBuffer();
+		vertexBuffer.put(vertices);
+		vertexBuffer.position(0);
+
+		byteBuf = ByteBuffer.allocateDirect(textureCoords.length * 4);
+		byteBuf.order(ByteOrder.nativeOrder());
+		textureBuffer = byteBuf.asFloatBuffer();
+		textureBuffer.put(textureCoords);
+		textureBuffer.position(0);
+		
+		this.liftPercentage = 1.0f;
+	}
+
+	public void draw(GL10 gl) {
+		gl.glBindTexture(GL10.GL_TEXTURE_2D, this.texture);
+		
+		//Enable the vertex, texture and normal state
+		gl.glEnableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glEnableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+		
+		//Point to our buffers
+		gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertexBuffer);
+		gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, textureBuffer);
+		
+		//Draw the vertices as triangle strip
+		gl.glDrawArrays(GL10.GL_TRIANGLE_STRIP, 0, vertices.length / 3);
+		
+		//Disable the client state before leaving
+		gl.glDisableClientState(GL10.GL_VERTEX_ARRAY);
+		gl.glDisableClientState(GL10.GL_TEXTURE_COORD_ARRAY);
+	}
+
+	/**
+	 * @return the balloon type
+	 */
+	public int getType() {
+		return this.type;
 	}
 	
-	public Balloon(Bitmap b) {
-		this.x = 0;
-		this.y = 0;
-		this.bitmap = b;
+	/**
+	 * Sets the upward lift in percentages
+	 * @param percentage from 0.0 to 1.0
+	 */
+	public void setLift(float percentage) {
+		this.liftPercentage = percentage;
 	}
 	
-	protected void setCoords(int x, int y) {
-		this.x = x;
-		this.y = y;
+	
+	/**
+	 * @return the upward lift in percentages from 0.0 to 1.0
+	 */
+	public float getLift() {
+		return this.liftPercentage;
 	}
 	
-	protected void move(int x, int y) {
-		this.x += x;
-		this.y += y;
-	}
-	
-	protected int getX() {
-		return this.x;
-	}
-	
-	protected int getY() {
-		return this.y;
-	}
-	
-	protected Bitmap getBitmap() {
-		return bitmap;
+	public static int getReferenceDrawable(int t) {
+		switch(t) {
+		case TYPE_BLUE:
+			return R.drawable.aj_balloon_blue;
+		case TYPE_RED:
+			return R.drawable.aj_balloon_red;
+		}
+		return -1;
 	}
 }
