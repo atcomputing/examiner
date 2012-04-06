@@ -1,4 +1,4 @@
-package nl.atcomputing.examtrainer.exam;
+package nl.atcomputing.examtrainer.exam.score;
 
 import static android.opengl.GLES11.GL_MODELVIEW_MATRIX;
 import static android.opengl.GLES11.GL_PROJECTION_MATRIX;

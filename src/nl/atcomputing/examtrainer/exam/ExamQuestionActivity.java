@@ -5,15 +5,10 @@ import java.util.ArrayList;
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.ExamTrainerActivity;
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.R.color;
-import nl.atcomputing.examtrainer.R.id;
-import nl.atcomputing.examtrainer.R.layout;
-import nl.atcomputing.examtrainer.R.menu;
-import nl.atcomputing.examtrainer.R.string;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
+import nl.atcomputing.examtrainer.exam.score.ShowScoreActivity;
 import nl.atcomputing.examtrainer.review.HistoryActivity;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;

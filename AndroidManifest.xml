@@ -21,7 +21,7 @@
 			android:exported="false" />
 		<activity android:name=".exam.ExamQuestionActivity"
 		    android:exported="false"/>
-		<activity android:name=".exam.ShowScoreActivity"
+		<activity android:name=".exam.score.ShowScoreActivity"
 			android:exported="false" >
 		</activity>
 		<activity android:name=".manage.ManageExamsActivity"

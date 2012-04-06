@@ -1,22 +1,24 @@
-package nl.atcomputing.examtrainer.exam;
+package nl.atcomputing.examtrainer.exam.score;
 
 import java.util.Random;
 
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.R.array;
-import nl.atcomputing.examtrainer.R.string;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
-
+import nl.atcomputing.examtrainer.exam.ExamQuestion;
 import android.app.ProgressDialog;
-import android.content.Context;
+import android.content.res.Resources;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.util.Log;
 
+/**
+ * @author martijn brekhof
+ *
+ */
+
 public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
-		private Context context;
-		private ShowScoreView showScoreView;
+		private ShowScoreActivity showScoreActivity;
 		private ProgressDialog dialog;
 		private String[] messagesClassA;
 		private String[] messagesClassB;
@@ -29,9 +31,8 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 		private int itemsNeededToPass;
 		private int amountOfItems;
 		
-		CalculateScore(Context context, ShowScoreView showScoreView) {
-			this.context = context;
-			this.showScoreView = showScoreView;
+		CalculateScore(ShowScoreActivity context) {
+			this.showScoreActivity = context;
 		}
 		
 		protected void onPreExecute() {
@@ -41,25 +42,26 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 			itemsNeededToPass = 44;
 			amountOfItems = 65;
 			
-			dialog = new ProgressDialog(context);
-			dialog.setMessage(context.getResources().getString(R.string.Calculating_your_score));
+			Resources resource = showScoreActivity.getResources();
+			dialog = new ProgressDialog(showScoreActivity);
+			dialog.setMessage(resource.getString(R.string.Calculating_your_score));
 			dialog.setMax(amountOfItems);
 			dialog.setProgress(0);
 			dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			dialog.show();
 			
-			messagesClassA = context.getResources().getStringArray(R.array.class_A);
-			messagesClassB = context.getResources().getStringArray(R.array.class_B);
-			messagesClassC = context.getResources().getStringArray(R.array.class_C);
-			messagesClassD = context.getResources().getStringArray(R.array.class_D);
-			messagesClassE = context.getResources().getStringArray(R.array.class_E);
-			messagesClassF = context.getResources().getStringArray(R.array.class_F);
+			messagesClassA = resource.getStringArray(R.array.class_A);
+			messagesClassB = resource.getStringArray(R.array.class_B);
+			messagesClassC = resource.getStringArray(R.array.class_C);
+			messagesClassD = resource.getStringArray(R.array.class_D);
+			messagesClassE = resource.getStringArray(R.array.class_E);
+			messagesClassF = resource.getStringArray(R.array.class_F);
 		}
 		
 		protected Integer doInBackground(Object... questionIds) {
 			
 			ExaminationDbAdapter examinationDbHelper;
-			examinationDbHelper = new ExaminationDbAdapter(context);
+			examinationDbHelper = new ExaminationDbAdapter(showScoreActivity);
 			try {
 				examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 			} catch (SQLiteException e) {
@@ -114,11 +116,10 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 	     }
 		
 		protected void onPostExecute(Integer answersCorrect) {
-			this.showScoreView.setScore(answersCorrect);
 			
 			//Update score in database
 			ExaminationDbAdapter examinationDbHelper;
-			examinationDbHelper = new ExaminationDbAdapter(context);
+			examinationDbHelper = new ExaminationDbAdapter(this.showScoreActivity);
 			try {
 				examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 				examinationDbHelper.updateScore(ExamTrainer.getExamId(), answersCorrect);
@@ -129,7 +130,7 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 			
 			dialog.dismiss();
 			
-			this.showScoreView.showResult();
+			this.showScoreActivity.showResult(answersCorrect);
 		}
 		
 		protected void updateText(int itemsCalculated, int score) {

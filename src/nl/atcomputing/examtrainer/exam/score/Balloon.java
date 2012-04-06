@@ -1,4 +1,4 @@
-package nl.atcomputing.examtrainer.exam;
+package nl.atcomputing.examtrainer.exam.score;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -6,13 +6,8 @@ import java.nio.FloatBuffer;
 
 import javax.microedition.khronos.opengles.GL10;
 
-import nl.popdaballoons.R;
-import nl.popdaballoons.R.drawable;
-
+import nl.atcomputing.examtrainer.R;
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.util.AttributeSet;
-import android.util.Log;
 
 /**
  * Based on code from http://insanitydesign.com/wp/projects/nehe-android-ports/
@@ -22,10 +17,9 @@ import android.util.Log;
 
 public class Balloon  {
 
-	public static final int AMOUNT_OF_TYPES = 3;
+	public static final int AMOUNT_OF_TYPES = 2;
 	public static final int TYPE_BLUE = 0;
 	public static final int TYPE_RED = 1;
-	public static final int TYPE_ARROW = 2;
 	
 	public float x;
 	public float y;
@@ -39,7 +33,6 @@ public class Balloon  {
 	
 	private int texture;
 	private int type;
-	private Context context;
 	
 	/** The buffer holding the vertices */
 	private FloatBuffer vertexBuffer;
