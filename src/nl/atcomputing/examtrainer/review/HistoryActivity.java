@@ -1,13 +1,11 @@
 package nl.atcomputing.examtrainer.review;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.R.id;
-import nl.atcomputing.examtrainer.R.layout;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -79,15 +77,18 @@ public class HistoryActivity extends Activity {
 		}
 	}
 	
-	protected void addSelectionToList(int id) {
+	protected void addItemToDeletionList(int id) {
 		this.examIdsSelected.add(new Integer(id));
 		this.deleteSelectedButton.setEnabled(true);
 	}
 	
-	protected void removeSelectionFromList(int id) {
-		for( Integer examId: this.examIdsSelected ) {
+	protected void removeItemFromDeletionList(int id) {
+		Iterator<Integer> itr = this.examIdsSelected.iterator();
+		while( itr.hasNext() ) {
+			Integer examId = itr.next();
 			if( examId.intValue() == id ) {
 				this.examIdsSelected.remove(examId);
+				break;
 			}
 		}
 		

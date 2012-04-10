@@ -280,6 +280,7 @@ public class ExamQuestionActivity extends Activity {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		Cursor cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getExamId(), questionNumber);
+		examinationDbHelper.close();
 		if ( cursor.getCount() > 0 ) {
 			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
 			editText.setText(cursor.getString(index));

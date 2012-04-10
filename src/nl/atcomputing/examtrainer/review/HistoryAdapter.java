@@ -1,6 +1,7 @@
 package  nl.atcomputing.examtrainer.review;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
@@ -30,6 +31,7 @@ import android.widget.TextView;
 public class HistoryAdapter extends CursorAdapter  {
 	private int layout;
 	private HistoryActivity activity;
+	private HashMap<Integer, Boolean> itemChecked = new HashMap<Integer, Boolean>();
 	
 	    public HistoryAdapter(HistoryActivity activity, int layout, Cursor c, Button deleteScoresButton) {
 	      super(activity, c);
@@ -62,17 +64,25 @@ public class HistoryAdapter extends CursorAdapter  {
 			    final int examId = cursor.getInt(index);
 			    
 		        CheckBox cbox = (CheckBox) view.findViewById(R.id.historyCheckBox);
-		        cbox.setChecked(false);
 		        cbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					
 					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
 						if( isChecked ) {
-							activity.addSelectionToList(examId);
+							activity.addItemToDeletionList(examId);
+							itemChecked.put(examId, true);
 						} else {
-							activity.removeSelectionFromList(examId);
+							activity.removeItemFromDeletionList(examId);
+							itemChecked.put(examId, false);
 						}
 					}
 				});
+		        
+		        Boolean checked = itemChecked.get(examId);
+		        if ( ( checked == null ) || ( checked == false ) ) {
+		        	cbox.setChecked(false);
+		        } else {
+		        	cbox.setChecked(true);
+		        }
 		}
 
 		@Override

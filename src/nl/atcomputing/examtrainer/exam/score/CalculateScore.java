@@ -95,6 +95,8 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 				//publishProgress(i, answers_correct);
 				
 			}
+			examinationDbHelper.close();
+			
 			for (int i = 0; i < amountOfItems; i++) {
 				publishProgress(i, i-randomNumberGenerator.nextInt(30));
 				try {
