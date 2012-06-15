@@ -101,12 +101,7 @@ public class SelectExamActivity extends Activity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
 		switch (item.getItemId()) {
-		case R.id.selectexam_menu_settings:
-			intent = new Intent(this, PreferencesActivity.class);
-			startActivity(intent);
-			break;
 		case R.id.selectexam_menu_manage:
 			startManageExams();
 			break;

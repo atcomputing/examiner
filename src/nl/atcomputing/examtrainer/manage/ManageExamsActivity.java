@@ -126,7 +126,6 @@ public class ManageExamsActivity extends ListActivity {
 		
 		examTrainerDbHelper.open();
 		Cursor cursor = examTrainerDbHelper.getAllExams();
-		examTrainerDbHelper.close();
 		
 		if( cursor == null )
 			return;
@@ -151,6 +150,7 @@ public class ManageExamsActivity extends ListActivity {
 		} while(cursor.moveToNext());
 
 		cursor.close();
+		examTrainerDbHelper.close();
 		
 		updateView();
 	}

@@ -80,6 +80,16 @@ public class ExamQuestionActivity extends Activity {
 		}
 	}
 
+	public void onBackPressed() {
+		if( this.questionNumber == 1 ) {
+			//Delete current exam from scorelist
+			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
+			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+			examinationDbHelper.deleteScore(ExamTrainer.getExamId());
+		}
+		super.onBackPressed();
+	}
+	
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.question_menu, menu);
@@ -186,10 +196,9 @@ public class ExamQuestionActivity extends Activity {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		Cursor cursor = examinationDbHelper.getAnswers(questionNumber);
-		Log.d("ExamQuestionActivity showAnswers","Cursor: " + cursor);
 		examinationDbHelper.close();
 		if ( cursor == null ) {
-			Log.d(TAG, "Oi, cursor is nulllll");
+			Log.d(TAG, "Oi, cursor is null");
 			return;
 		}
 		int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
@@ -237,9 +246,7 @@ public class ExamQuestionActivity extends Activity {
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 
 		ArrayList<String> choices = this.examQuestion.getChoices();
-		Log.d("ExamQuestionActivity", "choices.size()"+choices.size());
 		for( String choice : choices ) {
-			Log.d("ExamQuestionActivity", "choice: "+ choice);
 			cbox = new CheckBox(this);
 			cbox.setText(choice);
 
@@ -339,6 +346,7 @@ public class ExamQuestionActivity extends Activity {
 					Intent intent = new Intent(ExamQuestionActivity.this, ExamQuestionActivity.class);
 					ExamTrainer.setQuestionNumber(intent, questionNumber - 1);
 					startActivity(intent);
+					finish();
 				}
 			});
 		}

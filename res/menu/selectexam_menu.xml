@@ -1,9 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/selectexam_menu_settings"
-          android:icon="@drawable/menu_preferences"
-          android:title="@string/Settings" />
     <item android:id="@+id/selectexam_menu_manage"
-          android:icon="@drawable/nicubunu_tools_48"
+          android:icon="@drawable/menu_preferences"
           android:title="@string/Manage_Exams" />
 </menu>
