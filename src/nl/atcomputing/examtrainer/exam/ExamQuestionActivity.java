@@ -82,12 +82,9 @@ public class ExamQuestionActivity extends Activity {
 
 	public void onBackPressed() {
 		if( this.questionNumber == 1 ) {
-			//Delete current exam from scorelist
-			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
-			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-			examinationDbHelper.deleteScore(ExamTrainer.getExamId());
+			showDialog(DIALOG_QUITEXAM_ID);
 		}
-		super.onBackPressed();
+		//super.onBackPressed();
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {

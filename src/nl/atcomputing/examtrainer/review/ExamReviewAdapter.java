@@ -36,8 +36,8 @@ import android.widget.TextView;
 			this.cursor = cursor;
 			this.layout = layout;
 			Resources res = context.getResources();
-			not_okImage = res.getDrawable(R.drawable.not_ok);
-			okImage = res.getDrawable(R.drawable.ok);
+			not_okImage = res.getDrawable(R.drawable.red_cross);
+			okImage = res.getDrawable(R.drawable.green_check);
 		}
 
 		public int getCount() 

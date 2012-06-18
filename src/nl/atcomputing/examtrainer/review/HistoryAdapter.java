@@ -54,10 +54,10 @@ public class HistoryAdapter extends CursorAdapter  {
 		        ImageView scoreEntryImage = (ImageView) view.findViewById(R.id.historyEntryPass);
 		        
 		        if( examScore >= ExamTrainer.getItemsNeededToPass() ) { 
-		        	scoreEntryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.ok));
+		        	scoreEntryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.green_check));
 		        } 
 		        else {
-		        	scoreEntryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.not_ok));
+		        	scoreEntryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.red_cross));
 		        }
 		        
 		        index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores._ID);
