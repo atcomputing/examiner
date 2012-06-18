@@ -40,8 +40,6 @@ import android.widget.Toast;
 public class SelectExamActivity extends Activity {
 	private SelectExamAdapter adap;
 	private static Cursor cursor;
-	private long examsRowId;
-	private static final int DIALOG_SHOW_EXAM = 0;
 	private TextView clickOnManageExams;
 	private TextView noExamsAvailable;
 	
@@ -61,8 +59,9 @@ public class SelectExamActivity extends Activity {
 		selectExam.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				examsRowId = id;
-				showDialog(DIALOG_SHOW_EXAM);
+				ExamTrainer.setExamId(id);
+				Intent intent = new Intent(SelectExamActivity.this, StartExamActivity.class);
+				startActivity(intent);
 			}
 		});
 	}
@@ -103,125 +102,12 @@ public class SelectExamActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.selectexam_menu_manage:
-			startManageExams();
+			Intent intent = new Intent(this, ManageExamsActivity.class);
+			startActivity(intent);
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 		return true;
-	}
-
-	protected void onPrepareDialog(int id, Dialog dialog) {
-		switch(id) {
-		case DIALOG_SHOW_EXAM:
-			ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
-			examTrainerDbHelper.open();
-			Cursor cursor = examTrainerDbHelper.getExam(examsRowId);
-			examTrainerDbHelper.close();
-			int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
-			String examTitle = cursor.getString(index);
-			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS);
-			int examAmountOfItems = cursor.getInt(index);
-			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
-			int examItemsNeededToPass = cursor.getInt(index);
-			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT);
-			long examTimeLimit = cursor.getLong(index);
-
-			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE);
-			long examInstallationDate = cursor.getLong(index);
-			String localDate = ExamTrainer.convertEpochToString(examInstallationDate);
-
-			StringBuffer dialogMessage = new StringBuffer();
-			dialogMessage.append(examTitle + "\n\n" +
-					this.getString(R.string.installed_on) + 
-					" " + localDate + "\n" +
-					this.getString(R.string.questions) + 
-					": " +  examAmountOfItems + "\n" +
-					this.getString(R.string.correct_answer_required_to_pass) +
-					": " +  examItemsNeededToPass + "\n");
-
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-			boolean useTimeLimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
-
-			if ( useTimeLimit ) {
-				dialogMessage.append(this.getString(R.string.Time_limit) 
-						+ ": " + examTimeLimit + " " + this.getString(R.string.minutes) + "\n");
-			}
-
-			ExamTrainer.setExamDatabaseName(examTitle, examInstallationDate);
-			ExamTrainer.setItemsNeededToPass(examItemsNeededToPass);
-			ExamTrainer.setExamTitle(examTitle);
-			ExamTrainer.setTimeLimit(examTimeLimit);
-			ExamTrainer.setAmountOfItems(examAmountOfItems);
-			Log.d("SelectExamActivity", "examAmountOfItems " + examAmountOfItems);
-			((AlertDialog) dialog).setMessage( dialogMessage );
-			cursor.close();
-			break;
-		default:
-			break;
-		}
-	}
-
-	protected Dialog onCreateDialog(int id) {
-		Dialog dialog;
-		AlertDialog.Builder builder;
-		switch(id) {
-		case DIALOG_SHOW_EXAM: 
-			builder = new AlertDialog.Builder(this);
-			builder.setCancelable(true)
-			.setMessage("")
-			.setPositiveButton(this.getString(R.string.Start_exam), new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					startExam();
-				}
-			})
-			.setNeutralButton(this.getString(R.string.show_history), new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					showHistory();
-				}
-			})
-			.setNegativeButton(this.getString(R.string.close), new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					dialog.dismiss();
-				}
-			});
-			dialog = builder.create();
-			break;
-		default:
-			dialog = null;
-		}
-		return dialog;
-	}
-
-	private void showHistory() {
-		Intent intent = new Intent(this, HistoryActivity.class);
-		startActivity(intent);
-	}
-
-	private void startManageExams() {
-		Intent intent = new Intent(this, ManageExamsActivity.class);
-		startActivity(intent);
-	}
-
-	private void startExam() {
-		Intent intent = new Intent(this, ExamQuestionActivity.class);
-		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
-		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		long examId = examinationDbHelper.createNewScore();
-		examinationDbHelper.close();
-		if( examId == -1 ) {
-			Toast.makeText(this, this.getString(R.string.failed_to_create_a_new_score_for_the_exam), Toast.LENGTH_LONG);
-		} else {
-			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-			boolean useTimelimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
-			ExamTrainer.setTimer();
-			if( useTimelimit ) {
-				//startTimer();
-			}
-			ExamTrainer.setExamId(examId);
-			ExamTrainer.setQuestionNumber(intent, 1);
-			ExamTrainer.setStartExam();
-			startActivity(intent);
-		}
 	}
 }

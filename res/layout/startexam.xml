@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+	<ImageView 
+		android:layout_width="fill_parent" android:layout_height="fill_parent"
+		android:src="@drawable/student_hat_320" android:scaleType="fitCenter" />
+  
+    <LinearLayout 
+              android:orientation="vertical"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent">
+              
+        <LinearLayout 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+    		<TextView
+    			android:id="@+id/startexam_installed_on_text"
+    			android:layout_width="wrap_content"
+    			android:layout_height="wrap_content"
+    			android:text="@string/installed_on" />
+    		<TextView
+    			android:id="@+id/startexam_installed_on_value"
+    			android:layout_width="wrap_content"
+    			android:layout_height="wrap_content"
+    			android:text="" />
+    	</LinearLayout>
+    	<LinearLayout 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+    		<TextView
+    			android:id="@+id/startexam_amount_of_items_text"
+    			android:layout_width="wrap_content"
+    			android:layout_height="wrap_content"
+    			android:text="@string/Amount_of_questions" />
+    		<TextView
+    			android:id="@+id/startexam_amount_of_items_value"
+    			android:layout_width="wrap_content"
+    			android:layout_height="wrap_content"
+    			android:text="" />
+    	</LinearLayout>
+    	<LinearLayout 
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content">
+    		<TextView
+    			android:id="@+id/startexam_items_needed_to_pass_text"
+    			android:layout_width="wrap_content"
+    			android:layout_height="wrap_content"
+    			android:text="@string/correct_questions_required_to_pass" />
+    		<TextView
+    			android:id="@+id/startexam_items_needed_to_pass_value"
+    			android:layout_width="wrap_content"
+    			android:layout_height="wrap_content"
+    			android:text="" />
+    	</LinearLayout>
+	</LinearLayout>
+</FrameLayout>
