@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.ExamTrainerActivity;
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.StartExamActivity;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.exam.score.ShowScoreActivity;
-import nl.atcomputing.examtrainer.review.HistoryActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -247,7 +247,7 @@ public class ExamQuestionActivity extends Activity {
 			cbox = new CheckBox(this);
 			cbox.setText(choice);
 
-			if ( examinationDbHelper.scoresAnswerPresent(ExamTrainer.getExamId(), 
+			if ( examinationDbHelper.scoresAnswerPresent(ExamTrainer.getScoresId(), 
 					questionNumber, choice) ) {
 				cbox.setChecked(true);
 			}
@@ -258,13 +258,13 @@ public class ExamQuestionActivity extends Activity {
 					if (((CheckBox) v).isChecked()) {
 						ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
 						examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-						examinationDbHelper.setScoresAnswersMultipleChoice(ExamTrainer.getExamId(), questionNumber, answer);
+						examinationDbHelper.setScoresAnswersMultipleChoice(ExamTrainer.getScoresId(), questionNumber, answer);
 						examinationDbHelper.close();
 
 					} else {
 						ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
 						examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-						examinationDbHelper.deleteScoresAnswer(ExamTrainer.getExamId(), questionNumber, answer);
+						examinationDbHelper.deleteScoresAnswer(ExamTrainer.getScoresId(), questionNumber, answer);
 						examinationDbHelper.close();
 					}
 
@@ -283,7 +283,7 @@ public class ExamQuestionActivity extends Activity {
 		
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		Cursor cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getExamId(), questionNumber);
+		Cursor cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionNumber);
 		examinationDbHelper.close();
 		if ( cursor.getCount() > 0 ) {
 			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
@@ -336,7 +336,7 @@ public class ExamQuestionActivity extends Activity {
 					if( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
 						ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
 						examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-						examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getExamId(), questionNumber,
+						examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getScoresId(), questionNumber,
 								editText.getText().toString());
 						examinationDbHelper.close();
 					}
@@ -362,14 +362,14 @@ public class ExamQuestionActivity extends Activity {
 				if( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
 					ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
 					examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-					examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getExamId(), questionNumber,
+					examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getScoresId(), questionNumber,
 							editText.getText().toString());
 					examinationDbHelper.close();
 				}
 
 				if ( questionNumber >= ExamTrainer.getAmountOfItems() ) {
 					if(ExamTrainer.review()) {
-						Intent intent = new Intent(ExamQuestionActivity.this, HistoryActivity.class);
+						Intent intent = new Intent(ExamQuestionActivity.this, StartExamActivity.class);
 						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(intent);
 						finish();

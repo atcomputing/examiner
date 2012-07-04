@@ -94,5 +94,8 @@
     <string name="Quit">Quit</string>
     <string name="Amount_of_questions">Amount of questions</string>
     <string name="correct_questions_required_to_pass">Correct questions required to pass</string>
+    <string name="timelimit">Timelimit</string>
+    <string name="start_a_new_exam">Start a new exam</string>
+    <string name="student_hat">Student Hat</string>
 
 </resources>

@@ -20,6 +20,7 @@ public final class ExamTrainer {
 	private static String examDatabaseName = null;
 	private static ExamTrainerMode mode = ExamTrainerMode.EXAM;
 	private static long examId = -1;
+	private static long scoresId = -1;
 	private static long itemsNeededToPass = 0;
 	private static long totalAmountOfItems = 0;
 	private static final String questionNumber = "questionNumber";
@@ -55,6 +56,14 @@ public final class ExamTrainer {
 		return examId;
 	}
 
+	public static void setScoresId(long id) {
+		scoresId = id;
+	}
+
+	public static long getScoresId() {
+		return scoresId;
+	}
+	
 	public static void setItemsNeededToPass(long items) {
 		itemsNeededToPass = items;
 	}

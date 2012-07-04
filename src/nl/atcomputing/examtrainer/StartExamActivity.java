@@ -1,21 +1,15 @@
 package nl.atcomputing.examtrainer;
 
-import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.R.id;
-import nl.atcomputing.examtrainer.R.layout;
-import nl.atcomputing.examtrainer.R.menu;
-import nl.atcomputing.examtrainer.R.string;
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.exam.ExamQuestionActivity;
-import nl.atcomputing.examtrainer.manage.ManageExamsActivity;
 import nl.atcomputing.examtrainer.manage.PreferencesActivity;
-import nl.atcomputing.examtrainer.review.HistoryActivity;
+import nl.atcomputing.examtrainer.review.ExamReviewActivity;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -26,8 +20,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,9 +35,51 @@ import android.widget.Toast;
  */
 
 public class StartExamActivity extends Activity {
+	private HistoryAdapter adapter;
+	private ArrayList<Integer> examIdsSelected = new ArrayList<Integer>();
+	private Button deleteSelectedButton;
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.selectexam);
+		setContentView(R.layout.startexam);
+		
+		Button button = (Button) findViewById(R.id.startexam_button_start_exam);
+		button.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				startExam();
+			}
+		});
+		
+		this.deleteSelectedButton = (Button) findViewById(R.id.startexam_history_button_delete_scores);
+		this.deleteSelectedButton.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				deleteSelectedFromDatabase();
+			}
+		});
+        
+        adapter = new HistoryAdapter(
+        		StartExamActivity.this, 
+        		R.layout.history_entry, 
+        		null, 
+        		deleteSelectedButton);
+
+        ListView scoresList = (ListView) findViewById(R.id.history_listview);
+        scoresList.setAdapter(adapter);
+        
+        scoresList.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Intent intent = new Intent(StartExamActivity.this, ExamReviewActivity.class);
+				ExamTrainer.setExamId(id);
+				startActivity(intent);
+			}
+		});
+	}
+
+	protected void onResume() {
+		super.onResume();
 		
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		examTrainerDbHelper.open();
@@ -60,31 +99,48 @@ public class StartExamActivity extends Activity {
 		long examInstallationDate = cursor.getLong(index);
 		String localDate = ExamTrainer.convertEpochToString(examInstallationDate);
 
-		StringBuffer dialogMessage = new StringBuffer();
-		dialogMessage.append(examTitle + "\n\n" +
-				this.getString(R.string.installed_on) + 
-				" " + localDate + "\n" +
-				this.getString(R.string.questions) + 
-				": " +  examAmountOfItems + "\n" +
-				this.getString(R.string.correct_answer_required_to_pass) +
-				": " +  examItemsNeededToPass + "\n");
+		TextView tv = (TextView) findViewById(R.id.startexam_amount_of_items_value);
+		tv.setText(Integer.toString(examAmountOfItems));
+		tv = (TextView) findViewById(R.id.startexam_items_needed_to_pass_value);
+		tv.setText(Integer.toString(examItemsNeededToPass));
+		tv = (TextView) findViewById(R.id.startexam_installed_on_value);
+		tv.setText(localDate);
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		boolean useTimeLimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
 
+		tv = (TextView) findViewById(R.id.startexam_timelimit_value);
 		if ( useTimeLimit ) {
-			dialogMessage.append(this.getString(R.string.Time_limit) 
-					+ ": " + examTimeLimit + " " + this.getString(R.string.minutes) + "\n");
+			tv.setText(Long.toString(examTimeLimit));
+		} else {
+			tv.setText(getString(R.string.No_time_limit));
 		}
 
+		
 		ExamTrainer.setExamDatabaseName(examTitle, examInstallationDate);
 		ExamTrainer.setItemsNeededToPass(examItemsNeededToPass);
 		ExamTrainer.setExamTitle(examTitle);
 		ExamTrainer.setTimeLimit(examTimeLimit);
 		ExamTrainer.setAmountOfItems(examAmountOfItems);
 		cursor.close();
+		
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+        examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+        cursor = examinationDbHelper.getScoresReversed();
+        examinationDbHelper.close();
+		adapter.changeCursor(cursor);
+		adapter.notifyDataSetChanged();
 	}
-
+	
+	protected void onDestroy() {
+		super.onDestroy();
+		Log.d("StartExamActivity", "StartExamActivity destroyed");
+		Cursor cursor = adapter.getCursor();
+		if ( cursor != null ) {
+			cursor.close();
+		}
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -105,24 +161,14 @@ public class StartExamActivity extends Activity {
 		return true;
 	}
 
-	private void showHistory() {
-		Intent intent = new Intent(this, HistoryActivity.class);
-		startActivity(intent);
-	}
-
-	private void startManageExams() {
-		Intent intent = new Intent(this, ManageExamsActivity.class);
-		startActivity(intent);
-	}
-
 	private void startExam() {
 		Intent intent = new Intent(this, ExamQuestionActivity.class);
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		long examId = examinationDbHelper.createNewScore();
+		long scoresId = examinationDbHelper.createNewScore();
 		examinationDbHelper.close();
-		if( examId == -1 ) {
-			Toast.makeText(this, this.getString(R.string.failed_to_create_a_new_score_for_the_exam), Toast.LENGTH_LONG);
+		if( scoresId == -1 ) {
+			Toast.makeText(this, this.getString(R.string.failed_to_create_a_new_score_for_the_exam), Toast.LENGTH_LONG).show();
 		} else {
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			boolean useTimelimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
@@ -130,10 +176,45 @@ public class StartExamActivity extends Activity {
 			if( useTimelimit ) {
 				//startTimer();
 			}
-			ExamTrainer.setExamId(examId);
+			ExamTrainer.setScoresId(scoresId);
 			ExamTrainer.setQuestionNumber(intent, 1);
 			ExamTrainer.setStartExam();
 			startActivity(intent);
 		}
+	}
+	
+	protected void addItemToDeletionList(int id) {
+		this.examIdsSelected.add(Integer.valueOf(id));
+		this.deleteSelectedButton.setVisibility(View.VISIBLE);
+	}
+	
+	protected void removeItemFromDeletionList(int id) {
+		Iterator<Integer> itr = this.examIdsSelected.iterator();
+		while( itr.hasNext() ) {
+			Integer examId = itr.next();
+			if( examId.intValue() == id ) {
+				this.examIdsSelected.remove(examId);
+				break;
+			}
+		}
+		
+		if( this.examIdsSelected.isEmpty() ) {
+			this.deleteSelectedButton.setVisibility(View.GONE);
+		}
+	}
+	
+	private void deleteSelectedFromDatabase() {
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+        examinationDbHelper.open(ExamTrainer.getExamDatabaseName());    
+		for( Integer examId : this.examIdsSelected ) {
+			examinationDbHelper.deleteScore(examId.intValue());
+		}
+		Cursor cursor = examinationDbHelper.getScoresReversed();
+		examinationDbHelper.close();
+		adapter.changeCursor(cursor);
+		adapter.notifyDataSetChanged();
+		
+		this.examIdsSelected.clear();
+		this.deleteSelectedButton.setVisibility(View.GONE);
 	}
 }

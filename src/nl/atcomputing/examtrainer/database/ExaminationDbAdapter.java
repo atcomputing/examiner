@@ -359,7 +359,7 @@ public class ExaminationDbAdapter {
 				},
 				null, null, null, null, ExaminationDatabaseHelper.Scores.COLUMN_NAME_DATE + " DESC", null);
 		
-		Log.d("ExaminationDbAdapter getScoresReversed", "Cursor: " + cursor);	
+		Log.d("ExaminationDbAdapter getScoresReversed", "Cursor: " + cursor + " amount: "+ cursor.getCount());	
 		if(cursor.moveToFirst())
 			return cursor;
 		

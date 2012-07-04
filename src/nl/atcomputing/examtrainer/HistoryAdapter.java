@@ -1,14 +1,8 @@
-package  nl.atcomputing.examtrainer.review;
+package  nl.atcomputing.examtrainer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import nl.atcomputing.examtrainer.ExamTrainer;
-import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.R.drawable;
-import nl.atcomputing.examtrainer.R.id;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
@@ -30,10 +24,10 @@ import android.widget.TextView;
 
 public class HistoryAdapter extends CursorAdapter  {
 	private int layout;
-	private HistoryActivity activity;
+	private StartExamActivity activity;
 	private HashMap<Integer, Boolean> itemChecked = new HashMap<Integer, Boolean>();
 	
-	    public HistoryAdapter(HistoryActivity activity, int layout, Cursor c, Button deleteScoresButton) {
+	    public HistoryAdapter(StartExamActivity activity, int layout, Cursor c, Button deleteScoresButton) {
 	      super(activity, c);
 	      this.layout = layout;
 	      this.activity = activity;
