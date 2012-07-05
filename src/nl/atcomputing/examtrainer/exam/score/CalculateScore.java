@@ -7,6 +7,7 @@ import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.exam.ExamQuestion;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
@@ -20,6 +21,7 @@ import android.util.Log;
 public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 		private ShowScoreActivity showScoreActivity;
 		private ProgressDialog dialog;
+		private String dialogMessage;
 		private String[] messagesClassA;
 		private String[] messagesClassB;
 		private String[] messagesClassC;
@@ -30,9 +32,19 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 		
 		private int itemsNeededToPass;
 		private int amountOfItems;
+		private int progress;
 		
 		CalculateScore(ShowScoreActivity context) {
 			this.showScoreActivity = context;
+		}
+		
+		protected void setContext(Context context) {
+			this.dialog = new ProgressDialog(context);
+			dialog.setMessage(dialogMessage);
+			dialog.setMax(amountOfItems);
+			dialog.setProgress(progress);
+			dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			dialog.show();
 		}
 		
 		protected void onPreExecute() {
@@ -41,12 +53,14 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 			
 			itemsNeededToPass = 44;
 			amountOfItems = 65;
+			progress = 0;
 			
 			Resources resource = showScoreActivity.getResources();
 			dialog = new ProgressDialog(showScoreActivity);
-			dialog.setMessage(resource.getString(R.string.Calculating_your_score));
+			dialogMessage = resource.getString(R.string.Calculating_your_score);
+			dialog.setMessage(dialogMessage);
 			dialog.setMax(amountOfItems);
-			dialog.setProgress(0);
+			dialog.setProgress(progress);
 			dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
 			dialog.show();
 			
@@ -61,7 +75,7 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 		protected Integer doInBackground(Object... questionIds) {
 			
 			ExaminationDbAdapter examinationDbHelper;
-			examinationDbHelper = new ExaminationDbAdapter(showScoreActivity);
+			examinationDbHelper = new ExaminationDbAdapter(this.showScoreActivity);
 			try {
 				examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 			} catch (SQLiteException e) {
@@ -77,18 +91,18 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 				String questionType = examinationDbHelper.getQuestionType(questionId);
 				boolean answerCorrect = false;
 				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-					answerCorrect = examinationDbHelper.checkScoresAnswersOpen(questionId, ExamTrainer.getExamId());
+					answerCorrect = examinationDbHelper.checkScoresAnswersOpen(questionId, ExamTrainer.getScoresId());
 				}
 				else {
-					answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(questionId, ExamTrainer.getExamId());
+					answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(questionId, ExamTrainer.getScoresId());
 				}
 
 				if ( answerCorrect ) {
 					answers_correct++;
-					examinationDbHelper.addResultPerQuestion(ExamTrainer.getExamId(), questionId, true);
+					examinationDbHelper.addResultPerQuestion(ExamTrainer.getScoresId(), questionId, true);
 				}
 				else {
-					examinationDbHelper.addResultPerQuestion(ExamTrainer.getExamId(), questionId, false);
+					examinationDbHelper.addResultPerQuestion(ExamTrainer.getScoresId(), questionId, false);
 				}
 				
 				
@@ -98,7 +112,8 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 			examinationDbHelper.close();
 			
 			for (int i = 0; i < amountOfItems; i++) {
-				publishProgress(i, i-randomNumberGenerator.nextInt(30));
+				progress = i;
+				publishProgress(progress, progress-randomNumberGenerator.nextInt(30));
 				try {
 					Thread.sleep((long) (100 + ((i/(double) amountOfItems) * 200)));
 				} catch (InterruptedException e) {
@@ -124,7 +139,7 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 			examinationDbHelper = new ExaminationDbAdapter(this.showScoreActivity);
 			try {
 				examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-				examinationDbHelper.updateScore(ExamTrainer.getExamId(), answersCorrect);
+				examinationDbHelper.updateScore(ExamTrainer.getScoresId(), answersCorrect);
 				examinationDbHelper.close();
 			} catch (SQLiteException e) {
 				Log.d("CalculateScore", e.getMessage());
@@ -132,7 +147,7 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 			
 			dialog.dismiss();
 			
-			this.showScoreActivity.showResult(answersCorrect);
+			this.showScoreActivity.showResult();
 		}
 		
 		protected void updateText(int itemsCalculated, int score) {
@@ -160,30 +175,28 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 			 * 			messagesClassF[ x / ((amountOfItems / amountOfMessagesInClassF) + 1)  ]
 			 */
 			
-			String message = "";
-			
 			int fx = ((itemsCalculated * itemsNeededToPass) / amountOfItems) - amountOfItems + itemsCalculated;
 			int gx = itemsCalculated * (amountOfItems/itemsNeededToPass);
 			int hx = (itemsCalculated * itemsNeededToPass) / amountOfItems;
 			
 			if( score > hx ) {
 				if( score > itemsNeededToPass ) {
-					message = messagesClassA[ itemsCalculated / ((amountOfItems / messagesClassA.length) + 1)  ];
+					dialogMessage = messagesClassA[ itemsCalculated / ((amountOfItems / messagesClassA.length) + 1)  ];
 				} else if ( ( score - hx ) > ( gx - score ) ) {
-					message = messagesClassB[ itemsCalculated / ((amountOfItems / messagesClassB.length) + 1)  ];
+					dialogMessage = messagesClassB[ itemsCalculated / ((amountOfItems / messagesClassB.length) + 1)  ];
 				} else {
-					message = messagesClassC[ itemsCalculated / ((amountOfItems / messagesClassC.length) + 1)  ];
+					dialogMessage = messagesClassC[ itemsCalculated / ((amountOfItems / messagesClassC.length) + 1)  ];
 				}
 			} else {
 				if ( score < fx ) {
-					message = messagesClassF[ itemsCalculated / ((amountOfItems / messagesClassF.length) + 1)  ];
+					dialogMessage = messagesClassF[ itemsCalculated / ((amountOfItems / messagesClassF.length) + 1)  ];
 				} else if ( ( score - fx ) > ( hx - score ) ) {
-					message = messagesClassD[ itemsCalculated / ((amountOfItems / messagesClassD.length) + 1)  ];
+					dialogMessage = messagesClassD[ itemsCalculated / ((amountOfItems / messagesClassD.length) + 1)  ];
 				} else {
-					message = messagesClassE[ itemsCalculated / ((amountOfItems / messagesClassE.length) + 1)  ];
+					dialogMessage = messagesClassE[ itemsCalculated / ((amountOfItems / messagesClassE.length) + 1)  ];
 				}
 			}
 			
-			dialog.setMessage(message);
+			dialog.setMessage(dialogMessage);
 		}
 	}

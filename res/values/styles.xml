@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="BackgroundImage">
+        <item name="android:contentDescription">@string/student_hat</item>
+		<item name="android:layout_width">fill_parent</item> 
+		<item name="android:layout_height">fill_parent</item>
+		<item name="android:scaleType">center</item> 
+		<item name="android:src">@drawable/student_hat</item>
+    </style>
     <style name="exhibit" parent="@android:style/TextAppearance">
             <item name="android:layout_width">fill_parent</item>
         	<item name="android:layout_height">wrap_content</item>
@@ -24,4 +31,16 @@
         <item name="android:textSize">30dp</item>
         <item name="android:textStyle">bold</item>
     </style>
+    <style name="TextWhite" parent="@android:style/TextAppearance">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:typeface">sans</item>
+    </style>
+    <style name="TextDefault" parent="@android:style/TextAppearance">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#AAAAAA</item>
+        <item name="android:typeface">sans</item>
+        </style>
 </resources>

@@ -48,6 +48,8 @@ public class ManageExamsActivity extends ListActivity {
 		Log.d("trace", "ManageExamsActivity created");
 		setContentView(R.layout.manageexams);
 
+		loadLocalExams();
+		
 		noExamsAvailable = (TextView) this.findViewById(R.id.manageexams_no_exams_available);
 		clickOnManageExams = (TextView) this.findViewById(R.id.manageexams_click_on_manage_exams);		
 
@@ -127,7 +129,7 @@ public class ManageExamsActivity extends ListActivity {
 		examTrainerDbHelper.open();
 		Cursor cursor = examTrainerDbHelper.getAllExams();
 		
-		if( cursor == null )
+		if( cursor.getCount() < 1 )
 			return;
 		
 		do {

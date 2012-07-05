@@ -1,11 +1,11 @@
 package  nl.atcomputing.examtrainer;
 
-import java.util.HashMap;
-
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -24,13 +25,17 @@ import android.widget.TextView;
 
 public class HistoryAdapter extends CursorAdapter  {
 	private int layout;
-	private StartExamActivity activity;
-	private HashMap<Integer, Boolean> itemChecked = new HashMap<Integer, Boolean>();
+	private Activity activity;
+	private int amountOfItemsChecked;
+	public SparseBooleanArray itemChecked = new SparseBooleanArray();
+	private Button buttonDeleteSelected;
 	
-	    public HistoryAdapter(StartExamActivity activity, int layout, Cursor c, Button deleteScoresButton) {
+	    public HistoryAdapter(Activity activity, int layout, Cursor c, Button deleteSelectedButton) {
 	      super(activity, c);
-	      this.layout = layout;
 	      this.activity = activity;
+	      this.layout = layout;
+	      this.buttonDeleteSelected = deleteSelectedButton;
+	      this.amountOfItemsChecked = 0;
 	    }
 
 		@Override
@@ -39,7 +44,6 @@ public class HistoryAdapter extends CursorAdapter  {
 			    String examDate = ExamTrainer.convertEpochToString(cursor.getLong(index));
 			    index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE);
 			    int examScore = cursor.getInt(index);
-			    
 			    TextView scoreEntryDate = (TextView) view.findViewById(R.id.historyEntryDate);
 		        scoreEntryDate.setText(examDate);
 		        TextView scoreEntryScore = (TextView) view.findViewById(R.id.historyEntryScore);
@@ -55,23 +59,31 @@ public class HistoryAdapter extends CursorAdapter  {
 		        }
 		        
 		        index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores._ID);
-			    final int examId = cursor.getInt(index);
+			    final int scoresId = cursor.getInt(index);
 			    
 		        CheckBox cbox = (CheckBox) view.findViewById(R.id.historyCheckBox);
 		        cbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					
 					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+						Log.d("HistoryAdapter", "onCheckedChanged");
 						if( isChecked ) {
-							activity.addItemToDeletionList(examId);
-							itemChecked.put(examId, true);
+							itemChecked.put(scoresId, true);
+							amountOfItemsChecked++;
+							buttonDeleteSelected.setVisibility(View.VISIBLE);
 						} else {
-							activity.removeItemFromDeletionList(examId);
-							itemChecked.put(examId, false);
+							itemChecked.put(scoresId, false);
+							amountOfItemsChecked--;
+							if(amountOfItemsChecked < 1) {
+								amountOfItemsChecked = 0;
+								buttonDeleteSelected.setVisibility(View.GONE);
+								LinearLayout ll = (LinearLayout) activity.findViewById(R.id.startexam_bottom_buttons);
+								ll.invalidate();
+							}
 						}
 					}
 				});
 		        
-		        Boolean checked = itemChecked.get(examId);
+		        Boolean checked = itemChecked.get(scoresId);
 		        if ( ( checked == null ) || ( checked == false ) ) {
 		        	cbox.setChecked(false);
 		        } else {

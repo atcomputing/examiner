@@ -31,7 +31,7 @@ public class ExamReviewActivity extends Activity {
 			
 		setContentView(R.layout.review_exam);
 		
-		long examId = ExamTrainer.getExamId();
+		long examId = ExamTrainer.getScoresId();
 		
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
@@ -47,7 +47,7 @@ public class ExamReviewActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionActivity.class);
-				ExamTrainer.setReview();
+				ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.REVIEW);
 				ExamTrainer.setQuestionNumber(intent, adapter.getItemId(position));
 				startActivity(intent);
 			}

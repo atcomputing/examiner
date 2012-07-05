@@ -12,7 +12,7 @@ import android.text.format.Time;
 public final class ExamTrainer {
 
 	public enum ExamTrainerMode {
-		EXAM, REVIEW, ENDOFEXAM
+		EXAM, REVIEW, ENDOFEXAM, SHOW_SCORE
 	}
 
 	private static String TAG = "ExamTrainer";
@@ -96,29 +96,37 @@ public final class ExamTrainer {
 		return examTitle;
 	}
 	
-	public static void setEndOfExam() {
-		mode = ExamTrainerMode.ENDOFEXAM;
+	public static void setExamMode(ExamTrainerMode m) {
+		mode = m;
 	}
 	
-	public static boolean endOfExam() {
-		return mode == ExamTrainerMode.ENDOFEXAM;
+	public static ExamTrainerMode getExamMode() {
+		return mode;
 	}
 	
-	public static void setReview() {
-		mode = ExamTrainerMode.REVIEW;
-	}
-	
-	public static boolean review() {
-		return mode == ExamTrainerMode.REVIEW;
-	}
-	
-	public static void setStartExam() {
-		mode = ExamTrainerMode.EXAM;
-	}
-	
-	public static boolean startExam() {
-		return mode == ExamTrainerMode.EXAM;
-	}
+//	public static void setEndOfExam() {
+//		mode = ExamTrainerMode.ENDOFEXAM;
+//	}
+//	
+//	public static boolean endOfExam() {
+//		return mode == ExamTrainerMode.ENDOFEXAM;
+//	}
+//	
+//	public static void setReview() {
+//		mode = ExamTrainerMode.REVIEW;
+//	}
+//	
+//	public static boolean review() {
+//		return mode == ExamTrainerMode.REVIEW;
+//	}
+//	
+//	public static void setStartExam() {
+//		mode = ExamTrainerMode.EXAM;
+//	}
+//	
+//	public static boolean startExam() {
+//		return mode == ExamTrainerMode.EXAM;
+//	}
 	
 	public static void setQuestionNumber(Intent intent, long number) {
 		intent.putExtra(questionNumber, number);

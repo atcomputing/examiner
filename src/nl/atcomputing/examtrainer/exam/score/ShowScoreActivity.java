@@ -9,10 +9,12 @@ import android.app.Activity;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteException;
 import android.opengl.GLSurfaceView;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 /**
  * @author martijn brekhof
@@ -20,24 +22,34 @@ import android.widget.TextView;
  */
 
 public class ShowScoreActivity extends Activity {
-	private static final String TAG = "ShowScoreActivity";
 	private int amountOfBalloons;
-	private int score;
 	private GLSurfaceViewRenderer renderer;
-	
+	private CalculateScore calculateScore;
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d("trace", "ShowScoreActivity created");
-		
-		ExamTrainer.setEndOfExam();
-		
+
 		setContentView(R.layout.show_score);
 
 		GLSurfaceView view = (GLSurfaceView) findViewById(R.id.show_score_glsurfaceview);
 		this.renderer = new GLSurfaceViewRenderer(this);
-        view.setRenderer(this.renderer);
-		
-		calculateScore();
+		view.setRenderer(this.renderer);
+
+		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_SCORE ) {
+			showResult();
+		} else {
+			this.calculateScore = (CalculateScore) getLastNonConfigurationInstance();
+			if( ( this.calculateScore != null ) && ( this.calculateScore.getStatus() != AsyncTask.Status.FINISHED) ) {
+				this.calculateScore.setContext(this);
+			} else {
+				calculateScore();
+			}
+		}
+	}
+
+	public Object onRetainNonConfigurationInstance() {
+		return this.calculateScore;
 	}
 
 	protected void calculateScore() {
@@ -49,16 +61,16 @@ public class ShowScoreActivity extends Activity {
 		} catch (SQLiteException e) {
 			throw(e);
 		}
-		
+
 		List<Long> questionIDsList = examinationDbHelper.getAllQuestionIDs();
 		examinationDbHelper.close();
-		
-		CalculateScore task = new CalculateScore(this);
-		task.execute(questionIDsList.toArray());
-		
+
+		this.calculateScore = new CalculateScore(this);
+		this.calculateScore.execute(questionIDsList.toArray());
+
 	}
 
-	protected int calculateAmountOfBalloons() {
+	protected int calculateAmountOfBalloons(int score) {
 		long totalAmountOfItems = ExamTrainer.getAmountOfItems();
 		long itemsRequiredToPass = ExamTrainer.getItemsNeededToPass();
 		//determine amount of balloons
@@ -69,7 +81,23 @@ public class ShowScoreActivity extends Activity {
 		return Math.round((totalAmountOfItems - itemsRequiredToPass) / amountOfWrongAnswers) * 2;
 	}
 
-	protected void showResult(int score) {
+	protected void showResult() {
+		int score = 0;
+		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.SHOW_SCORE);
+		
+		ExaminationDbAdapter examinationDbHelper;
+		examinationDbHelper = new ExaminationDbAdapter(this);
+		try {
+			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+			score = examinationDbHelper.getScore(ExamTrainer.getScoresId());
+			examinationDbHelper.close();
+		} catch (SQLiteException e) {
+			Log.d("ShowScoreActivity", e.getMessage());
+			Toast.makeText(this, "Database Error: Could not get score", Toast.LENGTH_LONG).show();
+			examinationDbHelper.close();
+			return;
+		}
+		
 		long totalAmountOfItems = ExamTrainer.getAmountOfItems();
 		long itemsRequiredToPass = ExamTrainer.getItemsNeededToPass();
 		Resources r = this.getResources();
@@ -90,11 +118,11 @@ public class ShowScoreActivity extends Activity {
 		tv.setText(text);
 		tv.setVisibility(View.VISIBLE);
 
-		this.amountOfBalloons = calculateAmountOfBalloons();
+		this.amountOfBalloons = calculateAmountOfBalloons(score);
 		Log.d("ShowScoreActivity", "amountOfBalloons"+this.amountOfBalloons);
 		//if( this.amountOfBalloons > 0 ) {
-			this.renderer.showBalloons(50);
-			this.renderer.requestRender();
+		this.renderer.showBalloons(50);
+		this.renderer.requestRender();
 		//}
 	}
 }

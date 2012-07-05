@@ -198,7 +198,7 @@ public class ExamQuestion {
 		
 		if( this.type.equalsIgnoreCase(TYPE_MULTIPLE_CHOICE) ) {
 			cursor = examinationDbHelper.getChoices(questionNumber);
-			Log.d("ExamQuestion", "cursor.getCount(): "+cursor.getCount());
+//			Log.d("ExamQuestion", "cursor.getCount(): "+cursor.getCount());
 			if ( cursor != null ) {
 				index = cursor.getColumnIndex(ExaminationDatabaseHelper.Choices.COLUMN_NAME_CHOICE);
 				do {
@@ -210,11 +210,11 @@ public class ExamQuestion {
 		
 		examinationDbHelper.close();
 		
-		Log.d("ExamQuestion", "type: " +this.type + 
-				"\nexhibit: " +this.exhibit + 
-				"\nquestion: " +this.question + 
-				"\nanswers: " +this.answers.toString() + 
-				"\nchoices: " +this.choices.toString());
+//		Log.d("ExamQuestion", "type: " +this.type + 
+//				"\nexhibit: " +this.exhibit + 
+//				"\nquestion: " +this.question + 
+//				"\nanswers: " +this.answers.toString() + 
+//				"\nchoices: " +this.choices.toString());
 		return this;
 	}
 }

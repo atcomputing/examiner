@@ -52,7 +52,7 @@ public class ExamQuestionActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Log.d("trace", "ExamQuestionActivity created");
-		if ( ExamTrainer.endOfExam() ) {
+		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
 			finish();
 		}
 
@@ -75,7 +75,7 @@ public class ExamQuestionActivity extends Activity {
 
 	protected void onResume() {
 		super.onResume();
-		if ( ExamTrainer.endOfExam() ) {
+		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
 			finish();
 		}
 	}
@@ -91,7 +91,7 @@ public class ExamQuestionActivity extends Activity {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.question_menu, menu);
 
-		if( ExamTrainer.review() ) {
+		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW ) {
 			MenuItem item = menu.findItem(R.id.question_menu_get_hint);
 			item.setTitle(R.string.Show_Answers);
 		}
@@ -103,7 +103,7 @@ public class ExamQuestionActivity extends Activity {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.question_menu_get_hint:
-			if(ExamTrainer.review()) {
+			if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW ) {
 				showAnswers();
 			}
 			else {
@@ -131,7 +131,7 @@ public class ExamQuestionActivity extends Activity {
 			.setCancelable(false)
 			.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					if( !ExamTrainer.review() ) {
+					if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) {
 						startShowScoreActivity();
 					} 
 					else {
@@ -225,6 +225,7 @@ public class ExamQuestionActivity extends Activity {
 	}
 
 	private void startShowScoreActivity() {
+		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.ENDOFEXAM);
 		Intent intent = new Intent(ExamQuestionActivity.this, ShowScoreActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
@@ -350,7 +351,7 @@ public class ExamQuestionActivity extends Activity {
 
 		Button button_next_question = (Button) findViewById(R.id.button_next);
 		if( questionNumber >= ExamTrainer.getAmountOfItems() ) {
-			if (ExamTrainer.review()) {
+			if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW) {
 				button_next_question.setText(R.string.End_review);
 			} else {
 				button_next_question.setText(R.string.End_exam);
@@ -368,7 +369,7 @@ public class ExamQuestionActivity extends Activity {
 				}
 
 				if ( questionNumber >= ExamTrainer.getAmountOfItems() ) {
-					if(ExamTrainer.review()) {
+					if(ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW) {
 						Intent intent = new Intent(ExamQuestionActivity.this, StartExamActivity.class);
 						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(intent);

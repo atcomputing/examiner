@@ -1,8 +1,8 @@
 package nl.atcomputing.examtrainer;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
+import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
@@ -36,8 +36,7 @@ import android.widget.Toast;
 
 public class StartExamActivity extends Activity {
 	private HistoryAdapter adapter;
-	private ArrayList<Integer> examIdsSelected = new ArrayList<Integer>();
-	private Button deleteSelectedButton;
+	private Button buttonDeleteSelected;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,8 +50,8 @@ public class StartExamActivity extends Activity {
 			}
 		});
 		
-		this.deleteSelectedButton = (Button) findViewById(R.id.startexam_history_button_delete_scores);
-		this.deleteSelectedButton.setOnClickListener(new OnClickListener() {
+		this.buttonDeleteSelected = (Button) findViewById(R.id.startexam_history_button_delete_scores);
+		this.buttonDeleteSelected.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
 				deleteSelectedFromDatabase();
@@ -63,16 +62,16 @@ public class StartExamActivity extends Activity {
         		StartExamActivity.this, 
         		R.layout.history_entry, 
         		null, 
-        		deleteSelectedButton);
+        		buttonDeleteSelected);
 
-        ListView scoresList = (ListView) findViewById(R.id.history_listview);
+        ListView scoresList = (ListView) findViewById(R.id.startexam_history_listview);
         scoresList.setAdapter(adapter);
         
         scoresList.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Intent intent = new Intent(StartExamActivity.this, ExamReviewActivity.class);
-				ExamTrainer.setExamId(id);
+				ExamTrainer.setScoresId(id);
 				startActivity(intent);
 			}
 		});
@@ -80,6 +79,7 @@ public class StartExamActivity extends Activity {
 
 	protected void onResume() {
 		super.onResume();
+		Log.d("StartExamActivity", "onResume");
 		
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		examTrainerDbHelper.open();
@@ -105,7 +105,9 @@ public class StartExamActivity extends Activity {
 		tv.setText(Integer.toString(examItemsNeededToPass));
 		tv = (TextView) findViewById(R.id.startexam_installed_on_value);
 		tv.setText(localDate);
-
+		tv = (TextView) findViewById(R.id.startexam_examtitle_value);
+		tv.setText(examTitle);
+		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		boolean useTimeLimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
 
@@ -128,6 +130,20 @@ public class StartExamActivity extends Activity {
         examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
         cursor = examinationDbHelper.getScoresReversed();
         examinationDbHelper.close();
+        
+        tv = (TextView) findViewById(R.id.startexam_history_textview_noscoresavailable);
+        LinearLayout ll = (LinearLayout) findViewById(R.id.startexam_history_header);
+        ListView lv = (ListView) findViewById(R.id.startexam_history_listview);
+        if( cursor.getCount() > 0 ) {
+        	tv.setVisibility(View.GONE);
+        	ll.setVisibility(View.VISIBLE);
+        	lv.setVisibility(View.VISIBLE);
+        } else {
+        	ll.setVisibility(View.GONE);
+        	lv.setVisibility(View.GONE);
+        	tv.setVisibility(View.VISIBLE);
+        }
+        
 		adapter.changeCursor(cursor);
 		adapter.notifyDataSetChanged();
 	}
@@ -178,43 +194,31 @@ public class StartExamActivity extends Activity {
 			}
 			ExamTrainer.setScoresId(scoresId);
 			ExamTrainer.setQuestionNumber(intent, 1);
-			ExamTrainer.setStartExam();
+			ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM);
 			startActivity(intent);
 		}
 	}
 	
-	protected void addItemToDeletionList(int id) {
-		this.examIdsSelected.add(Integer.valueOf(id));
-		this.deleteSelectedButton.setVisibility(View.VISIBLE);
-	}
 	
-	protected void removeItemFromDeletionList(int id) {
-		Iterator<Integer> itr = this.examIdsSelected.iterator();
-		while( itr.hasNext() ) {
-			Integer examId = itr.next();
-			if( examId.intValue() == id ) {
-				this.examIdsSelected.remove(examId);
-				break;
+	private void deleteSelectedFromDatabase() {
+		
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+        examinationDbHelper.open(ExamTrainer.getExamDatabaseName()); 
+        
+        int size = this.adapter.itemChecked.size();
+		for( int i = 0; i < size; i++ ) {
+			int key = this.adapter.itemChecked.keyAt(i);
+			if( this.adapter.itemChecked.get(key) ) {
+				examinationDbHelper.deleteScore(key);
 			}
 		}
 		
-		if( this.examIdsSelected.isEmpty() ) {
-			this.deleteSelectedButton.setVisibility(View.GONE);
-		}
-	}
-	
-	private void deleteSelectedFromDatabase() {
-		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
-        examinationDbHelper.open(ExamTrainer.getExamDatabaseName());    
-		for( Integer examId : this.examIdsSelected ) {
-			examinationDbHelper.deleteScore(examId.intValue());
-		}
 		Cursor cursor = examinationDbHelper.getScoresReversed();
 		examinationDbHelper.close();
 		adapter.changeCursor(cursor);
 		adapter.notifyDataSetChanged();
 		
-		this.examIdsSelected.clear();
-		this.deleteSelectedButton.setVisibility(View.GONE);
+//		this.examIdsSelected.clear();
+		this.buttonDeleteSelected.setVisibility(View.GONE);
 	}
 }
