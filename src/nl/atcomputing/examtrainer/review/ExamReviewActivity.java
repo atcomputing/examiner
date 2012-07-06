@@ -36,7 +36,7 @@ public class ExamReviewActivity extends Activity {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		Cursor cursor = examinationDbHelper.getResultPerQuestion(examId);
-		Log.d(TAG,"Cursor: " + cursor);
+		//Log.d(TAG,"Cursor: " + cursor);
 		examinationDbHelper.close();
 		
 		adapter = new ExamReviewAdapter(this, R.layout.review_exam_entry, cursor);

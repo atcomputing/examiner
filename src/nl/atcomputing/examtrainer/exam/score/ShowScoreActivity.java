@@ -24,6 +24,7 @@ import android.widget.Toast;
 public class ShowScoreActivity extends Activity {
 	private int amountOfBalloons;
 	private GLSurfaceViewRenderer renderer;
+	private GLSurfaceView glView;
 	private CalculateScore calculateScore;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -32,20 +33,43 @@ public class ShowScoreActivity extends Activity {
 
 		setContentView(R.layout.show_score);
 
-		GLSurfaceView view = (GLSurfaceView) findViewById(R.id.show_score_glsurfaceview);
+		this.glView = (GLSurfaceView) findViewById(R.id.show_score_glsurfaceview);
 		this.renderer = new GLSurfaceViewRenderer(this);
-		view.setRenderer(this.renderer);
+		this.glView.setRenderer(this.renderer);
 
-		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_SCORE ) {
-			showResult();
-		} else {
-			this.calculateScore = (CalculateScore) getLastNonConfigurationInstance();
-			if( ( this.calculateScore != null ) && ( this.calculateScore.getStatus() != AsyncTask.Status.FINISHED) ) {
-				this.calculateScore.setContext(this);
+		if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.SHOW_SCORE ) {
+			ShowScoreActivity.this.calculateScore = (CalculateScore) getLastNonConfigurationInstance();
+			if( ( ShowScoreActivity.this.calculateScore != null ) && 
+					( ShowScoreActivity.this.calculateScore.getStatus() != AsyncTask.Status.FINISHED) ) {
+				Log.d("ShowScoreActivity", "restoring previous configuration instance");
+				ShowScoreActivity.this.calculateScore.setContext(ShowScoreActivity.this);
 			} else {
 				calculateScore();
 			}
 		}
+	}
+
+	public void startAnimation() {
+		runOnUiThread(new Runnable() {
+
+			public void run() {
+				if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_SCORE ) {
+					showResult();
+				}
+			}
+		} );
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		this.glView.onPause();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		this.glView.onResume();
 	}
 
 	public Object onRetainNonConfigurationInstance() {
@@ -84,7 +108,7 @@ public class ShowScoreActivity extends Activity {
 	protected void showResult() {
 		int score = 0;
 		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.SHOW_SCORE);
-		
+
 		ExaminationDbAdapter examinationDbHelper;
 		examinationDbHelper = new ExaminationDbAdapter(this);
 		try {
@@ -97,7 +121,7 @@ public class ShowScoreActivity extends Activity {
 			examinationDbHelper.close();
 			return;
 		}
-		
+
 		long totalAmountOfItems = ExamTrainer.getAmountOfItems();
 		long itemsRequiredToPass = ExamTrainer.getItemsNeededToPass();
 		Resources r = this.getResources();

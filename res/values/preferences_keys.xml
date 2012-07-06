@@ -5,4 +5,5 @@
        <string name="pref_key_preferences">preferences_pref_key</string>
        <string name="pref_key_updates">updates_pref_key</string>
        <string name="pref_key_updates_url">updates_url_pref_key</string>
+       <string name="pref_key_show_score_instantaneous">instant_score_pref_key</string>
 	</resources>

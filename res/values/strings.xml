@@ -100,5 +100,7 @@
     <string name="no_previous_scores_available">No previous scores available</string>
     <string name="name">Name</string>
     <string name="database_error_could_not_get_score">Database Error: Could not get score</string>
+    <string name="instant_score">Instant score</string>
+    <string name="do_not_show_calculating_score_animation_before_showing_the_final_result">Do not show calculating score animation before showing the final result</string>
 
 </resources>

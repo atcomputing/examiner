@@ -29,17 +29,18 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 	private int amountOfBalloons;
 	private Textures textures;
 	private Balloon[] balloons;
-	private Context context;
+	private ShowScoreActivity activity;
 	private Wind wind;
 	private float screenBoundaryTop;
 	private float screenBoundaryRight;
 	private float screenBoundaryLeft;
 	private float screenBoundaryBottom;
-	private float scaleFactor = 5f;
+	private float screenWidth;
+	private float screenHeight;
 	
-	public GLSurfaceViewRenderer(Context context) {
-		super(context);
-		this.context = context;
+	public GLSurfaceViewRenderer(ShowScoreActivity activity) {
+		super(activity);
+		this.activity = activity;
 
 		//Set this as Renderer
 		this.setRenderer(this);
@@ -55,9 +56,7 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 	public void onDrawFrame(GL10 gl) {
 		//Clear Screen And Depth Buffer
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);	
-		//gl.glEnable(GL10.GL_BLEND);			//Turn Blending On
-		//gl.glDisable(GL10.GL_DEPTH_TEST);	//Turn Depth Testing Off
-
+		
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();                      // reset the matrix to its default state
 		GLU.gluLookAt(gl, 0f, 0f, this.zoom, 0f, 0f, 0f, 0f, -1.0f, 0f);
@@ -92,45 +91,64 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 
 	public void onSurfaceChanged(GL10 gl, int width, int height) 
 	{
+		Log.d("GLSurfaceViewRendered", "onSurfaceChanged");
 		gl.glViewport(0, 0, width, height);
 
+		this.screenWidth = width;
+		this.screenHeight = height;
+		
 		// make adjustments for screen ratio
 		float ratio = (float) width / height;
+		
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glLoadIdentity();                        // reset the matrix to its default state
-		gl.glFrustumf(-ratio, ratio, -1f, 1f, 1.0f, 250f);
-
+		gl.glFrustumf(-ratio , ratio, -1f, 1f, 1.0f, 250f);
 		updateScreenBoundaries();
 		this.wind.setWindowSize(this.screenBoundaryTop, 
 				this.screenBoundaryBottom, 
 				this.screenBoundaryLeft,
 				this.screenBoundaryRight);
+		
+		this.activity.startAnimation();
 	}
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) 
 	{
+		Log.d("GLSurfaceViewRendered", "onSurfaceCreated");
+		
 		gl.glEnable(GL10.GL_TEXTURE_2D);					//Enable Texture Mapping
-
+		gl.glDisable(GL10.GL_DITHER);
 		gl.glEnable(GL10.GL_BLEND);							//Enable blending
 		gl.glDisable(GL10.GL_DEPTH_TEST);					//Disable depth test
+		gl.glCullFace(GL10.GL_FRONT);						//only draw front of polygon
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
-		this.textures = new Textures(this.context);
+		
+		this.textures = new Textures(this.activity);
 		this.textures.loadTextures(gl);
-		updateScreenBoundaries();
 	}
 
+	
 	protected void showBalloons(int amount) {
+		Log.d("GLSurfaceViewRenderer", "showBalloons");
 		this.amountOfBalloons = amount;
 		Random rng = new Random();
-         
+        
+		int resource_id = Balloon.getReferenceDrawable(Balloon.TYPE_BLUE);
+		int width = this.textures.getWidth(resource_id);
+		int height = this.textures.getHeight(resource_id);
+		if( this.screenWidth > this.screenHeight ) {
+			double ratio = this.screenWidth / this.screenHeight;
+			width *= ratio;
+			height *= ratio;
+		}
+		
 		this.balloons = new Balloon[this.amountOfBalloons];
 		for( int i = 0; i < this.amountOfBalloons; i++ ) {
 			int type = rng.nextInt(Balloon.AMOUNT_OF_TYPES);
-			int resource_id = Balloon.getReferenceDrawable(type);
-			Balloon b = new Balloon(this.context, type,
+			resource_id = Balloon.getReferenceDrawable(type);
+			Balloon b = new Balloon(this.activity, type,
 					this.textures.getTexture(resource_id), 
-					this.textures.getWidth(resource_id),
-					this.textures.getHeight(resource_id));
+					width, height);
 			b.x = this.screenBoundaryRight - (rng.nextFloat() * this.screenBoundaryRight * 2f);
 			b.y = this.screenBoundaryTop;
 			b.setLift(0.001f + rng.nextFloat()/8f);

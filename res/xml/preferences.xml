@@ -16,4 +16,8 @@
         android:summary="@string/Sets_the_URL_to_retrieve_updates_from"
         android:dialogTitle="@string/Enter_URL" 
         android:defaultValue="@string/default_update_URL"/>
+    <CheckBoxPreference 
+        android:key="@string/pref_key_show_score_instantaneous" 
+        android:title="@string/instant_score"
+        android:summary="@string/do_not_show_calculating_score_animation_before_showing_the_final_result"/>
 </PreferenceScreen>

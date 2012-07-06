@@ -181,7 +181,8 @@ public class ExamQuestion {
 		}
 		
 		Cursor cursor = examinationDbHelper.getQuestion(questionNumber);
-		if( ( cursor == null ) || ( cursor.getCount() < 1 ) ) {
+		if( cursor.getCount() < 1 ) {
+			cursor.close();
 			return null;
 		}
 		

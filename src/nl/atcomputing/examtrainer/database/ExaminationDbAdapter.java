@@ -238,6 +238,28 @@ public class ExaminationDbAdapter {
 		return list;
 	}
 	
+	/**
+	 * Returns the hint if specified for the question
+	 * @param questionId _ID of the question 
+	 * @return String or null if no hint was not found
+	 */
+	public String getHint(long questionId) {
+		Cursor cursor = db.query(true, ExaminationDatabaseHelper.Questions.TABLE_NAME, 
+				new String[] {
+				ExaminationDatabaseHelper.Questions.COLUMN_NAME_HINT
+				},
+				ExaminationDatabaseHelper.Questions._ID + "= ?",
+				new String[] { Long.toString(questionId) },
+				null, null, null, null);
+		if(cursor.moveToFirst()) {
+			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_HINT);
+			String hint = cursor.getString(index);
+			cursor.close();
+			return hint;
+		}
+		return null;
+	}
+	
 	public Cursor getAnswers(long questionId) {
 		Cursor mCursor = db.query(true, ExaminationDatabaseHelper.Answers.TABLE_NAME, 
 				new String[] {
@@ -360,29 +382,9 @@ public class ExaminationDbAdapter {
 				ExaminationDatabaseHelper.Scores._ID + "= ?" , 
 				new String[] { Long.toString(id) }, null, null, null, null);
 		cursor.moveToFirst();
-		return cursor.getInt(cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE));
-	}
-	
-	/**
-	 * Returns the hint if specified for the question
-	 * @param questionId _ID of the question 
-	 * @return String or null if no hint was not found
-	 */
-	public String getHint(long questionId) {
-		Cursor cursor = db.query(true, ExaminationDatabaseHelper.Questions.TABLE_NAME, 
-				new String[] {
-				ExaminationDatabaseHelper.Questions.COLUMN_NAME_HINT
-				},
-				ExaminationDatabaseHelper.Questions._ID + "= ?",
-				new String[] { Long.toString(questionId) },
-				null, null, null, null);
-		if(cursor.moveToFirst()) {
-			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Questions.COLUMN_NAME_HINT);
-			String hint = cursor.getString(index);
-			cursor.close();
-			return hint;
-		}
-		return null;
+		int count = cursor.getInt(cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE));
+		cursor.close();
+		return count;
 	}
 	
 	/**
@@ -488,6 +490,35 @@ public class ExaminationDbAdapter {
 	 * @param scoresId  The ID of the score associated with the exam
 	 * @return true if all answers are correct, false otherwise
 	 */
+	public int calculateScore(long scoresId) {
+		String answersQuestionId = ExaminationDatabaseHelper.Answers.TABLE_NAME + "." + ExaminationDatabaseHelper.Answers.COLUMN_NAME_QUESTION_ID;
+		String answersAnswer = ExaminationDatabaseHelper.Answers.TABLE_NAME + "." + ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER;
+		String scoresAnswersQuestionId = ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME + "." + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID;
+		String scoresAnswersAnswer = ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME + "." + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER;
+		String scoresAnswersScoresId = ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME + "." + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID;
+		String sqlQuery = "SELECT COUNT(*) FROM "
+			+ ExaminationDatabaseHelper.Answers.TABLE_NAME + ", " + ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME +
+			" WHERE "
+			+ scoresAnswersQuestionId + " = " + answersQuestionId +
+			" AND "
+			+ scoresAnswersScoresId + " = ?" +
+			" AND "
+			+ answersAnswer + " = " + scoresAnswersAnswer			
+			;
+		String[] sqlArgs = new String[] { Long.toString(scoresId) };
+		Cursor mCursor = db.rawQuery(sqlQuery, sqlArgs);
+		int count = mCursor.getInt(0);
+		mCursor.close();
+		return count;
+	}
+	
+	/**
+	 * Checks if a open choice question was answered correctly using a SQL query
+	 * with a JOIN over the scores answers table and correct answers table
+	 * @param questionId ID of the question you want to check the answers for
+	 * @param scoresId  The ID of the score associated with the exam
+	 * @return true if all answers are correct, false otherwise
+	 */
 	public boolean checkScoresAnswersOpen(long questionId, long scoresId) {
 		String correctAnswersQuestionId = ExaminationDatabaseHelper.Answers.TABLE_NAME + "." + ExaminationDatabaseHelper.Answers.COLUMN_NAME_QUESTION_ID;
 		String correctAnswersAnswer = ExaminationDatabaseHelper.Answers.TABLE_NAME + "." + ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER;
@@ -510,12 +541,9 @@ public class ExaminationDbAdapter {
 		String[] sqlArgs = new String[] { Long.toString(questionId), Long.toString(questionId)
 				, Long.toString(scoresId) };
 		Cursor mCursor = db.rawQuery(sqlQuery, sqlArgs);
-		if (mCursor != null) {
-			int count = mCursor.getCount();
-		  mCursor.close();
-			return count > 0;
-		}
-		return false;
+		int count = mCursor.getCount();
+		mCursor.close();
+		return count > 0;
 	}
 	
 	/**
@@ -533,11 +561,11 @@ public class ExaminationDbAdapter {
 	public boolean checkScoresAnswersMultipleChoice(long questionId, long scoresId) {
 		Cursor answersCountCursor = getScoresAnswers(scoresId, questionId);
 		Cursor correctAnswersCountCursor = getAnswers(questionId);
-		if ( ( answersCountCursor == null ) || ( correctAnswersCountCursor == null ) ) {
-			return false;
-		}
 		int answersCount = answersCountCursor.getCount();
 		int correctAnswersCount = correctAnswersCountCursor.getCount();
+		answersCountCursor.close();
+		correctAnswersCountCursor.close();
+		
 		if ( answersCount == correctAnswersCount ) {
 			String correctAnswersQuestionId = ExaminationDatabaseHelper.Answers.TABLE_NAME + "." + ExaminationDatabaseHelper.Answers.COLUMN_NAME_QUESTION_ID;
 			String correctAnswersAnswer = ExaminationDatabaseHelper.Answers.TABLE_NAME + "." + ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER;
