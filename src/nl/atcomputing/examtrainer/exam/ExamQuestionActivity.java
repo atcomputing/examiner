@@ -83,8 +83,12 @@ public class ExamQuestionActivity extends Activity {
 	public void onBackPressed() {
 		if( this.questionNumber == 1 ) {
 			showDialog(DIALOG_QUITEXAM_ID);
+		} else {
+			Intent intent = new Intent(ExamQuestionActivity.this, ExamQuestionActivity.class);
+			ExamTrainer.setQuestionNumber(intent, questionNumber - 1);
+			startActivity(intent);
+			finish();
 		}
-		//super.onBackPressed();
 	}
 	
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -229,12 +233,18 @@ public class ExamQuestionActivity extends Activity {
 		Intent intent = new Intent(ExamQuestionActivity.this, ShowScoreActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
+		finish();
 	}
 
 	private void stopExam() {
-		Intent intent = new Intent(ExamQuestionActivity.this, ExamTrainerActivity.class);
+		ExaminationDbAdapter db = new ExaminationDbAdapter(this);
+		db.open(ExamTrainer.getExamDatabaseName());
+		db.deleteScore(ExamTrainer.getScoresId());
+		db.close();
+		Intent intent = new Intent(ExamQuestionActivity.this, StartExamActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
+		finish();
 	}
 
 	private void createChoicesLayout(LinearLayout layout) {
@@ -360,6 +370,7 @@ public class ExamQuestionActivity extends Activity {
 
 		button_next_question.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
+				//Save answer to open question
 				if( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
 					ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
 					examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
@@ -383,6 +394,7 @@ public class ExamQuestionActivity extends Activity {
 					Intent intent = new Intent(ExamQuestionActivity.this, ExamQuestionActivity.class);
 					ExamTrainer.setQuestionNumber(intent, questionNumber + 1);
 					startActivity(intent);
+					finish();
 				}
 			}
 		});

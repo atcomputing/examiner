@@ -4,8 +4,8 @@
 		<title>LPI 101 Exam</title>
 		<category>LPI</category>
 		<author>AT Computing</author>
-		<numberofitems>2</numberofitems>
-		<itemsneededtopass>2</itemsneededtopass>
+		<numberofitems>60</numberofitems>
+		<itemsneededtopass>40</itemsneededtopass>
 		<url>file:///exam101.xml</url>
 		<timelimit>90</timelimit>
 	</exam>
@@ -13,8 +13,8 @@
 		<title>LPI 102 Exam</title>
 		<category>LPI</category>
 		<author>AT Computing</author>
-		<numberofitems>65</numberofitems>
-		<itemsneededtopass>44</itemsneededtopass>
+		<numberofitems>2</numberofitems>
+		<itemsneededtopass>2</itemsneededtopass>
 		<url>file:///exam102.xml</url>
 	</exam>
 	<exam>

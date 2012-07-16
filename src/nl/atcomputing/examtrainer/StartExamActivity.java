@@ -1,8 +1,6 @@
 package nl.atcomputing.examtrainer;
 
-import java.util.ArrayList;
-
-import nl.atcomputing.examtrainer.ExamTrainer.ExamTrainerMode;
+import nl.atcomputing.dialogs.RunThreadWithProgressDialog;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
@@ -10,6 +8,7 @@ import nl.atcomputing.examtrainer.exam.ExamQuestionActivity;
 import nl.atcomputing.examtrainer.manage.PreferencesActivity;
 import nl.atcomputing.examtrainer.review.ExamReviewActivity;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -51,18 +50,20 @@ public class StartExamActivity extends Activity {
 		});
 		
 		this.buttonDeleteSelected = (Button) findViewById(R.id.startexam_history_button_delete_scores);
-		this.buttonDeleteSelected.setOnClickListener(new OnClickListener() {
-			
-			public void onClick(View v) {
-				deleteSelectedFromDatabase();
-			}
-		});
         
-        adapter = new HistoryAdapter(
+        this.adapter = new HistoryAdapter(
         		StartExamActivity.this, 
         		R.layout.history_entry, 
         		null, 
         		buttonDeleteSelected);
+
+        this.buttonDeleteSelected.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				deleteSelectedFromDatabase();
+				adapter.itemChecked.clear();
+			}
+		});
 
         ListView scoresList = (ListView) findViewById(R.id.startexam_history_listview);
         scoresList.setAdapter(adapter);
@@ -202,23 +203,39 @@ public class StartExamActivity extends Activity {
 	
 	private void deleteSelectedFromDatabase() {
 		
-		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
-        examinationDbHelper.open(ExamTrainer.getExamDatabaseName()); 
-        
-        int size = this.adapter.itemChecked.size();
-		for( int i = 0; i < size; i++ ) {
-			int key = this.adapter.itemChecked.keyAt(i);
-			if( this.adapter.itemChecked.get(key) ) {
-				examinationDbHelper.deleteScore(key);
+		RunThreadWithProgressDialog pd = new RunThreadWithProgressDialog(this, 
+		new Thread(new Runnable() {
+	        public void run() {
+	    		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(StartExamActivity.this);
+	            examinationDbHelper.open(ExamTrainer.getExamDatabaseName()); 
+	            
+	            int size = adapter.itemChecked.size();
+	    		for( int i = 0; i < size; i++ ) {
+	    			int key = adapter.itemChecked.keyAt(i);
+	    			if( adapter.itemChecked.get(key) ) {
+	    				examinationDbHelper.deleteScore(key);
+	    			}
+	    		}
+	    		
+	    		examinationDbHelper.close();
+	        }
+	    }),
+	    new Runnable() {
+			public void run() {
+				ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(StartExamActivity.this);
+	            examinationDbHelper.open(ExamTrainer.getExamDatabaseName()); 
+				
+				Cursor cursor = examinationDbHelper.getScoresReversed();
+				examinationDbHelper.close();
+	    		
+	    		adapter.changeCursor(cursor);
+	    		adapter.notifyDataSetChanged();
 			}
 		}
+		);
 		
-		Cursor cursor = examinationDbHelper.getScoresReversed();
-		examinationDbHelper.close();
-		adapter.changeCursor(cursor);
-		adapter.notifyDataSetChanged();
+		pd.run(getString(R.string.deleting_scores_please_wait_));
 		
-//		this.examIdsSelected.clear();
 		this.buttonDeleteSelected.setVisibility(View.GONE);
 	}
 }

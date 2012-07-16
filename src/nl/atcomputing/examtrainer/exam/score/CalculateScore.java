@@ -39,9 +39,9 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 
 	CalculateScore(ShowScoreActivity context) {
 		this.showScoreActivity = context;
-		itemsNeededToPass = 44;
-		amountOfItems = 65;
-		progress = 0;
+		this.progress = 0;
+		this.itemsNeededToPass = (int) ExamTrainer.getItemsNeededToPass();
+		this.amountOfItems = (int) ExamTrainer.getAmountOfItems();
 	}
 
 	protected void setContext(ShowScoreActivity context) {
@@ -49,20 +49,14 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 		this.showScoreActivity = context;
 
 		this.dialog = new ProgressDialog(context);
-		dialog.setMessage(dialogMessage);
-		dialog.setMax(amountOfItems);
-		dialog.setProgress(progress);
-		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		dialog.show();
-		Log.d("CalculateScore", "setContext: progress="+progress);
+		this.dialog.setMessage(dialogMessage);
+		this.dialog.setMax(amountOfItems);
+		this.dialog.setProgress(progress);
+		this.dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+		this.dialog.show();
 	}
 
 	protected void onPreExecute() {
-		//			itemsNeededToPass = (int) ExamTrainer.getItemsNeededToPass();
-		//			amountOfItems = (int) ExamTrainer.getAmountOfItems();
-
-		Log.d("CalculateScore", "onPreExecute");
-
 		Resources resource = showScoreActivity.getResources();
 
 		dialog = new ProgressDialog(showScoreActivity);
@@ -82,6 +76,9 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 	}
 
 	protected Integer doInBackground(Object... questionIds) {
+
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.showScoreActivity);
+		boolean showScoreInstantaneously = prefs.getBoolean(this.showScoreActivity.getResources().getString(R.string.pref_key_show_score_instantaneous), false);
 
 		ExaminationDbAdapter examinationDbHelper;
 		examinationDbHelper = new ExaminationDbAdapter(this.showScoreActivity);
@@ -115,28 +112,19 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 			}
 
 
-			//publishProgress(i, answers_correct);
+			if( ! showScoreInstantaneously ) {
+				publishProgress(i, answers_correct);
+
+				try {
+					Thread.sleep((long) (100 + ((i/(double) amountOfItems) * 200)));
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
 
 		}
 		examinationDbHelper.close();
 
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.showScoreActivity);
-		boolean showScoreInstantaneously = prefs.getBoolean(this.showScoreActivity.getResources().getString(R.string.pref_key_show_score_instantaneous), false);
-		
-		if( showScoreInstantaneously ) {
-			return answers_correct;
-		}
-		
-		for (int i = 0; i < amountOfItems; i++) {
-			progress = i;
-			publishProgress(progress, progress-randomNumberGenerator.nextInt(30));
-			try {
-				Thread.sleep((long) (100 + ((i/(double) amountOfItems) * 200)));
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 		return answers_correct;
 	}
 

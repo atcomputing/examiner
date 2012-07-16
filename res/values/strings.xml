@@ -102,5 +102,6 @@
     <string name="database_error_could_not_get_score">Database Error: Could not get score</string>
     <string name="instant_score">Instant score</string>
     <string name="do_not_show_calculating_score_animation_before_showing_the_final_result">Do not show calculating score animation before showing the final result</string>
+    <string name="deleting_scores_please_wait_">Deleting scores. Please wait...</string>
 
 </resources>

@@ -65,7 +65,7 @@ public class HistoryAdapter extends CursorAdapter  {
 		        cbox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					
 					public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-						Log.d("HistoryAdapter", "onCheckedChanged");
+						Log.d("HistoryAdapter", "onCheckedChanged: amountOfItemsChecked="+amountOfItemsChecked);
 						if( isChecked ) {
 							itemChecked.put(scoresId, true);
 							amountOfItemsChecked++;

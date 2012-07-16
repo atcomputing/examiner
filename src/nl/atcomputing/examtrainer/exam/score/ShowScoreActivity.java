@@ -64,12 +64,14 @@ public class ShowScoreActivity extends Activity {
 	protected void onPause() {
 		super.onPause();
 		this.glView.onPause();
+		this.renderer.onPause();
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
 		this.glView.onResume();
+		this.renderer.onResume();
 	}
 
 	public Object onRetainNonConfigurationInstance() {
@@ -92,17 +94,6 @@ public class ShowScoreActivity extends Activity {
 		this.calculateScore = new CalculateScore(this);
 		this.calculateScore.execute(questionIDsList.toArray());
 
-	}
-
-	protected int calculateAmountOfBalloons(int score) {
-		long totalAmountOfItems = ExamTrainer.getAmountOfItems();
-		long itemsRequiredToPass = ExamTrainer.getItemsNeededToPass();
-		//determine amount of balloons
-		long amountOfWrongAnswers = totalAmountOfItems - score;
-		if ( amountOfWrongAnswers < 1 ) {
-			amountOfWrongAnswers = 1;
-		}
-		return Math.round((totalAmountOfItems - itemsRequiredToPass) / amountOfWrongAnswers) * 2;
 	}
 
 	protected void showResult() {
@@ -132,6 +123,8 @@ public class ShowScoreActivity extends Activity {
 					r.getString(R.string.You_passed) + "\n" +
 					r.getString(R.string.You_scored) + " " + score + " " +
 					r.getString(R.string.out_of) + " " + totalAmountOfItems;
+			this.renderer.showBalloons(score);
+			this.renderer.requestRender();
 		} else {
 			text = r.getString(R.string.You_failed) + "\n" +
 					r.getString(R.string.You_scored) + " " + score + " " +
@@ -141,12 +134,5 @@ public class ShowScoreActivity extends Activity {
 		TextView tv = (TextView) findViewById(R.id.show_score_text);
 		tv.setText(text);
 		tv.setVisibility(View.VISIBLE);
-
-		this.amountOfBalloons = calculateAmountOfBalloons(score);
-		Log.d("ShowScoreActivity", "amountOfBalloons"+this.amountOfBalloons);
-		//if( this.amountOfBalloons > 0 ) {
-		this.renderer.showBalloons(50);
-		this.renderer.requestRender();
-		//}
 	}
 }

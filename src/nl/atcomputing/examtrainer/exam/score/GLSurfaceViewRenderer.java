@@ -1,19 +1,13 @@
 package nl.atcomputing.examtrainer.exam.score;
 
-import static android.opengl.GLES11.GL_MODELVIEW_MATRIX;
-import static android.opengl.GLES11.GL_PROJECTION_MATRIX;
-import static android.opengl.GLES11.glGetFloatv;
-
 import java.util.Random;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
-import android.opengl.GLUtils;
 import android.util.Log;
 
 /**
@@ -47,12 +41,18 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 		//Request focus
 		this.requestFocus();
 		this.setFocusableInTouchMode(true);
+	}
 
+	public void onPause() {
+		
+	}
+	
+	public void onResume() {
 		this.wind = new Wind();
 		this.wind.setWindChance(30);
 		this.wind.setWindSpeedUpperLimit(0.5f);
 	}
-
+	
 	public void onDrawFrame(GL10 gl) {
 		//Clear Screen And Depth Buffer
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);	
@@ -71,13 +71,13 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 				b.x += windSpeedHorizontal; 
 				b.y -= b.getLift();
 				
-				if( b.y < this.screenBoundaryBottom ) {
-					b.y = this.screenBoundaryTop;
+				if( (b.y + 1.5f) < this.screenBoundaryBottom ) {
+					b.y = this.screenBoundaryTop + 1.5f;
 				}
-				if( b.x < this.screenBoundaryLeft ) {
-					b.x = this.screenBoundaryRight;
-				} else if ( b.x > this.screenBoundaryRight ) {
-					b.x = this.screenBoundaryLeft;
+				if( (b.x + 1.5f) < this.screenBoundaryLeft ) {
+					b.x = this.screenBoundaryRight + 1.5f;
+				} else if ( (b.x - 1.5f) > this.screenBoundaryRight ) {
+					b.x = this.screenBoundaryLeft - 1.5f;
 				}
 				
 				gl.glPushMatrix();
@@ -129,7 +129,6 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 
 	
 	protected void showBalloons(int amount) {
-		Log.d("GLSurfaceViewRenderer", "showBalloons");
 		this.amountOfBalloons = amount;
 		Random rng = new Random();
         
@@ -162,9 +161,9 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 		Frustum f = new Frustum();
 		f.extractFromOGL();
 
-		this.screenBoundaryBottom = f.getWorldCoordinateBottom(this.zoom - 10);
-		this.screenBoundaryTop = f.getWorldCoordinateTop(this.zoom - 10);
-		this.screenBoundaryLeft = f.getWorldCoordinateLeft(this.zoom - 10);
-		this.screenBoundaryRight = f.getWorldCoordinateRight(this.zoom - 10);
+		this.screenBoundaryBottom = f.getWorldCoordinateBottom(this.zoom);
+		this.screenBoundaryTop = f.getWorldCoordinateTop(this.zoom);
+		this.screenBoundaryLeft = f.getWorldCoordinateLeft(this.zoom);
+		this.screenBoundaryRight = f.getWorldCoordinateRight(this.zoom);
 	}
 }
