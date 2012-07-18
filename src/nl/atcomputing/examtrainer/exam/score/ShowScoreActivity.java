@@ -22,7 +22,6 @@ import android.widget.Toast;
  */
 
 public class ShowScoreActivity extends Activity {
-	private int amountOfBalloons;
 	private GLSurfaceViewRenderer renderer;
 	private GLSurfaceView glView;
 	private CalculateScore calculateScore;
@@ -41,7 +40,6 @@ public class ShowScoreActivity extends Activity {
 			ShowScoreActivity.this.calculateScore = (CalculateScore) getLastNonConfigurationInstance();
 			if( ( ShowScoreActivity.this.calculateScore != null ) && 
 					( ShowScoreActivity.this.calculateScore.getStatus() != AsyncTask.Status.FINISHED) ) {
-				Log.d("ShowScoreActivity", "restoring previous configuration instance");
 				ShowScoreActivity.this.calculateScore.setContext(ShowScoreActivity.this);
 			} else {
 				calculateScore();

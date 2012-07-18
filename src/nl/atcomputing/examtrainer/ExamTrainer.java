@@ -15,12 +15,12 @@ public final class ExamTrainer {
 		EXAM, REVIEW, ENDOFEXAM, SHOW_SCORE
 	}
 
-	private static String TAG = "ExamTrainer";
 	private static String examTitle = "ExamTrainer";
 	private static String examDatabaseName = null;
 	private static ExamTrainerMode mode = ExamTrainerMode.EXAM;
 	private static long examId = -1;
 	private static long scoresId = -1;
+	private static long answersCorrect = 0;
 	private static long itemsNeededToPass = 0;
 	private static long totalAmountOfItems = 0;
 	private static final String questionNumber = "questionNumber";
@@ -32,10 +32,21 @@ public final class ExamTrainer {
 	private ExamTrainer() {
 	}
 
-	public static void setTimeLimit(long minutes) {
-		timeLimit = minutes;
+	public static void setAnswersCorrect(long amount) {
+		answersCorrect = amount;
 	}
 	
+	public static long getAnswersCorrect() {
+		return answersCorrect;
+	}
+	
+	public static void setTimeLimit(long seconds) {
+		timeLimit = seconds * 1000;
+	}
+	
+	/**
+	 * @return timelimit in seconds
+	 */
 	public static long getTimeLimit() {
 		return timeLimit;
 	}
@@ -46,6 +57,10 @@ public final class ExamTrainer {
 	
 	public static long getTimerStart() {
 		return timerStart;
+	}
+	
+	public static long getTimeEnd() {
+		return timerStart + timeLimit;
 	}
 	
 	public static void setExamId(long id) {
@@ -104,35 +119,12 @@ public final class ExamTrainer {
 		return mode;
 	}
 	
-//	public static void setEndOfExam() {
-//		mode = ExamTrainerMode.ENDOFEXAM;
-//	}
-//	
-//	public static boolean endOfExam() {
-//		return mode == ExamTrainerMode.ENDOFEXAM;
-//	}
-//	
-//	public static void setReview() {
-//		mode = ExamTrainerMode.REVIEW;
-//	}
-//	
-//	public static boolean review() {
-//		return mode == ExamTrainerMode.REVIEW;
-//	}
-//	
-//	public static void setStartExam() {
-//		mode = ExamTrainerMode.EXAM;
-//	}
-//	
-//	public static boolean startExam() {
-//		return mode == ExamTrainerMode.EXAM;
-//	}
 	
-	public static void setQuestionNumber(Intent intent, long number) {
-		intent.putExtra(questionNumber, number);
+	public static void setQuestionId(Intent intent, long id) {
+		intent.putExtra(questionNumber, id);
 	}
 
-	public static long getQuestionNumber(Intent intent) {
+	public static long getQuestionId(Intent intent) {
 		return intent.getLongExtra(questionNumber, 1);
 	}
 

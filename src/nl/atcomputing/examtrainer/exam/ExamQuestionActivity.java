@@ -1,9 +1,12 @@
 package nl.atcomputing.examtrainer.exam;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import nl.atcomputing.examtrainer.ExamTrainer;
-import nl.atcomputing.examtrainer.ExamTrainerActivity;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.StartExamActivity;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
@@ -17,7 +20,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,14 +43,17 @@ import android.widget.Toast;
 public class ExamQuestionActivity extends Activity {
 	//private ExaminationDbAdapter examinationDbHelper;
 	//private Cursor cursorQuestion;
-	private long questionNumber;
+	private long questionId;
 	private EditText editText;
-	private ArrayList <CheckBox> cboxes;
+	private TextView timeLimitTextView;
+	private ArrayList <View> multipleChoices;
 	private static final int DIALOG_ENDOFEXAM_ID = 1;
 	private static final int DIALOG_SHOW_HINT_ID = 2;
 	private static final int DIALOG_QUITEXAM_ID = 3;
-	
+	private static final int DIALOG_TIMELIMITREACHED_ID = 4;
 	private static final String TAG = "ExamQuestionActivity";
+
+	private Timer timer;
 
 	private ExamQuestion examQuestion;
 
@@ -58,19 +67,21 @@ public class ExamQuestionActivity extends Activity {
 
 		Intent intent = getIntent();
 
-		questionNumber = ExamTrainer.getQuestionNumber(intent);
-		if ( ( questionNumber < 1 ) || ( ExamTrainer.getExamDatabaseName() == null ) ) {
+		questionId = ExamTrainer.getQuestionId(intent);
+		if ( ( questionId < 1 ) || ( ExamTrainer.getExamDatabaseName() == null ) ) {
 			this.finish();
 		}
 
 		this.examQuestion = new ExamQuestion(this);
 		try {
-			this.examQuestion.fillFromDatabase(ExamTrainer.getExamDatabaseName(), questionNumber);
+			this.examQuestion.fillFromDatabase(ExamTrainer.getExamDatabaseName(), questionId);
 		} catch (SQLiteException e) {
 			ExamTrainer.showError(this, this.getResources().getString(R.string.Exam_is_empty) + "\n" +
 					this.getResources().getString(R.string.Try_reinstalling_the_exam));
 		}
 		setupLayout();
+		
+		this.timeLimitTextView = (TextView) findViewById(R.id.textExamTime);
 	}
 
 	protected void onResume() {
@@ -78,19 +89,53 @@ public class ExamQuestionActivity extends Activity {
 		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
 			finish();
 		}
+		setTitle(ExamTrainer.getExamTitle());
+		
+		timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+			
+			@Override
+			public void run() {
+				Log.d("ExamQuestionActivity", "timer run");
+				//update time
+				long currentTime = System.currentTimeMillis();
+				if( currentTime > ExamTrainer.getTimeEnd() ) {
+					//time limit reached 
+					Log.d("ExamQuestionActivity", "out of time: currentTime="+currentTime+
+							", timeEnd="+ExamTrainer.getTimeEnd());
+					showDialog(DIALOG_TIMELIMITREACHED_ID);
+					timer.cancel();
+					timer.purge();
+				} else {
+					Date date = new Date(ExamTrainer.getTimeEnd() - currentTime);
+					String timeLeft = new SimpleDateFormat("HH:mm:ss").format(date);
+					timeLimitTextView.setText(timeLeft);
+					Log.d("ExamQuestionActivity", "time left: " + timeLeft);
+				}
+			}
+		}, 0, 1000);
+	}
+	
+	protected void onPause() {
+		super.onPause();
+		timer.cancel();
 	}
 
 	public void onBackPressed() {
-		if( this.questionNumber == 1 ) {
-			showDialog(DIALOG_QUITEXAM_ID);
+		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW ) {
+			super.onBackPressed();
 		} else {
-			Intent intent = new Intent(ExamQuestionActivity.this, ExamQuestionActivity.class);
-			ExamTrainer.setQuestionNumber(intent, questionNumber - 1);
-			startActivity(intent);
-			finish();
+			if( this.questionId == 1 ) {
+				showDialog(DIALOG_QUITEXAM_ID);
+			} else {
+				Intent intent = new Intent(ExamQuestionActivity.this, ExamQuestionActivity.class);
+				ExamTrainer.setQuestionId(intent, questionId - 1);
+				startActivity(intent);
+				finish();
+			}
 		}
 	}
-	
+
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.question_menu, menu);
@@ -151,6 +196,19 @@ public class ExamQuestionActivity extends Activity {
 			});
 			dialog = builder.create();
 			break;
+		case DIALOG_TIMELIMITREACHED_ID:
+			builder = new AlertDialog.Builder(this);
+			messageId = R.string.time_s_up_;	
+			builder.setMessage(messageId)
+			.setCancelable(false)
+			.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					startShowScoreActivity();
+					dialog.dismiss();
+				}
+			});
+			dialog = builder.create();
+			break;
 		case DIALOG_QUITEXAM_ID:
 			builder = new AlertDialog.Builder(this);
 			messageId = R.string.quit_exam_message;		
@@ -173,7 +231,7 @@ public class ExamQuestionActivity extends Activity {
 			builder = new AlertDialog.Builder(this);
 			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-			message = examinationDbHelper.getHint(questionNumber);
+			message = examinationDbHelper.getHint(questionId);
 			examinationDbHelper.close();
 			if( message == null ) {
 				message = getString(R.string.hint_not_available);
@@ -192,11 +250,11 @@ public class ExamQuestionActivity extends Activity {
 		}
 		return dialog;
 	}
-
+	
 	private void showAnswers() {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		Cursor cursor = examinationDbHelper.getAnswers(questionNumber);
+		Cursor cursor = examinationDbHelper.getAnswers(questionId);
 		examinationDbHelper.close();
 		if ( cursor == null ) {
 			Log.d(TAG, "Oi, cursor is null");
@@ -207,9 +265,11 @@ public class ExamQuestionActivity extends Activity {
 		if(examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
 			do {
 				String answer = cursor.getString(index);
-				for(int i = 0; i < cboxes.size(); i++) {
-					if(cboxes.get(i).getText().toString().equals(answer)) {
-						cboxes.get(i).setTextColor(getResources().getColor(
+				for(int i = 0; i < multipleChoices.size(); i++) {
+					View view = this.multipleChoices.get(i);
+					TextView tv = (TextView) view.findViewById(R.id.choiceTextView);
+					if(tv.getText().toString().equals(answer)) {
+						tv.setTextColor(getResources().getColor(
 								R.color.correct_answer));
 					}
 				}
@@ -247,19 +307,39 @@ public class ExamQuestionActivity extends Activity {
 		finish();
 	}
 
+	private void saveScore() {
+		boolean answerCorrect = false;
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
+		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+		if( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
+			examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getScoresId(), questionId,
+					editText.getText().toString());
+			answerCorrect = examinationDbHelper.checkScoresAnswersOpen(questionId, ExamTrainer.getScoresId());
+		} else {
+			answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(questionId, ExamTrainer.getScoresId());
+		}
+		examinationDbHelper.addResultPerQuestion(ExamTrainer.getScoresId(), questionId, answerCorrect);
+		
+		examinationDbHelper.close();
+	}
+
 	private void createChoicesLayout(LinearLayout layout) {
 		CheckBox cbox; 
-		cboxes = new ArrayList<CheckBox>();
+		this.multipleChoices = new ArrayList<View>();
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 
 		ArrayList<String> choices = this.examQuestion.getChoices();
 		for( String choice : choices ) {
-			cbox = new CheckBox(this);
-			cbox.setText(choice);
+			View view = LayoutInflater.from(this).inflate(R.layout.choice, null);
+
+			TextView tv = (TextView) view.findViewById(R.id.choiceTextView);
+			tv.setText(Html.fromHtml(choice));
+
+			cbox = (CheckBox) view.findViewById(R.id.choiceCheckBox);
 
 			if ( examinationDbHelper.scoresAnswerPresent(ExamTrainer.getScoresId(), 
-					questionNumber, choice) ) {
+					questionId, choice) ) {
 				cbox.setChecked(true);
 			}
 
@@ -269,21 +349,21 @@ public class ExamQuestionActivity extends Activity {
 					if (((CheckBox) v).isChecked()) {
 						ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
 						examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-						examinationDbHelper.setScoresAnswersMultipleChoice(ExamTrainer.getScoresId(), questionNumber, answer);
+						examinationDbHelper.setScoresAnswersMultipleChoice(ExamTrainer.getScoresId(), questionId, answer);
 						examinationDbHelper.close();
 
 					} else {
 						ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
 						examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-						examinationDbHelper.deleteScoresAnswer(ExamTrainer.getScoresId(), questionNumber, answer);
+						examinationDbHelper.deleteScoresAnswer(ExamTrainer.getScoresId(), questionId, answer);
 						examinationDbHelper.close();
 					}
 
 				}
 			});
 
-			layout.addView(cbox);
-			cboxes.add(cbox);
+			layout.addView(view);
+			this.multipleChoices.add(view);
 		}
 		examinationDbHelper.close();
 	}
@@ -291,10 +371,10 @@ public class ExamQuestionActivity extends Activity {
 
 	private void createOpenQuestionLayout(LinearLayout layout) {
 		this.editText = new EditText(this);
-		
+
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		Cursor cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionNumber);
+		Cursor cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionId);
 		examinationDbHelper.close();
 		if ( cursor.getCount() > 0 ) {
 			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
@@ -302,7 +382,7 @@ public class ExamQuestionActivity extends Activity {
 		}
 		layout.addView(editText);
 	}
-	
+
 	private void setupLayout() {
 		String text;
 
@@ -310,16 +390,13 @@ public class ExamQuestionActivity extends Activity {
 
 		LinearLayout layout = (LinearLayout) findViewById(R.id.question_layout);
 
-		TextView title = (TextView) findViewById(R.id.textExamTitle);
-		title.setText(ExamTrainer.getExamTitle());
-
 		TextView question = (TextView) findViewById(R.id.textQuestionNumber);
-		question.setText(this.getString(R.string.Question) + ": " + Long.toString(questionNumber));
+		question.setText(Long.toString(questionId));
 
 		text = this.examQuestion.getExhibit();
 		if( text != null ) {
 			TextView exhibit = (TextView) findViewById(R.id.textExhibit);
-			exhibit.setText(text);
+			exhibit.setText(Html.fromHtml(text));
 		} else {
 			HorizontalScrollView viewExhibit = (HorizontalScrollView) findViewById(R.id.horizontalScrollViewExhibit);
 			layout.removeView(viewExhibit);
@@ -328,7 +405,7 @@ public class ExamQuestionActivity extends Activity {
 
 		text = this.examQuestion.getQuestion();
 		TextView question_textview = (TextView) findViewById(R.id.textQuestion);
-		question_textview.setText(text);
+		question_textview.setText(Html.fromHtml(text));
 
 		LinearLayout v_layout = (LinearLayout) findViewById(R.id.answerLayout);
 
@@ -339,20 +416,14 @@ public class ExamQuestionActivity extends Activity {
 		}
 
 		Button button_prev_question = (Button) findViewById(R.id.button_prev);
-		if( questionNumber == 1 ) {
+		if( questionId == 1 ) {
 			button_prev_question.setEnabled(false);
 		} else {
 			button_prev_question.setOnClickListener( new View.OnClickListener() {
 				public void onClick(View v) {
-					if( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-						ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
-						examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-						examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getScoresId(), questionNumber,
-								editText.getText().toString());
-						examinationDbHelper.close();
-					}
+					saveScore();
 					Intent intent = new Intent(ExamQuestionActivity.this, ExamQuestionActivity.class);
-					ExamTrainer.setQuestionNumber(intent, questionNumber - 1);
+					ExamTrainer.setQuestionId(intent, questionId - 1);
 					startActivity(intent);
 					finish();
 				}
@@ -360,7 +431,7 @@ public class ExamQuestionActivity extends Activity {
 		}
 
 		Button button_next_question = (Button) findViewById(R.id.button_next);
-		if( questionNumber >= ExamTrainer.getAmountOfItems() ) {
+		if( questionId >= ExamTrainer.getAmountOfItems() ) {
 			if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW) {
 				button_next_question.setText(R.string.End_review);
 			} else {
@@ -370,16 +441,8 @@ public class ExamQuestionActivity extends Activity {
 
 		button_next_question.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
-				//Save answer to open question
-				if( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-					ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
-					examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-					examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getScoresId(), questionNumber,
-							editText.getText().toString());
-					examinationDbHelper.close();
-				}
-
-				if ( questionNumber >= ExamTrainer.getAmountOfItems() ) {
+				saveScore();
+				if ( questionId >= ExamTrainer.getAmountOfItems() ) {
 					if(ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW) {
 						Intent intent = new Intent(ExamQuestionActivity.this, StartExamActivity.class);
 						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -392,7 +455,7 @@ public class ExamQuestionActivity extends Activity {
 				}
 				else {
 					Intent intent = new Intent(ExamQuestionActivity.this, ExamQuestionActivity.class);
-					ExamTrainer.setQuestionNumber(intent, questionNumber + 1);
+					ExamTrainer.setQuestionId(intent, questionId + 1);
 					startActivity(intent);
 					finish();
 				}

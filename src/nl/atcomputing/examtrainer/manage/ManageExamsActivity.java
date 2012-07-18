@@ -3,16 +3,12 @@ package nl.atcomputing.examtrainer.manage;
 import java.net.URL;
 import java.util.ArrayList;
 
+import nl.atcomputing.adapters.ManageExamsAdapter;
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.R.id;
-import nl.atcomputing.examtrainer.R.layout;
-import nl.atcomputing.examtrainer.R.menu;
-import nl.atcomputing.examtrainer.R.string;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.exam.Exam;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;

@@ -1,5 +1,6 @@
 package nl.atcomputing.examtrainer;
 
+import nl.atcomputing.adapters.SelectExamAdapter;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.manage.ManageExamsActivity;
 import android.app.Activity;

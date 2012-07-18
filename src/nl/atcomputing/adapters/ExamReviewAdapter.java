@@ -1,4 +1,4 @@
-package nl.atcomputing.examtrainer.review;
+package nl.atcomputing.adapters;
 
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.R.drawable;

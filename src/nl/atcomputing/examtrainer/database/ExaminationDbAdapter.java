@@ -156,6 +156,7 @@ public class ExaminationDbAdapter {
 	 * @return true if rows were deleted, false if nothing was deleted.
 	 */
 	public boolean deleteScore(long scoresId) {
+		Log.d("ExaminationDbAdapter", "Deleting score "+scoresId);
 		db.delete(ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, 
 				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "= ?",
 				new String[] { Long.toString(scoresId) });
@@ -484,30 +485,24 @@ public class ExaminationDbAdapter {
 	}
 	
 	/**
-	 * Checks if a open choice question was answered correctly using a SQL query
-	 * with a JOIN over the scores answers table and correct answers table
-	 * @param questionId ID of the question you want to check the answers for
+	 * Counts the amount of questions answered correctly in ResultPerQuestion table.
 	 * @param scoresId  The ID of the score associated with the exam
-	 * @return true if all answers are correct, false otherwise
+	 * @return amount of correctly answered questions
 	 */
 	public int calculateScore(long scoresId) {
-		String answersQuestionId = ExaminationDatabaseHelper.Answers.TABLE_NAME + "." + ExaminationDatabaseHelper.Answers.COLUMN_NAME_QUESTION_ID;
-		String answersAnswer = ExaminationDatabaseHelper.Answers.TABLE_NAME + "." + ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER;
-		String scoresAnswersQuestionId = ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME + "." + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID;
-		String scoresAnswersAnswer = ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME + "." + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER;
-		String scoresAnswersScoresId = ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME + "." + ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID;
-		String sqlQuery = "SELECT COUNT(*) FROM "
-			+ ExaminationDatabaseHelper.Answers.TABLE_NAME + ", " + ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME +
-			" WHERE "
-			+ scoresAnswersQuestionId + " = " + answersQuestionId +
-			" AND "
-			+ scoresAnswersScoresId + " = ?" +
-			" AND "
-			+ answersAnswer + " = " + scoresAnswersAnswer			
-			;
-		String[] sqlArgs = new String[] { Long.toString(scoresId) };
-		Cursor mCursor = db.rawQuery(sqlQuery, sqlArgs);
-		int count = mCursor.getInt(0);
+		String selection = ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_SCORES_ID + 
+				" = ? AND " + ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT + 
+				" = ?";
+		String[] selectionArgs = new String[] { Long.toString(scoresId), Long.toString(1) };
+		
+		Cursor mCursor = db.query(true, ExaminationDatabaseHelper.ResultPerQuestion.TABLE_NAME, 
+				new String[] {
+				ExaminationDatabaseHelper.ResultPerQuestion._ID
+				}, selection, selectionArgs, null, null, null, null);
+		int count = 0;
+		if(mCursor.moveToFirst()) {
+			count = mCursor.getCount();
+		}
 		mCursor.close();
 		return count;
 	}

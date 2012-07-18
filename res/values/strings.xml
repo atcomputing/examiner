@@ -103,5 +103,9 @@
     <string name="instant_score">Instant score</string>
     <string name="do_not_show_calculating_score_animation_before_showing_the_final_result">Do not show calculating score animation before showing the final result</string>
     <string name="deleting_scores_please_wait_">Deleting scores. Please wait...</string>
+    <string name="error_url_is_not_correct">"Error: URL is not correct"</string>
+    <string name="failed_to_install_exam">"Failed to install exam"</string>
+    <string name="error_parsing_exam">"Error parsing exam"</string>
+    <string name="time_s_up_">Time\'s up.</string>
 
 </resources>

@@ -1,5 +1,6 @@
 package nl.atcomputing.examtrainer.review;
 
+import nl.atcomputing.adapters.ExamReviewAdapter;
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.R.id;
@@ -48,7 +49,7 @@ public class ExamReviewActivity extends Activity {
 					int position, long id) {
 				Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionActivity.class);
 				ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.REVIEW);
-				ExamTrainer.setQuestionNumber(intent, adapter.getItemId(position));
+				ExamTrainer.setQuestionId(intent, adapter.getItemId(position));
 				startActivity(intent);
 			}
 		});

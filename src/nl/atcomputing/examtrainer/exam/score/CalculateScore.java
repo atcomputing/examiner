@@ -31,13 +31,16 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 	private String[] messagesClassD;
 	private String[] messagesClassE;
 	private String[] messagesClassF;
-	private static final Random randomNumberGenerator = new Random();
 
 	private int itemsNeededToPass;
 	private int amountOfItems;
 	private int progress;
+	private boolean showScoreInstantaneously;
 
 	CalculateScore(ShowScoreActivity context) {
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+		showScoreInstantaneously = prefs.getBoolean(context.getResources().getString(R.string.pref_key_show_score_instantaneous), false);
+
 		this.showScoreActivity = context;
 		this.progress = 0;
 		this.itemsNeededToPass = (int) ExamTrainer.getItemsNeededToPass();
@@ -57,28 +60,28 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 	}
 
 	protected void onPreExecute() {
-		Resources resource = showScoreActivity.getResources();
+		if( ! this.showScoreInstantaneously ) {
+			Resources resource = showScoreActivity.getResources();
 
-		dialog = new ProgressDialog(showScoreActivity);
-		dialogMessage = resource.getString(R.string.Calculating_your_score);
-		dialog.setMessage(dialogMessage);
-		dialog.setMax(amountOfItems);
-		dialog.setProgress(progress);
-		dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		dialog.show();
+			dialog = new ProgressDialog(showScoreActivity);
+			dialogMessage = resource.getString(R.string.Calculating_your_score);
+			dialog.setMessage(dialogMessage);
+			dialog.setMax(amountOfItems);
+			dialog.setProgress(progress);
+			dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			dialog.show();
 
-		messagesClassA = resource.getStringArray(R.array.class_A);
-		messagesClassB = resource.getStringArray(R.array.class_B);
-		messagesClassC = resource.getStringArray(R.array.class_C);
-		messagesClassD = resource.getStringArray(R.array.class_D);
-		messagesClassE = resource.getStringArray(R.array.class_E);
-		messagesClassF = resource.getStringArray(R.array.class_F);
+			messagesClassA = resource.getStringArray(R.array.class_A);
+			messagesClassB = resource.getStringArray(R.array.class_B);
+			messagesClassC = resource.getStringArray(R.array.class_C);
+			messagesClassD = resource.getStringArray(R.array.class_D);
+			messagesClassE = resource.getStringArray(R.array.class_E);
+			messagesClassF = resource.getStringArray(R.array.class_F);
+		}
 	}
 
 	protected Integer doInBackground(Object... questionIds) {
 
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this.showScoreActivity);
-		boolean showScoreInstantaneously = prefs.getBoolean(this.showScoreActivity.getResources().getString(R.string.pref_key_show_score_instantaneous), false);
 
 		ExaminationDbAdapter examinationDbHelper;
 		examinationDbHelper = new ExaminationDbAdapter(this.showScoreActivity);
@@ -88,40 +91,36 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 			throw(e);
 		}
 
-		int amountOfQuestions = questionIds.length;
 		int answers_correct = 0;
+		int amountOfQuestions = questionIds.length;
 
-		for(int i = 0; i < amountOfQuestions; i++) {
-			long questionId = (Long) questionIds[i];
+		if( this.showScoreInstantaneously ) {
+			answers_correct = examinationDbHelper.calculateScore(ExamTrainer.getScoresId());
+		} else {
+			for(int i = 0; i < amountOfQuestions; i++) {
+				long questionId = (Long) questionIds[i];
 
-			String questionType = examinationDbHelper.getQuestionType(questionId);
-			boolean answerCorrect = false;
-			if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-				answerCorrect = examinationDbHelper.checkScoresAnswersOpen(questionId, ExamTrainer.getScoresId());
-			}
-			else {
-				answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(questionId, ExamTrainer.getScoresId());
-			}
+				String questionType = examinationDbHelper.getQuestionType(questionId);
+				boolean answerCorrect = false;
+				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
+					answerCorrect = examinationDbHelper.checkScoresAnswersOpen(questionId, ExamTrainer.getScoresId());
+				}
+				else {
+					answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(questionId, ExamTrainer.getScoresId());
+				}
 
-			if ( answerCorrect ) {
-				answers_correct++;
-				examinationDbHelper.addResultPerQuestion(ExamTrainer.getScoresId(), questionId, true);
-			}
-			else {
-				examinationDbHelper.addResultPerQuestion(ExamTrainer.getScoresId(), questionId, false);
-			}
+				if( answerCorrect ) {
+					answers_correct++;
+				}
 
-
-			if( ! showScoreInstantaneously ) {
 				publishProgress(i, answers_correct);
 
 				try {
-					Thread.sleep((long) (100 + ((i/(double) amountOfItems) * 200)));
+					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
-
 		}
 		examinationDbHelper.close();
 
@@ -148,7 +147,9 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 			Log.d("CalculateScore", e.getMessage());
 		}
 
-		dialog.dismiss();
+		if( ! this.showScoreInstantaneously ) {
+			dialog.dismiss();
+		}
 
 		this.showScoreActivity.showResult();
 	}

@@ -145,6 +145,7 @@ public class ExamQuestion {
 		hint = str;
 	}
 	public void addChoice(String str) {
+		Log.d("ExamQuestion", "adding choice: "+str);
 		choices.add(str);
 	}
 	
@@ -171,7 +172,7 @@ public class ExamQuestion {
 		
 	}
 	
-	public ExamQuestion fillFromDatabase(String databaseName, long questionNumber) 
+	public ExamQuestion fillFromDatabase(String databaseName, long questionId) 
 			throws SQLiteException {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this.context);
 		try {
@@ -180,7 +181,7 @@ public class ExamQuestion {
 			throw e;
 		}
 		
-		Cursor cursor = examinationDbHelper.getQuestion(questionNumber);
+		Cursor cursor = examinationDbHelper.getQuestion(questionId);
 		if( cursor.getCount() < 1 ) {
 			cursor.close();
 			return null;
@@ -198,9 +199,9 @@ public class ExamQuestion {
 		
 		
 		if( this.type.equalsIgnoreCase(TYPE_MULTIPLE_CHOICE) ) {
-			cursor = examinationDbHelper.getChoices(questionNumber);
+			cursor = examinationDbHelper.getChoices(questionId);
 //			Log.d("ExamQuestion", "cursor.getCount(): "+cursor.getCount());
-			if ( cursor != null ) {
+			if ( cursor.getCount() > 0 ) {
 				index = cursor.getColumnIndex(ExaminationDatabaseHelper.Choices.COLUMN_NAME_CHOICE);
 				do {
 					this.choices.add(cursor.getString(index));

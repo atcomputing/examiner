@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <exams>
 	<exam>
+		<title>LPI 101 Exam All-In-One</title>
+		<category>LPI</category>
+		<author>AT Computing</author>
+		<numberofitems>188</numberofitems>
+		<itemsneededtopass>40</itemsneededtopass>
+		<url>file:///examen.xml</url>
+		<timelimit>90</timelimit>
+	</exam>
+	<exam>
 		<title>LPI 101 Exam</title>
 		<category>LPI</category>
 		<author>AT Computing</author>

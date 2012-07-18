@@ -1,8 +1,10 @@
 package nl.atcomputing.examtrainer;
 
+import nl.atcomputing.adapters.HistoryAdapter;
 import nl.atcomputing.dialogs.RunThreadWithProgressDialog;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
+import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.exam.ExamQuestionActivity;
 import nl.atcomputing.examtrainer.manage.PreferencesActivity;
@@ -61,7 +63,6 @@ public class StartExamActivity extends Activity {
 			
 			public void onClick(View v) {
 				deleteSelectedFromDatabase();
-				adapter.itemChecked.clear();
 			}
 		});
 
@@ -115,15 +116,16 @@ public class StartExamActivity extends Activity {
 		tv = (TextView) findViewById(R.id.startexam_timelimit_value);
 		if ( useTimeLimit ) {
 			tv.setText(Long.toString(examTimeLimit));
+			ExamTrainer.setTimeLimit(examTimeLimit * 60);
 		} else {
 			tv.setText(getString(R.string.No_time_limit));
+			ExamTrainer.setTimeLimit(0);
 		}
 
 		
 		ExamTrainer.setExamDatabaseName(examTitle, examInstallationDate);
 		ExamTrainer.setItemsNeededToPass(examItemsNeededToPass);
 		ExamTrainer.setExamTitle(examTitle);
-		ExamTrainer.setTimeLimit(examTimeLimit);
 		ExamTrainer.setAmountOfItems(examAmountOfItems);
 		cursor.close();
 		
@@ -184,17 +186,17 @@ public class StartExamActivity extends Activity {
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		long scoresId = examinationDbHelper.createNewScore();
 		examinationDbHelper.close();
+		
 		if( scoresId == -1 ) {
 			Toast.makeText(this, this.getString(R.string.failed_to_create_a_new_score_for_the_exam), Toast.LENGTH_LONG).show();
 		} else {
 			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 			boolean useTimelimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
-			ExamTrainer.setTimer();
 			if( useTimelimit ) {
-				//startTimer();
+				ExamTrainer.setTimer();
 			}
 			ExamTrainer.setScoresId(scoresId);
-			ExamTrainer.setQuestionNumber(intent, 1);
+			ExamTrainer.setQuestionId(intent, 1);
 			ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM);
 			startActivity(intent);
 		}
@@ -202,7 +204,6 @@ public class StartExamActivity extends Activity {
 	
 	
 	private void deleteSelectedFromDatabase() {
-		
 		RunThreadWithProgressDialog pd = new RunThreadWithProgressDialog(this, 
 		new Thread(new Runnable() {
 	        public void run() {
@@ -228,8 +229,10 @@ public class StartExamActivity extends Activity {
 				Cursor cursor = examinationDbHelper.getScoresReversed();
 				examinationDbHelper.close();
 	    		
+				adapter.itemChecked.clear();
 	    		adapter.changeCursor(cursor);
 	    		adapter.notifyDataSetChanged();
+	    		
 			}
 		}
 		);
