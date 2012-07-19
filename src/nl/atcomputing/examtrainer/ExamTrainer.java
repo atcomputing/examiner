@@ -26,6 +26,7 @@ public final class ExamTrainer {
 	private static final String questionNumber = "questionNumber";
 	private static boolean KEEP_PROGRESS_DIALOG_RUNNING = false;
 	private static long timeLimit = 0;
+	private static long timeEnd = 0;
 	private static long timerStart; 
 	
 	// This class cannot be instantiated
@@ -41,7 +42,7 @@ public final class ExamTrainer {
 	}
 	
 	public static void setTimeLimit(long seconds) {
-		timeLimit = seconds * 1000;
+		timeLimit = seconds;
 	}
 	
 	/**
@@ -53,14 +54,22 @@ public final class ExamTrainer {
 	
 	public static void setTimer() {
 		timerStart = System.currentTimeMillis();
+		timeEnd = timerStart + (timeLimit * 1000);
 	}
 	
 	public static long getTimerStart() {
 		return timerStart;
 	}
 	
+	/**
+	 * @return end time in milliseconds
+	 */
 	public static long getTimeEnd() {
-		return timerStart + timeLimit;
+		return timeEnd;
+	}
+	
+	public static void setTimeEnd(long milliseconds) {
+		timeEnd = milliseconds;
 	}
 	
 	public static void setExamId(long id) {

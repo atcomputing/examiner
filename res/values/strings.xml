@@ -107,5 +107,7 @@
     <string name="failed_to_install_exam">"Failed to install exam"</string>
     <string name="error_parsing_exam">"Error parsing exam"</string>
     <string name="time_s_up_">Time\'s up.</string>
+    <string name="calculate_score">Calculate score</string>
+    <string name="resume">Resume</string>
 
 </resources>

@@ -17,6 +17,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -59,6 +60,11 @@ public class StartExamActivity extends Activity {
         		null, 
         		buttonDeleteSelected);
 
+        final SparseBooleanArray itemsChecked = (SparseBooleanArray) getLastNonConfigurationInstance();
+        if (itemsChecked != null) {
+            this.adapter.itemChecked = itemsChecked;
+        }
+        
         this.buttonDeleteSelected.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
@@ -79,6 +85,10 @@ public class StartExamActivity extends Activity {
 		});
 	}
 
+	public Object onRetainNonConfigurationInstance() {
+	    return this.adapter.itemChecked;
+	}
+	
 	protected void onResume() {
 		super.onResume();
 		Log.d("StartExamActivity", "onResume");
@@ -114,7 +124,7 @@ public class StartExamActivity extends Activity {
 		boolean useTimeLimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
 
 		tv = (TextView) findViewById(R.id.startexam_timelimit_value);
-		if ( useTimeLimit ) {
+		if ( ( useTimeLimit ) && ( examTimeLimit > 0 ) ) {
 			tv.setText(Long.toString(examTimeLimit));
 			ExamTrainer.setTimeLimit(examTimeLimit * 60);
 		} else {

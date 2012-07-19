@@ -15,13 +15,15 @@ import nl.atcomputing.examtrainer.exam.score.ShowScoreActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Html;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -51,15 +53,41 @@ public class ExamQuestionActivity extends Activity {
 	private static final int DIALOG_SHOW_HINT_ID = 2;
 	private static final int DIALOG_QUITEXAM_ID = 3;
 	private static final int DIALOG_TIMELIMITREACHED_ID = 4;
+	private static final String HANDLER_MESSAGE_KEY = "handler_update_timer"; 
+	private static final int HANDLER_MESSAGE_VALUE_UPDATE_TIMER = 0;
+	private static final int HANDLER_MESSAGE_VALUE_TIMELIMITREACHED = 1;
+	private static final String HANDLER_KEY_CURRENT_TIME = "handler_current_time"; 
+
 	private static final String TAG = "ExamQuestionActivity";
 
 	private Timer timer;
+	private MyHandler myHandler;
 
 	private ExamQuestion examQuestion;
+
+	private class MyHandler extends Handler {
+
+		public void handleMessage(Message msg) {
+			int key = msg.getData().getInt(HANDLER_MESSAGE_KEY);
+			if( key == HANDLER_MESSAGE_VALUE_UPDATE_TIMER ) {
+				long currentTime = msg.getData().getLong(HANDLER_KEY_CURRENT_TIME);
+				Date date = new Date(ExamTrainer.getTimeEnd() - currentTime);
+				String timeLeft = new SimpleDateFormat("HH:mm:ss").format(date);
+				Log.d("ExamQuestionActivity", "timeLeft: " + timeLeft);
+				timeLimitTextView.setText(timeLeft);
+			} else if ( key == HANDLER_MESSAGE_VALUE_TIMELIMITREACHED ) {
+				showDialog(DIALOG_TIMELIMITREACHED_ID);
+			}
+
+		}
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		this.myHandler = new MyHandler();
+
 		Log.d("trace", "ExamQuestionActivity created");
 		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
 			finish();
@@ -80,7 +108,7 @@ public class ExamQuestionActivity extends Activity {
 					this.getResources().getString(R.string.Try_reinstalling_the_exam));
 		}
 		setupLayout();
-		
+
 		this.timeLimitTextView = (TextView) findViewById(R.id.textExamTime);
 	}
 
@@ -90,35 +118,44 @@ public class ExamQuestionActivity extends Activity {
 			finish();
 		}
 		setTitle(ExamTrainer.getExamTitle());
-		
-		timer = new Timer();
-		timer.scheduleAtFixedRate(new TimerTask() {
-			
-			@Override
-			public void run() {
-				Log.d("ExamQuestionActivity", "timer run");
-				//update time
-				long currentTime = System.currentTimeMillis();
-				if( currentTime > ExamTrainer.getTimeEnd() ) {
-					//time limit reached 
-					Log.d("ExamQuestionActivity", "out of time: currentTime="+currentTime+
-							", timeEnd="+ExamTrainer.getTimeEnd());
-					showDialog(DIALOG_TIMELIMITREACHED_ID);
-					timer.cancel();
-					timer.purge();
-				} else {
-					Date date = new Date(ExamTrainer.getTimeEnd() - currentTime);
-					String timeLeft = new SimpleDateFormat("HH:mm:ss").format(date);
-					timeLimitTextView.setText(timeLeft);
-					Log.d("ExamQuestionActivity", "time left: " + timeLeft);
+
+		if ( ExamTrainer.getTimeLimit() > 0 ) {
+			timer = new Timer();
+			timer.scheduleAtFixedRate(new TimerTask() {
+
+				@Override
+				public void run() {
+					//update time
+					Message m = Message.obtain();
+					long currentTime = System.currentTimeMillis();
+					if( currentTime > ExamTrainer.getTimeEnd() ) {
+						//time limit reached 
+						Bundle b = new Bundle();
+						b.putInt(HANDLER_MESSAGE_KEY, HANDLER_MESSAGE_VALUE_TIMELIMITREACHED);
+						m.setData(b);
+						myHandler.sendMessage(m);
+						timer.cancel();
+						timer.purge();
+					} else {
+						Bundle b = new Bundle();
+						b.putInt(HANDLER_MESSAGE_KEY, HANDLER_MESSAGE_VALUE_UPDATE_TIMER);
+						b.putLong(HANDLER_KEY_CURRENT_TIME, currentTime);
+						m.setData(b);
+						myHandler.sendMessage(m);
+					}
 				}
-			}
-		}, 0, 1000);
+			}, 0, 1000);
+		}
+
+		updateLayout();
 	}
-	
+
 	protected void onPause() {
 		super.onPause();
-		timer.cancel();
+		if ( ExamTrainer.getTimeLimit() > 0 ) {
+			timer.cancel();
+		}
+		saveState();
 	}
 
 	public void onBackPressed() {
@@ -201,9 +238,15 @@ public class ExamQuestionActivity extends Activity {
 			messageId = R.string.time_s_up_;	
 			builder.setMessage(messageId)
 			.setCancelable(false)
-			.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+			.setPositiveButton(R.string.calculate_score, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					startShowScoreActivity();
+					dialog.dismiss();
+				}
+			})
+			.setNegativeButton(R.string.Quit, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int id) {
+					stopExam();
 					dialog.dismiss();
 				}
 			});
@@ -214,13 +257,13 @@ public class ExamQuestionActivity extends Activity {
 			messageId = R.string.quit_exam_message;		
 			builder.setMessage(messageId)
 			.setCancelable(false)
-			.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+			.setPositiveButton(R.string.Quit, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					stopExam();
 					dialog.dismiss();
 				}
 			})
-			.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+			.setNegativeButton(R.string.resume, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.dismiss();
 				}
@@ -250,7 +293,7 @@ public class ExamQuestionActivity extends Activity {
 		}
 		return dialog;
 	}
-	
+
 	private void showAnswers() {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
@@ -307,7 +350,7 @@ public class ExamQuestionActivity extends Activity {
 		finish();
 	}
 
-	private void saveScore() {
+	private void saveState() {
 		boolean answerCorrect = false;
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
@@ -319,7 +362,7 @@ public class ExamQuestionActivity extends Activity {
 			answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(questionId, ExamTrainer.getScoresId());
 		}
 		examinationDbHelper.addResultPerQuestion(ExamTrainer.getScoresId(), questionId, answerCorrect);
-		
+
 		examinationDbHelper.close();
 	}
 
@@ -337,11 +380,6 @@ public class ExamQuestionActivity extends Activity {
 			tv.setText(Html.fromHtml(choice));
 
 			cbox = (CheckBox) view.findViewById(R.id.choiceCheckBox);
-
-			if ( examinationDbHelper.scoresAnswerPresent(ExamTrainer.getScoresId(), 
-					questionId, choice) ) {
-				cbox.setChecked(true);
-			}
 
 			final String answer = choice;
 			cbox.setOnClickListener(new View.OnClickListener() {
@@ -378,9 +416,33 @@ public class ExamQuestionActivity extends Activity {
 		examinationDbHelper.close();
 		if ( cursor.getCount() > 0 ) {
 			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
-			editText.setText(cursor.getString(index));
+			this.editText.setText(cursor.getString(index));
 		}
-		layout.addView(editText);
+		layout.addView(this.editText);
+	}
+
+	private void updateLayout() {
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+
+		if( this.examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
+			Cursor cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionId);
+			if ( cursor.getCount() > 0 ) {
+				int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
+				this.editText.setText(cursor.getString(index));
+			}
+		} else {
+			for( View view : this.multipleChoices ) {
+				TextView tv = (TextView) view.findViewById(R.id.choiceTextView);
+				CheckBox cbox = (CheckBox) view.findViewById(R.id.choiceCheckBox);
+
+				if ( examinationDbHelper.scoresAnswerPresent(ExamTrainer.getScoresId(), 
+						questionId, tv.getText().toString()) ) {
+					cbox.setChecked(true);
+				}
+			}
+		}
+		examinationDbHelper.close();
 	}
 
 	private void setupLayout() {
@@ -421,7 +483,6 @@ public class ExamQuestionActivity extends Activity {
 		} else {
 			button_prev_question.setOnClickListener( new View.OnClickListener() {
 				public void onClick(View v) {
-					saveScore();
 					Intent intent = new Intent(ExamQuestionActivity.this, ExamQuestionActivity.class);
 					ExamTrainer.setQuestionId(intent, questionId - 1);
 					startActivity(intent);
@@ -441,7 +502,6 @@ public class ExamQuestionActivity extends Activity {
 
 		button_next_question.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
-				saveScore();
 				if ( questionId >= ExamTrainer.getAmountOfItems() ) {
 					if(ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW) {
 						Intent intent = new Intent(ExamQuestionActivity.this, StartExamActivity.class);
