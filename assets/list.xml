@@ -1,37 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <exams>
 	<exam>
-		<title>LPI 101 Exam All-In-One</title>
-		<category>LPI</category>
-		<author>AT Computing</author>
-		<numberofitems>188</numberofitems>
-		<itemsneededtopass>40</itemsneededtopass>
-		<url>file:///examen.xml</url>
-		<timelimit>90</timelimit>
-	</exam>
-	<exam>
-		<title>LPI 101 Exam</title>
+		<title>LPI 101 exam 1</title>
 		<category>LPI</category>
 		<author>AT Computing</author>
 		<numberofitems>60</numberofitems>
 		<itemsneededtopass>40</itemsneededtopass>
-		<url>file:///exam101.xml</url>
-		<timelimit>2</timelimit>
+		<url>file:///proefexamen-1.xml</url>
+		<timelimit>90</timelimit>
 	</exam>
 	<exam>
-		<title>LPI 102 Exam</title>
+		<title>LPI 101 Exam 2</title>
 		<category>LPI</category>
 		<author>AT Computing</author>
-		<numberofitems>2</numberofitems>
-		<itemsneededtopass>2</itemsneededtopass>
-		<url>file:///exam102.xml</url>
+		<numberofitems>60</numberofitems>
+		<itemsneededtopass>40</itemsneededtopass>
+		<url>file:///proefexamen-2.xml</url>
+		<timelimit>90</timelimit>
 	</exam>
 	<exam>
-		<title>LPI 102-b Exam</title>
+		<title>LPI 101 Exam 3</title>
 		<category>LPI</category>
 		<author>AT Computing</author>
-		<numberofitems>2</numberofitems>
-		<itemsneededtopass>1</itemsneededtopass>
-		<url>file:///exam102-b.xml</url>
+		<numberofitems>60</numberofitems>
+		<itemsneededtopass>40</itemsneededtopass>
+		<url>file:///proefexamen-3.xml</url>
+		<timelimit>90</timelimit>
 	</exam>
 </exams>
