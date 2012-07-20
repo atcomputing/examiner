@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="fill_parent"
               android:layout_height="fill_parent">
-<GridView xmlns:android="http://schemas.android.com/apk/res/android" 
+<GridView
     android:id="@+id/review_exam_grid"
     android:layout_width="fill_parent" 
     android:layout_height="wrap_content"
@@ -13,6 +12,12 @@
     android:columnWidth="90dp"
     android:stretchMode="columnWidth"
     android:gravity="center"
-    android:layout_weight="1"
 />
-</LinearLayout>
+<Button 
+    android:id="@+id/review_exam_resume_button"
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content"
+    android:text="@string/resume_exam"
+    android:visibility="gone"
+    android:layout_alignParentBottom="true"/>
+</RelativeLayout>

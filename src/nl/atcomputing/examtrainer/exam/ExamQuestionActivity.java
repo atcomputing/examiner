@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
+import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -73,7 +74,6 @@ public class ExamQuestionActivity extends Activity {
 				long currentTime = msg.getData().getLong(HANDLER_KEY_CURRENT_TIME);
 				Date date = new Date(ExamTrainer.getTimeEnd() - currentTime);
 				String timeLeft = new SimpleDateFormat("HH:mm:ss").format(date);
-				Log.d("ExamQuestionActivity", "timeLeft: " + timeLeft);
 				timeLimitTextView.setText(timeLeft);
 			} else if ( key == HANDLER_MESSAGE_VALUE_TIMELIMITREACHED ) {
 				showDialog(DIALOG_TIMELIMITREACHED_ID);
@@ -95,7 +95,7 @@ public class ExamQuestionActivity extends Activity {
 
 		Intent intent = getIntent();
 
-		questionId = ExamTrainer.getQuestionId(intent);
+		this.questionId = ExamTrainer.getQuestionId(intent);
 		if ( ( questionId < 1 ) || ( ExamTrainer.getExamDatabaseName() == null ) ) {
 			this.finish();
 		}
@@ -119,7 +119,8 @@ public class ExamQuestionActivity extends Activity {
 		}
 		setTitle(ExamTrainer.getExamTitle());
 
-		if ( ExamTrainer.getTimeLimit() > 0 ) {
+		if ( ( ExamTrainer.getTimeLimit() > 0 ) && 
+				( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) ) {
 			timer = new Timer();
 			timer.scheduleAtFixedRate(new TimerTask() {
 
@@ -145,17 +146,22 @@ public class ExamQuestionActivity extends Activity {
 					}
 				}
 			}, 0, 1000);
+		} else {
+			timer = null;
 		}
 
 		updateLayout();
 	}
 
 	protected void onPause() {
+		Log.d("ExamQuestionActivity", "onPause");
 		super.onPause();
-		if ( ExamTrainer.getTimeLimit() > 0 ) {
+		if ( timer != null ) {
 			timer.cancel();
 		}
-		saveState();
+		if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) {
+			saveState();
+		}
 	}
 
 	public void onBackPressed() {
@@ -176,10 +182,8 @@ public class ExamQuestionActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.question_menu, menu);
-
-		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW ) {
-			MenuItem item = menu.findItem(R.id.question_menu_get_hint);
-			item.setTitle(R.string.Show_Answers);
+		if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) {
+			menu.removeItem(R.id.question_menu_show_answer);
 		}
 		return true;
 	}
@@ -189,12 +193,10 @@ public class ExamQuestionActivity extends Activity {
 		// Handle item selection
 		switch (item.getItemId()) {
 		case R.id.question_menu_get_hint:
-			if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW ) {
-				showAnswers();
-			}
-			else {
-				showDialog(DIALOG_SHOW_HINT_ID);
-			}
+			showDialog(DIALOG_SHOW_HINT_ID);
+			return true;
+		case R.id.question_menu_show_answer:
+			showAnswers();
 			return true;
 		case R.id.question_menu_quit_exam:
 			showDialog(DIALOG_QUITEXAM_ID);
@@ -279,7 +281,7 @@ public class ExamQuestionActivity extends Activity {
 			if( message == null ) {
 				message = getString(R.string.hint_not_available);
 			}
-			builder.setMessage(message)
+			builder.setMessage(Html.fromHtml(message))
 			.setCancelable(false)
 			.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
@@ -295,21 +297,23 @@ public class ExamQuestionActivity extends Activity {
 	}
 
 	private void showAnswers() {
+		Log.d("ExamQuestionActivity", "showAnswers: questionId="+this.questionId);
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		Cursor cursor = examinationDbHelper.getAnswers(questionId);
+		Cursor cursor = examinationDbHelper.getAnswers(this.questionId);
 		examinationDbHelper.close();
-		if ( cursor == null ) {
-			Log.d(TAG, "Oi, cursor is null");
+		if ( cursor.getCount() < 1 ) {
+			Log.d(TAG, "showAnswers: no answer present");
 			return;
 		}
 		int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
 
 		if(examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
 			do {
-				String answer = cursor.getString(index);
+				String answer = Html.fromHtml(cursor.getString(index)).toString();
 				for(int i = 0; i < multipleChoices.size(); i++) {
 					View view = this.multipleChoices.get(i);
+
 					TextView tv = (TextView) view.findViewById(R.id.choiceTextView);
 					if(tv.getText().toString().equals(answer)) {
 						tv.setTextColor(getResources().getColor(
@@ -340,10 +344,10 @@ public class ExamQuestionActivity extends Activity {
 	}
 
 	private void stopExam() {
-		ExaminationDbAdapter db = new ExaminationDbAdapter(this);
-		db.open(ExamTrainer.getExamDatabaseName());
-		db.deleteScore(ExamTrainer.getScoresId());
-		db.close();
+//		ExaminationDbAdapter db = new ExaminationDbAdapter(this);
+//		db.open(ExamTrainer.getExamDatabaseName());
+//		db.deleteScore(ExamTrainer.getScoresId());
+//		db.close();
 		Intent intent = new Intent(ExamQuestionActivity.this, StartExamActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
@@ -355,9 +359,25 @@ public class ExamQuestionActivity extends Activity {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		if( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-			examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getScoresId(), questionId,
-					editText.getText().toString());
-			answerCorrect = examinationDbHelper.checkScoresAnswersOpen(questionId, ExamTrainer.getScoresId());
+			//This complexity is needed as the answers may contain markup we use to display the answers
+			//The user provides his/her answer without markup so using SQL to check the answer is not 
+			//possible.
+			Cursor correctAnswers = examinationDbHelper.getAnswers(this.questionId);
+			if( correctAnswers.getCount() < 1 ) {
+				Log.d(TAG, "showAnswers: no answer present");
+				examinationDbHelper.close();
+				return;
+			}
+			int index = correctAnswers.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
+			do {
+				String correctAnswer = correctAnswers.getString(index);
+				String answerWithoutMarkup = Html.fromHtml(correctAnswer).toString();
+				if( answerWithoutMarkup.contentEquals(editText.getText().toString())) {
+					examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getScoresId(), questionId,
+							correctAnswer);
+					answerCorrect = true;
+				}
+			} while( correctAnswers.moveToNext() );
 		} else {
 			answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(questionId, ExamTrainer.getScoresId());
 		}
@@ -369,16 +389,12 @@ public class ExamQuestionActivity extends Activity {
 	private void createChoicesLayout(LinearLayout layout) {
 		CheckBox cbox; 
 		this.multipleChoices = new ArrayList<View>();
-		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
-		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-
 		ArrayList<String> choices = this.examQuestion.getChoices();
 		for( String choice : choices ) {
 			View view = LayoutInflater.from(this).inflate(R.layout.choice, null);
 
 			TextView tv = (TextView) view.findViewById(R.id.choiceTextView);
 			tv.setText(Html.fromHtml(choice));
-
 			cbox = (CheckBox) view.findViewById(R.id.choiceCheckBox);
 
 			final String answer = choice;
@@ -403,7 +419,6 @@ public class ExamQuestionActivity extends Activity {
 			layout.addView(view);
 			this.multipleChoices.add(view);
 		}
-		examinationDbHelper.close();
 	}
 
 
@@ -432,14 +447,19 @@ public class ExamQuestionActivity extends Activity {
 				this.editText.setText(cursor.getString(index));
 			}
 		} else {
-			for( View view : this.multipleChoices ) {
-				TextView tv = (TextView) view.findViewById(R.id.choiceTextView);
-				CheckBox cbox = (CheckBox) view.findViewById(R.id.choiceCheckBox);
-
-				if ( examinationDbHelper.scoresAnswerPresent(ExamTrainer.getScoresId(), 
-						questionId, tv.getText().toString()) ) {
-					cbox.setChecked(true);
-				}
+			Cursor scoresAnswers = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId());
+			if( scoresAnswers.getCount() > 0 ) {
+				int index = scoresAnswers.getColumnIndex(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER);
+				do {
+					String answer = Html.fromHtml(scoresAnswers.getString(index)).toString();
+					for( View view : this.multipleChoices ) {
+						TextView tv = (TextView) view.findViewById(R.id.choiceTextView);
+						if( answer.contentEquals(tv.getText().toString())) {
+							CheckBox cbox = (CheckBox) view.findViewById(R.id.choiceCheckBox);
+							cbox.setChecked(true);
+						}
+					}
+				} while( scoresAnswers.moveToNext() );
 			}
 		}
 		examinationDbHelper.close();
