@@ -1,107 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_height="fill_parent" android:layout_width="fill_parent">
-<RelativeLayout android:id="@+id/titleBar" 
-    	android:layout_width="fill_parent" 
-    				android:layout_height="wrap_content"
-    				android:background="@android:color/white"
-    				android:gravity="top"
-    				>
-    	<TextView
-    	    android:id="@+id/question_textQuestion"
-    	android:layout_width="wrap_content" 
-    	android:layout_height="wrap_content" 
-    	android:text="@string/Question"
-    	android:layout_alignParentLeft="true"
-    	android:textColor="@android:color/black"
-    	android:paddingRight="10dp"/>
-    	<TextView
-    	android:id="@+id/textQuestionNumber"
-    	android:layout_width="wrap_content" 
-    	android:layout_height="wrap_content" 
-    	android:text=""
-    	android:layout_toRightOf="@id/question_textQuestion"
-    	android:textColor="@android:color/black"
-    	android:paddingRight="10dp"/>
-    	<TextView 
-    	android:id="@+id/textExamTime"
-    	android:layout_width="wrap_content" 
-    	android:layout_height="wrap_content" 
-    	android:text="@string/No_time_limit"
-    	android:layout_alignParentRight="true"
-    	android:textColor="@android:color/black"
-    	/>
-    </RelativeLayout>  	
-<ScrollView 
-    android:layout_marginBottom="50dip" 
-    android:layout_below="@id/titleBar" 
-    android:id="@+id/ScrollView" 
-    android:layout_height="wrap_content" 
-    android:layout_width="fill_parent">
-			>
-<LinearLayout 	android:id="@+id/question_layout" 
-    			android:layout_width="fill_parent" 
-    			android:layout_height="wrap_content"
-    			android:orientation="vertical"
-    			>
-    
-    	
-			<HorizontalScrollView android:id="@+id/horizontalScrollViewExhibit"
-                      android:layout_width="fill_parent" 
-                      android:layout_height="wrap_content"
-                      android:scrollbars="none"
-                      android:background="#333333">
-    	<TextView android:id="@+id/textExhibit"
-    		android:layout_width="fill_parent"
-        	android:layout_height="wrap_content"
-        	android:textColor="#FFFFFF"
-        	android:typeface="monospace"
-        	android:padding="10dp"
-        android:focusable="true"
-        android:focusableInTouchMode="true" 
-        android:scrollHorizontally="true"/>
-        </HorizontalScrollView>
-        <HorizontalScrollView android:id="@+id/horizontalScrollViewExhibit"
-                      android:layout_width="fill_parent" 
-                      android:layout_height="wrap_content"
-                      android:scrollbars="none">
-        <TextView android:id="@+id/textQuestion"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:textColor="#CCCCCC"
-        	android:background="#000000"
-        	android:typeface="serif"
-        	android:padding="10dp"
-        	android:scrollHorizontally="true">
-        			</TextView>
-        </HorizontalScrollView>
-     <LinearLayout
-     	android:id="@+id/answerLayout"
-     	android:layout_width="fill_parent" 
-    	android:layout_height="wrap_content"
-     	android:orientation="vertical">
-     </LinearLayout>
-</LinearLayout>
-</ScrollView>
-<LinearLayout 
-    	android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:layout_alignParentBottom="true"
-    	android:orientation="horizontal"
-    	>
-        <Button android:text="@string/button_prev" 
-        		android:id="@+id/button_prev" 
-        		android:layout_gravity="left"
-        		android:layout_weight="1"
-        		android:layout_width="wrap_content" 
-        		android:layout_height="wrap_content"
-        		></Button>
-        <Button android:text="@string/button_next" 
-        		android:id="@+id/button_next"
-        		android:layout_gravity="right"
-        		android:layout_weight="1"
-        		android:layout_width="wrap_content" 
-        		android:layout_height="wrap_content"
-        		></Button>
-</LinearLayout>
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <RelativeLayout
+        android:id="@+id/titleBar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:gravity="top" >
+
+        <TextView
+            android:id="@+id/question_textQuestion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:paddingRight="@dimen/paddingDefault"
+            android:text="@string/Question"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/textSizeDefault" />
+
+        <TextView
+            android:id="@+id/textQuestionNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/question_textQuestion"
+            android:paddingRight="@dimen/paddingDefault"
+            android:text=""
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/textSizeDefault" />
+
+        <TextView
+            android:id="@+id/textExamTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="@string/No_time_limit"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/textSizeDefault" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/ScrollView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titleBar"
+        android:layout_marginBottom="50dip" >
+
+        <LinearLayout
+            android:id="@+id/question_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <HorizontalScrollView
+                android:id="@+id/horizontalScrollViewExhibit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#333333"
+                android:scrollbars="none" >
+
+                <TextView
+                    android:id="@+id/textExhibit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:padding="@dimen/paddingDefault"             
+    				android:textSize="@dimen/textSizeDefault"
+                    android:scrollHorizontally="true"
+                    android:textColor="#FFFFFF"
+                    android:typeface="monospace" />
+            </HorizontalScrollView>
+
+            <HorizontalScrollView
+                android:id="@+id/horizontalScrollViewQuestion"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none" >
+
+                <TextView
+                    android:id="@+id/textQuestion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#000000"
+                    android:padding="@dimen/paddingDefault"
+                    android:textSize="@dimen/textSizeDefault"
+                    android:scrollHorizontally="true"
+                    android:textColor="#CCCCCC"
+                    android:typeface="serif" >
+                </TextView>
+            </HorizontalScrollView>
+
+            <LinearLayout
+                android:id="@+id/answerLayout"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" >
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/button_prev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_weight="1"
+            android:textSize="@dimen/textSizeDefault"
+            android:text="@string/button_prev" >
+        </Button>
+
+        <Button
+            android:id="@+id/button_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:textSize="@dimen/textSizeDefault"
+            android:text="@string/button_next" >
+        </Button>
+    </LinearLayout>
+
 </RelativeLayout>

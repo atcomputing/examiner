@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <ImageView android:contentDescription="@string/student_hat" 
+        style="@style/BackgroundImage" />
+
+    <LinearLayout
+        android:id="@+id/startexam_bottom_buttons"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <Button
+            android:id="@+id/startexam_history_button_delete_scores"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:textSize="@dimen/textSizeDefault"
+            android:text="@string/Delete_selected_scores"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/startexam_button_start_exam"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:textSize="@dimen/textSizeDefault"
+            android:text="@string/start_a_new_exam" />
+    </LinearLayout>
+    
+    <LinearLayout
+        android:id="@+id/startexam_examinfo"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:baselineAligned="false"
+        android:layout_marginTop ="@dimen/paddingSmall"
+        android:layout_marginBottom ="@dimen/paddingSmall"
+        android:layout_above="@id/startexam_bottom_buttons" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:layout_weight="1"
+            android:background="#AA404040"
+        	android:padding="@dimen/paddingSmall"
+        	android:layout_margin="@dimen/paddingSmall" >
+
+            <RelativeLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+
+				<TextView android:id="@+id/startexam_examtitle_text"
+					style="@style/TextWhite" android:layout_alignParentLeft="true"
+					android:text="@string/name" />
+
+				<TextView android:id="@+id/startexam_examtitle_value"
+					style="@style/TextWhite" android:layout_alignParentRight="true"
+					android:text="" />
+			</RelativeLayout>
+			
+			<RelativeLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+
+				<TextView android:id="@+id/startexam_installed_on_text"
+					style="@style/TextWhite" android:layout_alignParentLeft="true"
+					android:text="@string/installed_on" />
+
+				<TextView android:id="@+id/startexam_installed_on_value"
+					style="@style/TextWhite" android:layout_alignParentRight="true"
+					android:text="" />
+			</RelativeLayout>
+
+			<RelativeLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+
+				<TextView android:id="@+id/startexam_amount_of_items_text"
+					style="@style/TextWhite" android:layout_alignParentLeft="true"
+					android:text="@string/Amount_of_questions" />
+
+				<TextView android:id="@+id/startexam_amount_of_items_value"
+					style="@style/TextWhite" android:layout_alignParentRight="true"
+					android:text="" />
+			</RelativeLayout>
+
+			<RelativeLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+
+				<TextView android:id="@+id/startexam_items_needed_to_pass_text"
+					style="@style/TextWhite" android:layout_alignParentLeft="true"
+					android:text="@string/Required_to_pass" />
+
+				<TextView android:id="@+id/startexam_items_needed_to_pass_value"
+					style="@style/TextWhite" android:layout_alignParentRight="true"
+					android:text="" />
+			</RelativeLayout>
+
+			<RelativeLayout android:layout_width="fill_parent"
+				android:layout_height="wrap_content">
+
+				<TextView android:id="@+id/startexam_timelimit_text" style="@style/TextWhite"
+					android:layout_alignParentLeft="true" android:text="@string/Time_limit" />
+
+				<TextView android:id="@+id/startexam_timelimit_value"
+					style="@style/TextWhite" android:layout_alignParentRight="true"
+					android:text="" />
+			</RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout 
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:orientation="vertical"
+            android:background="#80000000"
+            android:layout_weight="1"
+            android:layout_margin="@dimen/paddingSmall">
+
+            <TextView
+                android:id="@+id/startexam_history_textview_noscoresavailable"
+                android:text="@string/no_previous_scores_available"
+                android:textSize="@dimen/textSizeDefault"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:id="@+id/startexam_history_header"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:orientation="horizontal"
+                android:gravity="center" >
+
+                <CheckBox
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:visibility="invisible" />
+
+                <TextView
+                 	style="@style/tableHeaderText"
+                    android:text="@string/Date"
+                     />
+
+                <TextView
+                    style="@style/tableHeaderText"
+                    android:text="@string/Score"/>
+
+                <TextView
+                    style="@style/tableHeaderText"
+                    android:text="@string/Pass"/>
+            </LinearLayout>
+
+            <ListView
+                android:id="@+id/startexam_history_listview"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:cacheColorHint="#00000000" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

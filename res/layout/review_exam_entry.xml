@@ -6,9 +6,11 @@
               android:id="@+id/reviewExamQuestionID"
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:paddingRight="10px"
-              android:paddingLeft="0px"/>
-    <ImageView android:id="@+id/reviewExamAnswer"
-      android:layout_width="20px" android:layout_height="20px">
+              android:paddingRight="@dimen/paddingDefault"
+              android:textSize="@dimen/textSizeDefault"/>
+    <ImageView android:contentDescription="@string/answer_correct_or_wrong" 
+      android:id="@+id/reviewExamAnswer"
+      android:layout_width="@dimen/rowHeightDefault" 
+      android:layout_height="@dimen/rowHeightDefault">
    </ImageView>
 </LinearLayout>

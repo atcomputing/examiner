@@ -46,7 +46,7 @@ public final class ExamTrainer {
 	}
 	
 	/**
-	 * @return timelimit in seconds
+	 * @return time limit in seconds
 	 */
 	public static long getTimeLimit() {
 		return timeLimit;
@@ -55,6 +55,11 @@ public final class ExamTrainer {
 	public static void setTimer() {
 		timerStart = System.currentTimeMillis();
 		timeEnd = timerStart + (timeLimit * 1000);
+	}
+	
+	public static boolean timeLimitExceeded() {
+		long currentTime = System.currentTimeMillis();
+		return currentTime > timeEnd;
 	}
 	
 	public static long getTimerStart() {

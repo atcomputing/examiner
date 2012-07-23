@@ -88,18 +88,17 @@ public class ExamQuestionActivity extends Activity {
 
 		this.myHandler = new MyHandler();
 
-		Log.d("trace", "ExamQuestionActivity created");
 		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
 			finish();
 		}
-
+		
 		Intent intent = getIntent();
 
 		this.questionId = ExamTrainer.getQuestionId(intent);
 		if ( ( questionId < 1 ) || ( ExamTrainer.getExamDatabaseName() == null ) ) {
 			this.finish();
 		}
-
+		
 		this.examQuestion = new ExamQuestion(this);
 		try {
 			this.examQuestion.fillFromDatabase(ExamTrainer.getExamDatabaseName(), questionId);
@@ -108,7 +107,6 @@ public class ExamQuestionActivity extends Activity {
 					this.getResources().getString(R.string.Try_reinstalling_the_exam));
 		}
 		setupLayout();
-
 		this.timeLimitTextView = (TextView) findViewById(R.id.textExamTime);
 	}
 
@@ -118,7 +116,6 @@ public class ExamQuestionActivity extends Activity {
 			finish();
 		}
 		setTitle(ExamTrainer.getExamTitle());
-
 		if ( ( ExamTrainer.getTimeLimit() > 0 ) && 
 				( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) ) {
 			timer = new Timer();
@@ -149,12 +146,11 @@ public class ExamQuestionActivity extends Activity {
 		} else {
 			timer = null;
 		}
-
+		
 		updateLayout();
 	}
 
 	protected void onPause() {
-		Log.d("ExamQuestionActivity", "onPause");
 		super.onPause();
 		if ( timer != null ) {
 			timer.cancel();
@@ -297,7 +293,6 @@ public class ExamQuestionActivity extends Activity {
 	}
 
 	private void showAnswers() {
-		Log.d("ExamQuestionActivity", "showAnswers: questionId="+this.questionId);
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		Cursor cursor = examinationDbHelper.getAnswers(this.questionId);
@@ -447,7 +442,7 @@ public class ExamQuestionActivity extends Activity {
 				this.editText.setText(cursor.getString(index));
 			}
 		} else {
-			Cursor scoresAnswers = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId());
+			Cursor scoresAnswers = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionId);
 			if( scoresAnswers.getCount() > 0 ) {
 				int index = scoresAnswers.getColumnIndex(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER);
 				do {
@@ -457,6 +452,10 @@ public class ExamQuestionActivity extends Activity {
 						if( answer.contentEquals(tv.getText().toString())) {
 							CheckBox cbox = (CheckBox) view.findViewById(R.id.choiceCheckBox);
 							cbox.setChecked(true);
+						}
+						if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW ) {
+							CheckBox cbox = (CheckBox) view.findViewById(R.id.choiceCheckBox);
+							cbox.setClickable(false);
 						}
 					}
 				} while( scoresAnswers.moveToNext() );

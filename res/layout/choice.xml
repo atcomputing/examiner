@@ -11,7 +11,7 @@
      	    android:layout_width="wrap_content" 
     		android:layout_height="wrap_content"
     		android:layout_gravity="left|center_vertical"
-    		android:layout_marginRight="10dp"/>
+    		android:layout_marginRight="@dimen/paddingDefault"/>
      	 <HorizontalScrollView
                       android:layout_width="fill_parent" 
                       android:layout_height="wrap_content"
@@ -21,6 +21,7 @@
      	    android:id="@+id/choiceTextView"
      	    android:layout_width="wrap_content" 
     		android:layout_height="wrap_content"
+    		android:textSize="@dimen/textSizeDefault"
     		android:textStyle="bold"
     		android:textColor="#FFFFFFFF"
     		android:gravity="center_vertical"

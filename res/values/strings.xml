@@ -96,7 +96,7 @@
     <string name="correct_questions_required_to_pass">Correct questions required to pass</string>
     <string name="timelimit">Timelimit</string>
     <string name="start_a_new_exam">Start a new exam</string>
-    <string name="student_hat">Student Hat</string>
+    <string name="student_hat">student hat</string>
     <string name="no_previous_scores_available">No previous scores available</string>
     <string name="name">Name</string>
     <string name="database_error_could_not_get_score">Database Error: Could not get score</string>
@@ -110,5 +110,10 @@
     <string name="calculate_score">Calculate score</string>
     <string name="resume">Resume</string>
     <string name="resume_exam">Resume exam</string>
+    <string name="Required_to_pass">Required to pass</string>
+    <string name="Date">Date</string>
+    <string name="pass_or_not_pass_image">pass or not pass image</string>
+    <string name="at_computing_logo">AT Computing Logo</string>
+    <string name="answer_correct_or_wrong">answer correct or wrong</string>
 
 </resources>

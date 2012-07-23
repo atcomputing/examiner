@@ -20,8 +20,8 @@
 			android:layout_height="wrap_content"
 			android:layout_centerInParent="true"
 			android:gravity="center_horizontal"
-			android:textColor="#ff8888ff"
-			android:textSize="24sp"
+			android:textColor="@color/at_blue"
+			android:textSize="@dimen/textSizeHuge"
 			android:visibility="gone"/>
 	    
 		<TextView
@@ -30,8 +30,8 @@
 			android:layout_height="wrap_content"
 			android:layout_centerInParent="true"
 			android:gravity="center_horizontal"
-			android:textColor="#ff8888ff"
-			android:textSize="24sp"
+			android:textColor="@color/at_blue"
+			android:textSize="@dimen/textSizeHuge"
 			android:visibility="gone"
 			android:layout_below="@id/calculate_score_text"/>
 	</RelativeLayout>

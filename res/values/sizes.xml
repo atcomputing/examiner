@@ -1,8 +1,11 @@
 <resources>
-    <dimen name="textSizeDescription">17dp</dimen>
-    <dimen name="textSizeTab">15dp</dimen>
-    <dimen name="textSizeRowItem">16dp</dimen>
-    <dimen name="textSizeSynopsis">15dp</dimen>
-    <dimen name="textSizeFlags">15dp</dimen>
-    <dimen name="textSizeExpList">15dp</dimen>
+    <dimen name="textSizeDefault">12dp</dimen>
+    <dimen name="textSizeMenu">12dp</dimen>
+    <dimen name="textSizeRowItem">12dp</dimen>
+    <dimen name="textSizeRowSubItem">10dp</dimen>
+    <dimen name="textSizeHuge">40dp</dimen>
+    <dimen name="paddingDefault">10dp</dimen>
+    <dimen name="paddingSmall">5dp</dimen>
+    <dimen name="rowHeightDefault">20dp</dimen>
+    <dimen name="columnWidthDefault">90dp</dimen>
 </resources>

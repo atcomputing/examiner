@@ -11,18 +11,22 @@
               android:layout_width="0dp"
               android:layout_height="wrap_content"
               android:gravity="center"
+              android:textSize="@dimen/textSizeDefault"
               android:layout_gravity="center"
               android:layout_weight="1"/>
     <TextView android:id="@+id/historyEntryScore"
               android:layout_width="0dp"
               android:layout_height="wrap_content"
               android:gravity="center"
+              android:textSize="@dimen/textSizeDefault"
               android:layout_gravity="center"
               android:layout_weight="1"/>
-    <ImageView android:id="@+id/historyEntryPass"
+    <ImageView android:contentDescription="@string/pass_or_not_pass_image" 
+              android:id="@+id/historyEntryPass"
     		  android:layout_gravity="center"
               android:layout_weight="1"
               android:layout_width="0dp"
-              android:layout_height="20dp"
+              android:textSize="@dimen/textSizeDefault"
+              android:layout_height="@dimen/rowHeightDefault"
               android:src="@drawable/questionmark"/>
 </LinearLayout>

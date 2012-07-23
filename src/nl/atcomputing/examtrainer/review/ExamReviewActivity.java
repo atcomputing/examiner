@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.Toast;
 
 /**
  * @author martijn brekhof
@@ -64,10 +65,16 @@ public class ExamReviewActivity extends Activity {
 			button.setOnClickListener(new OnClickListener() {
 				
 				public void onClick(View v) {
+					Log.d("ExamReviewActivity", "onResume button clicked starting exam at "+amountOfQuestionsAnswered);
 					Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionActivity.class);
-					ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.REVIEW);
-					ExamTrainer.setQuestionId(intent, adapter.getItemId(amountOfQuestionsAnswered));
+					ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM);
+					ExamTrainer.setQuestionId(intent, adapter.getItemId(amountOfQuestionsAnswered - 1));
+					if( (ExamTrainer.getTimeLimit() > 0)  && ( ExamTrainer.timeLimitExceeded() ) ) {
+						ExamTrainer.setTimeLimit(0);
+						Toast.makeText(ExamReviewActivity.this, "Time limit exceeded. Disabling time limit", Toast.LENGTH_SHORT).show();
+					} 
 					startActivity(intent);
+					finish();
 				}
 			});
 			button.setVisibility(View.VISIBLE);

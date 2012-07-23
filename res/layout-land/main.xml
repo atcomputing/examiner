@@ -20,13 +20,13 @@
     		>
     	<TextView
     		android:id="@+id/startscreen_quote"
-    		android:layout_width="fill_parent"
+    		android:layout_width="wrap_content"
     		android:layout_height="wrap_content"
     		android:textColor="#FFFFFF"
-    		android:textSize="40dp"
+    		android:textSize="@dimen/textSizeHuge"
     		android:text="@string/startscreen_quote"
     		android:typeface="serif"
-    		android:padding="10dp"/>
+    		android:padding="@dimen/paddingDefault"/>
     	</LinearLayout>
     	
     	<LinearLayout
@@ -65,23 +65,24 @@
     			android:layout_height="wrap_content"
     	        android:text="@string/app_name"
     		    android:gravity="center"
-    		    android:padding="10dp">
+    		    android:padding="@dimen/paddingDefault">
     	    </TextView>
     	    <LinearLayout
     	    	android:layout_width="wrap_content"
     			android:layout_height="wrap_content"
-    		    android:layout_centerInParent="true"
     		    android:orientation="horizontal"
     		    android:gravity="center"
-    	    	android:padding="10dp">
+    	    	android:padding="@dimen/paddingDefault">
     	    	<TextView
     	        	android:layout_width="wrap_content"
     				android:layout_height="wrap_content"
+    				android:gravity="center"
     	       		android:text="@string/Version">
     	    	</TextView>
     	    	<TextView
     	    	    android:id="@+id/about_version_number"
     	        	android:layout_width="wrap_content"
+    	        	android:gravity="center"
     				android:layout_height="wrap_content"
     	       		android:text="">
     	    	</TextView>
@@ -91,14 +92,14 @@
     			android:layout_height="wrap_content" 
     		    android:text="@string/Copyright"
     		    android:gravity="center"
-    		    android:padding="10dp">
+    		    android:padding="@dimen/paddingDefault">
     		</TextView>
     		<TextView
     		    android:layout_width="fill_parent"
     			android:layout_height="wrap_content" 
     		    android:text="@string/text_about_atcomputing"
     		    android:gravity="center"
-    		    android:padding="10dp">
+    		    android:padding="@dimen/paddingDefault">
     		</TextView>
     		<TextView
     		    android:layout_width="fill_parent"

@@ -7,17 +7,12 @@
 
     <TextView
         android:id="@+id/selectexamEntryTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/RowEntryMainText"
         android:layout_gravity="top"
-        android:textColor="#FFFFFF"
         android:background="@android:color/transparent" />
     <TextView
         android:id="@+id/selectexamEntryAuthor"
-        android:layout_width="wrap_content" 
-        android:layout_height="wrap_content"
+        style="@style/RowEntrySubitemText"
         android:layout_gravity="bottom"
-        android:textSize="10dip"
-        android:textColor="#AAAAAA" 
         android:background="@android:color/transparent"/>
 </LinearLayout>

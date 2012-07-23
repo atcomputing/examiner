@@ -11,22 +11,20 @@
     	android:layout_alignParentLeft="true">
     <TextView
         android:id="@+id/manageExamsEntryTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_gravity="top"
-        android:textColor="#FFFFFF" />
+        style="@style/RowEntryMainText"
+        android:background="@android:color/transparent" />
     <TextView
         android:id="@+id/manageExamsEntryAuthor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/RowEntrySubitemText"
         android:layout_gravity="bottom"
-        android:textSize="10dip"
-        android:textColor="#AAAAAA" />
+        android:background="@android:color/transparent" />
 	</LinearLayout>
     <Button
         android:id="@+id/manageExamsDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 		android:layout_alignParentRight="true"
-        android:text="@string/install" />
+        android:text="@string/install"
+        android:textSize="@dimen/textSizeDefault" />
 </RelativeLayout>

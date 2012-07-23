@@ -14,13 +14,13 @@
     
     <TextView
         android:id="@+id/startscreen_quote"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="10dp"
+        android:layout_alignParentRight="true"
+        android:padding="@dimen/paddingDefault"
         android:text="@string/startscreen_quote"
         android:textColor="#FFFFFF"
-        android:textSize="40dp"
+        android:textSize="@dimen/textSizeHuge"
         android:typeface="serif" />
 
     <LinearLayout
@@ -30,6 +30,7 @@
         android:orientation="vertical">
 
         <ImageView
+            android:contentDescription="@string/at_computing_logo"
             android:id="@+id/logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -42,6 +43,7 @@
             android:id="@+id/button_start"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:textSize="@dimen/textSizeDefault"
             android:text="@string/Start">
         </Button>
     </LinearLayout>
@@ -59,22 +61,23 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="@dimen/paddingDefault"
+            android:textSize="@dimen/textSizeDefault"
             android:text="@string/app_name" >
         </TextView>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:gravity="center"
             android:orientation="horizontal"
-            android:padding="10dp" >
+            android:padding="@dimen/paddingDefault" >
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingRight="10dp"
+                android:paddingRight="@dimen/paddingDefault"
+                android:textSize="@dimen/textSizeDefault"
                 android:text="@string/Version" >
             </TextView>
 
@@ -82,6 +85,7 @@
                 android:id="@+id/about_version_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="@dimen/textSizeDefault"
                 android:text="1.0" >
             </TextView>
         </LinearLayout>
@@ -90,16 +94,18 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="10dp"
-            android:text="@string/Copyright" >
+            android:padding="@dimen/paddingDefault"
+            android:text="@string/Copyright"
+            android:textSize="@dimen/textSizeDefault" >
         </TextView>
 
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:padding="10dp"
-            android:text="@string/text_about_atcomputing" >
+            android:padding="@dimen/paddingDefault"
+            android:text="@string/text_about_atcomputing"
+            android:textSize="@dimen/textSizeDefault" >
         </TextView>
 
         <TextView
@@ -107,8 +113,9 @@
             android:layout_height="wrap_content"
             android:autoLink="web"
             android:gravity="center"
-            android:paddingBottom="10dp"
-            android:text="@string/Visit_atcomputing" >
+            android:paddingBottom="@dimen/paddingDefault"
+            android:text="@string/Visit_atcomputing"
+            android:textSize="@dimen/textSizeDefault" >
         </TextView>
     </LinearLayout>
 
