@@ -4,11 +4,11 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import nl.atcomputing.adapters.ManageExamsAdapter;
+import nl.atcomputing.examtrainer.Exam;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
-import nl.atcomputing.examtrainer.exam.Exam;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
@@ -41,7 +41,6 @@ public class ManageExamsActivity extends ListActivity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d("trace", "ManageExamsActivity created");
 		setContentView(R.layout.manageexams);
 
 		loadLocalExams();
@@ -157,7 +156,6 @@ public class ManageExamsActivity extends ListActivity {
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		examTrainerDbHelper.open();
 		Cursor cursor = examTrainerDbHelper.getAllExams();
-		Log.d("ManageExamsActivity", "Cursor: "+ cursor);
 		
 		if ( (cursor == null) || (cursor.getCount() == 0) ) {
 			noExamsAvailable.setVisibility(View.VISIBLE);

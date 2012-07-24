@@ -1,4 +1,4 @@
-package nl.atcomputing.examtrainer.exam;
+package nl.atcomputing.examtrainer;
 
 import java.util.ArrayList;
 
@@ -145,7 +145,6 @@ public class ExamQuestion {
 		hint = str;
 	}
 	public void addChoice(String str) {
-		Log.d("ExamQuestion", "adding choice: "+str);
 		choices.add(str);
 	}
 	
@@ -200,7 +199,6 @@ public class ExamQuestion {
 		
 		if( this.type.equalsIgnoreCase(TYPE_MULTIPLE_CHOICE) ) {
 			cursor = examinationDbHelper.getChoices(questionId);
-//			Log.d("ExamQuestion", "cursor.getCount(): "+cursor.getCount());
 			if ( cursor.getCount() > 0 ) {
 				index = cursor.getColumnIndex(ExaminationDatabaseHelper.Choices.COLUMN_NAME_CHOICE);
 				do {
@@ -212,11 +210,6 @@ public class ExamQuestion {
 		
 		examinationDbHelper.close();
 		
-//		Log.d("ExamQuestion", "type: " +this.type + 
-//				"\nexhibit: " +this.exhibit + 
-//				"\nquestion: " +this.question + 
-//				"\nanswers: " +this.answers.toString() + 
-//				"\nchoices: " +this.choices.toString());
 		return this;
 	}
 }

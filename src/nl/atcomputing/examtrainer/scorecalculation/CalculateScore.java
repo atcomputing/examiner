@@ -1,11 +1,11 @@
-package nl.atcomputing.examtrainer.exam.score;
+package nl.atcomputing.examtrainer.scorecalculation;
 
 import java.util.Random;
 
+import nl.atcomputing.examtrainer.ExamQuestion;
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
-import nl.atcomputing.examtrainer.exam.ExamQuestion;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -63,25 +63,24 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 		if( ! this.showScoreInstantaneously ) {
 			Resources resource = showScoreActivity.getResources();
 
-			dialog = new ProgressDialog(showScoreActivity);
-			dialogMessage = resource.getString(R.string.Calculating_your_score);
-			dialog.setMessage(dialogMessage);
-			dialog.setMax(amountOfItems);
-			dialog.setProgress(progress);
-			dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-			dialog.show();
+			this.dialog = new ProgressDialog(showScoreActivity);
+			this.dialogMessage = resource.getString(R.string.Calculating_your_score);
+			this.dialog.setMessage(dialogMessage);
+			this.dialog.setMax(amountOfItems);
+			this.dialog.setProgress(progress);
+			this.dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+			this.dialog.show();
 
-			messagesClassA = resource.getStringArray(R.array.class_A);
-			messagesClassB = resource.getStringArray(R.array.class_B);
-			messagesClassC = resource.getStringArray(R.array.class_C);
-			messagesClassD = resource.getStringArray(R.array.class_D);
-			messagesClassE = resource.getStringArray(R.array.class_E);
-			messagesClassF = resource.getStringArray(R.array.class_F);
+			this.messagesClassA = resource.getStringArray(R.array.class_A);
+			this.messagesClassB = resource.getStringArray(R.array.class_B);
+			this.messagesClassC = resource.getStringArray(R.array.class_C);
+			this.messagesClassD = resource.getStringArray(R.array.class_D);
+			this.messagesClassE = resource.getStringArray(R.array.class_E);
+			this.messagesClassF = resource.getStringArray(R.array.class_F);
 		}
 	}
 
 	protected Integer doInBackground(Object... questionIds) {
-
 
 		ExaminationDbAdapter examinationDbHelper;
 		examinationDbHelper = new ExaminationDbAdapter(this.showScoreActivity);
@@ -93,21 +92,15 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 
 		int answers_correct = 0;
 		int amountOfQuestions = questionIds.length;
-
 		if( this.showScoreInstantaneously ) {
 			answers_correct = examinationDbHelper.calculateScore(ExamTrainer.getScoresId());
 		} else {
+			long scoresId = ExamTrainer.getScoresId();
 			for(int i = 0; i < amountOfQuestions; i++) {
 				long questionId = (Long) questionIds[i];
-
-				String questionType = examinationDbHelper.getQuestionType(questionId);
+				
 				boolean answerCorrect = false;
-				if( questionType.equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-					answerCorrect = examinationDbHelper.checkScoresAnswersOpen(questionId, ExamTrainer.getScoresId());
-				}
-				else {
-					answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(questionId, ExamTrainer.getScoresId());
-				}
+				answerCorrect = examinationDbHelper.getResultPerQuestion(scoresId, questionId) == 1;
 
 				if( answerCorrect ) {
 					answers_correct++;

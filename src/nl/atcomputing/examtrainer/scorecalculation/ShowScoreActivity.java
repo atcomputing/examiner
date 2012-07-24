@@ -1,4 +1,4 @@
-package nl.atcomputing.examtrainer.exam.score;
+package nl.atcomputing.examtrainer.scorecalculation;
 
 import java.util.List;
 
@@ -28,8 +28,7 @@ public class ShowScoreActivity extends Activity {
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d("trace", "ShowScoreActivity created");
-
+		
 		setContentView(R.layout.show_score);
 
 		this.glView = (GLSurfaceView) findViewById(R.id.show_score_glsurfaceview);
@@ -105,7 +104,6 @@ public class ShowScoreActivity extends Activity {
 			score = examinationDbHelper.getScore(ExamTrainer.getScoresId());
 			examinationDbHelper.close();
 		} catch (SQLiteException e) {
-			Log.d("ShowScoreActivity", e.getMessage());
 			Toast.makeText(this, "Database Error: Could not get score", Toast.LENGTH_LONG).show();
 			examinationDbHelper.close();
 			return;

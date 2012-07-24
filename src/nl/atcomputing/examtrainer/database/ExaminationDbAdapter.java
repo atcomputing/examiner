@@ -3,7 +3,7 @@ package nl.atcomputing.examtrainer.database;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.atcomputing.examtrainer.exam.ExamQuestion;
+import nl.atcomputing.examtrainer.ExamQuestion;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -156,7 +156,6 @@ public class ExaminationDbAdapter {
 	 * @return true if rows were deleted, false if nothing was deleted.
 	 */
 	public boolean deleteScore(long scoresId) {
-		Log.d("ExaminationDbAdapter", "Deleting score "+scoresId);
 		db.delete(ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, 
 				ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID + "= ?",
 				new String[] { Long.toString(scoresId) });
@@ -228,8 +227,8 @@ public class ExaminationDbAdapter {
 				null, null, null, null, null, null);
 		
 		if(mCursor.moveToFirst()) {
+			int index = mCursor.getColumnIndex(ExaminationDatabaseHelper.Questions._ID);
 			do {
-				int index = mCursor.getColumnIndex(ExaminationDatabaseHelper.Questions._ID);
 				long questionId = mCursor.getLong(index);
 				list.add(questionId);
 			} while (mCursor.moveToNext());
@@ -289,7 +288,31 @@ public class ExaminationDbAdapter {
 		
 	}
 
-	public Cursor getResultPerQuestion(long scoresId) {
+	/**
+	 * Returns the result of a question in the ResultPerQuestion table
+	 * @param scoresId
+	 * @param questionId
+	 * @return -1 if result is not present, 0 if answer is wrong, 1 if answer is correct
+	 */
+	public int getResultPerQuestion(long scoresId, long questionId) {
+		Cursor mCursor = db.query(true, ExaminationDatabaseHelper.ResultPerQuestion.TABLE_NAME, 
+				new String[] {
+				ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT
+				},
+				ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_SCORES_ID + "= ? AND "+
+						ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_QUESTION_ID + "= ?",
+				new String[] { Long.toString(scoresId), Long.toString(questionId) }, 
+				null, null, null, null);
+		int answered_correct = -1;
+		if(mCursor.moveToFirst()) {
+			int index = mCursor.getColumnIndex(ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT);
+			answered_correct = mCursor.getInt(index);
+		}
+		
+		return answered_correct;
+	}
+	
+	public Cursor getResultsPerQuestion(long scoresId) {
 		Cursor mCursor = db.query(true, ExaminationDatabaseHelper.ResultPerQuestion.TABLE_NAME, 
 				new String[] {
 				ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_QUESTION_ID,
@@ -313,6 +336,35 @@ public class ExaminationDbAdapter {
 			values.put(ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT, 0);
 		}
 		return db.insert(ExaminationDatabaseHelper.ResultPerQuestion.TABLE_NAME, null, values);
+	}
+	
+	public boolean updateResultPerQuestion(long scoresId, long questionId, boolean answerCorrect) {
+		ContentValues values = new ContentValues();
+		if ( answerCorrect ) {
+			values.put(ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT, 1);
+		} else {
+			values.put(ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_ANSWER_CORRECT, 0);
+		}
+		
+		return db.update(ExaminationDatabaseHelper.ResultPerQuestion.TABLE_NAME, values, 
+				ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_SCORES_ID + "= ? AND "+
+						ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_QUESTION_ID + "= ?", 
+				new String[] { Long.toString(scoresId), Long.toString(questionId) } ) > 0;
+	}
+	
+	/**
+	 * Adds or updates the result for a specific question in ResultPerQuestion table
+	 * @param scoresId
+	 * @param questionId
+	 * @param answerCorrect
+	 */
+	public void setResultPerQuestion(long scoresId, long questionId, boolean answerCorrect) {
+		int res = getResultPerQuestion(scoresId, questionId);
+		if( res == -1 ) {
+			addResultPerQuestion(scoresId, questionId, answerCorrect);
+		} else {
+			updateResultPerQuestion(scoresId, questionId, answerCorrect);
+		}
 	}
 	
 	public long addScoresAnswers(long scoresId, long questionId, String answer) {
@@ -448,7 +500,6 @@ public class ExaminationDbAdapter {
 		values.put(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_SCORES_ID, scoresId);
 		values.put(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_QUESTION_ID, questionId);
 		values.put(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER, answer);
-		//Log.d(this.getClass().getName(), "insertAnswer values: "+ values.toString());
 		return db.insert(ExaminationDatabaseHelper.ScoresAnswers.TABLE_NAME, null, values) != -1;
 	}
 	

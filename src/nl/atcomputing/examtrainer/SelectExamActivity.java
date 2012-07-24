@@ -30,16 +30,22 @@ public class SelectExamActivity extends Activity {
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d("trace", "SelectExamActivity created");
-		//requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.selectexam);
-		
-		ListView selectExam = (ListView) this.findViewById(R.id.select_exam_list);
-		noExamsAvailable = (TextView) this.findViewById(R.id.selectexam_no_exams_available);
-		clickOnManageExams = (TextView) this.findViewById(R.id.selectexam_click_on_manage_exams);
+	}
 
-		adap = new SelectExamAdapter(this, R.layout.selectexam_entry, null);
-		selectExam.setAdapter(adap);
+	protected void onResume() {
+		super.onResume();
+		ListView selectExam = (ListView) this.findViewById(R.id.select_exam_list);
+		this.noExamsAvailable = (TextView) this.findViewById(R.id.selectexam_no_exams_available);
+		this.clickOnManageExams = (TextView) this.findViewById(R.id.selectexam_click_on_manage_exams);
+
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+		examTrainerDbHelper.open();
+		cursor = examTrainerDbHelper.getInstalledExams();
+		examTrainerDbHelper.close();
+		
+		this.adap = new SelectExamAdapter(this, R.layout.selectexam_entry, cursor);
+		selectExam.setAdapter(this.adap);
 
 		selectExam.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
@@ -49,15 +55,7 @@ public class SelectExamActivity extends Activity {
 				startActivity(intent);
 			}
 		});
-	}
-
-	protected void onResume() {
-		super.onResume();
-		Log.d("trace", "SelectExamActivity resumed");
-		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
-		examTrainerDbHelper.open();
-		cursor = examTrainerDbHelper.getInstalledExams();
-		examTrainerDbHelper.close();
+		
 		if(cursor.getCount() > 0) {
 			//Remove exams not available text when there are exams installed
 			noExamsAvailable.setVisibility(View.GONE);
@@ -66,13 +64,10 @@ public class SelectExamActivity extends Activity {
 			noExamsAvailable.setVisibility(View.VISIBLE);
 			clickOnManageExams.setVisibility(View.VISIBLE);
 		}
-		adap.changeCursor(cursor);
-		adap.notifyDataSetChanged();
 	}
 
 	protected void onPause() {
 		super.onPause();
-		Log.d("trace", "SelectExamActivity paused");
 		cursor.close();
 	}
 	

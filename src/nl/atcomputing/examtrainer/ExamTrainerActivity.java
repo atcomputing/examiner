@@ -26,14 +26,8 @@ public class ExamTrainerActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
-		Log.d("trace", "ExamTrainerActivity created");
 		
 		setContentView(R.layout.main);		
-
-//		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
-//		examTrainerDbHelper.open();
-//		examTrainerDbHelper.upgrade();
-//		examTrainerDbHelper.close();
 		
 		this.about_layout = (LinearLayout) findViewById(R.id.about_window);
 		this.about_layout.setVisibility(View.INVISIBLE);

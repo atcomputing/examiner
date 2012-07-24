@@ -1,10 +1,8 @@
-package nl.atcomputing.examtrainer.review;
+package nl.atcomputing.examtrainer;
 
 import nl.atcomputing.adapters.ExamReviewAdapter;
-import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
-import nl.atcomputing.examtrainer.exam.ExamQuestionActivity;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -29,7 +27,6 @@ public class ExamReviewActivity extends Activity {
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d("trace", "ExamReviewActivity created");
 			
 		setContentView(R.layout.review_exam);
 	}
@@ -41,8 +38,7 @@ public class ExamReviewActivity extends Activity {
 		
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		Cursor cursor = examinationDbHelper.getResultPerQuestion(examId);
-		//Log.d(TAG,"Cursor: " + cursor);
+		Cursor cursor = examinationDbHelper.getResultsPerQuestion(examId);
 		
 		adapter = new ExamReviewAdapter(this, R.layout.review_exam_entry, cursor);
 		scoresGrid = (GridView) findViewById(R.id.review_exam_grid);
@@ -65,7 +61,6 @@ public class ExamReviewActivity extends Activity {
 			button.setOnClickListener(new OnClickListener() {
 				
 				public void onClick(View v) {
-					Log.d("ExamReviewActivity", "onResume button clicked starting exam at "+amountOfQuestionsAnswered);
 					Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionActivity.class);
 					ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM);
 					ExamTrainer.setQuestionId(intent, adapter.getItemId(amountOfQuestionsAnswered - 1));

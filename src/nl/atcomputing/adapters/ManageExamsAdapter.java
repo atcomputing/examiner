@@ -4,11 +4,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import nl.atcomputing.examtrainer.ExamQuestion;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
-import nl.atcomputing.examtrainer.exam.ExamQuestion;
 import nl.atcomputing.examtrainer.manage.XmlPullExamParser;
 import android.content.Context;
 import android.database.Cursor;

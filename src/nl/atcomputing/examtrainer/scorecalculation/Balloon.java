@@ -1,4 +1,4 @@
-package nl.atcomputing.examtrainer.exam.score;
+package nl.atcomputing.examtrainer.scorecalculation;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

@@ -1,5 +1,6 @@
 
     <resources>
         <color name="correct_answer">#00FF00</color>
-        <color name="at_blue">#00FF00</color>
+        <color name="at_blue">#007FFF</color>
+        <color name="final_score_text">#00b300</color>
     </resources>

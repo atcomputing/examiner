@@ -1,4 +1,4 @@
-package nl.atcomputing.examtrainer.exam.score;
+package nl.atcomputing.examtrainer.scorecalculation;
 
 import java.util.Date;
 import java.util.Random;
@@ -130,7 +130,6 @@ public class Wind  {
 			//first build up to max wind
 			if ( this.buildingUp ) {
 				if (this.speedHorizontal < this.maxSpeed){
-					//				Log.d(TAG, "Incrementing speed="+this.speedHorizontal);
 					this.speedHorizontal += this.incrementSteps;
 				} else {
 					this.buildingUp = false;
@@ -154,11 +153,6 @@ public class Wind  {
 
 	protected float getWind(float height) {
 		float heightFactor = (height - this.displayBottom) / this.displayRange;
-		//		
-		//		Log.d("Wind", "heightFactor="+heightFactor+" windSpeed=" + this.speedHorizontal * heightFactor);
-		//		
-		//		return this.speedHorizontal * heightFactor;
-		//Log.d("Wind", "windSpeed=" + this.speedHorizontal);
 		return this.speedHorizontal * heightFactor;
 	}
 }

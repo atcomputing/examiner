@@ -1,4 +1,4 @@
-package nl.atcomputing.examtrainer.exam.score;
+package nl.atcomputing.examtrainer.scorecalculation;
 
 import java.util.Random;
 
@@ -23,6 +23,7 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 	private int amountOfBalloons;
 	private Textures textures;
 	private Balloon[] balloons;
+	private boolean showBalloons;
 	private ShowScoreActivity activity;
 	private Wind wind;
 	private float screenBoundaryTop;
@@ -41,26 +42,37 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 		//Request focus
 		this.requestFocus();
 		this.setFocusableInTouchMode(true);
-	}
-
-	public void onPause() {
 		
-	}
-	
-	public void onResume() {
 		this.wind = new Wind();
 		this.wind.setWindChance(30);
 		this.wind.setWindSpeedUpperLimit(0.5f);
+		
+		this.showBalloons = false;
+	}
+
+	public void onPause() {
+		this.mode = this.PAUSE;
+	}
+	
+	public void onResume() {
+//		this.wind = new Wind();
+//		this.wind.setWindChance(30);
+//		this.wind.setWindSpeedUpperLimit(0.5f);
+		this.mode = this.RUN;
 	}
 	
 	public void onDrawFrame(GL10 gl) {
+		if( this.mode != this.RUN ) {
+			return;
+		}
+		
 		//Clear Screen And Depth Buffer
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);	
 		
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();                      // reset the matrix to its default state
 		GLU.gluLookAt(gl, 0f, 0f, this.zoom, 0f, 0f, 0f, 0f, -1.0f, 0f);
-		if( this.mode == this.RUN ) {
+		if(this.showBalloons) {
 			this.wind.update();
 			for(Balloon b: this.balloons) {
 				float windSpeedHorizontal = this.wind.getWind(-b.y);
@@ -91,7 +103,6 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 
 	public void onSurfaceChanged(GL10 gl, int width, int height) 
 	{
-		Log.d("GLSurfaceViewRendered", "onSurfaceChanged");
 		gl.glViewport(0, 0, width, height);
 
 		this.screenWidth = width;
@@ -114,8 +125,6 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) 
 	{
-		Log.d("GLSurfaceViewRendered", "onSurfaceCreated");
-		
 		gl.glEnable(GL10.GL_TEXTURE_2D);					//Enable Texture Mapping
 		gl.glDisable(GL10.GL_DITHER);
 		gl.glEnable(GL10.GL_BLEND);							//Enable blending
@@ -155,6 +164,7 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 			this.balloons[i] = b;
 		}
 		this.mode = this.RUN;
+		this.showBalloons = true;
 	}
 
 	protected void updateScreenBoundaries() {

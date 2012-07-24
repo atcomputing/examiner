@@ -114,7 +114,7 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit>cat &lt; /etc/passwd | grep 'guru1'</exhibit>
+    <exhibit>cat&amp;nbsp;&lt;&amp;nbsp;/etc/passwd&amp;nbsp;|&amp;nbsp;grep&amp;nbsp;'guru1'</exhibit>
     <question>What best describes the above commandline when executed?</question>
     <choice>&lt;font face="monospace"&gt;cat&lt;/font&gt; reads from the file &lt;font face="monospace"&gt;/etc/passwd&lt;/font&gt; through stdin and pipes the output to &lt;font face="monospace"&gt;grep&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;cat&lt;/font&gt; reads the files &lt;font face="monospace"&gt;&amp;lt;&lt;/font&gt; and &lt;font face="monospace"&gt;/etc/passwd&lt;/font&gt; and sends the output to &lt;font face="monospace"&gt;grep&lt;/font&gt;</choice>
@@ -139,7 +139,7 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit>tak&lt;br/&gt;talk&lt;br/&gt;tik&lt;br/&gt;tok&lt;br/&gt;tuk&lt;br/&gt;tuuk</exhibit>
+    <exhibit>tak&amp;nbsp;&lt;br/&gt;talk&amp;nbsp;&lt;br/&gt;tik&amp;nbsp;&lt;br/&gt;tok&amp;nbsp;&lt;br/&gt;tuk&amp;nbsp;&lt;br/&gt;tuuk&amp;nbsp;</exhibit>
     <question>Your current working directory contains the above files.&lt;br/&gt;Which files are shown when you execute the command &lt;font face="monospace"&gt;ls | grep 't[^o].$'&lt;/font&gt;?&lt;br/&gt;Choose all that apply.</question>
     <choice>tak</choice>
     <choice>talk</choice>
@@ -185,7 +185,7 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit>drw--w---- guru1 course 4096 2010-10-28 10:42 /home/guru1</exhibit>
+    <exhibit>drw--w----&amp;nbsp;guru1&amp;nbsp;course&amp;nbsp;4096&amp;nbsp;2010-10-28&amp;nbsp;10:42&amp;nbsp;/home/guru1</exhibit>
     <question>The user &lt;font face="monospace"&gt;guru1&lt;/font&gt; complains that he cannot access his homedirectory.&lt;br/&gt;Given the directory &lt;font face="monospace"&gt;/home/guru1&lt;/font&gt; has the above permissions.&lt;br/&gt;Which of the following commands would fix this problem?</question>
     <choice>chmod 0664 /home/guru1</choice>
     <choice>chmod u+x,g= /home/guru1</choice>
@@ -428,7 +428,7 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit>$ ls -l foo bar&lt;br/&gt;lrwxrwxrwx 1  guru1  course   3  Aug 31 14:12  bar -&gt; foo&lt;br/&gt;-rw-r--r-- 1  guru1  course  10  Aug 31 14:12  foo&lt;br/&gt;$ rm bar</exhibit>
+    <exhibit>$&amp;nbsp;ls&amp;nbsp;-l&amp;nbsp;foo&amp;nbsp;bar&lt;br/&gt;lrwxrwxrwx&amp;nbsp;1&amp;nbsp;&amp;nbsp;guru1&amp;nbsp;&amp;nbsp;course&amp;nbsp;&amp;nbsp;&amp;nbsp;3&amp;nbsp;&amp;nbsp;Aug&amp;nbsp;31&amp;nbsp;14:12&amp;nbsp;&amp;nbsp;bar&amp;nbsp;-&gt;&amp;nbsp;foo&lt;br/&gt;-rw-r--r--&amp;nbsp;1&amp;nbsp;&amp;nbsp;guru1&amp;nbsp;&amp;nbsp;course&amp;nbsp;&amp;nbsp;10&amp;nbsp;&amp;nbsp;Aug&amp;nbsp;31&amp;nbsp;14:12&amp;nbsp;&amp;nbsp;foo&lt;br/&gt;$&amp;nbsp;rm&amp;nbsp;bar</exhibit>
     <question>Consider the above exhibit.&lt;br/&gt;As you can see &lt;font face="monospace"&gt;bar&lt;/font&gt;  is a symbolic link, pointing to  &lt;font face="monospace"&gt;foo&lt;/font&gt;.&lt;br/&gt;As user &lt;font face="monospace"&gt;guru1&lt;/font&gt; you execute  '&lt;font face="monospace"&gt;rm bar&lt;/font&gt;'.&lt;br/&gt;What happens?</question>
     <choice>Nothing, because  &lt;font face="monospace"&gt;bar&lt;/font&gt;  is no ordinary file.</choice>
     <choice>Both &lt;font face="monospace"&gt;foo&lt;/font&gt;  and  &lt;font face="monospace"&gt;bar&lt;/font&gt;  would be removed.</choice>
@@ -458,7 +458,7 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit># jobs -l&lt;br/&gt;[1] Running firefox &amp;&lt;br/&gt;[2]- Stopped atop&lt;br/&gt;[3]+ Stopped vi</exhibit>
+    <exhibit>#&amp;nbsp;jobs&amp;nbsp;-l&lt;br/&gt;[1]&amp;nbsp;Running&amp;nbsp;firefox&amp;nbsp;&amp;&lt;br/&gt;[2]-&amp;nbsp;Stopped&amp;nbsp;atop&lt;br/&gt;[3]+&amp;nbsp;Stopped&amp;nbsp;vi</exhibit>
     <question>Given the above exhibit, which command could you use to bring application 'vi' to the foreground?</question>
     <choice>&lt;font face="monospace"&gt;bg %3&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;fg&lt;/font&gt;</choice>
@@ -500,7 +500,7 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit>cat 'echo ATcomputing</exhibit>
+    <exhibit>cat&amp;nbsp;'echo&amp;nbsp;ATcomputing</exhibit>
     <question>What is the result of the above command?</question>
     <choice>You will get the shell secondary prompt</choice>
     <choice>The text &lt;i&gt;ATcomputing&lt;/i&gt; will be printed</choice>
@@ -554,7 +554,7 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit>$ ls -l /tmp/test&lt;br/&gt;total 4&lt;br/&gt;lrwxrwxrwx 1 root root  6 2010-10-28 12:56 desiree -&gt; potato&lt;br/&gt;lrwxrwxrwx 1 root root  7 2010-10-28 12:57 fries -&gt; desiree&lt;br/&gt;-rw-r--r-- 1 root root 10 2010-10-28 12:48 potato&lt;br/&gt;$ rm desiree</exhibit>
+    <exhibit>$&amp;nbsp;ls&amp;nbsp;-l&amp;nbsp;/tmp/test&lt;br/&gt;total&amp;nbsp;4&lt;br/&gt;lrwxrwxrwx&amp;nbsp;1&amp;nbsp;root&amp;nbsp;root&amp;nbsp;&amp;nbsp;6&amp;nbsp;2010-10-28&amp;nbsp;12:56&amp;nbsp;desiree&amp;nbsp;-&gt;&amp;nbsp;potato&lt;br/&gt;lrwxrwxrwx&amp;nbsp;1&amp;nbsp;root&amp;nbsp;root&amp;nbsp;&amp;nbsp;7&amp;nbsp;2010-10-28&amp;nbsp;12:57&amp;nbsp;fries&amp;nbsp;-&gt;&amp;nbsp;desiree&lt;br/&gt;-rw-r--r--&amp;nbsp;1&amp;nbsp;root&amp;nbsp;root&amp;nbsp;10&amp;nbsp;2010-10-28&amp;nbsp;12:48&amp;nbsp;potato&lt;br/&gt;$&amp;nbsp;rm&amp;nbsp;desiree</exhibit>
     <question>Consider the above exhibit.&lt;br/&gt;What would best describe the &lt;font face="monospace"&gt;rm&lt;/font&gt; command at the end?</question>
     <choice>It will remove the symbolic link &lt;font face="monospace"&gt;desiree&lt;/font&gt; and the contents of the file potato</choice>
     <choice>It will remove the symbolic link &lt;font face="monospace"&gt;desiree&lt;/font&gt; as well as the symbolic link &lt;font face="monospace"&gt;fries&lt;/font&gt;</choice>
@@ -565,7 +565,7 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit>Bill Howes&lt;br/&gt;Steve Lops&lt;br/&gt;June Lops&lt;br/&gt;Joan Read&lt;br/&gt;Steve Read</exhibit>
+    <exhibit>Bill&amp;nbsp;Howes&lt;br/&gt;Steve&amp;nbsp;Lops&lt;br/&gt;June&amp;nbsp;Lops&lt;br/&gt;Joan&amp;nbsp;Read&lt;br/&gt;Steve&amp;nbsp;Read</exhibit>
     <question>Consider the above output from a file called &lt;i&gt;employees&lt;/i&gt;.&lt;br/&gt;Which command will NOT sort this file appropriately on family names?</question>
     <choice>&lt;font face="monospace"&gt;cut -f 2 -d " " employees | paste employees - | &lt;/font&gt;&lt;br/&gt;&lt;font face="monospace"&gt;sort -k 3 | cut -f 1&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;sort -k 2 employees&lt;/font&gt;</choice>
@@ -596,7 +596,7 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit>$ chmod &lt;font face="serif"&gt;"mode"&lt;/font&gt; foo&lt;br/&gt;$ ls -l foo&lt;br/&gt;-rwsr-xr-- 1  guru1  course  42  Sep 6 14:46  foo</exhibit>
+    <exhibit>$&amp;nbsp;chmod&amp;nbsp;&lt;font face="serif"&gt;"mode"&lt;/font&gt;&amp;nbsp;foo&lt;br/&gt;$&amp;nbsp;ls&amp;nbsp;-l&amp;nbsp;foo&lt;br/&gt;-rwsr-xr--&amp;nbsp;1&amp;nbsp;&amp;nbsp;guru1&amp;nbsp;&amp;nbsp;course&amp;nbsp;&amp;nbsp;42&amp;nbsp;&amp;nbsp;Sep&amp;nbsp;6&amp;nbsp;14:46&amp;nbsp;&amp;nbsp;foo</exhibit>
     <question>Consider the above exhibit.&lt;br/&gt;Select the possible value for &lt;i&gt;mode&lt;/i&gt; that caused the file &lt;font face="monospace"&gt;foo&lt;/font&gt; to get the above permissions:</question>
     <choice>2754</choice>
     <choice>4754</choice>

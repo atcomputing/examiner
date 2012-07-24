@@ -1,21 +1,18 @@
-package nl.atcomputing.examtrainer.exam;
+package nl.atcomputing.examtrainer;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import nl.atcomputing.examtrainer.ExamTrainer;
-import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.StartExamActivity;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
-import nl.atcomputing.examtrainer.exam.score.ShowScoreActivity;
+import nl.atcomputing.examtrainer.scorecalculation.ShowScoreActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -24,7 +21,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -67,13 +63,15 @@ public class ExamQuestionActivity extends Activity {
 	private ExamQuestion examQuestion;
 
 	private class MyHandler extends Handler {
-
+		SimpleDateFormat dateFormatGmt = new SimpleDateFormat("HH:mm:ss");
+		
 		public void handleMessage(Message msg) {
 			int key = msg.getData().getInt(HANDLER_MESSAGE_KEY);
 			if( key == HANDLER_MESSAGE_VALUE_UPDATE_TIMER ) {
 				long currentTime = msg.getData().getLong(HANDLER_KEY_CURRENT_TIME);
 				Date date = new Date(ExamTrainer.getTimeEnd() - currentTime);
-				String timeLeft = new SimpleDateFormat("HH:mm:ss").format(date);
+				dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));		
+				String timeLeft = dateFormatGmt.format(date);
 				timeLimitTextView.setText(timeLeft);
 			} else if ( key == HANDLER_MESSAGE_VALUE_TIMELIMITREACHED ) {
 				showDialog(DIALOG_TIMELIMITREACHED_ID);
@@ -320,7 +318,7 @@ public class ExamQuestionActivity extends Activity {
 		else {
 			StringBuffer str = new StringBuffer();
 			do {
-				String answer = cursor.getString(index);
+				String answer = Html.fromHtml(cursor.getString(index)).toString();
 				str.append(answer + "\n");
 			} while(cursor.moveToNext());
 			Toast.makeText(ExamQuestionActivity.this, 
@@ -357,6 +355,9 @@ public class ExamQuestionActivity extends Activity {
 			//This complexity is needed as the answers may contain markup we use to display the answers
 			//The user provides his/her answer without markup so using SQL to check the answer is not 
 			//possible.
+			String userAnswer = editText.getText().toString();
+			examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getScoresId(), questionId,
+					userAnswer);
 			Cursor correctAnswers = examinationDbHelper.getAnswers(this.questionId);
 			if( correctAnswers.getCount() < 1 ) {
 				Log.d(TAG, "showAnswers: no answer present");
@@ -367,16 +368,14 @@ public class ExamQuestionActivity extends Activity {
 			do {
 				String correctAnswer = correctAnswers.getString(index);
 				String answerWithoutMarkup = Html.fromHtml(correctAnswer).toString();
-				if( answerWithoutMarkup.contentEquals(editText.getText().toString())) {
-					examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getScoresId(), questionId,
-							correctAnswer);
+				if( answerWithoutMarkup.contentEquals(userAnswer) ) {
 					answerCorrect = true;
 				}
 			} while( correctAnswers.moveToNext() );
 		} else {
 			answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(questionId, ExamTrainer.getScoresId());
 		}
-		examinationDbHelper.addResultPerQuestion(ExamTrainer.getScoresId(), questionId, answerCorrect);
+		examinationDbHelper.setResultPerQuestion(ExamTrainer.getScoresId(), questionId, answerCorrect);
 
 		examinationDbHelper.close();
 	}
@@ -438,7 +437,7 @@ public class ExamQuestionActivity extends Activity {
 		if( this.examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
 			Cursor cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionId);
 			if ( cursor.getCount() > 0 ) {
-				int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
+				int index = cursor.getColumnIndex(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER);
 				this.editText.setText(cursor.getString(index));
 			}
 		} else {

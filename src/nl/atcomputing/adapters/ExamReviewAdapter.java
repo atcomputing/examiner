@@ -1,14 +1,11 @@
 package nl.atcomputing.adapters;
 
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.R.drawable;
-import nl.atcomputing.examtrainer.R.id;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,7 +67,6 @@ import android.widget.TextView;
 		{
 			long questionId = 0;
 			
-			Log.d(TAG, "position: "+ position + " convertView: " + view );
 			if ( view == null )
 			{  
 				final LayoutInflater mInflater = LayoutInflater.from(context);

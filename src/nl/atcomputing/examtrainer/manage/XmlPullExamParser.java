@@ -6,7 +6,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 
-import nl.atcomputing.examtrainer.exam.ExamQuestion;
+import nl.atcomputing.examtrainer.ExamQuestion;
 
 import org.xmlpull.v1.XmlPullParser;
 

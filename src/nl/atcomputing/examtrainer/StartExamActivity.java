@@ -6,9 +6,7 @@ import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
-import nl.atcomputing.examtrainer.exam.ExamQuestionActivity;
 import nl.atcomputing.examtrainer.manage.PreferencesActivity;
-import nl.atcomputing.examtrainer.review.ExamReviewActivity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -91,7 +89,6 @@ public class StartExamActivity extends Activity {
 	
 	protected void onResume() {
 		super.onResume();
-		Log.d("StartExamActivity", "onResume");
 		
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		examTrainerDbHelper.open();
@@ -163,7 +160,6 @@ public class StartExamActivity extends Activity {
 	
 	protected void onDestroy() {
 		super.onDestroy();
-		Log.d("StartExamActivity", "StartExamActivity destroyed");
 		Cursor cursor = adapter.getCursor();
 		if ( cursor != null ) {
 			cursor.close();

@@ -1,4 +1,4 @@
-package nl.atcomputing.examtrainer.exam;
+package nl.atcomputing.examtrainer;
 
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import android.content.Context;

@@ -83,7 +83,7 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit>cat 'echo ATcomputing'</exhibit>
+    <exhibit>cat&amp;nbsp;'echo&amp;nbsp;ATcomputing'</exhibit>
     <question>What is the result of the above command?</question>
     <choice>You will get the shell secondary prompt</choice>
     <choice>The text &lt;i&gt;ATcomputing&lt;/i&gt; will be printed</choice>
@@ -94,7 +94,7 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit>cd ~guru0</exhibit>
+    <exhibit>cd&amp;nbsp;~guru0</exhibit>
     <question>What will be the result of the above command?</question>
     <choice>Changes directory to the user guru0's home directory</choice>
     <choice>Changes to a directory named &lt;font face="monospace"&gt;~guru0&lt;/font&gt;</choice>
@@ -204,7 +204,7 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit>#!/bin/bash&lt;br/&gt;MYVAR=hi&lt;br/&gt;MYVAR=$USER</exhibit>
+    <exhibit>#!/bin/bash&amp;nbsp;&lt;br/&gt;MYVAR=hi&amp;nbsp;&lt;br/&gt;MYVAR=$USER&amp;nbsp;</exhibit>
     <question>At the commandline you set a variable's value with the command &lt;font face="monospace"&gt;export MYVAR=hello&lt;/font&gt;.&lt;br/&gt;Afterwards you execute the above script.&lt;br/&gt;When the script finishes you type the command &lt;font face="monospace"&gt;echo $MYVAR&lt;/font&gt;.&lt;br/&gt;What would be the output of the last command you executed?</question>
     <choice>hello</choice>
     <choice>hi</choice>
@@ -322,7 +322,7 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit>#include &lt;stdio.h&gt;&lt;br/&gt;&lt;br/&gt;int main(int argc, char *argv[])&lt;br/&gt;{&lt;br/&gt;if ( argc == 2 )&lt;br/&gt;{&lt;br/&gt;printf("atcomputing\n");&lt;br/&gt;}&lt;br/&gt;return 0;&lt;br/&gt;}</exhibit>
+    <exhibit>#include&amp;nbsp;&lt;stdio.h&gt;&lt;br/&gt;&amp;nbsp;&lt;br/&gt;int&amp;nbsp;main(int&amp;nbsp;argc,&amp;nbsp;char&amp;nbsp;*argv[])&lt;br/&gt;{&amp;nbsp;&lt;br/&gt;&amp;nbsp;&amp;nbsp;if&amp;nbsp;(&amp;nbsp;argc&amp;nbsp;==&amp;nbsp;2&amp;nbsp;)&lt;br/&gt;&amp;nbsp;&amp;nbsp;{&amp;nbsp;&lt;br/&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;printf("atcomputing\n");&amp;nbsp;&lt;br/&gt;&amp;nbsp;&amp;nbsp;}&amp;nbsp;&lt;br/&gt;&amp;nbsp;&amp;nbsp;return&amp;nbsp;0;&lt;br/&gt;}&amp;nbsp;</exhibit>
     <question>Consider the above piece of code that uses tabs to indent lines.&lt;br/&gt;Which command will easily convert the tabs to 8 spaces?</question>
     <choice>convert</choice>
     <choice>expand</choice>
@@ -376,7 +376,7 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit>$ echo boo&lt;br/&gt;boo</exhibit>
+    <exhibit>$&amp;nbsp;echo&amp;nbsp;boo&lt;br/&gt;boo&amp;nbsp;</exhibit>
     <question>You execute the above command.&lt;br/&gt;You now want to know which &lt;font face="monospace"&gt;echo&lt;/font&gt; command was executed.&lt;br/&gt;Which command is best fit for the job?</question>
     <choice>which</choice>
     <choice>where</choice>
@@ -415,7 +415,7 @@
     <type>open</type>
   </item>
   <item>
-    <exhibit>/bin/ls: ELF 32-bit LSB executable, Intel 80386, version 1&lt;br/&gt;(SYSV), for GNU/Linux 2.6.9, dynamically linked (uses&lt;br/&gt;shared libs), for GNU/Linux 2.6.9, stripped</exhibit>
+    <exhibit>/bin/ls:&amp;nbsp;ELF&amp;nbsp;32-bit&amp;nbsp;LSB&amp;nbsp;executable,&amp;nbsp;Intel&amp;nbsp;80386,&amp;nbsp;version&amp;nbsp;1&lt;br/&gt;(SYSV),&amp;nbsp;for&amp;nbsp;GNU/Linux&amp;nbsp;2.6.9,&amp;nbsp;dynamically&amp;nbsp;linked&amp;nbsp;(uses&lt;br/&gt;shared&amp;nbsp;libs),&amp;nbsp;for&amp;nbsp;GNU/Linux&amp;nbsp;2.6.9,&amp;nbsp;stripped</exhibit>
     <question>Which command will produce the above output?</question>
     <choice>&lt;font face="monospace"&gt;type&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;file&lt;/font&gt;</choice>
@@ -513,7 +513,7 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit>ls -R / &gt; contents.txt 2&gt;&amp;1</exhibit>
+    <exhibit>ls&amp;nbsp;-R&amp;nbsp;/&amp;nbsp;&gt;&amp;nbsp;contents.txt&amp;nbsp;2&gt;&amp;1</exhibit>
     <question>What will the above command do?</question>
     <choice>Write the directory listing to the file &lt;font face="monospace"&gt;contents.txt&lt;/font&gt;</choice>
     <choice>Write all directories and files to the file &lt;font face="monospace"&gt;contents.txt&lt;/font&gt;</choice>
@@ -598,7 +598,7 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit>$ touch nicefile&lt;br/&gt;$ ls -l nicefile&lt;br/&gt;-rw-r--r-- 1 guru0 cursus 0 Sep 28 13:57 nicefile</exhibit>
+    <exhibit>$&amp;nbsp;touch&amp;nbsp;nicefile&lt;br/&gt;$&amp;nbsp;ls&amp;nbsp;-l&amp;nbsp;nicefile&lt;br/&gt;-rw-r--r--&amp;nbsp;1&amp;nbsp;guru0&amp;nbsp;cursus&amp;nbsp;0&amp;nbsp;Sep&amp;nbsp;28&amp;nbsp;13:57&amp;nbsp;nicefile</exhibit>
     <question>Consider the above exhibit.&lt;br/&gt;What is the most probable value of the umask set for user &lt;font face="monospace"&gt;guru0&lt;/font&gt;?</question>
     <choice>644</choice>
     <choice>233</choice>

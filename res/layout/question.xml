@@ -16,6 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:paddingRight="@dimen/paddingDefault"
+            android:paddingLeft="@dimen/paddingDefault"
             android:text="@string/Question"
             android:textColor="@android:color/black"
             android:textSize="@dimen/textSizeDefault" />
@@ -35,6 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:paddingRight="@dimen/paddingDefault"
             android:text="@string/No_time_limit"
             android:textColor="@android:color/black"
             android:textSize="@dimen/textSizeDefault" />
