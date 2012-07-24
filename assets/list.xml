@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <exams>
 	<exam>
-		<title>LPI 101 exam 1</title>
+		<title>LPI 101 Exam 1</title>
 		<category>LPI</category>
 		<author>AT Computing</author>
 		<numberofitems>60</numberofitems>
