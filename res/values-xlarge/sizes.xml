@@ -1,10 +1,11 @@
 <resources>
-    <dimen name="textSizeDefault">20dp</dimen>
-    <dimen name="textSizeMenu">20dp</dimen>
-    <dimen name="textSizeRowItem">20dp</dimen>
-    <dimen name="textSizeRowSubItem">16dp</dimen>
-    <dimen name="textSizeHuge">100dp</dimen>
-    <dimen name="paddingDefault">20dp</dimen>
-    <dimen name="rowHeightDefault">40dp</dimen>
+    <dimen name="textSizeDefault">25dp</dimen>
+    <dimen name="textSizeMenu">25dp</dimen>
+    <dimen name="textSizeRowItem">25dp</dimen>
+    <dimen name="textSizeRowSubItem">20dp</dimen>
+    <dimen name="textSizeHuge">140dp</dimen>
+    <dimen name="textSizeDialog">35dp</dimen>
+    <dimen name="paddingDefault">25dp</dimen>
+    <dimen name="rowHeightDefault">60dp</dimen>
     <dimen name="columnWidthDefault">180dp</dimen>
 </resources>

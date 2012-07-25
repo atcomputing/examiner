@@ -12,7 +12,8 @@ android:layout_width="fill_parent" android:layout_height="fill_parent">
     android:id="@+id/selectexam_no_exams_available"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:text="@string/no_exams_available" />
+    android:text="@string/no_exams_available"
+    android:textSize="@dimen/textSizeDefault" />
     <TextView
     android:id="@+id/selectexam_click_on_manage_exams"
     android:layout_width="fill_parent"

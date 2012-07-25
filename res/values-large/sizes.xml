@@ -4,6 +4,7 @@
     <dimen name="textSizeRowItem">20dp</dimen>
     <dimen name="textSizeRowSubItem">16dp</dimen>
     <dimen name="textSizeHuge">100dp</dimen>
+    <dimen name="textSizeDialog">30dp</dimen>
     <dimen name="paddingDefault">20dp</dimen>
     <dimen name="rowHeightDefault">40dp</dimen>
     <dimen name="columnWidthDefault">140dp</dimen>

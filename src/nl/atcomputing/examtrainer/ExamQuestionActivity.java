@@ -7,6 +7,7 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import nl.atcomputing.dialogs.DialogFactory;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.scorecalculation.ShowScoreActivity;
@@ -27,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -64,7 +66,7 @@ public class ExamQuestionActivity extends Activity {
 
 	private class MyHandler extends Handler {
 		SimpleDateFormat dateFormatGmt = new SimpleDateFormat("HH:mm:ss");
-		
+
 		public void handleMessage(Message msg) {
 			int key = msg.getData().getInt(HANDLER_MESSAGE_KEY);
 			if( key == HANDLER_MESSAGE_VALUE_UPDATE_TIMER ) {
@@ -89,14 +91,14 @@ public class ExamQuestionActivity extends Activity {
 		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
 			finish();
 		}
-		
+
 		Intent intent = getIntent();
 
 		this.questionId = ExamTrainer.getQuestionId(intent);
 		if ( ( questionId < 1 ) || ( ExamTrainer.getExamDatabaseName() == null ) ) {
 			this.finish();
 		}
-		
+
 		this.examQuestion = new ExamQuestion(this);
 		try {
 			this.examQuestion.fillFromDatabase(ExamTrainer.getExamDatabaseName(), questionId);
@@ -144,7 +146,7 @@ public class ExamQuestionActivity extends Activity {
 		} else {
 			timer = null;
 		}
-		
+
 		updateLayout();
 	}
 
@@ -201,93 +203,73 @@ public class ExamQuestionActivity extends Activity {
 	}
 
 	protected Dialog onCreateDialog(int id) {
-		Dialog dialog = null;
-		String message;
-		int messageId;
-		AlertDialog.Builder builder;
 		switch(id) {
 		case DIALOG_ENDOFEXAM_ID:
-			builder = new AlertDialog.Builder(this);
-			messageId = R.string.end_of_exam_message;		
-			builder.setMessage(messageId)
-			.setCancelable(false)
-			.setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) {
-						startShowScoreActivity();
-					} 
-					else {
-						stopExam();
-					}
-					dialog.dismiss();
-				}
-			})
-			.setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					dialog.dismiss();
+			final Dialog d1 = DialogFactory.createTwoButtonDialog(this, R.string.end_of_exam_message, 
+					R.string.yes, new Runnable() {
+						
+						public void run() {
+							if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) {
+								startShowScoreActivity();
+							} 
+							else {
+								stopExam();
+							}
+						}
+					},
+			R.string.no, new Runnable() {
+				
+				public void run() {
 				}
 			});
-			dialog = builder.create();
-			break;
+			return d1;
 		case DIALOG_TIMELIMITREACHED_ID:
-			builder = new AlertDialog.Builder(this);
-			messageId = R.string.time_s_up_;	
-			builder.setMessage(messageId)
-			.setCancelable(false)
-			.setPositiveButton(R.string.calculate_score, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					startShowScoreActivity();
-					dialog.dismiss();
-				}
-			})
-			.setNegativeButton(R.string.Quit, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
+			final Dialog d2 = DialogFactory.createTwoButtonDialog(this, R.string.time_s_up_, 
+					R.string.calculate_score, new Runnable() {
+						
+						public void run() {
+							startShowScoreActivity();
+						}
+					}, 
+			R.string.Quit, new Runnable() {
+				
+				public void run() {
 					stopExam();
-					dialog.dismiss();
 				}
 			});
-			dialog = builder.create();
-			break;
+			return d2;
 		case DIALOG_QUITEXAM_ID:
-			builder = new AlertDialog.Builder(this);
-			messageId = R.string.quit_exam_message;		
-			builder.setMessage(messageId)
-			.setCancelable(false)
-			.setPositiveButton(R.string.Quit, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					stopExam();
-					dialog.dismiss();
-				}
-			})
-			.setNegativeButton(R.string.resume, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					dialog.dismiss();
+			final Dialog d3 = DialogFactory.createTwoButtonDialog(this, R.string.quit_exam_message, 
+					R.string.Quit, new Runnable() {
+						
+						public void run() {
+							stopExam();
+						}
+					}, 
+			R.string.resume, new Runnable() {
+				
+				public void run() {
+					
 				}
 			});
-			dialog = builder.create();
-			break;
+			return d3;
 		case DIALOG_SHOW_HINT_ID:
-			builder = new AlertDialog.Builder(this);
 			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-			message = examinationDbHelper.getHint(questionId);
+			String message = examinationDbHelper.getHint(questionId);
 			examinationDbHelper.close();
 			if( message == null ) {
 				message = getString(R.string.hint_not_available);
 			}
-			builder.setMessage(Html.fromHtml(message))
-			.setCancelable(false)
-			.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int id) {
-					dialog.dismiss();
+			final Dialog d4 = DialogFactory.createOneButtonDialog(this, message, R.string.ok, 
+					new OnClickListener() {
+				public void onClick(View v) {
+					v.setVisibility(View.GONE);
 				}
 			});
-			dialog = builder.create();
-			break;
-		default:
-			dialog = null;
+			return d4;
 		}
-		return dialog;
+		return null;
 	}
 
 	private void showAnswers() {
@@ -337,10 +319,10 @@ public class ExamQuestionActivity extends Activity {
 	}
 
 	private void stopExam() {
-//		ExaminationDbAdapter db = new ExaminationDbAdapter(this);
-//		db.open(ExamTrainer.getExamDatabaseName());
-//		db.deleteScore(ExamTrainer.getScoresId());
-//		db.close();
+		//		ExaminationDbAdapter db = new ExaminationDbAdapter(this);
+		//		db.open(ExamTrainer.getExamDatabaseName());
+		//		db.deleteScore(ExamTrainer.getScoresId());
+		//		db.close();
 		Intent intent = new Intent(ExamQuestionActivity.this, StartExamActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
@@ -418,7 +400,7 @@ public class ExamQuestionActivity extends Activity {
 
 	private void createOpenQuestionLayout(LinearLayout layout) {
 		this.editText = new EditText(this);
-
+		this.editText.setTextSize(getResources().getDimension(R.dimen.textSizeDefault));
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		Cursor cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionId);

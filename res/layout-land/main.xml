@@ -48,7 +48,8 @@
             android:id="@+id/button_start"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/Start">
+            android:text="@string/Start"
+            android:textSize="@dimen/textSizeDefault">
         </Button>
     </LinearLayout>
     
@@ -65,6 +66,7 @@
     			android:layout_height="wrap_content"
     	        android:text="@string/app_name"
     		    android:gravity="center"
+    		    android:textSize="@dimen/textSizeDefault"
     		    android:padding="@dimen/paddingDefault">
     	    </TextView>
     	    <LinearLayout
@@ -72,17 +74,20 @@
     			android:layout_height="wrap_content"
     		    android:orientation="horizontal"
     		    android:gravity="center"
+    		    android:textSize="@dimen/textSizeDefault"
     	    	android:padding="@dimen/paddingDefault">
     	    	<TextView
     	        	android:layout_width="wrap_content"
     				android:layout_height="wrap_content"
     				android:gravity="center"
+    				android:textSize="@dimen/textSizeDefault"
     	       		android:text="@string/Version">
     	    	</TextView>
     	    	<TextView
     	    	    android:id="@+id/about_version_number"
     	        	android:layout_width="wrap_content"
     	        	android:gravity="center"
+    	        	android:textSize="@dimen/textSizeDefault"
     				android:layout_height="wrap_content"
     	       		android:text="">
     	    	</TextView>
@@ -92,6 +97,7 @@
     			android:layout_height="wrap_content" 
     		    android:text="@string/Copyright"
     		    android:gravity="center"
+    		    android:textSize="@dimen/textSizeDefault"
     		    android:padding="@dimen/paddingDefault">
     		</TextView>
     		<TextView
@@ -99,6 +105,7 @@
     			android:layout_height="wrap_content" 
     		    android:text="@string/text_about_atcomputing"
     		    android:gravity="center"
+    		    android:textSize="@dimen/textSizeDefault"
     		    android:padding="@dimen/paddingDefault">
     		</TextView>
     		<TextView
@@ -106,6 +113,7 @@
     			android:layout_height="wrap_content" 
     		    android:text="@string/Visit_atcomputing"
     		    android:gravity="center"
+    		    android:textSize="@dimen/textSizeDefault"
     		    android:autoLink="web"
     		    >
     		</TextView>
