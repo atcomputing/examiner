@@ -1,6 +1,5 @@
 <resources>
     <dimen name="textSizeDefault">14dp</dimen>
-    <dimen name="textSizeMenu">12dp</dimen>
     <dimen name="textSizeRowItem">14dp</dimen>
     <dimen name="textSizeRowSubItem">10dp</dimen>
     <dimen name="textSizeHuge">40dp</dimen>
