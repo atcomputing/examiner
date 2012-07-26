@@ -12,9 +12,7 @@ import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.scorecalculation.ShowScoreActivity;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
@@ -85,7 +83,7 @@ public class ExamQuestionActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
+		Log.d("ExamQuestionActivity", "onCreate");
 		this.myHandler = new MyHandler();
 
 		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
@@ -107,11 +105,11 @@ public class ExamQuestionActivity extends Activity {
 					this.getResources().getString(R.string.Try_reinstalling_the_exam));
 		}
 		setupLayout();
-		this.timeLimitTextView = (TextView) findViewById(R.id.textExamTime);
 	}
 
 	protected void onResume() {
 		super.onResume();
+		Log.d("ExamQuestionActivity", "onResume");
 		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
 			finish();
 		}
@@ -156,7 +154,7 @@ public class ExamQuestionActivity extends Activity {
 			timer.cancel();
 		}
 		if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) {
-			saveState();
+			saveScore();
 		}
 	}
 
@@ -207,18 +205,18 @@ public class ExamQuestionActivity extends Activity {
 		case DIALOG_ENDOFEXAM_ID:
 			final Dialog d1 = DialogFactory.createTwoButtonDialog(this, R.string.end_of_exam_message, 
 					R.string.yes, new Runnable() {
-						
-						public void run() {
-							if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) {
-								startShowScoreActivity();
-							} 
-							else {
-								stopExam();
-							}
-						}
-					},
+
+				public void run() {
+					if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) {
+						startShowScoreActivity();
+					} 
+					else {
+						stopExam();
+					}
+				}
+			},
 			R.string.no, new Runnable() {
-				
+
 				public void run() {
 				}
 			});
@@ -226,13 +224,13 @@ public class ExamQuestionActivity extends Activity {
 		case DIALOG_TIMELIMITREACHED_ID:
 			final Dialog d2 = DialogFactory.createTwoButtonDialog(this, R.string.time_s_up_, 
 					R.string.calculate_score, new Runnable() {
-						
-						public void run() {
-							startShowScoreActivity();
-						}
-					}, 
+
+				public void run() {
+					startShowScoreActivity();
+				}
+			}, 
 			R.string.Quit, new Runnable() {
-				
+
 				public void run() {
 					stopExam();
 				}
@@ -241,15 +239,15 @@ public class ExamQuestionActivity extends Activity {
 		case DIALOG_QUITEXAM_ID:
 			final Dialog d3 = DialogFactory.createTwoButtonDialog(this, R.string.quit_exam_message, 
 					R.string.Quit, new Runnable() {
-						
-						public void run() {
-							stopExam();
-						}
-					}, 
-			R.string.resume, new Runnable() {
-				
+
 				public void run() {
-					
+					stopExam();
+				}
+			}, 
+			R.string.resume, new Runnable() {
+
+				public void run() {
+
 				}
 			});
 			return d3;
@@ -329,7 +327,7 @@ public class ExamQuestionActivity extends Activity {
 		finish();
 	}
 
-	private void saveState() {
+	private void saveScore() {
 		boolean answerCorrect = false;
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
@@ -391,7 +389,6 @@ public class ExamQuestionActivity extends Activity {
 
 				}
 			});
-
 			layout.addView(view);
 			this.multipleChoices.add(view);
 		}
@@ -416,30 +413,35 @@ public class ExamQuestionActivity extends Activity {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 
+		Cursor scoresAnswersCursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionId);
+		if ( scoresAnswersCursor.getCount() < 1 ) {
+			examinationDbHelper.close();
+			return;
+		}
+
+		int index = scoresAnswersCursor.getColumnIndex(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER);
+
 		if( this.examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
-			Cursor cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionId);
-			if ( cursor.getCount() > 0 ) {
-				int index = cursor.getColumnIndex(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER);
-				this.editText.setText(cursor.getString(index));
-			}
+			this.editText.setText(scoresAnswersCursor.getString(index));
 		} else {
-			Cursor scoresAnswers = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionId);
-			if( scoresAnswers.getCount() > 0 ) {
-				int index = scoresAnswers.getColumnIndex(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER);
+			for( View view : this.multipleChoices ) {
+				
+				TextView tv = (TextView) view.findViewById(R.id.choiceTextView);
+				String tvText = tv.getText().toString();
+				CheckBox cbox = (CheckBox) view.findViewById(R.id.choiceCheckBox);
+				cbox.setChecked(false);
+				if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW ) {
+					cbox.setClickable(false);
+				}
+				
+				//Check if choice was selected by user previously
+				scoresAnswersCursor.moveToFirst();
 				do {
-					String answer = Html.fromHtml(scoresAnswers.getString(index)).toString();
-					for( View view : this.multipleChoices ) {
-						TextView tv = (TextView) view.findViewById(R.id.choiceTextView);
-						if( answer.contentEquals(tv.getText().toString())) {
-							CheckBox cbox = (CheckBox) view.findViewById(R.id.choiceCheckBox);
-							cbox.setChecked(true);
-						}
-						if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW ) {
-							CheckBox cbox = (CheckBox) view.findViewById(R.id.choiceCheckBox);
-							cbox.setClickable(false);
-						}
+					String answer = Html.fromHtml(scoresAnswersCursor.getString(index)).toString();			
+					if( answer.contentEquals(tvText)) {
+						cbox.setChecked(true);
 					}
-				} while( scoresAnswers.moveToNext() );
+				} while( scoresAnswersCursor.moveToNext() );
 			}
 		}
 		examinationDbHelper.close();
@@ -449,6 +451,8 @@ public class ExamQuestionActivity extends Activity {
 		String text;
 
 		setContentView(R.layout.question);
+
+		this.timeLimitTextView = (TextView) findViewById(R.id.textExamTime);
 
 		LinearLayout layout = (LinearLayout) findViewById(R.id.question_layout);
 
