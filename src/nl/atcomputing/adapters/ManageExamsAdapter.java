@@ -39,11 +39,18 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		this.layout = layout;
 	}
 
+	public void setContext(Context context) {
+		this.gContext = context;
+	}
+
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 
 		final ViewHolder holder = new ViewHolder();
-
+		holder.examTitleView = (TextView) view.findViewById(R.id.manageExamsEntryTitle);
+		holder.examAuthorView = (TextView) view.findViewById(R.id.manageExamsEntryAuthor);
+		holder.installUninstallButton = (Button) view.findViewById(R.id.manageExamsDelete);
+		
 		int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
 		holder.examTitle = cursor.getString(index);
 		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE);
@@ -61,11 +68,11 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT);
 		holder.timeLimit = cursor.getLong(index);
 
-		holder.examTitleView = (TextView) view.findViewById(R.id.manageExamsEntryTitle);
+
 		holder.examTitleView.setText(holder.examTitle);
-		holder.examAuthorView = (TextView) view.findViewById(R.id.manageExamsEntryAuthor);
+
 		holder.examAuthorView.setText(holder.author);
-		holder.installUninstallButton = (Button) view.findViewById(R.id.manageExamsDelete);
+
 
 		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED);
 		final int installed = cursor.getInt(index);
@@ -83,7 +90,8 @@ public class ManageExamsAdapter extends CursorAdapter  {
 					new UninstallExam(holder).execute();
 				} 
 				else {
-					new InstallExam(holder).execute();
+					InstallExam installer = new InstallExam(holder);
+					installer.execute();
 				}
 			}
 		});
@@ -94,24 +102,10 @@ public class ManageExamsAdapter extends CursorAdapter  {
 
 				strBuf.append(holder.examTitle + "\n");
 
-				if ( holder.examDate == 0 ) {
-					strBuf.append(gContext.getString(R.string.Not_installed) + "\n");
-				}
-				else {
-					Time time = new Time();
-					time.set(Long.valueOf(holder.examDate));
-					String localDate = time.format("%Y-%m-%d %H:%M");
-
-					strBuf.append(gContext.getString(R.string.installed_on) + 
-							" " + localDate + "\n");
-				}
-
 				strBuf.append(gContext.getString(R.string.questions) + 
 						": " +  holder.examAmountOfItems + "\n" +
 						gContext.getString(R.string.correct_answer_required_to_pass) +
-						": " +  holder.examItemsNeededToPass + "\n" +
-						gContext.getString(R.string.URL) +
-						": " +  holder.url + "\n");
+						": " +  holder.examItemsNeededToPass + "\n");
 
 				if ( holder.timeLimit == 0 ) {
 					strBuf.append(gContext.getString(R.string.No_time_limit));
@@ -123,7 +117,6 @@ public class ManageExamsAdapter extends CursorAdapter  {
 				Toast.makeText(gContext,  strBuf.toString(), Toast.LENGTH_LONG).show();
 			}
 		});
-
 	}
 
 	@Override
@@ -179,9 +172,11 @@ public class ManageExamsAdapter extends CursorAdapter  {
 				ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(gContext);
 				examinationDbHelper.open(holder.examTitle, holder.examDate);
 
+				int count = 0;
 				ArrayList<ExamQuestion> examQuestions = xmlPullFeedParser.getExam();
 				for( ExamQuestion examQuestion: examQuestions ) {
 					examQuestion.addToDatabase(examinationDbHelper);
+					onProgressUpdate(count++);
 				}
 
 				examinationDbHelper.close();
@@ -206,6 +201,9 @@ public class ManageExamsAdapter extends CursorAdapter  {
 
 		protected void onProgressUpdate(Integer... progress) {
 			//setProgressPercent(progress[0]);
+			Log.d("ManageExamsAdapter", "Progress: "+ progress[0]);
+			//			holder.installUninstallButton.setEnabled(false);
+			//			holder.installUninstallButton.setText(R.string.Installing_exam);
 		}
 
 		protected void onPostExecute(String errorMessage) {

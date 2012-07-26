@@ -48,11 +48,19 @@ public class ManageExamsActivity extends ListActivity {
 		noExamsAvailable = (TextView) this.findViewById(R.id.manageexams_no_exams_available);
 		clickOnManageExams = (TextView) this.findViewById(R.id.manageexams_click_on_manage_exams);		
 
-		adap = new ManageExamsAdapter(this, R.layout.manageexams_entry, null);
-		setListAdapter(adap);
+		this.adap = (ManageExamsAdapter) getLastNonConfigurationInstance();
+		if( this.adap == null ) {
+			this.adap = new ManageExamsAdapter(this, R.layout.manageexams_entry, null);
+		}
+		this.adap.setContext(this);
+		setListAdapter(this.adap);
 		updateView();
 	}
 
+	public Object onRetainNonConfigurationInstance() {
+		return this.adap;
+	}
+	
 	protected void onDestroy() {
 		super.onDestroy();
 		adap.getCursor().close();

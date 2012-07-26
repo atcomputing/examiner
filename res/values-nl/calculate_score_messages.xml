@@ -1,0 +1,28 @@
+
+    <resources>
+        <string-array name="class_A">
+            <item>Ik kan het niet meer voor me houden. Gefeliciteerd, je bent geslaagd.</item>
+            <item>Dit kan niet meer mis gaan. Gefeliciteerd!</item>
+        </string-array>
+        <string-array name="class_B">
+            <item>Dit ziet er erg goed uit.</item>
+            <item>Ik denk dat je het gaat halen.</item>
+        </string-array>
+        <string-array name="class_C">
+            <item>Als dit zo doorgaat zul je slagen.</item>
+            <item>Ziet er goed uit.</item>
+            <item></item>
+        </string-array>
+        <string-array name="class_D">
+            <item>Niet een geweldige start maar nog een hoop vragen te gaan.</item>
+            <item>Ik hoop dat je aan het einde beter scoort.</item>
+        </string-array>
+        <string-array name="class_E">
+            <item>Dit ziet er niet goed uit, maar er is nog hoop.</item>
+            <item>Het gaat moeilijk worden, maar je kan nog slagen.</item>
+        </string-array>
+        <string-array name="class_F">
+            <item>Alle hoop is verloren.</item>
+            <item>&#8230;</item>
+        </string-array>
+    </resources>
