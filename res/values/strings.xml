@@ -10,7 +10,6 @@
     <string name="out_of">out of</string>
     <string name="but_you_needed">but you needed</string>
     <string name="Error">Error</string>
-    <string name="Could_not_open_exam_database_file">Could not open exam database file.</string>
     <string name="Try_reinstalling_the_exam">Try reinstalling the exam.</string>
     <string name="Exam_is_empty">Exam is empty.</string>
     <string name="Could_not_remove_exam_database_file">Could not remove exam database file.</string>
@@ -68,7 +67,7 @@
     <string name="manageexams_get_exams_explanation">Press menu and use "Get new exams" to load
 		available exams.</string>
     <!-- Text for about -->
-    <string name="Copyright">(c) Copyright AT Computing 2011</string>
+    <string name="Copyright">© Copyright AT Computing 2011–2012</string>
     <string name="Version">Version</string>
     <string name="text_about_atcomputing">AT Computing is a team of specialized educators and
 		consultants in Linux, Open Source, UNIX and programming languages.</string>
@@ -84,7 +83,7 @@
     <string name="name">Name</string>
     <string name="instant_score">Instant score</string>
     <string name="do_not_show_calculating_score_animation_before_showing_the_final_result">Do not show calculating score animation before showing the final result</string>
-    <string name="deleting_scores_please_wait_">Deleting scores. Please wait...</string>
+    <string name="deleting_scores_please_wait_">Deleting scores. Please wait…</string>
     <string name="error_url_is_not_correct">"Error: URL is not correct"</string>
     <string name="failed_to_install_exam">"Failed to install exam"</string>
     <string name="error_parsing_exam">"Error parsing exam"</string>

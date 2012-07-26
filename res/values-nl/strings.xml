@@ -10,7 +10,6 @@
     <string name="out_of">van de</string>
     <string name="but_you_needed">U had nodig</string>
     <string name="Error">Error</string>
-    <string name="Could_not_open_exam_database_file">Examenbestand kan niet worden geopend.</string>
     <string name="Try_reinstalling_the_exam">Probeer het examen opnieuw te installeren.</string>
     <string name="Exam_is_empty">Examen is leeg.</string>
     <string name="Could_not_remove_exam_database_file">Het examen databestand kan niet worden verwijderd.</string>
@@ -65,8 +64,6 @@
     <string name="Are_you_sure_you_want_to_delete_all_exams">Weet u zeker dat u alle examens wilt verwijderen?</string>
     <string name="manageexams_get_exams_explanation">Druk op menu en gebruik "Haal examenlijst op" om de lijst met beschikbare examens in te laden.</string>
     <!-- Text for about -->
-    <string name="Copyright">(c) Copyright AT Computing 2011-2012</string>
-    <string name="Version">Version</string>
     <string name="text_about_atcomputing">AT Computing is een team van gespecialiseerde opleiders en oplossers op het gebied van Linux, Open Source, UNIX en programmeertalen.</string>
     <string name="Visit_atcomputing">Bezoek http://www.atcomputing.nl</string>
     <!-- Error messages -->
@@ -80,7 +77,7 @@
     <string name="name">Naam</string>
     <string name="instant_score">Toon het resultaat direct</string>
     <string name="do_not_show_calculating_score_animation_before_showing_the_final_result">Toon niet de animatie tijdens de berekening van het uiteindelijke resultaat.</string>
-    <string name="deleting_scores_please_wait_">Resultaten verwijderen.\nEven geduld...</string>
+    <string name="deleting_scores_please_wait_">Resultaten verwijderen.\nEven geduld…</string>
     <string name="error_url_is_not_correct">Error: URL is niet juist</string>
     <string name="failed_to_install_exam">Niet gelukt het examen het installeren</string>
     <string name="error_parsing_exam">Fout ontdekt tijdens het inlezen van het examen.</string>
