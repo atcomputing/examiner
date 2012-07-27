@@ -3,9 +3,9 @@ package nl.atcomputing.examtrainer.manage;
 import java.net.URL;
 import java.util.ArrayList;
 
-import nl.atcomputing.adapters.ManageExamsAdapter;
 import nl.atcomputing.examtrainer.Exam;
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;

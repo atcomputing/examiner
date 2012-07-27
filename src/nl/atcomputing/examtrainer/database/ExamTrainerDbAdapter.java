@@ -135,9 +135,12 @@ public class ExamTrainerDbAdapter {
 		return cursor;
 	}
 	
-	public Cursor getInstalledExams() {
+	public Cursor getInstalledAndInstallingExams() {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
-				this.allRows, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "=\'" + ExamTrainerDbAdapter.State.INSTALLED.name() +"\'",
+				this.allRows, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "=\'" + 
+		ExamTrainerDbAdapter.State.INSTALLED.name() +"\' OR " +
+		ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "=\'" + 
+		ExamTrainerDbAdapter.State.INSTALLING.name() +"\'",
 		null, null, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();

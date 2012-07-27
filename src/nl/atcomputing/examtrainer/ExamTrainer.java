@@ -15,6 +15,8 @@ public final class ExamTrainer {
 		EXAM, REVIEW, ENDOFEXAM, SHOW_SCORE
 	}
 
+	public static String BROADCAST_ACTION_EXAMLIST_UPDATED = "nl.atcomputing.examtrainer.examlistupdated";
+	
 	private static String examTitle = "ExamTrainer";
 	private static String examDatabaseName = null;
 	private static ExamTrainerMode mode = ExamTrainerMode.EXAM;

@@ -1,41 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-	package="nl.atcomputing.examtrainer" android:versionCode="1"
-	android:versionName="1.0">
-	<uses-sdk android:minSdkVersion="5" android:targetSdkVersion="10" />
-	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
-	<supports-screens android:smallScreens="true"
-	    android:normalScreens="true"
-	    android:largeScreens="true"
-	    android:xlargeScreens="true"/>
-	<application android:icon="@drawable/student_hat" android:label="@string/app_name">
-		<activity android:name=".ExamTrainerActivity"
-		    android:theme="@android:style/Theme.NoTitleBar">
-			<intent-filter>
-				<action android:name="android.intent.action.MAIN" />
-				<category android:name="android.intent.category.LAUNCHER" />
-			</intent-filter>
-		</activity>
-		<activity android:name=".SelectExamActivity"
-			android:exported="false" />
-		<activity android:name=".StartExamActivity"
-			android:exported="false" />
-		<activity android:name=".ExamReviewActivity"
-			android:exported="false" />
-		<activity android:name=".review.HistoryActivity"
-			android:exported="false" />
-		<activity android:name=".ExamQuestionActivity"
-		    android:exported="false"
-		    android:windowSoftInputMode="stateHidden" />
-		<activity android:name=".scorecalculation.ShowScoreActivity"
-			android:exported="false" >
-		</activity>
-		<activity android:name=".manage.ManageExamsActivity"
-			android:exported="false" />
-		<activity android:name=".manage.PreferencesActivity"
-			android:exported="false" >
-		</activity>
-		<service android:exported="false" android:name=".manage.RetrieveExamQuestions"
-			android:label="@string/app_name" />
-	</application>
+    package="nl.atcomputing.examtrainer"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="5"
+        android:targetSdkVersion="10" />
+
+    <uses-permission android:name="android.permission.INTERNET" >
+    </uses-permission>
+
+    <supports-screens
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true" />
+
+    <application
+        android:icon="@drawable/student_hat"
+        android:label="@string/app_name" >
+        <activity
+            android:name=".ExamTrainerActivity"
+            android:theme="@android:style/Theme.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".SelectExamActivity"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="nl.atcomputing.examtrainer.examlistupdated" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".StartExamActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ExamReviewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".review.HistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ExamQuestionActivity"
+            android:exported="false"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".scorecalculation.ShowScoreActivity"
+            android:exported="false" >
+        </activity>
+        <activity
+            android:name=".manage.ManageExamsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".manage.PreferencesActivity"
+            android:exported="false" >
+        </activity>
+
+        <service
+            android:name=".manage.RetrieveExamQuestions"
+            android:exported="false"
+            android:label="@string/app_name" />
+    </application>
+
 </manifest>
