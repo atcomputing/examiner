@@ -36,7 +36,7 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
     + Exams.COLUMN_NAME_DATE + " INTEGER,"
     + Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS + " INTEGER,"
     + Exams.COLUMN_NAME_AMOUNTOFITEMS + " INTEGER,"
-    + Exams.COLUMN_NAME_INSTALLED + " INTEGER,"
+    + Exams.COLUMN_NAME_INSTALLED + " TEXT,"
     + Exams.COLUMN_NAME_URL + " TEXT,"
     + Exams.COLUMN_NAME_AUTHOR + " TEXT,"
     + Exams.COLUMN_NAME_CATEGORY + " TEXT,"

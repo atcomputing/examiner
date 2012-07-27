@@ -18,6 +18,10 @@ public class ExamTrainerDbAdapter {
 	private SQLiteDatabase db;
 	private ExamTrainerDatabaseHelper dbHelper;
 
+	public static enum State {
+		INSTALLING, INSTALLED, NOT_INSTALLED
+	}
+	
 	private String[] allRows = new String[] {
 			ExamTrainerDatabaseHelper.Exams._ID,
 			ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE,
@@ -88,16 +92,28 @@ public class ExamTrainerDbAdapter {
 				ExamTrainerDatabaseHelper.Exams._ID + "=" + rowId, null) > 0;
 	}
 	
-	public boolean setInstalled(long rowId, long date, boolean installed) {
+	public boolean setInstallationState(long rowId, long date, State state) {
 		ContentValues values = new ContentValues();
-		if(installed) {
-			values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED, 1);
-		} else {
-			values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED, 0);
-		}
+		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED, state.name());
 		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE, date);
 		return db.update(ExamTrainerDatabaseHelper.Exams.TABLE_NAME, values, 
 				ExamTrainerDatabaseHelper.Exams._ID + "=\"" + rowId + "\"", null) > 0;
+	}
+	
+	public State getInstallationState(long rowId) {
+		State state = State.NOT_INSTALLED;
+		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
+				new String[] {ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED},
+		ExamTrainerDatabaseHelper.Exams._ID + "=" + rowId, null, null, null, null, null);
+		if( cursor.moveToFirst() ) {
+			String stateName = cursor.getString(cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED));
+			if( stateName.contentEquals(State.INSTALLED.name()) ) {
+				state = State.INSTALLED;
+			} else if ( stateName.contentEquals(State.INSTALLING.name()) ) {
+				state = State.INSTALLING;
+			}
+		}
+		return state;
 	}
 	
 	public Cursor getExam(long rowId) {
@@ -121,7 +137,7 @@ public class ExamTrainerDbAdapter {
 	
 	public Cursor getInstalledExams() {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
-				this.allRows, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "= 1",
+				this.allRows, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "=\'" + ExamTrainerDbAdapter.State.INSTALLED.name() +"\'",
 		null, null, null, null, null);
 		if (cursor != null) {
 			cursor.moveToFirst();

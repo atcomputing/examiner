@@ -4,6 +4,7 @@ import nl.atcomputing.examtrainer.manage.RetrieveExamQuestions;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +29,9 @@ public class ExamTrainerActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		setContentView(R.layout.main);		
+		
+		//Load default preference values
+		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 		
 		this.about_layout = (LinearLayout) findViewById(R.id.about_window);
 		this.about_layout.setVisibility(View.INVISIBLE);
