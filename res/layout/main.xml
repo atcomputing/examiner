@@ -34,7 +34,7 @@
             android:id="@+id/logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="right"
+            android:gravity="center"
             android:scaleType="centerInside"
             android:src="@drawable/atlogo" 
             android:clickable="true"/>
@@ -54,23 +54,24 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:background="#BB000000"
+        android:gravity="center"
         android:orientation="vertical"
         android:visibility="gone" >
 
         <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:padding="@dimen/paddingDefault"
             android:textSize="@dimen/textSizeDefault"
+            android:gravity="center"
             android:text="@string/app_name" >
         </TextView>
 
         <LinearLayout
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:orientation="horizontal"
+            android:gravity="center"
             android:padding="@dimen/paddingDefault" >
 
             <TextView
@@ -91,30 +92,30 @@
         </LinearLayout>
 
         <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:padding="@dimen/paddingDefault"
             android:text="@string/Copyright"
+            android:gravity="center"
             android:textSize="@dimen/textSizeDefault" >
         </TextView>
 
         <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:padding="@dimen/paddingDefault"
             android:text="@string/text_about_atcomputing"
+            android:gravity="center"
             android:textSize="@dimen/textSizeDefault" >
         </TextView>
 
         <TextView
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:autoLink="web"
-            android:gravity="center"
             android:paddingBottom="@dimen/paddingDefault"
             android:text="@string/Visit_atcomputing"
+            android:gravity="center"
             android:textSize="@dimen/textSizeDefault" >
         </TextView>
     </LinearLayout>
