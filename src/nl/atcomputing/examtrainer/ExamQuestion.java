@@ -2,15 +2,11 @@ package nl.atcomputing.examtrainer;
 
 import java.util.ArrayList;
 
-import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.R.string;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
-
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
-import android.util.Log;
 
 /**
  * @author martijn brekhof

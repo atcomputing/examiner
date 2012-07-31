@@ -2,13 +2,10 @@ package  nl.atcomputing.examtrainer.adapters;
 
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.R.drawable;
-import nl.atcomputing.examtrainer.R.id;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;

@@ -11,7 +11,6 @@ import android.database.sqlite.SQLiteException;
 import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -115,7 +114,7 @@ public class ShowScoreActivity extends Activity {
 		String text = "";
 
 		if( score >= itemsRequiredToPass) {
-			text = r.getString(R.string.Gongratulations) + ".\n" + 
+			text = r.getString(R.string.Congratulations) + ".\n" + 
 					r.getString(R.string.You_passed) + ".\n" +
 					r.getString(R.string.You_scored) + " " + score + " " +
 					r.getString(R.string.out_of) + " " + totalAmountOfItems + ".";

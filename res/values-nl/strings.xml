@@ -5,7 +5,7 @@
     <string name="Calculating_your_score">Uw score wordt berekend</string>
     <string name="You_passed">U bent geslaagd</string>
     <string name="You_failed">U bent gezakt</string>
-    <string name="Gongratulations">Gefeliciteerd</string>
+    <string name="Congratulations">Gefeliciteerd</string>
     <string name="You_scored">Uw score is</string>
     <string name="out_of">van de</string>
     <string name="but_you_needed">maar u had</string>
@@ -18,7 +18,7 @@
     <string name="No_question_available">Vraag niet beschikbaar.</string>
     <string name="app_name">Exam Trainer</string>
     <string name="No_time_limit">Geen tijdslimiet</string>
-    <string name="Time_limit">Tijdslimiet</string>
+    <string name="Time_limit_in_minutes">Tijdslimiet in minuten</string>
     <string name="minutes">minuten</string>
     <string name="button_next">Volgende</string>
     <string name="button_prev">Vorige</string>
@@ -62,7 +62,7 @@
     <string name="About">Info</string>
     <string name="Question">Vraag</string>
     <string name="Manage_Exams">Beheer Examens</string>
-    <string name="Are_you_sure_you_want_to_delete_all_exams">Weet u zeker dat u alle examens wilt verwijderen?</string>
+    <string name="Are_you_sure_you_want_to_delete_all_exams">Weet u zeker dat u alle examens wilt verwijderen?\nDit zal ook alle scores verwijderen.</string>
     <string name="manageexams_get_exams_explanation">Druk op menu en gebruik "Haal examenlijst op" om de lijst met beschikbare examens in te laden.</string>
     <!-- Text for about -->
     <string name="text_about_atcomputing">AT Computing is een team van gespecialiseerde opleiders en oplossers op het gebied van Linux, Open Source, UNIX en programmeertalen.</string>
@@ -91,4 +91,7 @@
     <string name="pass_or_not_pass_image">geslaagd of gezakt plaatje</string>
     <string name="at_computing_logo">AT Computing Logo</string>
     <string name="answer_correct_or_wrong">antwoord goed of fout</string>
+    <string name="delete_all_exams">Verwijder alle examens</string>
+    <string name="cancel">Annuleer</string>
+    <string name="are_you_sure_you_want_to_uninstall_this_exam">Weet u zeker dat u het examen wilt deïnstalleren?\nDit zal ook alle scores voor dit examen verwijderen.</string>
 </resources>

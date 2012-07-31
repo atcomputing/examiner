@@ -1,13 +1,11 @@
 package nl.atcomputing.examtrainer;
 
-import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.adapters.ExamReviewAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;

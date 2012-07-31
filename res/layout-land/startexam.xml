@@ -103,7 +103,7 @@
 				android:layout_height="wrap_content">
 
 				<TextView android:id="@+id/startexam_timelimit_text" style="@style/TextWhite"
-					android:layout_alignParentLeft="true" android:text="@string/Time_limit" />
+					android:layout_alignParentLeft="true" android:text="@string/Time_limit_in_minutes" />
 
 				<TextView android:id="@+id/startexam_timelimit_value"
 					style="@style/TextWhite" android:layout_alignParentRight="true"

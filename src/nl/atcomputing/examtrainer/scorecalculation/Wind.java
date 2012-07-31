@@ -3,16 +3,12 @@ package nl.atcomputing.examtrainer.scorecalculation;
 import java.util.Date;
 import java.util.Random;
 
-import android.util.Log;
-
 /**
  * @author martijn brekhof
  *
  */
 
 public class Wind  {
-	private static final String TAG = "Wind";
-
 	//Times are in milliseconds
 	private static final int MAX_INCREMENT_STEPS = 50;
 	private static final int MAX_DECREMENT_STEPS = 50;

@@ -1,7 +1,6 @@
 package nl.atcomputing.examtrainer.manage;
 
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.R.xml;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 

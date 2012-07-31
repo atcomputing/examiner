@@ -1,14 +1,9 @@
 package nl.atcomputing.examtrainer.scorecalculation;
 
-import java.util.Random;
-
-import nl.atcomputing.examtrainer.ExamQuestion;
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteException;

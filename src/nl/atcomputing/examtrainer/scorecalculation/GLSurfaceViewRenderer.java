@@ -8,7 +8,6 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
-import android.util.Log;
 
 /**
  * @author martijn brekhof

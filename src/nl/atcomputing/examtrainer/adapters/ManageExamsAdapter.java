@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
+import nl.atcomputing.dialogs.DialogFactory;
 import nl.atcomputing.examtrainer.ExamQuestion;
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
@@ -11,6 +12,7 @@ import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.manage.XmlPullExamParser;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -123,7 +125,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 				if ( holder.timeLimit == 0 ) {
 					strBuf.append(gContext.getString(R.string.No_time_limit));
 				} else {
-					strBuf.append(gContext.getString(R.string.Time_limit) + ": " + holder.timeLimit
+					strBuf.append(gContext.getString(R.string.Time_limit_in_minutes) + ": " + holder.timeLimit
 							+ " " + gContext.getString(R.string.minutes));
 				}
 
@@ -141,13 +143,26 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		this.notifyDataSetChanged();
 	}
 	
-	private void handleButtonClick(ViewHolder holder) {
+	private void handleButtonClick(final ViewHolder holder) {
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(gContext);
 		examTrainerDbHelper.open();
 		ExamTrainerDbAdapter.State state = examTrainerDbHelper.getInstallationState(holder.examID);
 		examTrainerDbHelper.close();
 		if( state == ExamTrainerDbAdapter.State.INSTALLED ) {
-			new UninstallExam(holder, gContext).execute();
+			Dialog dialog = DialogFactory.createTwoButtonDialog(this.gContext, 
+					R.string.are_you_sure_you_want_to_uninstall_this_exam, 
+					R.string.uninstall, new Runnable() {
+						
+						public void run() {
+							new UninstallExam(holder, gContext).execute();
+						}
+					}, R.string.cancel, new Runnable() {
+						
+						public void run() {
+							
+						}
+					});
+			dialog.show();
 		} 
 		else {
 			new InstallExam(holder, gContext).execute();

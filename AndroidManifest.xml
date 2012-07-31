@@ -18,7 +18,7 @@
         android:xlargeScreens="true" />
 
     <application
-        android:icon="@drawable/student_hat"
+        android:icon="@drawable/launcher"
         android:label="@string/app_name" >
         <activity
             android:name=".ExamTrainerActivity"

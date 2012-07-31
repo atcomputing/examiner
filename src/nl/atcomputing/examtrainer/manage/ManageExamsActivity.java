@@ -30,9 +30,6 @@ import android.widget.Toast;
  *
  */
 
-//Example code on how to setup nice selectionbox: 
-//http://www.codemobiles.com/forum/viewtopic.php?t=876
-
 public class ManageExamsActivity extends ListActivity {
 	private ManageExamsAdapter adap;
 	static final int DIALOG_CONFIRMATION_ID = 0;
@@ -102,12 +99,12 @@ public class ManageExamsActivity extends ListActivity {
 			builder = new AlertDialog.Builder(this);
 			builder.setMessage(this.getString(R.string.Are_you_sure_you_want_to_delete_all_exams))
 			.setCancelable(false)
-			.setPositiveButton(this.getString(R.string.Yes), new DialogInterface.OnClickListener() {
+			.setPositiveButton(this.getString(R.string.delete_all_exams), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					deleteAllExams();
 				}
 			})
-			.setNegativeButton(this.getString(R.string.No), new DialogInterface.OnClickListener() {
+			.setNegativeButton(this.getString(R.string.cancel), new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
 					dialog.cancel();
 				}
@@ -216,9 +213,5 @@ public class ManageExamsActivity extends ListActivity {
 			}
 		}
 		examTrainerDbHelper.close();
-	}
-
-	private void loadRemoteExams() {
-		//retrieveExam();
 	}
 }

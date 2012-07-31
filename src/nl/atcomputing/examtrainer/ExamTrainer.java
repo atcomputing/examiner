@@ -26,7 +26,6 @@ public final class ExamTrainer {
 	private static long itemsNeededToPass = 0;
 	private static long totalAmountOfItems = 0;
 	private static final String questionNumber = "questionNumber";
-	private static boolean KEEP_PROGRESS_DIALOG_RUNNING = false;
 	private static long timeLimit = 0;
 	private static long timeEnd = 0;
 	private static long timerStart; 
