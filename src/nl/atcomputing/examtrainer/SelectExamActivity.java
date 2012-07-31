@@ -8,6 +8,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
@@ -76,6 +78,15 @@ public class SelectExamActivity extends Activity {
 			startActivity(intent);
 			break;
 		case R.id.selectexam_menu_about:
+			String version;
+			try {
+				PackageInfo info = getPackageManager().getPackageInfo("nl.atcomputing.examtrainer", 0);
+				version = info.versionName;
+			} catch (NameNotFoundException e) {
+				version = getString(R.string.unknown);
+			}
+			TextView tv = (TextView) findViewById(R.id.about_version_number);
+			tv.setText(version);
 			LinearLayout about_layout = (LinearLayout) findViewById(R.id.about_window);
 			if( ( about_layout.getVisibility() == View.INVISIBLE ) || 
 					( about_layout.getVisibility() == View.GONE ) )	{

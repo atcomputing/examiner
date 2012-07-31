@@ -2,14 +2,17 @@ package nl.atcomputing.examtrainer;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 /**
  * @author martijn brekhof
- *
+ * Copyright AT Computing 2012
  */
 public class ExamTrainerActivity extends Activity {
 
@@ -30,5 +33,17 @@ public class ExamTrainerActivity extends Activity {
 				startActivity(intent);
 			}
 		});
+		
+		String version;
+		try {
+			PackageInfo info = getPackageManager().getPackageInfo("nl.atcomputing.examtrainer", 0);
+			version = info.versionName;
+		} catch (NameNotFoundException e) {
+			version = getString(R.string.unknown);
+		}
+		TextView tv = (TextView) findViewById(R.id.about_version_number);
+		if( tv != null ) {
+			tv.setText(version);
+		}
 	}
 }

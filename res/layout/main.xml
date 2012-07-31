@@ -88,8 +88,7 @@
                 android:id="@+id/about_version_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/textSizeDefault"
-                android:text="1.0" >
+                android:textSize="@dimen/textSizeDefault" >
             </TextView>
         </LinearLayout>
 

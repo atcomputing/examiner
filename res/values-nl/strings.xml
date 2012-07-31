@@ -33,9 +33,7 @@
     <string name="quit_exam_message">Weet u zeker dat u het huidige examen wilt beëindigen?</string>
     <string name="yes">ja</string>
     <string name="no">nee</string>
-    <string name="Yes">Ja</string>
-    <string name="No">nee</string>
-    <string name="ok">ok</string>
+    <string name="ok">OK</string>
     <string name="hint_not_available">Hint niet beschikbaar</string>
     <string name="no_exams_available">Geen examens beschikbaar</string>
     <string name="click_on_manage_exams_to_install_one_or_more_exams">Druk op de menu toets en gebruik Beheer Examens om één of meerdere examens te installeren.</string>
@@ -51,13 +49,8 @@
     <string name="Pass">Geslaagd</string>
     <string name="Use_Timelimits">Gebruik tijdslimiet</string>
     <string name="Use_timelimits_during_examination_if_available">Gebruik de tijdslimiet tijdens het examen.\n(indien beschikbaar)</string>
-    <string name="Check_for_updates_at_start">Controleer voor nieuwe examens bij het opstarten.</string>
-    <string name="Set_Updates_URL">Stel URL in</string>
-    <string name="Sets_the_URL_to_retrieve_updates_from">Stelt het URL in waar gecontroleerd wordt of er nieuwe examens beschikbaar zijn.</string>
-    <string name="Enter_URL">Voer URL in</string>
     <string name="ExamTrainer_Preferences">ExamTrainer instellingen</string>
     <string name="Set_ExamTrainer_Preferences">Stel voorkeuren in</string>
-    <string name="default_update_URL">http://www.atcomputing.nl/ExamTrainer/exams</string>
     <string name="Settings">Instellingen</string>
     <string name="About">Info</string>
     <string name="Question">Vraag</string>
@@ -65,6 +58,7 @@
     <string name="Are_you_sure_you_want_to_delete_all_exams">Weet u zeker dat u alle examens wilt verwijderen?\nDit zal ook alle scores verwijderen.</string>
     <string name="manageexams_get_exams_explanation">Druk op menu en gebruik "Haal examenlijst op" om de lijst met beschikbare examens in te laden.</string>
     <!-- Text for about -->
+    <string name="Version">Versie</string>
     <string name="text_about_atcomputing">AT Computing is een team van gespecialiseerde opleiders en oplossers op het gebied van Linux, Open Source, UNIX en programmeertalen.</string>
     <string name="Visit_atcomputing">Bezoek http://www.atcomputing.nl</string>
     <!-- Error messages -->

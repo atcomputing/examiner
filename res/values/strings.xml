@@ -34,8 +34,6 @@
     <string name="quit_exam_message">Are you sure you want to quit the current exam?</string>
     <string name="yes">yes</string>
     <string name="no">no</string>
-    <string name="Yes">Yes</string>
-    <string name="No">No</string>
     <string name="ok">OK</string>
     <string name="hint_not_available">Hint not available</string>
     <string name="no_exams_available">No exams available</string>
@@ -53,13 +51,8 @@
     <string name="Pass">Pass</string>
     <string name="Use_Timelimits">Use Timelimits</string>
     <string name="Use_timelimits_during_examination_if_available">Use timelimits during examination\n(if available)</string>
-    <string name="Check_for_updates_at_start">Check for updates at start</string>
-    <string name="Set_Updates_URL">Set Updates URL</string>
-    <string name="Sets_the_URL_to_retrieve_updates_from">Sets the URL to retrieve updates from</string>
-    <string name="Enter_URL">Enter URL</string>
     <string name="ExamTrainer_Preferences">ExamTrainer Preferences</string>
     <string name="Set_ExamTrainer_Preferences">Set ExamTrainer Preferences</string>
-    <string name="default_update_URL">http://www.atcomputing.nl/ExamTrainer/exams</string>
     <string name="Settings">Settings</string>
     <string name="About">About</string>
     <string name="Question">Question</string>
@@ -100,4 +93,5 @@
     <string name="delete_all_exams">Delete all exams</string>
     <string name="cancel">Cancel</string>
     <string name="are_you_sure_you_want_to_uninstall_this_exam">Are you sure you want to uninstall this exam?\nThis will also remove the current scores for this exam.</string>
+    <string name="unknown">unknown</string>
 </resources>
