@@ -138,7 +138,8 @@
         android:id="@+id/startexam_history_textview_noscoresavailable"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/no_previous_scores_available" />
+        android:text="@string/no_previous_scores_available"
+        android:textSize="@dimen/textSizeDefault" />
 
     <LinearLayout
         android:id="@+id/startexam_history_header"

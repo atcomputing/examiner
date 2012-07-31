@@ -9,6 +9,7 @@
     <string name="You_scored">You scored</string>
     <string name="out_of">out of</string>
     <string name="but_you_needed">but you needed</string>
+    <string name="to_pass">to pass</string>
     <string name="Error">Error</string>
     <string name="Try_reinstalling_the_exam">Try reinstalling the exam.</string>
     <string name="Exam_is_empty">Exam is empty.</string>
@@ -96,5 +97,4 @@
     <string name="pass_or_not_pass_image">pass or not pass image</string>
     <string name="at_computing_logo">AT Computing Logo</string>
     <string name="answer_correct_or_wrong">answer correct or wrong</string>
-
 </resources>

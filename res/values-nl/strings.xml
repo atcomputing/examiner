@@ -8,7 +8,8 @@
     <string name="Gongratulations">Gefeliciteerd</string>
     <string name="You_scored">Uw score is</string>
     <string name="out_of">van de</string>
-    <string name="but_you_needed">U had nodig</string>
+    <string name="but_you_needed">maar u had</string>
+    <string name="to_pass">nodig om te slagen</string>
     <string name="Error">Error</string>
     <string name="Try_reinstalling_the_exam">Probeer het examen opnieuw te installeren.</string>
     <string name="Exam_is_empty">Examen is leeg.</string>

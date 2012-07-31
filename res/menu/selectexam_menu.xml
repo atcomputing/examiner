@@ -3,4 +3,7 @@
     <item android:id="@+id/selectexam_menu_manage"
           android:icon="@drawable/ic_menu_preferences"
           android:title="@string/Manage_Exams" />
+    <item android:id="@+id/selectexam_menu_about"
+          android:icon="@drawable/menu_atlogo"
+          android:title="@string/About" />
 </menu>

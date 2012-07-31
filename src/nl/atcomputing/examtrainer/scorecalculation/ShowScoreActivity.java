@@ -115,17 +115,18 @@ public class ShowScoreActivity extends Activity {
 		String text = "";
 
 		if( score >= itemsRequiredToPass) {
-			text = r.getString(R.string.Gongratulations) + "\n" + 
-					r.getString(R.string.You_passed) + "\n" +
+			text = r.getString(R.string.Gongratulations) + ".\n" + 
+					r.getString(R.string.You_passed) + ".\n" +
 					r.getString(R.string.You_scored) + " " + score + " " +
-					r.getString(R.string.out_of) + " " + totalAmountOfItems;
+					r.getString(R.string.out_of) + " " + totalAmountOfItems + ".";
 			this.renderer.showBalloons(score);
 			this.renderer.requestRender();
 		} else {
-			text = r.getString(R.string.You_failed) + "\n" +
+			text = r.getString(R.string.You_failed) + ".\n" +
 					r.getString(R.string.You_scored) + " " + score + " " +
-					r.getString(R.string.out_of) + " " + totalAmountOfItems + " " +
-					r.getString(R.string.but_you_needed) + " " + itemsRequiredToPass;
+					r.getString(R.string.out_of) + " " + totalAmountOfItems + ", " +
+					r.getString(R.string.but_you_needed) + " " + itemsRequiredToPass + " " +
+					r.getString(R.string.to_pass) + ".";
 		}
 		TextView tv = (TextView) findViewById(R.id.show_score_text);
 		tv.setText(text);

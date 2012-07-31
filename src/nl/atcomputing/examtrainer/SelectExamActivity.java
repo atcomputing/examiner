@@ -16,6 +16,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -43,6 +45,8 @@ public class SelectExamActivity extends Activity {
 		setContentView(R.layout.selectexam);
 		
 		this.receiveBroadcast = new ReceiveBroadcast();
+		
+		
 	}
 
 	protected void onResume() {
@@ -71,6 +75,15 @@ public class SelectExamActivity extends Activity {
 		case R.id.selectexam_menu_manage:
 			Intent intent = new Intent(this, ManageExamsActivity.class);
 			startActivity(intent);
+			break;
+		case R.id.selectexam_menu_about:
+			LinearLayout about_layout = (LinearLayout) findViewById(R.id.about_window);
+			if( ( about_layout.getVisibility() == View.INVISIBLE ) || 
+					( about_layout.getVisibility() == View.GONE ) )	{
+				about_layout.setVisibility(View.VISIBLE);
+			} else {
+				about_layout.setVisibility(View.INVISIBLE);
+			}
 			break;
 		default:
 			return super.onOptionsItemSelected(item);

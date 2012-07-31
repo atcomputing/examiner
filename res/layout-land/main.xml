@@ -11,36 +11,20 @@
         android:scaleType="centerCrop"
         android:src="@drawable/astronaut_land" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true" >
-
-        <TextView
-            android:id="@+id/startscreen_quote"
+    <ImageView
+            android:id="@+id/logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="@dimen/paddingDefault"
-            android:text="@string/startscreen_quote"
-            android:textColor="#FFFFFF"
-            android:textSize="@dimen/textSizeHuge"
-            android:typeface="serif" />
-    </LinearLayout>
+            android:layout_alignParentRight="true"
+            android:clickable="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/atlogo_wittetekst"/>
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="vertical" >
-
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:clickable="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/atlogo" />
 
         <Button
             android:id="@+id/button_start"
@@ -49,75 +33,6 @@
             android:text="@string/Start"
             android:textSize="@dimen/textSizeDefault" >
         </Button>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/about_window"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:background="#BB000000"
-        android:gravity="center"
-        android:orientation="vertical" >
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="@dimen/paddingDefault"
-            android:text="@string/app_name"
-            android:textSize="@dimen/textSizeDefault" >
-        </TextView>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/paddingDefault" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingRight="@dimen/paddingDefault"
-                android:text="@string/Version"
-                android:textSize="@dimen/textSizeDefault" >
-            </TextView>
-
-            <TextView
-                android:id="@+id/about_version_number"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="1.0"
-                android:textSize="@dimen/textSizeDefault" >
-            </TextView>
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="@dimen/paddingDefault"
-            android:text="@string/Copyright"
-            android:textSize="@dimen/textSizeDefault" >
-        </TextView>
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="@dimen/paddingDefault"
-            android:text="@string/text_about_atcomputing"
-            android:textSize="@dimen/textSizeDefault" >
-        </TextView>
-
-        <TextView
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:autoLink="web"
-            android:gravity="center"
-            android:text="@string/Visit_atcomputing"
-            android:textSize="@dimen/textSizeDefault" >
-        </TextView>
     </LinearLayout>
 
 </RelativeLayout>

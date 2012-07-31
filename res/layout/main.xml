@@ -27,17 +27,19 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true" 
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="#BB000000"
+        android:gravity="center">
 
         <ImageView
             android:contentDescription="@string/at_computing_logo"
             android:id="@+id/logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:scaleType="centerInside"
-            android:src="@drawable/atlogo" 
-            android:clickable="true"/>
+            android:src="@drawable/atlogo_wittetekst" 
+            android:clickable="true"
+            android:padding="@dimen/paddingSmall"/>
         
         <Button
             android:id="@+id/button_start"
