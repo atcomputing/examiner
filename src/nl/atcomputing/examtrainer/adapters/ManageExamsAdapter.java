@@ -35,17 +35,25 @@ import android.widget.Toast;
 public class ManageExamsAdapter extends CursorAdapter  {
 	private Context gContext;
 	private int layout;
-
+	private ArrayList<InstallExam> installationThreads;
+	
 	public ManageExamsAdapter(Context context, int layout, Cursor c) {
 		super(context, c, false);
 		this.gContext = context;
 		this.layout = layout;
+		
+		this.installationThreads = new ArrayList<ManageExamsAdapter.InstallExam>();
 	}
 
 	public void setContext(Context context) {
 		this.gContext = context;
 	}
 
+	public void cancelRunningInstallations() {
+		for(InstallExam installExam : installationThreads ) {
+			installExam.cancel(false);
+		}
+	}
 	@Override
 	public void bindView(View view, Context context, Cursor cursor) {
 		setupView(view, cursor);	
@@ -165,7 +173,9 @@ public class ManageExamsAdapter extends CursorAdapter  {
 			dialog.show();
 		} 
 		else {
-			new InstallExam(holder, gContext).execute();
+			InstallExam installExam = new InstallExam(holder, gContext);
+			this.installationThreads.add(installExam);
+			installExam.execute();
 		}
 	}
 
@@ -195,7 +205,6 @@ public class ManageExamsAdapter extends CursorAdapter  {
 
 		protected void onPreExecute() {
 			this.holder.installUninstallButton.setEnabled(false);
-			this.holder.installUninstallButton.setText(R.string.Installing_exam);
 			
 			ExamTrainerDbAdapter examTrainerDbHelperAdapter = new ExamTrainerDbAdapter(gContext);
 			examTrainerDbHelperAdapter.open();
@@ -207,7 +216,9 @@ public class ManageExamsAdapter extends CursorAdapter  {
 
 		protected String doInBackground(ViewHolder... holders) {
 			this.holder.examDate = System.currentTimeMillis();
-
+			int total = this.holder.examAmountOfItems;
+			int count = 0;
+			int percentage = 0;
 			try {
 				URL url = new URL(this.holder.url);
 				XmlPullExamParser xmlPullFeedParser = new XmlPullExamParser(gContext, url);
@@ -216,11 +227,16 @@ public class ManageExamsAdapter extends CursorAdapter  {
 				ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(gContext);
 				examinationDbHelper.open(this.holder.examTitle, this.holder.examDate);
 
-				int count = 0;
+				
 				ArrayList<ExamQuestion> examQuestions = xmlPullFeedParser.getExam();
 				for( ExamQuestion examQuestion: examQuestions ) {
+					if( isCancelled() ) {
+						break;
+					}
 					examQuestion.addToDatabase(examinationDbHelper);
-					onProgressUpdate(count++);
+					count++;
+					percentage = (100 * total/count);
+					onProgressUpdate(percentage);
 				}
 
 				examinationDbHelper.close();
@@ -236,9 +252,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		}
 
 		protected void onProgressUpdate(Integer... progress) {
-			//setProgressPercent(progress[0]);
-			//			holder.installUninstallButton.setEnabled(false);
-			//			holder.installUninstallButton.setText(R.string.Installing_exam);
+			this.holder.installUninstallButton.setText(progress[0] + "%");
 		}
 
 		protected void onPostExecute(String errorMessage) {

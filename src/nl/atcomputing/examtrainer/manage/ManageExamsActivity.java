@@ -122,7 +122,9 @@ public class ManageExamsActivity extends ListActivity {
 		long examId;
 		long examDate;
 		String examTitle;
-
+		
+		this.adap.cancelRunningInstallations();
+		
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		
