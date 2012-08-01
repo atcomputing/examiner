@@ -3,27 +3,27 @@
 <exam>
   <item>
     <question>You received an ASCII file from a good friend of yours who uses the windows OS.&lt;br/&gt;You notice that you see a lot of CR-LF line endings in the file.&lt;br/&gt;How can you remove the CR part from the file?</question>
-    <choice>&lt;font face="monospace"&gt;sed 's/\r//' winfile &amp;gt; unixfile&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;tr -d '\r' &amp;lt; winfile &amp;gt; unixfile&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;msdos2unix winfile unixfile&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;strip '\r' winfile &amp;gt; unixfile&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;sed -i '/\r/d' winfile&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;sed 's/\r//' winfile &amp;gt; unixfile&lt;/font&gt;</correct_answer>
-    <correct_answer>&lt;font face="monospace"&gt;tr -d '\r' &amp;lt; winfile &amp;gt; unixfile&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;sed&amp;nbsp;'s/\r//'&amp;nbsp;winfile&amp;nbsp;&amp;gt;&amp;nbsp;unixfile&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;tr&amp;nbsp;-d&amp;nbsp;'\r'&amp;nbsp;&amp;lt;&amp;nbsp;winfile&amp;nbsp;&amp;gt;&amp;nbsp;unixfile&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;msdos2unix&amp;nbsp;winfile&amp;nbsp;unixfile&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;strip&amp;nbsp;'\r'&amp;nbsp;winfile&amp;nbsp;&amp;gt;&amp;nbsp;unixfile&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;sed&amp;nbsp;-i&amp;nbsp;'/\r/d'&amp;nbsp;winfile&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;sed&amp;nbsp;'s/\r//'&amp;nbsp;winfile&amp;nbsp;&amp;gt;&amp;nbsp;unixfile&lt;/font&gt;</correct_answer>
+    <correct_answer>&lt;font face="monospace"&gt;tr&amp;nbsp;-d&amp;nbsp;'\r'&amp;nbsp;&amp;lt;&amp;nbsp;winfile&amp;nbsp;&amp;gt;&amp;nbsp;unixfile&lt;/font&gt;</correct_answer>
     <hint>If you are not certain you might get lucky and another question may give you a clue for the correct answer.</hint>
     <type>multiple choice</type>
   </item>
   <item>
     <question>Which of the following commandlines can you use in a BASH shell to make sure the command started in the shell uses the configuration-file &lt;i&gt;top.conf&lt;/i&gt;.&lt;br/&gt;Select two.</question>
-    <choice>&lt;font face="monospace"&gt;export $CONFFILE=top.conf&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;set CONFFILE=top.conf&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;CONFFILE=top.conf ; export CONFFILE&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;echo $CONFFILE=top.conf&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;declare -x CONFFILE=top.conf&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;declare CONFFILE=top.conf&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;define CONFFILE=top.conf&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;CONFFILE=top.conf ; export CONFFILE&lt;/font&gt;</correct_answer>
-    <correct_answer>&lt;font face="monospace"&gt;declare -x CONFFILE=top.conf&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;export&amp;nbsp;$CONFFILE=top.conf&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;set&amp;nbsp;CONFFILE=top.conf&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;CONFFILE=top.conf&amp;nbsp;;&amp;nbsp;export&amp;nbsp;CONFFILE&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;echo&amp;nbsp;$CONFFILE=top.conf&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;declare&amp;nbsp;-x&amp;nbsp;CONFFILE=top.conf&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;declare&amp;nbsp;CONFFILE=top.conf&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;define&amp;nbsp;CONFFILE=top.conf&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;CONFFILE=top.conf&amp;nbsp;;&amp;nbsp;export&amp;nbsp;CONFFILE&lt;/font&gt;</correct_answer>
+    <correct_answer>&lt;font face="monospace"&gt;declare&amp;nbsp;-x&amp;nbsp;CONFFILE=top.conf&lt;/font&gt;</correct_answer>
     <hint>You will need to provide exactly two correct answers. Note that defining a variable and using a variable requires a different syntax. Also note that the question mentions commands started in the shell should be able to read the variable. Hence, the shell should pass the variable to its childs.</hint>
     <type>multiple choice</type>
   </item>
@@ -58,7 +58,7 @@
   </item>
   <item>
     <exhibit>tak&amp;nbsp;&lt;br/&gt;talk&amp;nbsp;&lt;br/&gt;tik&amp;nbsp;&lt;br/&gt;tok&amp;nbsp;&lt;br/&gt;tuk&amp;nbsp;&lt;br/&gt;tuuk&amp;nbsp;</exhibit>
-    <question>Your current working directory contains the above files.&lt;br/&gt;Which files are shown when you execute the command &lt;font face="monospace"&gt;ls | grep 't[^o].$'&lt;/font&gt;?&lt;br/&gt;Choose all that apply.</question>
+    <question>Your current working directory contains the above files.&lt;br/&gt;Which files are shown when you execute the command &lt;font face="monospace"&gt;ls&amp;nbsp;|&amp;nbsp;grep&amp;nbsp;'t[^o].$'&lt;/font&gt;?&lt;br/&gt;Choose all that apply.</question>
     <choice>tak</choice>
     <choice>talk</choice>
     <choice>tik</choice>
@@ -73,12 +73,12 @@
   </item>
   <item>
     <question>Which of the following statements about &lt;i&gt;symbolic links&lt;/i&gt; is true?</question>
-    <choice>A symbolic link can be recognized by the character &lt;font face="monospace"&gt;l&lt;/font&gt; as being the most-left character in the output of  &lt;font face="monospace"&gt;ls -l&lt;/font&gt;.</choice>
+    <choice>A symbolic link can be recognized by the character &lt;font face="monospace"&gt;l&lt;/font&gt; as being the most-left character in the output of  &lt;font face="monospace"&gt;ls&amp;nbsp;-l&lt;/font&gt;.</choice>
     <choice>It is not possible to point a symbolic link to a directory in another filesystem.</choice>
     <choice>The filesize of a symbolic link is always less than 256 bytes.</choice>
-    <choice>The command  &lt;font face="monospace"&gt;find / -type s&lt;/font&gt;  only displays symbolic links.</choice>
+    <choice>The command  &lt;font face="monospace"&gt;find&amp;nbsp;/&amp;nbsp;-type&amp;nbsp;s&lt;/font&gt;  only displays symbolic links.</choice>
     <choice>A symbolic link does not have its own inode-number.</choice>
-    <correct_answer>A symbolic link can be recognized by the character &lt;font face="monospace"&gt;l&lt;/font&gt; as being the most-left character in the output of  &lt;font face="monospace"&gt;ls -l&lt;/font&gt;.</correct_answer>
+    <correct_answer>A symbolic link can be recognized by the character &lt;font face="monospace"&gt;l&lt;/font&gt; as being the most-left character in the output of  &lt;font face="monospace"&gt;ls&amp;nbsp;-l&lt;/font&gt;.</correct_answer>
     <correct_answer>The filesize of a symbolic link is always less than 256 bytes.</correct_answer>
     <hint>If you are not certain you might get lucky and another question may give you a clue for the correct answer.</hint>
     <type>multiple choice</type>
@@ -112,7 +112,7 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <question>The command '&lt;font face="monospace"&gt;echo $?&lt;/font&gt;' will give you what information?</question>
+    <question>The command '&lt;font face="monospace"&gt;echo&amp;nbsp;$?&lt;/font&gt;' will give you what information?</question>
     <choice>The process id of the current shell.</choice>
     <choice>The process id of last executed command.</choice>
     <choice>The exit status of the last executed background command.</choice>
@@ -135,15 +135,15 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <question>Which of the following commands will do the same as &lt;font face="monospace"&gt;kill -s INT 3022&lt;/font&gt;.&lt;br/&gt;Select all that apply.</question>
-    <choice>&lt;font face="monospace"&gt;kill -1 3022&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;kill 1 3022&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;kill 15 3022&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;kill -s SIGINT 3022&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;kill -SIGINT 3022&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;kill -1 3022&lt;/font&gt;</correct_answer>
-    <correct_answer>&lt;font face="monospace"&gt;kill -s SIGINT 3022&lt;/font&gt;</correct_answer>
-    <correct_answer>&lt;font face="monospace"&gt;kill -SIGINT 3022&lt;/font&gt;</correct_answer>
+    <question>Which of the following commands will do the same as &lt;font face="monospace"&gt;kill&amp;nbsp;-s&amp;nbsp;INT&amp;nbsp;3022&lt;/font&gt;.&lt;br/&gt;Select all that apply.</question>
+    <choice>&lt;font face="monospace"&gt;kill&amp;nbsp;-1&amp;nbsp;3022&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;kill&amp;nbsp;1&amp;nbsp;3022&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;kill&amp;nbsp;15&amp;nbsp;3022&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;kill&amp;nbsp;-s&amp;nbsp;SIGINT&amp;nbsp;3022&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;kill&amp;nbsp;-SIGINT&amp;nbsp;3022&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;kill&amp;nbsp;-1&amp;nbsp;3022&lt;/font&gt;</correct_answer>
+    <correct_answer>&lt;font face="monospace"&gt;kill&amp;nbsp;-s&amp;nbsp;SIGINT&amp;nbsp;3022&lt;/font&gt;</correct_answer>
+    <correct_answer>&lt;font face="monospace"&gt;kill&amp;nbsp;-SIGINT&amp;nbsp;3022&lt;/font&gt;</correct_answer>
     <hint>If you are not certain you might get lucky and another question may give you a clue for the correct answer.</hint>
     <type>multiple choice</type>
   </item>
@@ -202,20 +202,20 @@
   </item>
   <item>
     <question>You want to move all directories and ONLY directories in you current working directory that start with &lt;font face="monospace"&gt;test&lt;/font&gt; to the directory &lt;font face="monospace"&gt;testing&lt;/font&gt;.&lt;br/&gt;Which of the following commands would be best to perform this task?</question>
-    <choice>&lt;font face="monospace"&gt;mv -r test*/ testing&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;mv test* testing&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;mv test*/ testing&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;cp -r test*/ testing&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;mv test*/ testing&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;mv&amp;nbsp;-r&amp;nbsp;test*/&amp;nbsp;testing&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;mv&amp;nbsp;test*&amp;nbsp;testing&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;mv&amp;nbsp;test*/&amp;nbsp;testing&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;cp&amp;nbsp;-r&amp;nbsp;test*/&amp;nbsp;testing&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;mv&amp;nbsp;test*/&amp;nbsp;testing&lt;/font&gt;</correct_answer>
     <hint>The question states you want to MOVE the directories which means you can eliminate one answer immediately. The question also states you want to move ONLY directories which eliminates another answer. Now you are left with two possible answers and it comes down to knowing if the command requires an option or not.</hint>
     <type>multiple choice</type>
   </item>
   <item>
     <question>Which of the following commands can be used to examine kernel bootup messages after boot time?</question>
     <choice>&lt;font face="monospace"&gt;dmesg&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;less /proc/kmsg&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;less&amp;nbsp;/proc/kmsg&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;showbootmsg&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;less /var/log/bootmessages&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;less&amp;nbsp;/var/log/bootmessages&lt;/font&gt;</choice>
     <correct_answer>&lt;font face="monospace"&gt;dmesg&lt;/font&gt;</correct_answer>
     <hint>Some questions allow multiple answers. Sometimes the question will state how many correct answers are required, in this case not. If you do not know the answer immediately the best strategy is eliminating the answers you know are wrong and select the best answer from the ones that are left. Sometimes another question might give you a clue for a previous question. You can always come back to this question later on.</hint>
     <type>multiple choice</type>
@@ -232,23 +232,23 @@
   </item>
   <item>
     <question>Which of the following commandlines allows you to see the difference between the content of&lt;br/&gt;the tar archive and the current content of the directory &lt;font face="monospace"&gt;/home&lt;/font&gt;?</question>
-    <choice>&lt;font face="monospace"&gt;tar -cf home.tar /home&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;tar -xf home.tar /home&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;tar -tf home.tar /home&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;tar -df home.tar /home&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;tar -df home.tar /home&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;tar&amp;nbsp;-cf&amp;nbsp;home.tar&amp;nbsp;/home&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;tar&amp;nbsp;-xf&amp;nbsp;home.tar&amp;nbsp;/home&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;tar&amp;nbsp;-tf&amp;nbsp;home.tar&amp;nbsp;/home&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;tar&amp;nbsp;-df&amp;nbsp;home.tar&amp;nbsp;/home&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;tar&amp;nbsp;-df&amp;nbsp;home.tar&amp;nbsp;/home&lt;/font&gt;</correct_answer>
     <hint>Even if you never used &lt;font face="monospace"&gt;tar&lt;/font&gt; in this way you may be able to answer this question correctly by eliminating the wrong answers.</hint>
     <type>multiple choice</type>
   </item>
   <item>
     <exhibit>-r-xr--r--&amp;nbsp;&amp;nbsp;1&amp;nbsp;&amp;nbsp;me&amp;nbsp;&amp;nbsp;mygroup&amp;nbsp;&amp;nbsp;3&amp;nbsp;Sep&amp;nbsp;01&amp;nbsp;09:12&amp;nbsp;&amp;nbsp;/tmp/myfile&amp;nbsp;</exhibit>
     <question>Which of the following commands makes  &lt;font face="monospace"&gt;/tmp/myfile&lt;/font&gt;  readable by everyone but readable/executable only by its owner?</question>
-    <choice>&lt;font face="monospace"&gt;chmod 544 /tmp/myfile&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;chmod a=r,o=rx /tmp/myfile&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;chown 544 /tmp/myfile&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;chown a=r,o=rx /tmp/myfile&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;chmod&amp;nbsp;544&amp;nbsp;/tmp/myfile&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;chmod&amp;nbsp;a=r,o=rx&amp;nbsp;/tmp/myfile&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;chown&amp;nbsp;544&amp;nbsp;/tmp/myfile&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;chown&amp;nbsp;a=r,o=rx&amp;nbsp;/tmp/myfile&lt;/font&gt;</choice>
     <choice>None of the mentioned choices.</choice>
-    <correct_answer>&lt;font face="monospace"&gt;chmod 544 /tmp/myfile&lt;/font&gt;</correct_answer>
+    <correct_answer>&lt;font face="monospace"&gt;chmod&amp;nbsp;544&amp;nbsp;/tmp/myfile&lt;/font&gt;</correct_answer>
     <hint>If you look at the answers you should see that the exhibit is bogus and you should be able to answer the question without it. Note that the answers cover two commands (i.e. &lt;font face="monospace"&gt;chmod&lt;/font&gt; and &lt;font face="monospace"&gt;chown&lt;/font&gt;). If you are in a hurry you might not notice this.</hint>
     <type>multiple choice</type>
   </item>
@@ -275,32 +275,32 @@
   </item>
   <item>
     <question>Which command will set the the default permissions for new files to &lt;font face="monospace"&gt;rw-r-----&lt;/font&gt;, regardless of the current setting?</question>
-    <choice>&lt;font face="monospace"&gt;umask u=rw-,g=r--,o=---&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;umask 137&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;umask 640&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;umask u+rw,g+r&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;umask 137&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;umask&amp;nbsp;u=rw-,g=r--,o=---&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;umask&amp;nbsp;137&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;umask&amp;nbsp;640&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;umask&amp;nbsp;u+rw,g+r&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;umask&amp;nbsp;137&lt;/font&gt;</correct_answer>
     <hint>Beware that using the numeric notation you specify what &lt;font face="monospace"&gt;umask&lt;/font&gt; should block. Using the symbolic notation you specify what &lt;font face="monospace"&gt;umask&lt;/font&gt; should let through.</hint>
     <type>multiple choice</type>
   </item>
   <item>
     <question>You are searching for the file  &lt;font face="monospace"&gt;ring&lt;/font&gt;  which is owned by user &lt;i&gt;frodo&lt;/i&gt;.&lt;br/&gt;Assuming the file is on a mounted filesystem and permissions are sufficient,&lt;br/&gt;which command &lt;i&gt;most likely&lt;/i&gt; will display its full path name?</question>
-    <choice>&lt;font face="monospace"&gt;locate --user frodo ring&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;grep -u frodo ring *&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;find / -user frodo -name '*ring*'&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;find -user frodo -name 'ring'&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;locate ring&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;find / -user frodo -name '*ring*'&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;locate&amp;nbsp;--user&amp;nbsp;frodo&amp;nbsp;ring&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;grep&amp;nbsp;-u&amp;nbsp;frodo&amp;nbsp;ring&amp;nbsp;*&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;find&amp;nbsp;/&amp;nbsp;-user&amp;nbsp;frodo&amp;nbsp;-name&amp;nbsp;'*ring*'&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;find&amp;nbsp;-user&amp;nbsp;frodo&amp;nbsp;-name&amp;nbsp;'ring'&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;locate&amp;nbsp;ring&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;find&amp;nbsp;/&amp;nbsp;-user&amp;nbsp;frodo&amp;nbsp;-name&amp;nbsp;'*ring*'&lt;/font&gt;</correct_answer>
     <hint>The question mentions a mounted filesystem and asks you the &lt;i&gt;most likely&lt;/i&gt; command that will find the file. This kind of information is essential to answer this question correctly. If this was not added more answers would be correct. Try to remember the difference between &lt;font face="monospace"&gt;find&lt;/font&gt; and &lt;font face="monospace"&gt;locate&lt;/font&gt;. That should provide you with enough clues to answer the question correctly.</hint>
     <type>multiple choice</type>
   </item>
   <item>
     <question>You want the system to shutdown at 17:00 this afternoon. It is now 9:00.&lt;br/&gt;Which of the following commands will shutdown the system at 17:00 and sends out a warning message 20 minutes prior to shutting down?</question>
-    <choice>&lt;font face="monospace"&gt;shutdown 17:00&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;shutdown -t 1200 17:00&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;shutdown -w 16:40 17:00&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;shutdown -d 20 16:40&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;shutdown -t 1200 17:00&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;shutdown&amp;nbsp;17:00&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;shutdown&amp;nbsp;-t&amp;nbsp;1200&amp;nbsp;17:00&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;shutdown&amp;nbsp;-w&amp;nbsp;16:40&amp;nbsp;17:00&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;shutdown&amp;nbsp;-d&amp;nbsp;20&amp;nbsp;16:40&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;shutdown&amp;nbsp;-t&amp;nbsp;1200&amp;nbsp;17:00&lt;/font&gt;</correct_answer>
     <hint>If you are not certain you might get lucky and another question may give you a clue for the correct answer.</hint>
     <type>multiple choice</type>
   </item>
@@ -370,12 +370,12 @@
   </item>
   <item>
     <question>Which command will display all the lines of the file  &lt;font face="monospace"&gt;foo&lt;/font&gt; starting with a capital S?</question>
-    <choice>&lt;font face="monospace"&gt;cat foo | grep '$S'&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;grep '$S' foo&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;grep '^[^a-zA-RT-Z]' foo&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;grep '^S' foo&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;grep S* foo&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;grep '^S' foo&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;cat&amp;nbsp;foo&amp;nbsp;|&amp;nbsp;grep&amp;nbsp;'$S'&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;grep&amp;nbsp;'$S'&amp;nbsp;foo&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;grep&amp;nbsp;'^[^a-zA-RT-Z]'&amp;nbsp;foo&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;grep&amp;nbsp;'^S'&amp;nbsp;foo&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;grep&amp;nbsp;S*&amp;nbsp;foo&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;grep&amp;nbsp;'^S'&amp;nbsp;foo&lt;/font&gt;</correct_answer>
     <hint>The question asks for a regular expression that matches a capital S at the beginning of each line.</hint>
     <type>multiple choice</type>
   </item>
@@ -418,12 +418,12 @@
   </item>
   <item>
     <question>On a Debian system, which command will list all installed packages?</question>
-    <choice>&lt;font face="monospace"&gt;dpkg -C&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;apt-get -L&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;dpkg -L&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;dpkg -l&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;apt-get list&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;dpkg -l&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;dpkg&amp;nbsp;-C&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;apt-get&amp;nbsp;-L&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;dpkg&amp;nbsp;-L&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;dpkg&amp;nbsp;-l&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;apt-get&amp;nbsp;list&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;dpkg&amp;nbsp;-l&lt;/font&gt;</correct_answer>
     <hint>If you are not certain you might get lucky and another question may give you a clue for the correct answer.</hint>
     <type>multiple choice</type>
   </item>
@@ -450,7 +450,7 @@
   </item>
   <item>
     <exhibit>$&amp;nbsp;ls&amp;nbsp;-l&amp;nbsp;foo&amp;nbsp;bar&amp;nbsp;&lt;br/&gt;lrwxrwxrwx&amp;nbsp;&amp;nbsp;1&amp;nbsp;&amp;nbsp;guru1&amp;nbsp;&amp;nbsp;course&amp;nbsp;&amp;nbsp;&amp;nbsp;3&amp;nbsp;&amp;nbsp;Aug&amp;nbsp;31&amp;nbsp;14:12&amp;nbsp;&amp;nbsp;bar&amp;nbsp;-&amp;gt;&amp;nbsp;foo&amp;nbsp;&lt;br/&gt;-rw-r--r--&amp;nbsp;&amp;nbsp;1&amp;nbsp;&amp;nbsp;guru1&amp;nbsp;&amp;nbsp;course&amp;nbsp;&amp;nbsp;10&amp;nbsp;&amp;nbsp;Aug&amp;nbsp;31&amp;nbsp;14:12&amp;nbsp;&amp;nbsp;foo&amp;nbsp;&lt;br/&gt;$&amp;nbsp;rm&amp;nbsp;bar&amp;nbsp;</exhibit>
-    <question>Consider the above exhibit.&lt;br/&gt;As you can see &lt;font face="monospace"&gt;bar&lt;/font&gt;  is a symbolic link, pointing to  &lt;font face="monospace"&gt;foo&lt;/font&gt;.&lt;br/&gt;As user &lt;font face="monospace"&gt;guru1&lt;/font&gt; you execute  '&lt;font face="monospace"&gt;rm bar&lt;/font&gt;'.&lt;br/&gt;What happens?</question>
+    <question>Consider the above exhibit.&lt;br/&gt;As you can see &lt;font face="monospace"&gt;bar&lt;/font&gt;  is a symbolic link, pointing to  &lt;font face="monospace"&gt;foo&lt;/font&gt;.&lt;br/&gt;As user &lt;font face="monospace"&gt;guru1&lt;/font&gt; you execute  '&lt;font face="monospace"&gt;rm&amp;nbsp;bar&lt;/font&gt;'.&lt;br/&gt;What happens?</question>
     <choice>Nothing, because  &lt;font face="monospace"&gt;bar&lt;/font&gt;  is no ordinary file.</choice>
     <choice>Both  &lt;font face="monospace"&gt;foo&lt;/font&gt;  and  &lt;font face="monospace"&gt;bar&lt;/font&gt;  would be removed.</choice>
     <choice>Only  &lt;font face="monospace"&gt;foo&lt;/font&gt;  would be removed, because  &lt;font face="monospace"&gt;bar&lt;/font&gt;  points to  &lt;font face="monospace"&gt;foo&lt;/font&gt;.</choice>
@@ -511,22 +511,22 @@
   </item>
   <item>
     <question>Which of the following commands gets its input from  &lt;font face="monospace"&gt;file1&lt;/font&gt;, writes its output to  &lt;font face="monospace"&gt;file2&lt;/font&gt;  and writes errormessages to &lt;font face="monospace"&gt;file3&lt;/font&gt;?</question>
-    <choice>&lt;font face="monospace"&gt;command 0&amp;lt;&amp;lt;file1 1&amp;gt;file2 2&amp;gt;file3&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;command 1&amp;lt;&amp;lt;file1 2&amp;gt;file2 3&amp;gt;file3&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;command &amp;lt;file1 &amp;gt;file2 &amp;gt;&amp;gt;file3&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;cat file1 | command &amp;gt;file2 2&amp;gt;file3&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;cat file1 | command &amp;gt;file2 2&amp;gt;file3&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;command&amp;nbsp;0&amp;lt;&amp;lt;file1&amp;nbsp;1&amp;gt;file2&amp;nbsp;2&amp;gt;file3&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;command&amp;nbsp;1&amp;lt;&amp;lt;file1&amp;nbsp;2&amp;gt;file2&amp;nbsp;3&amp;gt;file3&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;command&amp;nbsp;&amp;lt;file1&amp;nbsp;&amp;gt;file2&amp;nbsp;&amp;gt;&amp;gt;file3&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;cat&amp;nbsp;file1&amp;nbsp;|&amp;nbsp;command&amp;nbsp;&amp;gt;file2&amp;nbsp;2&amp;gt;file3&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;cat&amp;nbsp;file1&amp;nbsp;|&amp;nbsp;command&amp;nbsp;&amp;gt;file2&amp;nbsp;2&amp;gt;file3&lt;/font&gt;</correct_answer>
     <hint>If you are not certain you might get lucky and another question may give you a clue for the correct answer.</hint>
     <type>multiple choice</type>
   </item>
   <item>
     <exhibit>&amp;nbsp;12:32:30&amp;nbsp;up&amp;nbsp;344&amp;nbsp;days,&amp;nbsp;11:23,&amp;nbsp;&amp;nbsp;4&amp;nbsp;users,&amp;nbsp;&amp;nbsp;load&amp;nbsp;average:&amp;nbsp;0.00,&amp;nbsp;0.00,&amp;nbsp;0.02&amp;nbsp;</exhibit>
     <question>On a system that has the above uptime.&lt;br/&gt;Which command is best used to print out system boot messages?</question>
-    <choice>&lt;font face="monospace"&gt;cat /var/log/dmesg&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;cat&amp;nbsp;/var/log/dmesg&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;dmesg&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;messages&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;reboot&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;cat /var/log/dmesg&lt;/font&gt;</correct_answer>
+    <correct_answer>&lt;font face="monospace"&gt;cat&amp;nbsp;/var/log/dmesg&lt;/font&gt;</correct_answer>
     <hint>The kernel keeps the messages in a buffer in memory. This buffer is limited and when full messages are removed using a first in first out algorithm.</hint>
     <type>multiple choice</type>
   </item>
@@ -544,97 +544,97 @@
   <item>
     <exhibit>#&amp;nbsp;jobs&amp;nbsp;-l&amp;nbsp;&lt;br/&gt;[1]&amp;nbsp;&amp;nbsp;&amp;nbsp;Running&amp;nbsp;firefox&amp;nbsp;&amp;&amp;nbsp;&lt;br/&gt;[2]-&amp;nbsp;&amp;nbsp;Stopped&amp;nbsp;atop&amp;nbsp;&lt;br/&gt;[3]+&amp;nbsp;&amp;nbsp;Stopped&amp;nbsp;vi&amp;nbsp;</exhibit>
     <question>Given the above exhibit, which command could you use to bring application 'vi' to the foreground?</question>
-    <choice>&lt;font face="monospace"&gt;bg %3&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;bg&amp;nbsp;%3&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;fg&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;kill 5457&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;switch %5457&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;kill&amp;nbsp;5457&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;switch&amp;nbsp;%5457&lt;/font&gt;</choice>
     <correct_answer>&lt;font face="monospace"&gt;fg&lt;/font&gt;</correct_answer>
     <hint>If you are not certain you might get lucky and another question may give you a clue for the correct answer.</hint>
     <type>multiple choice</type>
   </item>
   <item>
     <question>You plugged in a USB DVDROM drive. The  &lt;font face="monospace"&gt;dmesg&lt;/font&gt; command told you it was detected as device  &lt;font face="monospace"&gt;/dev/sr0&lt;/font&gt;.&lt;br/&gt;There is no fstab-entry for this device in  &lt;font face="monospace"&gt;/etc/fstab&lt;/font&gt;.&lt;br/&gt;Which of the following commands can you use to mount the media in that drive to the (existing) directory  &lt;font face="monospace"&gt;/mnt/dvdrom&lt;/font&gt;?</question>
-    <choice>&lt;font face="monospace"&gt;mount /mnt/dvdrom&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;mount /dev/sr0&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;mount /dev/sr0 /mnt/dvdrom&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;automount /dev/dvdrom&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;mount /mnt/dvdrom /dev/sr0&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;mount /dev/sr0 /mnt/dvdrom&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;mount&amp;nbsp;/mnt/dvdrom&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;mount&amp;nbsp;/dev/sr0&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;mount&amp;nbsp;/dev/sr0&amp;nbsp;/mnt/dvdrom&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;automount&amp;nbsp;/dev/dvdrom&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;mount&amp;nbsp;/mnt/dvdrom&amp;nbsp;/dev/sr0&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;mount&amp;nbsp;/dev/sr0&amp;nbsp;/mnt/dvdrom&lt;/font&gt;</correct_answer>
     <hint>Many questions require you to know which options a command accepts and in which order. This can be very hard to memorize and you may find it difficult to choose between two answers that only differ in the order of their arguments. Fortunately, you can always come back to this question later on. Sometimes another question might give you a clue for a previous question.</hint>
     <type>multiple choice</type>
   </item>
   <item>
     <question>You are editing the file  &lt;font face="monospace"&gt;foo&lt;/font&gt;  with  &lt;font face="monospace"&gt;vi&lt;/font&gt;.&lt;br/&gt;You want to save the changes with '[ESC]&lt;font face="monospace"&gt;:w&lt;/font&gt;', but  &lt;font face="monospace"&gt;vi&lt;/font&gt; complains you do not have sufficient rights.&lt;br/&gt;Therefore, you want to check the permissions on that file.&lt;br/&gt;How do you manage this without leaving &lt;font face="monospace"&gt;vi&lt;/font&gt;?</question>
-    <choice>&lt;font face="monospace"&gt;:ls -l foo&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;:!ls -l foo&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;:?ls -l foo&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;:command ls -l foo&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;:!ls -l foo&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;:ls&amp;nbsp;-l&amp;nbsp;foo&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;:!ls&amp;nbsp;-l&amp;nbsp;foo&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;:?ls&amp;nbsp;-l&amp;nbsp;foo&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;:command&amp;nbsp;ls&amp;nbsp;-l&amp;nbsp;foo&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;:!ls&amp;nbsp;-l&amp;nbsp;foo&lt;/font&gt;</correct_answer>
     <hint>If you are not certain you might get lucky and another question may give you a clue for the correct answer.</hint>
     <type>multiple choice</type>
   </item>
   <item>
     <question>Which of the following commands can you use to create a new file called &lt;i&gt;atcomputing&lt;/i&gt;?</question>
-    <choice>&lt;font face="monospace"&gt;touch atcomputing&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;create atcomputing&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;&amp;gt; atcomputing&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;mkfile atcomputing&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;touch atcomputing&lt;/font&gt;</correct_answer>
-    <correct_answer>&lt;font face="monospace"&gt;&amp;gt; atcomputing&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;touch&amp;nbsp;atcomputing&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;create&amp;nbsp;atcomputing&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;&amp;gt;&amp;nbsp;atcomputing&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;mkfile&amp;nbsp;atcomputing&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;touch&amp;nbsp;atcomputing&lt;/font&gt;</correct_answer>
+    <correct_answer>&lt;font face="monospace"&gt;&amp;gt;&amp;nbsp;atcomputing&lt;/font&gt;</correct_answer>
     <hint>Although it is not stated explicitly multiple answers may be correct. If there are multiple correct answers you should select all to answer the question correctly.</hint>
     <type>multiple choice</type>
   </item>
   <item>
     <question>Which of the following commands enables write access to the file &lt;i&gt;/usr/share/doc/lpi303/test&lt;/i&gt; for users who belong to the group of the file?</question>
-    <choice>&lt;font face="monospace"&gt;chmod a-x /usr/share/doc/lpi303/test&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;chmod 075 /usr/share/doc/lpi303/test&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;chmod 0711 /usr/share/doc/lpi303/test&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;chmod o+w /usr/share/doc/lpi303/test&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;chmod 075 /usr/share/doc/lpi303/test&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;chmod&amp;nbsp;a-x&amp;nbsp;/usr/share/doc/lpi303/test&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;chmod&amp;nbsp;075&amp;nbsp;/usr/share/doc/lpi303/test&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;chmod&amp;nbsp;0711&amp;nbsp;/usr/share/doc/lpi303/test&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;chmod&amp;nbsp;o+w&amp;nbsp;/usr/share/doc/lpi303/test&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;chmod&amp;nbsp;075&amp;nbsp;/usr/share/doc/lpi303/test&lt;/font&gt;</correct_answer>
     <hint>If you are not certain you might get lucky and another question may give you a clue for the correct answer.</hint>
     <type>multiple choice</type>
   </item>
   <item>
     <question>Which of the following commands will create an ext3 filesystem on device &lt;font face="monospace"&gt;/dev/sdb3&lt;/font&gt;?&lt;br/&gt;Select TWO answers.</question>
-    <choice>&lt;font face="monospace"&gt;/sbin/mke2fs -d /dev/sdb3&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;/sbin/mkfs -t ext3fs /dev/sdb3&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;/sbin/mke3fs /dev/sdb3&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;/sbin/mke2fs -j /dev/sdb3&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;/sbin/mkfs.ext3 /dev/sdb3&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;/sbin/mke2fs -j /dev/sdb3&lt;/font&gt;</correct_answer>
-    <correct_answer>&lt;font face="monospace"&gt;/sbin/mkfs.ext3 /dev/sdb3&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;/sbin/mke2fs&amp;nbsp;-d&amp;nbsp;/dev/sdb3&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;/sbin/mkfs&amp;nbsp;-t&amp;nbsp;ext3fs&amp;nbsp;/dev/sdb3&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;/sbin/mke3fs&amp;nbsp;/dev/sdb3&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;/sbin/mke2fs&amp;nbsp;-j&amp;nbsp;/dev/sdb3&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;/sbin/mkfs.ext3&amp;nbsp;/dev/sdb3&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;/sbin/mke2fs&amp;nbsp;-j&amp;nbsp;/dev/sdb3&lt;/font&gt;</correct_answer>
+    <correct_answer>&lt;font face="monospace"&gt;/sbin/mkfs.ext3&amp;nbsp;/dev/sdb3&lt;/font&gt;</correct_answer>
     <hint>If you are not certain you might get lucky and another question may give you a clue for the correct answer.</hint>
     <type>multiple choice</type>
   </item>
   <item>
     <exhibit>#&amp;nbsp;jobs&amp;nbsp;-l&amp;nbsp;&lt;br/&gt;[1]&amp;nbsp;&amp;nbsp;&amp;nbsp;Running&amp;nbsp;firefox&amp;nbsp;&amp;&amp;nbsp;&lt;br/&gt;[2]-&amp;nbsp;&amp;nbsp;Stopped&amp;nbsp;atop&amp;nbsp;&lt;br/&gt;[3]+&amp;nbsp;&amp;nbsp;Stopped&amp;nbsp;vi&amp;nbsp;</exhibit>
     <question>Given the above exhibit, which command could you use to terminate the application 'vi'?</question>
-    <choice>&lt;font face="monospace"&gt;bg %3&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;fg &lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;kill -9 5457&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;stop %3&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;kill -9 5457&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;bg&amp;nbsp;%3&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;fg&amp;nbsp;&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;kill&amp;nbsp;-9&amp;nbsp;5457&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;stop&amp;nbsp;%3&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;kill&amp;nbsp;-9&amp;nbsp;5457&lt;/font&gt;</correct_answer>
     <hint>Sometimes the correct answer does not fit the question exactly. However, eliminating the wrong answers should lead to the correct answer.</hint>
     <type>multiple choice</type>
   </item>
   <item>
     <question>Which of the following commandlines allows you to cancel a previous issued &lt;font face="monospace"&gt;shutdown&lt;/font&gt; command?</question>
-    <choice>&lt;font face="monospace"&gt;shutdown -c&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;shutdown --cancel&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;shutdown -r&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;shutdown -h&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;shutdown -c&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;shutdown&amp;nbsp;-c&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;shutdown&amp;nbsp;--cancel&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;shutdown&amp;nbsp;-r&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;shutdown&amp;nbsp;-h&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;shutdown&amp;nbsp;-c&lt;/font&gt;</correct_answer>
     <hint>If you are not certain you might get lucky and another question may give you a clue for the correct answer.</hint>
     <type>multiple choice</type>
   </item>
   <item>
     <question>Which command would you use to display how many inodes are available on the  &lt;font face="monospace"&gt;/home&lt;/font&gt;  filesystem?</question>
-    <choice>&lt;font face="monospace"&gt;du /home&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;df /home&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;df --i-nodes /home&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;df -i /home&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;du -i /home&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;df -i /home&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;du&amp;nbsp;/home&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;df&amp;nbsp;/home&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;df&amp;nbsp;--i-nodes&amp;nbsp;/home&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;df&amp;nbsp;-i&amp;nbsp;/home&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;du&amp;nbsp;-i&amp;nbsp;/home&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;df&amp;nbsp;-i&amp;nbsp;/home&lt;/font&gt;</correct_answer>
     <hint>The answers only cover the commands &lt;font face="monospace"&gt;du&lt;/font&gt; and &lt;font face="monospace"&gt;df&lt;/font&gt;. So choosing the correct command gets you halfway. You will then only need to remember if the command requires an option or not to show the amount of available inodes.</hint>
     <type>multiple choice</type>
   </item>

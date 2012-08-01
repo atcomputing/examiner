@@ -14,34 +14,34 @@
   </item>
   <item>
     <question>You are looking for an executable file &lt;font face="monospace"&gt;foo&lt;/font&gt;.&lt;br/&gt;Select TWO commands that would search for &lt;font face="monospace"&gt;foo&lt;/font&gt; within directories set in the shell variable &lt;font face="monospace"&gt;$PATH&lt;/font&gt;.</question>
-    <choice>&lt;font face="monospace"&gt;locate foo&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;which foo&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;find -name foo&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;query -f foo&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;whereis --file foo&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;type foo&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;which foo&lt;/font&gt;</correct_answer>
-    <correct_answer>&lt;font face="monospace"&gt;type foo&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;locate&amp;nbsp;foo&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;which&amp;nbsp;foo&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;find&amp;nbsp;-name&amp;nbsp;foo&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;query&amp;nbsp;-f&amp;nbsp;foo&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;whereis&amp;nbsp;--file&amp;nbsp;foo&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;type&amp;nbsp;foo&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;which&amp;nbsp;foo&lt;/font&gt;</correct_answer>
+    <correct_answer>&lt;font face="monospace"&gt;type&amp;nbsp;foo&lt;/font&gt;</correct_answer>
     <hint>You are required to provide TWO answers. So select two, no more, no less. The question asks for an executable file, not just any file named &lt;font face="monospace"&gt;foo&lt;/font&gt;.</hint>
     <type>multiple choice</type>
   </item>
   <item>
     <question>You started the program &lt;font face="monospace"&gt;rups&lt;/font&gt; in the background and you notice it consumes a lot of resources.&lt;br/&gt;Which of the following commands can you use to make the command you just started use less CPU resources?</question>
-    <choice>&lt;font face="monospace"&gt;nice -1&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;prio +1&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;renice +1&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;renice -n -2&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;renice +1&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;nice&amp;nbsp;-1&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;prio&amp;nbsp;+1&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;renice&amp;nbsp;+1&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;renice&amp;nbsp;-n&amp;nbsp;-2&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;renice&amp;nbsp;+1&lt;/font&gt;</correct_answer>
     <hint>The question is about changing the priority of a RUNNING proces. Changing the priority is done by changing the nice value of the proces. A lower value means less nice, a higher value means the proces is nicer to other processes regarding CPU resources.</hint>
     <type>multiple choice</type>
   </item>
   <item>
     <question>You want to know how much disk-space you are using in your homedirectory.&lt;br/&gt;Which of the following commands will accomplish this?</question>
     <choice>&lt;font face="monospace"&gt;free&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;df ~&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;df&amp;nbsp;~&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;quota&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;du -hs ~&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;du -hs ~&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;du&amp;nbsp;-hs&amp;nbsp;~&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;du&amp;nbsp;-hs&amp;nbsp;~&lt;/font&gt;</correct_answer>
     <hint>The question does not state what your current working directory is. Hence, the remark that you want to know the disk-space in your homedirectory allows you to easily eliminate to possible answers.</hint>
     <type>multiple choice</type>
   </item>
@@ -60,8 +60,8 @@
     <question>You want to know the previous runlevel your system was running.&lt;br/&gt;Which command can be used to find the previous runlevel?</question>
     <choice>&lt;font face="monospace"&gt;runlevel&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;curlevel&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;runlevel previous&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;show level previous&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;runlevel&amp;nbsp;previous&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;show&amp;nbsp;level&amp;nbsp;previous&lt;/font&gt;</choice>
     <correct_answer>&lt;font face="monospace"&gt;runlevel&lt;/font&gt;</correct_answer>
     <hint>If you are not certain you might get lucky and another question may give you a clue for the correct answer.</hint>
     <type>multiple choice</type>
@@ -119,12 +119,12 @@
   </item>
   <item>
     <question>You want to remove a package from the system completely, including its configuration files.&lt;br/&gt;Which  &lt;font face="monospace"&gt;dpkg&lt;/font&gt;  command-option(s) should you use?</question>
-    <choice>&lt;font face="monospace"&gt;dpkg --remove packagename&lt;/font&gt;  &lt;i&gt;or&lt;/i&gt;  &lt;font face="monospace"&gt;dpkg -r packagename&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;dpkg --purge packagename&lt;/font&gt;  &lt;i&gt;or&lt;/i&gt;  &lt;font face="monospace"&gt;dpkg -P packagename&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;dpkg --purge --remove packagename&lt;/font&gt;  &lt;i&gt;or&lt;/i&gt;  &lt;font face="monospace"&gt;dpkg -Pr packagename&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;dpkg --uninstall packagename&lt;/font&gt;  &lt;i&gt;or&lt;/i&gt;  &lt;font face="monospace"&gt;dpkg -u packagename&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;dpkg&amp;nbsp;--remove&amp;nbsp;packagename&lt;/font&gt;  &lt;i&gt;or&lt;/i&gt;  &lt;font face="monospace"&gt;dpkg&amp;nbsp;-r&amp;nbsp;packagename&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;dpkg&amp;nbsp;--purge&amp;nbsp;packagename&lt;/font&gt;  &lt;i&gt;or&lt;/i&gt;  &lt;font face="monospace"&gt;dpkg&amp;nbsp;-P&amp;nbsp;packagename&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;dpkg&amp;nbsp;--purge&amp;nbsp;--remove&amp;nbsp;packagename&lt;/font&gt;  &lt;i&gt;or&lt;/i&gt;  &lt;font face="monospace"&gt;dpkg&amp;nbsp;-Pr&amp;nbsp;packagename&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;dpkg&amp;nbsp;--uninstall&amp;nbsp;packagename&lt;/font&gt;  &lt;i&gt;or&lt;/i&gt;  &lt;font face="monospace"&gt;dpkg&amp;nbsp;-u&amp;nbsp;packagename&lt;/font&gt;</choice>
     <choice>None of the mentioned choices.</choice>
-    <correct_answer>&lt;font face="monospace"&gt;dpkg --purge packagename&lt;/font&gt;  &lt;i&gt;or&lt;/i&gt;  &lt;font face="monospace"&gt;dpkg -P packagename&lt;/font&gt;</correct_answer>
+    <correct_answer>&lt;font face="monospace"&gt;dpkg&amp;nbsp;--purge&amp;nbsp;packagename&lt;/font&gt;  &lt;i&gt;or&lt;/i&gt;  &lt;font face="monospace"&gt;dpkg&amp;nbsp;-P&amp;nbsp;packagename&lt;/font&gt;</correct_answer>
     <hint>If you are not certain you might get lucky and another question may give you a clue for the correct answer.</hint>
     <type>multiple choice</type>
   </item>
@@ -183,7 +183,7 @@
   <item>
     <question>Which command displays the shared libraries an executable uses?</question>
     <choice>&lt;font face="monospace"&gt;lslibs&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;ls --libs&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;ls&amp;nbsp;--libs&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;ldd&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;ldconfig&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;libpath&lt;/font&gt;</choice>
@@ -204,11 +204,11 @@
   <item>
     <exhibit>$&amp;nbsp;ls&amp;nbsp;/etc/rc3.d/&amp;nbsp;&lt;br/&gt;K01dnsmasq&amp;nbsp;&lt;br/&gt;K02NetworkManager&amp;nbsp;&lt;br/&gt;K50netconsole&amp;nbsp;&lt;br/&gt;K89netplugd&amp;nbsp;&lt;br/&gt;K92ip6tables&amp;nbsp;&lt;br/&gt;S05cpuspeed&amp;nbsp;&lt;br/&gt;S05kudzu&amp;nbsp;&lt;br/&gt;S10network&amp;nbsp;&lt;br/&gt;S99smartd&amp;nbsp;</exhibit>
     <question>Considering above exhibit, which command would add &lt;font face="monospace"&gt;firewall&lt;/font&gt; to the runlevel and start it before networking is started?</question>
-    <choice>&lt;font face="monospace"&gt;update-rc.d firewall start 11 3&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;update-rc.d firewall start 11 3 .&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;ln -s /etc/init.d/firewall /etc/rc5.d/S09firewall&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;ln -s /etc/init.d/firewall /etc/rc3.d/S10firewall&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;ln -s /etc/init.d/firewall /etc/rc3.d/S10firewall&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;update-rc.d&amp;nbsp;firewall&amp;nbsp;start&amp;nbsp;11&amp;nbsp;3&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;update-rc.d&amp;nbsp;firewall&amp;nbsp;start&amp;nbsp;11&amp;nbsp;3&amp;nbsp;.&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;ln&amp;nbsp;-s&amp;nbsp;/etc/init.d/firewall&amp;nbsp;/etc/rc5.d/S09firewall&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;ln&amp;nbsp;-s&amp;nbsp;/etc/init.d/firewall&amp;nbsp;/etc/rc3.d/S10firewall&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;ln&amp;nbsp;-s&amp;nbsp;/etc/init.d/firewall&amp;nbsp;/etc/rc3.d/S10firewall&lt;/font&gt;</correct_answer>
     <hint>The order is determined using Bash filename expansion, which is alphabetically.</hint>
     <type>multiple choice</type>
   </item>
@@ -284,9 +284,9 @@
   </item>
   <item>
     <question>You are a regular user (not &lt;font face="monospace"&gt;root&lt;/font&gt;) and want to examine the PCI bus configuration.&lt;br/&gt;Which command can you use?</question>
-    <choice>&lt;font face="monospace"&gt;cat /proc/bus/pci&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;cat&amp;nbsp;/proc/bus/pci&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;lspci&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;lsbus --pci&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;lsbus&amp;nbsp;--pci&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;pcilist&lt;/font&gt;</choice>
     <choice>None of the mentioned choices, it is only possible with &lt;font face="monospace"&gt;root&lt;/font&gt;-privileges.</choice>
     <correct_answer>&lt;font face="monospace"&gt;lspci&lt;/font&gt;</correct_answer>
@@ -328,11 +328,11 @@
   </item>
   <item>
     <question>You want to use shared libraries that are in  &lt;font face="monospace"&gt;/home/guru1/mylibs&lt;/font&gt; (which is not in the standard library search path).&lt;br/&gt;What is the appropriate command to use these libraries.</question>
-    <choice>&lt;font face="monospace"&gt;ldconfig /home/guru1/mylibs&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;export LD_LIBRARY_PATH=/home/guru1/mylibs&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;export LD_LIBPATH=/home/guru1/mylibs&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;ldd /home/guru1/mylibs&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;export LD_LIBRARY_PATH=/home/guru1/mylibs&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;ldconfig&amp;nbsp;/home/guru1/mylibs&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;export&amp;nbsp;LD_LIBRARY_PATH=/home/guru1/mylibs&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;export&amp;nbsp;LD_LIBPATH=/home/guru1/mylibs&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;ldd&amp;nbsp;/home/guru1/mylibs&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;export&amp;nbsp;LD_LIBRARY_PATH=/home/guru1/mylibs&lt;/font&gt;</correct_answer>
     <hint>If you are not certain you might get lucky and another question may give you a clue for the correct answer.</hint>
     <type>multiple choice</type>
   </item>
@@ -369,12 +369,12 @@
   </item>
   <item>
     <question>You are logged in as &lt;i&gt;root&lt;/i&gt;, and want to execute the command  &lt;font face="monospace"&gt;ls&lt;/font&gt;  as user &lt;i&gt;fordp&lt;/i&gt;.&lt;br/&gt;You do not know his password.&lt;br/&gt;How would you do this?</question>
-    <choice>&lt;font face="monospace"&gt;runas fordp "ls"&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;su -c ls fordp&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;sudo fordp "ls"&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;ssh fordp@localhost ls&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;runas&amp;nbsp;fordp&amp;nbsp;"ls"&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;su&amp;nbsp;-c&amp;nbsp;ls&amp;nbsp;fordp&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;sudo&amp;nbsp;fordp&amp;nbsp;"ls"&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;ssh&amp;nbsp;fordp@localhost&amp;nbsp;ls&lt;/font&gt;</choice>
     <choice>It is not possible, because you do not know his password.</choice>
-    <correct_answer>&lt;font face="monospace"&gt;su -c ls fordp&lt;/font&gt;</correct_answer>
+    <correct_answer>&lt;font face="monospace"&gt;su&amp;nbsp;-c&amp;nbsp;ls&amp;nbsp;fordp&lt;/font&gt;</correct_answer>
     <hint>You are root and as the root user you can become any user without providing a password.</hint>
     <type>multiple choice</type>
   </item>
@@ -410,24 +410,24 @@
   </item>
   <item>
     <question>On a &lt;i&gt;Red Hat 5&lt;/i&gt; system, which of the following commands can you use to update the package &lt;i&gt;bind&lt;/i&gt; to the latest available version?&lt;br/&gt;Select all answers that apply.</question>
-    <choice>&lt;font face="monospace"&gt;apt-get update bind&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;rpm -U bind&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;rpm --upgrade bind&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;yum update bind&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;yum upgrade bind&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;yum update bind&lt;/font&gt;</correct_answer>
-    <correct_answer>&lt;font face="monospace"&gt;yum upgrade bind&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;apt-get&amp;nbsp;update&amp;nbsp;bind&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;rpm&amp;nbsp;-U&amp;nbsp;bind&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;rpm&amp;nbsp;--upgrade&amp;nbsp;bind&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;yum&amp;nbsp;update&amp;nbsp;bind&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;yum&amp;nbsp;upgrade&amp;nbsp;bind&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;yum&amp;nbsp;update&amp;nbsp;bind&lt;/font&gt;</correct_answer>
+    <correct_answer>&lt;font face="monospace"&gt;yum&amp;nbsp;upgrade&amp;nbsp;bind&lt;/font&gt;</correct_answer>
     <hint>If you are not certain you might get lucky and another question may give you a clue for the correct answer.</hint>
     <type>multiple choice</type>
   </item>
   <item>
     <question>Which command will display a list with all installed RPMs?</question>
-    <choice>&lt;font face="monospace"&gt;rpm list&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;rpm -q&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;rpm -qa&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;rpm -ql&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;rpm listall&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;rpm -qa&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;rpm&amp;nbsp;list&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;rpm&amp;nbsp;-q&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;rpm&amp;nbsp;-qa&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;rpm&amp;nbsp;-ql&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;rpm&amp;nbsp;listall&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;rpm&amp;nbsp;-qa&lt;/font&gt;</correct_answer>
     <hint>If you are not certain you might get lucky and another question may give you a clue for the correct answer.</hint>
     <type>multiple choice</type>
   </item>
@@ -453,13 +453,13 @@
   </item>
   <item>
     <question>Which of the following commands would return all lines that contains text between brackets (i.e. &lt;font face="monospace"&gt;[...]&lt;/font&gt;)?&lt;br/&gt;Choose all that apply.</question>
-    <choice>&lt;font face="monospace"&gt;grep '[.*]' file.txt&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;grep '\[..*\]' file.txt&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;grep '\[.*\]' file.txt&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;grep '\[*\]' file.txt&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;grep '\[[^]][^]]*\]' file.txt&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;grep '\[..*\]' file.txt&lt;/font&gt;</correct_answer>
-    <correct_answer>&lt;font face="monospace"&gt;grep '\[[^]][^]]*\]' file.txt&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;grep&amp;nbsp;'[.*]'&amp;nbsp;file.txt&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;grep&amp;nbsp;'\[..*\]'&amp;nbsp;file.txt&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;grep&amp;nbsp;'\[.*\]'&amp;nbsp;file.txt&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;grep&amp;nbsp;'\[*\]'&amp;nbsp;file.txt&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;grep&amp;nbsp;'\[[^]][^]]*\]'&amp;nbsp;file.txt&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;grep&amp;nbsp;'\[..*\]'&amp;nbsp;file.txt&lt;/font&gt;</correct_answer>
+    <correct_answer>&lt;font face="monospace"&gt;grep&amp;nbsp;'\[[^]][^]]*\]'&amp;nbsp;file.txt&lt;/font&gt;</correct_answer>
     <hint>The command &lt;font face="monospace"&gt;grep&lt;/font&gt; uses regular expression syntax to specify the match filter. Brackets allow you to specify a set of characters that may occur at a single position. The caret inside brackets means you do not want the specified characters to match at that position. The dot (&lt;font face="monospace"&gt;.&lt;/font&gt;) means a single random character, but within brackets means a literal dot. The backslash escapes the next character which means it loses it special meaning, if any, and will be considered literally.</hint>
     <type>multiple choice</type>
   </item>
@@ -516,12 +516,12 @@
   </item>
   <item>
     <question>You enter a command (&lt;font face="monospace"&gt;mycmd&lt;/font&gt;) in  &lt;font face="monospace"&gt;bash&lt;/font&gt;  and want to write both standard output and standard error output correctly to a single file (&lt;font face="monospace"&gt;mylog&lt;/font&gt;).&lt;br/&gt;Select all correct answers.</question>
-    <choice>&lt;font face="monospace"&gt;mycmd &amp;gt;mylog &amp;gt;&amp;gt;mylog&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;&amp;gt;mylog 2&amp;gt;&amp;1 mycmd&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;mycmd 1&amp;gt;mylog 2&amp;gt;&amp;1&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;mycmd &amp;gt;mylog 2&amp;gt;mylog&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;&amp;gt;mylog 2&amp;gt;&amp;1 mycmd&lt;/font&gt;</correct_answer>
-    <correct_answer>&lt;font face="monospace"&gt;mycmd 1&amp;gt;mylog 2&amp;gt;&amp;1&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;mycmd&amp;nbsp;&amp;gt;mylog&amp;nbsp;&amp;gt;&amp;gt;mylog&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;&amp;gt;mylog&amp;nbsp;2&amp;gt;&amp;1&amp;nbsp;mycmd&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;mycmd&amp;nbsp;1&amp;gt;mylog&amp;nbsp;2&amp;gt;&amp;1&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;mycmd&amp;nbsp;&amp;gt;mylog&amp;nbsp;2&amp;gt;mylog&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;&amp;gt;mylog&amp;nbsp;2&amp;gt;&amp;1&amp;nbsp;mycmd&lt;/font&gt;</correct_answer>
+    <correct_answer>&lt;font face="monospace"&gt;mycmd&amp;nbsp;1&amp;gt;mylog&amp;nbsp;2&amp;gt;&amp;1&lt;/font&gt;</correct_answer>
     <hint>This is a tricky question. If you know your I/O redirection rules you will probably find one correct answer quickly. But there are actually two correct answers. Before the shell will fork and execute the command it will have rewritten the commandline and removed all special characters and words from the commandline. So the order may not be that important.</hint>
     <type>multiple choice</type>
   </item>
@@ -551,12 +551,12 @@
   <item>
     <exhibit>$&amp;nbsp;cat&amp;nbsp;input.txt&amp;nbsp;&lt;br/&gt;10&amp;nbsp;&amp;nbsp;1&amp;nbsp;&amp;nbsp;monkey&amp;nbsp;&lt;br/&gt;9&amp;nbsp;&amp;nbsp;&amp;nbsp;10&amp;nbsp;donkey&amp;nbsp;&lt;br/&gt;1&amp;nbsp;&amp;nbsp;&amp;nbsp;2&amp;nbsp;&amp;nbsp;mule&amp;nbsp;&lt;br/&gt;201&amp;nbsp;9&amp;nbsp;&amp;nbsp;bird&amp;nbsp;&lt;br/&gt;87&amp;nbsp;&amp;nbsp;10&amp;nbsp;dog&amp;nbsp;&lt;br/&gt;&amp;nbsp;&lt;br/&gt;$&amp;nbsp;COMMAND&amp;nbsp;&lt;br/&gt;10&amp;nbsp;&amp;nbsp;1&amp;nbsp;&amp;nbsp;monkey&amp;nbsp;&lt;br/&gt;1&amp;nbsp;&amp;nbsp;&amp;nbsp;2&amp;nbsp;&amp;nbsp;mule&amp;nbsp;&lt;br/&gt;201&amp;nbsp;9&amp;nbsp;&amp;nbsp;bird&amp;nbsp;&lt;br/&gt;87&amp;nbsp;&amp;nbsp;10&amp;nbsp;dog&amp;nbsp;&lt;br/&gt;9&amp;nbsp;&amp;nbsp;&amp;nbsp;10&amp;nbsp;donkey&amp;nbsp;</exhibit>
     <question>In above exhibit first the original text is shown and second the output is shown from &lt;font face="monospace"&gt;COMMAND&lt;/font&gt;.&lt;br/&gt;Which of the following commandlines can be used in place of &lt;font face="monospace"&gt;COMMAND&lt;/font&gt; to generate the shown output?&lt;br/&gt;Select all correct answers.</question>
-    <choice>&lt;font face="monospace"&gt;sort input.txt&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;cat input.txt | sort -k2,2n -k1,1n&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;sort -k1,1n -k2,2n input.txt&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;cat input.txt | sort | uniq&lt;/font&gt;</choice>
-    <correct_answer>&lt;font face="monospace"&gt;sort input.txt&lt;/font&gt;</correct_answer>
-    <correct_answer>&lt;font face="monospace"&gt;cat input.txt | sort | uniq&lt;/font&gt;</correct_answer>
+    <choice>&lt;font face="monospace"&gt;sort&amp;nbsp;input.txt&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;cat&amp;nbsp;input.txt&amp;nbsp;|&amp;nbsp;sort&amp;nbsp;-k2,2n&amp;nbsp;-k1,1n&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;sort&amp;nbsp;-k1,1n&amp;nbsp;-k2,2n&amp;nbsp;input.txt&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;cat&amp;nbsp;input.txt&amp;nbsp;|&amp;nbsp;sort&amp;nbsp;|&amp;nbsp;uniq&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;sort&amp;nbsp;input.txt&lt;/font&gt;</correct_answer>
+    <correct_answer>&lt;font face="monospace"&gt;cat&amp;nbsp;input.txt&amp;nbsp;|&amp;nbsp;sort&amp;nbsp;|&amp;nbsp;uniq&lt;/font&gt;</correct_answer>
     <hint>The order in which the file is sorted is not numerically but alphabetically.</hint>
     <type>multiple choice</type>
   </item>
@@ -598,7 +598,7 @@
     <choice>Your redhat system will be upgraded to the new release version</choice>
     <choice>Packages already installed will be updated if a new version is available</choice>
     <correct_answer>Packages already installed will be updated if a new version is available</correct_answer>
-    <hint>Usually you use &lt;font face="monospace"&gt;yum upgrade&lt;/font&gt; to upgrade the system to a new version but this requires more actions than are mentioned in the question.</hint>
+    <hint>Usually you use &lt;font face="monospace"&gt;yum&amp;nbsp;upgrade&lt;/font&gt; to upgrade the system to a new version but this requires more actions than are mentioned in the question.</hint>
     <type>multiple choice</type>
   </item>
   <item>

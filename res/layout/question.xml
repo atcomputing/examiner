@@ -3,6 +3,34 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
+    <LinearLayout
+        android:id="@+id/question_buttonLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/button_prev"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_weight="1"
+            android:text="@string/button_prev"
+            android:textSize="@dimen/textSizeDefault" >
+        </Button>
+
+        <Button
+            android:id="@+id/button_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:text="@string/button_next"
+            android:textSize="@dimen/textSizeDefault" >
+        </Button>
+    </LinearLayout>
+    
     <RelativeLayout
         android:id="@+id/titleBar"
         android:layout_width="fill_parent"
@@ -45,30 +73,31 @@
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/titleBar" >
-
-        <HorizontalScrollView
-            android:id="@+id/horizontalScrollViewQuestion"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none" >
+        android:layout_below="@id/titleBar"
+        android:layout_above="@id/question_buttonLayout"
+      >
 
             <LinearLayout
                 android:id="@+id/question_layout"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
+                <HorizontalScrollView
+            android:id="@+id/horizontalScrollViewExhibit"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="#333333"
+            android:scrollbars="none" >
                 <TextView
                     android:id="@+id/textExhibit"
-                    android:layout_width="fill_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="#333333"
                     android:padding="@dimen/paddingDefault"
                     android:textColor="#FFFFFF"
                     android:textSize="@dimen/textSizeDefault"
                     android:typeface="monospace" />
-
+			</HorizontalScrollView>
                 <TextView
                     android:id="@+id/textQuestion"
                     android:layout_width="fill_parent"
@@ -80,41 +109,22 @@
                     android:typeface="serif" >
                 </TextView>
 
+                <HorizontalScrollView
+            android:id="@+id/horizontalScrollViewAnswers"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none" >
                 <LinearLayout
                     android:id="@+id/answerLayout"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
                 </LinearLayout>
+                </HorizontalScrollView>
             </LinearLayout>
-        </HorizontalScrollView>
+        
     </ScrollView>
 
-    <LinearLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal" >
-
-        <Button
-            android:id="@+id/button_prev"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_weight="1"
-            android:text="@string/button_prev"
-            android:textSize="@dimen/textSizeDefault" >
-        </Button>
-
-        <Button
-            android:id="@+id/button_next"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:layout_weight="1"
-            android:text="@string/button_next"
-            android:textSize="@dimen/textSizeDefault" >
-        </Button>
-    </LinearLayout>
+    
 
 </RelativeLayout>

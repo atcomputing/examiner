@@ -27,6 +27,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -464,9 +465,8 @@ public class ExamQuestionActivity extends Activity {
 		if( text != null ) {
 			exhibit.setText(Html.fromHtml(text));
 		} else {
-//			HorizontalScrollView viewExhibit = (HorizontalScrollView) findViewById(R.id.horizontalScrollViewExhibit);
-//			layout.removeView(viewExhibit);
-			layout.removeView(exhibit);
+			HorizontalScrollView viewExhibit = (HorizontalScrollView) findViewById(R.id.horizontalScrollViewExhibit);
+			layout.removeView(viewExhibit);
 		}
 
 
