@@ -5,26 +5,22 @@
      	android:id="@+id/choiceLayout"
      	android:layout_width="fill_parent" 
     	android:layout_height="wrap_content"
-     	android:orientation="horizontal" >
+     	android:orientation="horizontal"
+     	android:gravity="center" >
      	<CheckBox 
      	    android:id="@+id/choiceCheckBox"
      	    android:layout_width="wrap_content" 
     		android:layout_height="wrap_content"
     		android:layout_gravity="left|center_vertical"
     		android:layout_marginRight="@dimen/paddingDefault"/>
-     	 <HorizontalScrollView
-                      android:layout_width="fill_parent" 
-                      android:layout_height="wrap_content"
-                      android:scrollbars="none"
-                      android:layout_gravity="center_vertical">
+     	 
      	<TextView 
      	    android:id="@+id/choiceTextView"
-     	    android:layout_width="wrap_content" 
+     	    android:layout_width="fill_parent" 
     		android:layout_height="wrap_content"
     		android:textSize="@dimen/textSizeDefault"
     		android:textStyle="bold"
     		android:textColor="#FFFFFFFF"
     		android:gravity="center_vertical"
     		android:scrollHorizontally="true"/>
-     	</HorizontalScrollView>
 </LinearLayout>

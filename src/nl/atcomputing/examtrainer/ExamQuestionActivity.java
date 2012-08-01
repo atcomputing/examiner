@@ -460,12 +460,13 @@ public class ExamQuestionActivity extends Activity {
 		question.setText(Long.toString(questionId));
 
 		text = this.examQuestion.getExhibit();
+		TextView exhibit = (TextView) findViewById(R.id.textExhibit);
 		if( text != null ) {
-			TextView exhibit = (TextView) findViewById(R.id.textExhibit);
 			exhibit.setText(Html.fromHtml(text));
 		} else {
-			HorizontalScrollView viewExhibit = (HorizontalScrollView) findViewById(R.id.horizontalScrollViewExhibit);
-			layout.removeView(viewExhibit);
+//			HorizontalScrollView viewExhibit = (HorizontalScrollView) findViewById(R.id.horizontalScrollViewExhibit);
+//			layout.removeView(viewExhibit);
+			layout.removeView(exhibit);
 		}
 
 

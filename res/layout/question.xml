@@ -15,8 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:paddingRight="@dimen/paddingDefault"
             android:paddingLeft="@dimen/paddingDefault"
+            android:paddingRight="@dimen/paddingDefault"
             android:text="@string/Question"
             android:textColor="@android:color/black"
             android:textSize="@dimen/textSizeDefault" />
@@ -43,64 +43,51 @@
     </RelativeLayout>
 
     <ScrollView
-        android:id="@+id/ScrollView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/titleBar"
-        android:layout_marginBottom="50dip" >
+        android:layout_below="@id/titleBar" >
 
-        <LinearLayout
-            android:id="@+id/question_layout"
+        <HorizontalScrollView
+            android:id="@+id/horizontalScrollViewQuestion"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:scrollbars="none" >
 
-            <HorizontalScrollView
-                android:id="@+id/horizontalScrollViewExhibit"
-                android:layout_width="fill_parent"
+            <LinearLayout
+                android:id="@+id/question_layout"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#333333"
-                android:scrollbars="none" >
+                android:orientation="vertical" >
 
                 <TextView
                     android:id="@+id/textExhibit"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
-                    android:padding="@dimen/paddingDefault"             
-    				android:textSize="@dimen/textSizeDefault"
-                    android:scrollHorizontally="true"
+                    android:background="#333333"
+                    android:padding="@dimen/paddingDefault"
                     android:textColor="#FFFFFF"
+                    android:textSize="@dimen/textSizeDefault"
                     android:typeface="monospace" />
-            </HorizontalScrollView>
-
-            <HorizontalScrollView
-                android:id="@+id/horizontalScrollViewQuestion"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="none" >
 
                 <TextView
                     android:id="@+id/textQuestion"
-                    android:layout_width="wrap_content"
+                    android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:background="#000000"
                     android:padding="@dimen/paddingDefault"
-                    android:textSize="@dimen/textSizeDefault"
-                    android:scrollHorizontally="true"
                     android:textColor="#CCCCCC"
+                    android:textSize="@dimen/textSizeDefault"
                     android:typeface="serif" >
                 </TextView>
-            </HorizontalScrollView>
 
-            <LinearLayout
-                android:id="@+id/answerLayout"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                <LinearLayout
+                    android:id="@+id/answerLayout"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
+        </HorizontalScrollView>
     </ScrollView>
 
     <LinearLayout
@@ -115,8 +102,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="left"
             android:layout_weight="1"
-            android:textSize="@dimen/textSizeDefault"
-            android:text="@string/button_prev" >
+            android:text="@string/button_prev"
+            android:textSize="@dimen/textSizeDefault" >
         </Button>
 
         <Button
@@ -125,8 +112,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_weight="1"
-            android:textSize="@dimen/textSizeDefault"
-            android:text="@string/button_next" >
+            android:text="@string/button_next"
+            android:textSize="@dimen/textSizeDefault" >
         </Button>
     </LinearLayout>
 
