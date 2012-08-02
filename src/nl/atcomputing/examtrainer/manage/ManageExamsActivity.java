@@ -35,7 +35,8 @@ public class ManageExamsActivity extends ListActivity {
 	static final int DIALOG_CONFIRMATION_ID = 0;
 	private TextView noExamsAvailable;
 	private TextView clickOnManageExams;
-
+	private Cursor cursor;
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.manageexams);
@@ -45,22 +46,42 @@ public class ManageExamsActivity extends ListActivity {
 		noExamsAvailable = (TextView) this.findViewById(R.id.manageexams_no_exams_available);
 		clickOnManageExams = (TextView) this.findViewById(R.id.manageexams_click_on_manage_exams);		
 
-		this.adap = (ManageExamsAdapter) getLastNonConfigurationInstance();
-		if( this.adap == null ) {
-			this.adap = new ManageExamsAdapter(this, R.layout.manageexams_entry, null);
-		}
-		this.adap.setContext(this);
-		setListAdapter(this.adap);
-		updateView();
 	}
+	
+	public void onResume() {
+		super.onResume();
+		
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+		examTrainerDbHelper.open();
+		this.cursor = examTrainerDbHelper.getAllExams();
+		
+		if ( (cursor == null) || (cursor.getCount() == 0) ) {
+			noExamsAvailable.setVisibility(View.VISIBLE);
+			clickOnManageExams.setVisibility(View.VISIBLE);
 
-	public Object onRetainNonConfigurationInstance() {
-		return this.adap;
+		} else {
+			//Remove exams not available text when there are exams installed
+			noExamsAvailable.setVisibility(View.GONE);
+			clickOnManageExams.setVisibility(View.GONE);
+		}
+		
+		examTrainerDbHelper.close();
+		
+		this.adap = new ManageExamsAdapter(this, R.layout.manageexams_entry, this.cursor);
+		setListAdapter(this.adap);
+	}
+	
+	public void onPause() {
+		super.onPause();
+		
+		if(this.cursor != null) {
+			this.cursor.close();
+		}
 	}
 	
 	protected void onDestroy() {
 		super.onDestroy();
-		adap.getCursor().close();
+		
 	}
 	
 	@Override
@@ -79,7 +100,7 @@ public class ManageExamsActivity extends ListActivity {
 			break;
 		case R.id.manageexam_menu_get_new_exams:
 			loadLocalExams();
-			updateView();
+			this.adap.notifyDataSetChanged();
 			break;
 		case R.id.manageexam_menu_settings:
 			intent = new Intent(this, PreferencesActivity.class);
@@ -156,30 +177,7 @@ public class ManageExamsActivity extends ListActivity {
 		cursor.close();
 		examTrainerDbHelper.close();
 		
-		updateView();
-	}
-
-	private void updateView() {
-		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
-		examTrainerDbHelper.open();
-		Cursor cursor = examTrainerDbHelper.getAllExams();
-		
-		if ( (cursor == null) || (cursor.getCount() == 0) ) {
-			noExamsAvailable.setVisibility(View.VISIBLE);
-			clickOnManageExams.setVisibility(View.VISIBLE);
-
-		} else {
-			//Remove exams not available text when there are exams installed
-			noExamsAvailable.setVisibility(View.GONE);
-			clickOnManageExams.setVisibility(View.GONE);
-		}
-		
-		if(cursor != null) {
-			cursor.close();
-		}
-
-		examTrainerDbHelper.close();
-		adap.updateView();
+		this.adap.notifyDataSetChanged();
 	}
 
 	private void loadLocalExams() {
