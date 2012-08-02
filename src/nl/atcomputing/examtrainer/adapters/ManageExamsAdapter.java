@@ -56,7 +56,7 @@ public class ManageExamsAdapter extends BaseAdapter  {
 	}
 
 	public Object getItem(int position) {
-		if( cursor.moveToPosition(position) ) {
+		if( (cursor.moveToPosition(position) ) && ( ! cursor.isClosed() ) ){
 			return cursor;
 		} else {
 			return null;
@@ -64,10 +64,7 @@ public class ManageExamsAdapter extends BaseAdapter  {
 	}
 
 	public long getItemId(int position) {
-		if( cursor.isClosed() ) {
-			return 0;
-		}
-		if( cursor.move(position) ) {
+		if( ( cursor.move(position) )  && ( ! cursor.isClosed() ) ) {
 			int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID);
 			return cursor.getLong(index);
 		} else {
@@ -191,6 +188,7 @@ public class ManageExamsAdapter extends BaseAdapter  {
 					R.string.uninstall, new Runnable() {
 
 				public void run() {
+					holder.installUninstallButton.setEnabled(false);
 					new UninstallExam(holder, context).execute();
 				}
 			}, R.string.cancel, new Runnable() {
@@ -201,8 +199,9 @@ public class ManageExamsAdapter extends BaseAdapter  {
 			});
 			dialog.show();
 		} else {
+			holder.installUninstallButton.setEnabled(false);
 			if( ExamTrainer.getInstallExamAsyncTask(holder.examID) == null ) {
-
+				
 				try {
 					URL url = new URL(holder.url);
 					XmlPullExamParser xmlPullFeedParser = new XmlPullExamParser(context, url);
@@ -216,6 +215,7 @@ public class ManageExamsAdapter extends BaseAdapter  {
 							holder.installUninstallButton, (int) holder.examID, examQuestions);
 					ExamTrainer.addInstallationThread(holder.examID, installExam);
 					installExam.execute();
+					examinationDbHelper.close();
 				}
 				catch (MalformedURLException e) {
 					String message = context.getString(R.string.error_url_is_not_correct) + " " + holder.url;

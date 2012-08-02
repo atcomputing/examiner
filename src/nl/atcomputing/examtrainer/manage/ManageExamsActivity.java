@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import nl.atcomputing.examtrainer.Exam;
+import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
@@ -12,8 +13,11 @@ import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ListActivity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -36,6 +40,14 @@ public class ManageExamsActivity extends ListActivity {
 	private TextView noExamsAvailable;
 	private TextView clickOnManageExams;
 	private Cursor cursor;
+	private ReceiveBroadcast receiveBroadcast;
+	
+	private class ReceiveBroadcast extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			updateListView();
+		}
+	}
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,33 +58,22 @@ public class ManageExamsActivity extends ListActivity {
 		noExamsAvailable = (TextView) this.findViewById(R.id.manageexams_no_exams_available);
 		clickOnManageExams = (TextView) this.findViewById(R.id.manageexams_click_on_manage_exams);		
 
+		this.receiveBroadcast = new ReceiveBroadcast();
 	}
 	
 	public void onResume() {
 		super.onResume();
 		
-		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
-		examTrainerDbHelper.open();
-		this.cursor = examTrainerDbHelper.getAllExams();
+		updateListView();
 		
-		if ( (cursor == null) || (cursor.getCount() == 0) ) {
-			noExamsAvailable.setVisibility(View.VISIBLE);
-			clickOnManageExams.setVisibility(View.VISIBLE);
-
-		} else {
-			//Remove exams not available text when there are exams installed
-			noExamsAvailable.setVisibility(View.GONE);
-			clickOnManageExams.setVisibility(View.GONE);
-		}
-		
-		examTrainerDbHelper.close();
-		
-		this.adap = new ManageExamsAdapter(this, R.layout.manageexams_entry, this.cursor);
-		setListAdapter(this.adap);
+		IntentFilter filter = new IntentFilter(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED);
+	    this.registerReceiver(this.receiveBroadcast, filter);
 	}
 	
 	public void onPause() {
 		super.onPause();
+		
+		this.unregisterReceiver(this.receiveBroadcast);
 		
 		if(this.cursor != null) {
 			this.cursor.close();
@@ -100,7 +101,7 @@ public class ManageExamsActivity extends ListActivity {
 			break;
 		case R.id.manageexam_menu_get_new_exams:
 			loadLocalExams();
-			this.adap.notifyDataSetChanged();
+			updateListView();
 			break;
 		case R.id.manageexam_menu_settings:
 			intent = new Intent(this, PreferencesActivity.class);
@@ -138,11 +139,34 @@ public class ManageExamsActivity extends ListActivity {
 		return dialog;
 	}
 
+	private void updateListView() {
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+		examTrainerDbHelper.open();
+		this.cursor = examTrainerDbHelper.getAllExams();
+		
+		if ( (cursor == null) || (cursor.getCount() == 0) ) {
+			noExamsAvailable.setVisibility(View.VISIBLE);
+			clickOnManageExams.setVisibility(View.VISIBLE);
+
+		} else {
+			//Remove exams not available text when there are exams installed
+			noExamsAvailable.setVisibility(View.GONE);
+			clickOnManageExams.setVisibility(View.GONE);
+		}
+		
+		examTrainerDbHelper.close();
+		
+		this.adap = new ManageExamsAdapter(this, R.layout.manageexams_entry, this.cursor);
+		setListAdapter(this.adap);
+	}
+	
 	private void deleteAllExams() {
 		int index;
 		long examId;
 		long examDate;
 		String examTitle;
+		
+		Log.d("ManageExamsActivity", "Deleting all exams");
 		
 		this.adap.cancelRunningInstallations();
 		
@@ -152,8 +176,11 @@ public class ManageExamsActivity extends ListActivity {
 		examTrainerDbHelper.open();
 		Cursor cursor = examTrainerDbHelper.getAllExams();
 		
-		if( cursor.getCount() < 1 )
+		if( cursor.getCount() < 1 ) {
+			cursor.close();
+			examTrainerDbHelper.close();
 			return;
+		}
 		
 		do {
 			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
@@ -177,7 +204,7 @@ public class ManageExamsActivity extends ListActivity {
 		cursor.close();
 		examTrainerDbHelper.close();
 		
-		this.adap.notifyDataSetChanged();
+		updateListView();
 	}
 
 	private void loadLocalExams() {

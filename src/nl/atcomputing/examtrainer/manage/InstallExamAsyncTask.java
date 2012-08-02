@@ -1,13 +1,10 @@
 package nl.atcomputing.examtrainer.manage;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import nl.atcomputing.examtrainer.ExamQuestion;
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import android.content.Context;
@@ -15,8 +12,6 @@ import android.content.Intent;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -129,7 +124,7 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 		ExamTrainerDbAdapter examTrainerDbHelperAdapter = new ExamTrainerDbAdapter(context);
 		examTrainerDbHelperAdapter.open();
 		if(! examTrainerDbHelperAdapter.setInstallationState(this.examID, ExamTrainerDbAdapter.State.NOT_INSTALLED)) {
-			Toast.makeText(context, "Failed to set exam " + this.examTitle + " to installed.", Toast.LENGTH_LONG).show();
+			Toast.makeText(context, "Failed to set exam " + this.examTitle + " to not installed.", Toast.LENGTH_LONG).show();
 		}
 		examTrainerDbHelperAdapter.close();
 	}
