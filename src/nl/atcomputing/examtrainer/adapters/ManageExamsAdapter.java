@@ -215,6 +215,7 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		}
 
 		protected String doInBackground(ViewHolder... holders) {
+			String returnMessage = "";
 			this.holder.examDate = System.currentTimeMillis();
 			int total = this.holder.examAmountOfItems;
 			int count = 0;
@@ -235,20 +236,23 @@ public class ManageExamsAdapter extends CursorAdapter  {
 					}
 					examQuestion.addToDatabase(examinationDbHelper);
 					count++;
-					percentage = (100 * total/count);
-					onProgressUpdate(percentage);
+					percentage = (int) (100 * (count/(double )total));
+					publishProgress(percentage);
 				}
 
 				examinationDbHelper.close();
 
 			} catch (MalformedURLException e) {
-				return gContext.getString(R.string.error_url_is_not_correct) + " " +this.holder.url;
+				returnMessage = gContext.getString(R.string.error_url_is_not_correct) + " " +this.holder.url;
+				Log.d("ManageExamsAdapter", returnMessage+"\n"+e.getMessage());
 			} catch (SQLiteException e) {
-				return gContext.getString(R.string.failed_to_install_exam) + " " +this.holder.url;
+				returnMessage = gContext.getString(R.string.failed_to_install_exam) + " " +this.holder.url;
+				Log.d("ManageExamsAdapter", returnMessage+"\n"+e.getMessage());
 			} catch (RuntimeException e) {
-				return gContext.getString(R.string.error_parsing_exam) + " " +this.holder.url;
+				returnMessage = gContext.getString(R.string.error_parsing_exam) + " " + this.holder.url;
+				Log.d("ManageExamsAdapter", returnMessage+"\n"+e.getMessage());
 			}
-			return "";
+			return returnMessage;
 		}
 
 		protected void onProgressUpdate(Integer... progress) {
