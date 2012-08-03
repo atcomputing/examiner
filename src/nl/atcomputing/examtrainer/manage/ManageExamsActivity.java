@@ -179,7 +179,7 @@ public class ManageExamsActivity extends ListActivity implements ShowProgression
 		
 		Log.d("ManageExamsActivity", "Deleting all exams");
 		
-		this.adap.cancelRunningInstallations();
+		ExamTrainer.cancelAllInstallationThreads();
 		
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);

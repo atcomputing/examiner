@@ -192,7 +192,6 @@ public class ExamQuestion {
 		cursor.close();
 		
 		
-		
 		if( this.type.equalsIgnoreCase(TYPE_MULTIPLE_CHOICE) ) {
 			cursor = examinationDbHelper.getChoices(questionId);
 			if ( cursor.getCount() > 0 ) {

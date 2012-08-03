@@ -125,14 +125,11 @@ public class ExamTrainerDbAdapter {
 		return cursor;
 	}
 	
-	public String getExamDate(long rowId) {
-		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
-				new String[] {ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE},
-		ExamTrainerDatabaseHelper.Exams._ID + "=" + rowId, null, null, null, null, null);
-		if ( cursor.moveToFirst() ) {
-			return cursor.getString(cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE));
-		}
-		return null;
+	public boolean setExamInstallationDate(long rowId, long epochseconds) {
+		ContentValues values = new ContentValues();
+		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE, epochseconds);
+		return db.update(ExamTrainerDatabaseHelper.Exams.TABLE_NAME, values, 
+				ExamTrainerDatabaseHelper.Exams._ID + "=\"" + rowId + "\"", null) > 0;
 	}
 	
 	public String getExamTitle(long rowId) {

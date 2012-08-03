@@ -52,11 +52,11 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 		if(! examTrainerDbHelperAdapter.setInstallationState(this.examID, ExamTrainerDbAdapter.State.INSTALLING)) {
 			Toast.makeText(this.context, "Failed to set exam " + this.examID + " to state installing.", Toast.LENGTH_LONG).show();
 		}
+		this.examDate = System.currentTimeMillis();
+		
 		this.examTitle = examTrainerDbHelperAdapter.getExamTitle(this.examID);
-
+		examTrainerDbHelperAdapter.setExamInstallationDate(this.examID, this.examDate);
 		examTrainerDbHelperAdapter.close();
-
-		examDate = System.currentTimeMillis();
 
 		ExamTrainer.addInstallationThread(this.examID, this);
 	}
@@ -69,8 +69,8 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 		try {
 
 			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this.context);
-			examinationDbHelper.open(this.examTitle, examDate);
-
+			examinationDbHelper.open(this.examTitle, this.examDate);
+			
 			for( ExamQuestion examQuestion: this.questions ) {
 				if( isCancelled() ) {
 					break;
@@ -131,5 +131,7 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 			Toast.makeText(this.context, "Failed to set exam " + this.examTitle + " to not installed.", Toast.LENGTH_LONG).show();
 		}
 		examTrainerDbHelperAdapter.close();
+		
+		ExamTrainer.removeInstallationThread(this.examID);
 	}
 }

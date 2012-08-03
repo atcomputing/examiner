@@ -2,6 +2,7 @@ package nl.atcomputing.examtrainer;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import nl.atcomputing.examtrainer.manage.InstallExamAsyncTask;
 import android.app.Activity;
@@ -48,6 +49,13 @@ public final class ExamTrainer {
 	
 	public static void removeInstallationThread(long id) {
 		installationThreads.remove(id);
+	}
+	
+	public static void cancelAllInstallationThreads() {
+		Collection<InstallExamAsyncTask> values = ExamTrainer.getAllgetInstallExamAsyncTasks();
+		for( InstallExamAsyncTask task : values ) {
+			task.cancel(false);
+		}
 	}
 	
 	public static InstallExamAsyncTask getInstallExamAsyncTask(long id) {
