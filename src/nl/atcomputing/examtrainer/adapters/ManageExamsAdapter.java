@@ -4,6 +4,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 import nl.atcomputing.dialogs.DialogFactory;
 import nl.atcomputing.examtrainer.ExamQuestion;
@@ -14,6 +15,7 @@ import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.manage.InstallExamAsyncTask;
 import nl.atcomputing.examtrainer.manage.XmlPullExamParser;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -34,17 +36,21 @@ import android.widget.Toast;
  */
 
 public class ManageExamsAdapter extends BaseAdapter  {
+	private ShowProgression activity;
 	private Context context;
 	private int layout;
 	private Cursor cursor;
-
-	public ManageExamsAdapter(Context context, int layout, Cursor c) {
-
-		this.context = context;
+	private HashMap<Long, TextView> progressTextViews;
+	
+	public ManageExamsAdapter(ShowProgression activity, int layout, Cursor c) {
 
 		this.layout = layout;
 
 		this.cursor = c;
+		
+		this.progressTextViews = new HashMap<Long, TextView>();
+		
+		attach(activity);
 	}
 
 	public int getCount() {
@@ -73,7 +79,12 @@ public class ManageExamsAdapter extends BaseAdapter  {
 	}
 
 	public View getView(int position, View view, ViewGroup parent) {
+		if( view != null ) {
+			return view;
+		}
+		
 		Log.d("ManageExamsAdapter", "getView("+position+", "+view+", "+parent+")");
+		
 		final ViewHolder holder = new ViewHolder();
 
 		if ( view == null )
@@ -85,12 +96,6 @@ public class ManageExamsAdapter extends BaseAdapter  {
 		holder.examTitleView = (TextView) view.findViewById(R.id.manageExamsEntryTitle);
 		holder.examAuthorView = (TextView) view.findViewById(R.id.manageExamsEntryAuthor);
 		holder.installUninstallButton = (Button) view.findViewById(R.id.manageExamsDelete);
-
-		InstallExamAsyncTask installExam = ExamTrainer.getInstallExamAsyncTask(holder.examID);
-		if( installExam != null ) {
-			Log.d("ManageExamsAdapter", "Connecting existing thread to view");
-			installExam.setView(holder.installUninstallButton);
-		}
 		
 		Cursor row = (Cursor) getItem(position);
 		if( cursor == null ) {
@@ -115,7 +120,8 @@ public class ManageExamsAdapter extends BaseAdapter  {
 		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT);
 		holder.timeLimit = row.getLong(index);
 
-
+		this.progressTextViews.put(holder.examID, holder.installUninstallButton);
+		
 		holder.examTitleView.setText(holder.examTitle);
 
 		holder.examAuthorView.setText(holder.author);
@@ -162,12 +168,17 @@ public class ManageExamsAdapter extends BaseAdapter  {
 				Toast.makeText(context,  strBuf.toString(), Toast.LENGTH_LONG).show();
 			}
 		});
-
+		
 		return view;
 	}
 
-	public void setContext(Context context) {
-		this.context = context;
+	public void attach(ShowProgression activity) {
+		if( activity instanceof Activity ) {
+			this.activity = activity;
+			this.context = ((Activity) activity).getApplicationContext();
+		} else {
+			Log.d("ManageExamsAdapter", "Error: trying to attach to something that is not an Activity");
+		}
 	}
 
 	public void cancelRunningInstallations() {
@@ -177,6 +188,14 @@ public class ManageExamsAdapter extends BaseAdapter  {
 		}
 	}
 
+	public void updateProgress(long id, long progress) {
+		Log.d("ManageExamsAdapter", "Updating progress: "+id+" : "+progress);
+		TextView tv = this.progressTextViews.get(id);
+		if( tv != null ) {
+			tv.setText(progress + "%");
+		}
+	}
+	
 	private void handleButtonClick(final ViewHolder holder) {
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(context);
 		examTrainerDbHelper.open();
@@ -211,15 +230,18 @@ public class ManageExamsAdapter extends BaseAdapter  {
 
 					ArrayList<ExamQuestion> examQuestions = xmlPullFeedParser.getExam();
 
-					InstallExamAsyncTask installExam = new InstallExamAsyncTask(context, 
-							holder.installUninstallButton, (int) holder.examID, examQuestions);
-					ExamTrainer.addInstallationThread(holder.examID, installExam);
+					InstallExamAsyncTask installExam = new InstallExamAsyncTask(this.activity, 
+							 (int) holder.examID, examQuestions);
 					installExam.execute();
 					examinationDbHelper.close();
 				}
 				catch (MalformedURLException e) {
 					String message = context.getString(R.string.error_url_is_not_correct) + " " + holder.url;
 					Log.d("ManageExamsAdapter", message+"\n"+e.getMessage());
+					Toast.makeText(context, message+"\n"+e.getMessage(), Toast.LENGTH_LONG).show();
+				} catch (Exception e) {
+					Log.d("ManageExamsAdapter", e.getMessage());
+					Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
 				}		
 				
 			}

@@ -2,11 +2,13 @@ package nl.atcomputing.examtrainer.manage;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import nl.atcomputing.examtrainer.Exam;
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter;
+import nl.atcomputing.examtrainer.adapters.ShowProgression;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
@@ -34,7 +36,7 @@ import android.widget.Toast;
  *
  */
 
-public class ManageExamsActivity extends ListActivity {
+public class ManageExamsActivity extends ListActivity implements ShowProgression {
 	private ManageExamsAdapter adap;
 	static final int DIALOG_CONFIRMATION_ID = 0;
 	private TextView noExamsAvailable;
@@ -65,6 +67,15 @@ public class ManageExamsActivity extends ListActivity {
 		super.onResume();
 		
 		updateListView();
+		
+		Collection<InstallExamAsyncTask> tasks = ExamTrainer.getAllgetInstallExamAsyncTasks();
+		for( InstallExamAsyncTask task : tasks ) {
+			try {
+				task.attach(this);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		
 		IntentFilter filter = new IntentFilter(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED);
 	    this.registerReceiver(this.receiveBroadcast, filter);
@@ -240,5 +251,9 @@ public class ManageExamsActivity extends ListActivity {
 			}
 		}
 		examTrainerDbHelper.close();
+	}
+
+	public void updateProgress(long id, long progress) {
+		this.adap.updateProgress(id, progress);
 	}
 }

@@ -9,6 +9,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.format.Time;
+import android.util.Log;
 
 /**
  * @author martijn brekhof
@@ -50,6 +51,7 @@ public final class ExamTrainer {
 	}
 	
 	public static InstallExamAsyncTask getInstallExamAsyncTask(long id) {
+		Log.d("ExamTrainer", "InstallExamAsyncTask: tasks in queue="+installationThreads.size());
 		return installationThreads.get(id);
 	}
 	
