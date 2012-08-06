@@ -1,33 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="fill_parent" android:layout_height="fill_parent">
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
-  <ImageView android:contentDescription="Background image" 
-      style="@style/BackgroundImage" />
-  
-    <LinearLayout 
-              android:orientation="vertical"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent">
-    <TextView
-    android:id="@+id/selectexam_no_exams_available"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/no_exams_available"
-    android:textSize="@dimen/textSizeDefault" />
-    <TextView
-    android:id="@+id/selectexam_click_on_manage_exams"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/click_on_manage_exams_to_install_one_or_more_exams"
-    android:textSize="@dimen/textSizeDefault"/>
-    <ListView android:layout_width="fill_parent"
-              android:layout_height="0dip"
-              android:id="@+id/select_exam_list"
-              android:layout_weight="1"
-              android:background="@android:color/transparent"/>
-	</LinearLayout>
-	
+    <ImageView
+        style="@style/BackgroundImage"
+        android:contentDescription="@string/student_hat" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:background="@color/transparent_background" >
+
+        <TextView
+            android:id="@+id/selectexam_no_exams_available"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_exams_available"
+            android:textSize="@dimen/textSizeDefault" />
+
+        <TextView
+            android:id="@+id/selectexam_click_on_manage_exams"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/click_on_manage_exams_to_install_one_or_more_exams"
+            android:textSize="@dimen/textSizeDefault" />
+
+        <ListView
+            android:id="@+id/select_exam_list"
+            android:layout_width="fill_parent"
+            android:layout_height="0dip"
+            android:layout_weight="1"
+            android:cacheColorHint="#00000000" />
+    </LinearLayout>
+
     <LinearLayout
         android:id="@+id/about_window"
         android:layout_width="fill_parent"
@@ -97,4 +104,5 @@ android:layout_width="fill_parent" android:layout_height="fill_parent">
             android:textSize="@dimen/textSizeDefault" >
         </TextView>
     </LinearLayout>
+
 </RelativeLayout>

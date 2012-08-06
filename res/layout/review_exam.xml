@@ -1,25 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="fill_parent"
-              android:layout_height="fill_parent">
-<Button 
-    android:id="@+id/review_exam_resume_button"
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content"
-    android:text="@string/resume_exam"
-    android:textSize="@dimen/textSizeDefault"
-    android:visibility="gone"
-    android:layout_alignParentBottom="true"/>
-<GridView
-    android:id="@+id/review_exam_grid"
-    android:layout_width="fill_parent" 
-    android:layout_height="fill_parent"
-    android:numColumns="auto_fit"
-    android:verticalSpacing="@dimen/paddingDefault"
-    android:horizontalSpacing="@dimen/paddingDefault"
-    android:columnWidth="@dimen/columnWidthDefault"
-    android:stretchMode="columnWidth"
-    android:gravity="center|top"
-    android:layout_above="@id/review_exam_resume_button"
-	/>
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <ImageView
+        style="@style/BackgroundImage"
+        android:contentDescription="@string/student_hat" />
+    
+    <Button
+        android:id="@+id/review_exam_resume_button"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/resume_exam"
+        android:textSize="@dimen/textSizeDefault"
+        android:visibility="gone" />
+
+    <GridView
+        android:id="@+id/review_exam_grid"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@id/review_exam_resume_button"
+        android:background="@color/transparent_background"
+        android:cacheColorHint="#00000000"
+        android:columnWidth="@dimen/columnWidthDefault"
+        android:gravity="center|top"
+        android:horizontalSpacing="@dimen/paddingDefault"
+        android:numColumns="auto_fit"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="@dimen/paddingDefault" />
+
 </RelativeLayout>

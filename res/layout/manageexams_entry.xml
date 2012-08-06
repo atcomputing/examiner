@@ -3,12 +3,12 @@
     android:id="@+id/lineItem"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:baselineAligned="true" >
-
+    android:baselineAligned="true">
     <LinearLayout android:layout_width="wrap_content"
     	android:layout_height="wrap_content"
     	android:orientation="vertical"
-    	android:layout_alignParentLeft="true">
+    	android:layout_alignParentLeft="true"
+    	android:background="@android:color/transparent">
     <TextView
         android:id="@+id/manageExamsEntryTitle"
         android:layout_gravity="top"

@@ -11,7 +11,8 @@
         android:id="@+id/startexam_bottom_buttons"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true" >
+        android:layout_alignParentBottom="true"
+        android:background="@color/transparent_background" >
 
         <Button
             android:id="@+id/startexam_history_button_delete_scores"
@@ -41,7 +42,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginBottom="@dimen/paddingSmall"
         android:layout_marginTop="@dimen/paddingSmall"
-        android:baselineAligned="false" >
+        android:baselineAligned="false"
+        android:background="@color/transparent_background" >
 
         <LinearLayout
             android:layout_width="0dp"
@@ -143,7 +145,7 @@
             android:layout_height="fill_parent"
             android:layout_margin="@dimen/paddingSmall"
             android:layout_weight="1"
-            android:background="#80000000"
+            android:background="@color/transparent_background"
             android:orientation="vertical" >
 
             <LinearLayout
