@@ -17,10 +17,10 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/paddingSmall"
             android:layout_margin="@dimen/paddingSmall"
             android:background="#AA404040"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:padding="@dimen/paddingSmall" >
 
             <RelativeLayout
                 android:layout_width="fill_parent"
@@ -134,12 +134,25 @@
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/startexam_history_textview_noscoresavailable"
+    <LinearLayout
+        android:id="@+id/startexam_history_textview_linearlayout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/no_previous_scores_available"
-        android:textSize="@dimen/textSizeDefault" />
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/startexam_history_textview_noscoresavailable"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_previous_scores_available"
+            android:textSize="@dimen/textSizeDefault" />
+
+        <TextView
+            android:id="@+id/startexam_history_textview_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/paddingDefault"
+            android:textSize="@dimen/textSizeDefault" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/startexam_history_header"
@@ -147,9 +160,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:background="@android:color/white"
-        android:orientation="horizontal"
         android:gravity="center"
-        >
+        android:orientation="horizontal" >
 
         <CheckBox
             android:layout_width="wrap_content"

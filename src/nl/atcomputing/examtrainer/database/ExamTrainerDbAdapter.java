@@ -92,10 +92,9 @@ public class ExamTrainerDbAdapter {
 				ExamTrainerDatabaseHelper.Exams._ID + "=" + rowId, null) > 0;
 	}
 	
-	public boolean setInstallationState(long rowId, long date, State state) {
+	public boolean setInstallationState(long rowId, State state) {
 		ContentValues values = new ContentValues();
 		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED, state.name());
-		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE, date);
 		return db.update(ExamTrainerDatabaseHelper.Exams.TABLE_NAME, values, 
 				ExamTrainerDatabaseHelper.Exams._ID + "=\"" + rowId + "\"", null) > 0;
 	}
@@ -125,7 +124,35 @@ public class ExamTrainerDbAdapter {
 		}
 		return cursor;
 	}
+	
+	public boolean setExamInstallationDate(long rowId, long epochseconds) {
+		ContentValues values = new ContentValues();
+		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE, epochseconds);
+		return db.update(ExamTrainerDatabaseHelper.Exams.TABLE_NAME, values, 
+				ExamTrainerDatabaseHelper.Exams._ID + "=\"" + rowId + "\"", null) > 0;
+	}
+	
+	public String getExamTitle(long rowId) {
+		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
+				new String[] {ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE},
+		ExamTrainerDatabaseHelper.Exams._ID + "=" + rowId, null, null, null, null, null);
+		if ( cursor.moveToFirst() ) {
+			return cursor.getString(cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE));
+		}
+		return null;
+	}
 
+	public String getURL(long rowId) {
+		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
+				new String[] {ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL},
+		ExamTrainerDatabaseHelper.Exams._ID + "=" + rowId, null, null, null, null, null);
+		if ( cursor.moveToFirst() ) {
+			return cursor.getString(cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL));
+		}
+		return null;
+	}
+
+	
 	public Cursor getAllExams() {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
 				this.allRows, null, null, null, null, null, null);
@@ -142,9 +169,16 @@ public class ExamTrainerDbAdapter {
 		ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "=\'" + 
 		ExamTrainerDbAdapter.State.INSTALLING.name() +"\'",
 		null, null, null, null, null);
-		if (cursor != null) {
-			cursor.moveToFirst();
-		}
+		cursor.moveToFirst();
+		return cursor;
+	}
+	
+	public Cursor getInstallingExams() {
+		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
+				this.allRows, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "=\'" + 
+		ExamTrainerDbAdapter.State.INSTALLING.name() +"\'",
+		null, null, null, null, null);
+		cursor.moveToFirst();
 		return cursor;
 	}
 }

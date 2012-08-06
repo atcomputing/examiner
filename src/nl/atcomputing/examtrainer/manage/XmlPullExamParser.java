@@ -5,12 +5,12 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 
-
 import nl.atcomputing.examtrainer.ExamQuestion;
 
 import org.xmlpull.v1.XmlPullParser;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.Xml;
 
 /**

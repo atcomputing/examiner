@@ -1,10 +1,16 @@
 package nl.atcomputing.examtrainer;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import nl.atcomputing.examtrainer.manage.InstallExamAsyncTask;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.format.Time;
+import android.util.Log;
 
 /**
  * @author martijn brekhof
@@ -30,10 +36,36 @@ public final class ExamTrainer {
 	private static long timeEnd = 0;
 	private static long timerStart; 
 	
+	private static HashMap<Long, Integer> examInstallationProgression = new HashMap<Long, Integer>();
+	private static HashMap<Long, InstallExamAsyncTask> installationThreads = new HashMap<Long, InstallExamAsyncTask>();
+	
 	// This class cannot be instantiated
 	private ExamTrainer() {
 	}
 
+	public static void addInstallationThread(long id, InstallExamAsyncTask task) {
+		installationThreads.put(id, task);
+	}
+	
+	public static void removeInstallationThread(long id) {
+		installationThreads.remove(id);
+	}
+	
+	public static void cancelAllInstallationThreads() {
+		Collection<InstallExamAsyncTask> values = ExamTrainer.getAllInstallExamAsyncTasks();
+		for( InstallExamAsyncTask task : values ) {
+			task.cancel(false);
+		}
+	}
+	
+	public static InstallExamAsyncTask getInstallExamAsyncTask(long id) {
+		return installationThreads.get(id);
+	}
+	
+	public static Collection<InstallExamAsyncTask> getAllInstallExamAsyncTasks() {
+		return installationThreads.values();
+	}
+	
 	public static void setAnswersCorrect(long amount) {
 		answersCorrect = amount;
 	}
@@ -165,5 +197,11 @@ public final class ExamTrainer {
 		alert.show();
 	}
 	
+	public static void setExamInstallationProgression(long id, int percentage) {
+		examInstallationProgression.put(id, percentage);
+	}
 	
+	public static int getExamInstallationProgression(long id) {
+		return examInstallationProgression.get(id);
+	}
 }
