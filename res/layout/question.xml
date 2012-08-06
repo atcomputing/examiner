@@ -30,7 +30,7 @@
             android:textSize="@dimen/textSizeDefault" >
         </Button>
     </LinearLayout>
-    
+
     <RelativeLayout
         android:id="@+id/titleBar"
         android:layout_width="fill_parent"
@@ -73,22 +73,22 @@
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/titleBar"
         android:layout_above="@id/question_buttonLayout"
-      >
+        android:layout_below="@id/titleBar" >
 
-            <LinearLayout
-                android:id="@+id/question_layout"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical" >
-
-                <HorizontalScrollView
-            android:id="@+id/horizontalScrollViewExhibit"
+        <LinearLayout
+            android:id="@+id/question_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="#333333"
-            android:scrollbars="none" >
+            android:orientation="vertical" >
+
+            <HorizontalScrollView
+                android:id="@+id/horizontalScrollViewExhibit"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#333333"
+                android:scrollbars="none" >
+
                 <TextView
                     android:id="@+id/textExhibit"
                     android:layout_width="wrap_content"
@@ -97,34 +97,41 @@
                     android:textColor="#FFFFFF"
                     android:textSize="@dimen/textSizeDefault"
                     android:typeface="monospace" />
-			</HorizontalScrollView>
-                <TextView
-                    android:id="@+id/textQuestion"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="#000000"
-                    android:padding="@dimen/paddingDefault"
-                    android:textColor="#CCCCCC"
-                    android:textSize="@dimen/textSizeDefault"
-                    android:typeface="serif" >
-                </TextView>
+            </HorizontalScrollView>
 
-                <HorizontalScrollView
-            android:id="@+id/horizontalScrollViewAnswers"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="none" >
+            <TextView
+                android:id="@+id/textQuestion"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="#000000"
+                android:padding="@dimen/paddingDefault"
+                android:textColor="#CCCCCC"
+                android:textSize="@dimen/textSizeDefault"
+                android:typeface="serif" >
+            </TextView>
+
+            <EditText
+                android:id="@+id/question_open_answer_edittext"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:textSize="@dimen/textSizeDefault"
+                android:visibility="gone" />
+
+            <HorizontalScrollView
+                android:id="@+id/question_multiplechoice_horizontalScrollView"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="none"
+                android:visibility="gone" >
                 <LinearLayout
-                    android:id="@+id/answerLayout"
-                    android:layout_width="fill_parent"
+                    android:id="@+id/question_multiplechoice_linear_layout"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical" >
                 </LinearLayout>
-                </HorizontalScrollView>
-            </LinearLayout>
-        
+            </HorizontalScrollView>
+        </LinearLayout>
     </ScrollView>
-
-    
 
 </RelativeLayout>

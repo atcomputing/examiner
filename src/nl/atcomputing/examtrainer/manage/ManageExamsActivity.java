@@ -2,7 +2,6 @@ package nl.atcomputing.examtrainer.manage;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import nl.atcomputing.examtrainer.Exam;
 import nl.atcomputing.examtrainer.ExamTrainer;

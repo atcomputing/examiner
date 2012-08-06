@@ -20,14 +20,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -55,8 +53,6 @@ public class ExamQuestionActivity extends Activity {
 	private static final int HANDLER_MESSAGE_VALUE_UPDATE_TIMER = 0;
 	private static final int HANDLER_MESSAGE_VALUE_TIMELIMITREACHED = 1;
 	private static final String HANDLER_KEY_CURRENT_TIME = "handler_current_time"; 
-
-	private static final String TAG = "ExamQuestionActivity";
 
 	private Timer timer;
 	private MyHandler myHandler;
@@ -315,10 +311,6 @@ public class ExamQuestionActivity extends Activity {
 	}
 
 	private void stopExam() {
-		//		ExaminationDbAdapter db = new ExaminationDbAdapter(this);
-		//		db.open(ExamTrainer.getExamDatabaseName());
-		//		db.deleteScore(ExamTrainer.getScoresId());
-		//		db.close();
 		Intent intent = new Intent(ExamQuestionActivity.this, StartExamActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
@@ -330,10 +322,7 @@ public class ExamQuestionActivity extends Activity {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		if( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
-			//This complexity is needed as the answers may contain markup we use to display the answers
-			//The user provides his/her answer without markup so using SQL to check the answer is not 
-			//possible.
-			String userAnswer = editText.getText().toString();
+			String userAnswer = this.editText.getText().toString();
 			examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getScoresId(), questionId,
 					userAnswer);
 			Cursor correctAnswers = examinationDbHelper.getAnswers(this.questionId);
@@ -392,9 +381,7 @@ public class ExamQuestionActivity extends Activity {
 	}
 
 
-	private void createOpenQuestionLayout(LinearLayout layout) {
-		this.editText = new EditText(this);
-		this.editText.setTextSize(getResources().getDimension(R.dimen.textSizeDefault));
+	private void createOpenQuestionLayout() {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		Cursor cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionId);
@@ -403,7 +390,6 @@ public class ExamQuestionActivity extends Activity {
 			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
 			this.editText.setText(cursor.getString(index));
 		}
-		layout.addView(this.editText);
 	}
 
 	private void updateLayout() {
@@ -470,12 +456,15 @@ public class ExamQuestionActivity extends Activity {
 		TextView question_textview = (TextView) findViewById(R.id.textQuestion);
 		question_textview.setText(Html.fromHtml(text));
 
-		LinearLayout v_layout = (LinearLayout) findViewById(R.id.answerLayout);
-
 		if( this.examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
+			LinearLayout v_layout = (LinearLayout) findViewById(R.id.question_multiplechoice_linear_layout);
 			createChoicesLayout(v_layout);
+			HorizontalScrollView sv = (HorizontalScrollView) findViewById(R.id.question_multiplechoice_horizontalScrollView);
+			sv.setVisibility(View.VISIBLE);
 		} else if ( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
-			createOpenQuestionLayout(v_layout);
+			this.editText = (EditText) findViewById(R.id.question_open_answer_edittext);
+			createOpenQuestionLayout();
+			this.editText.setVisibility(View.VISIBLE);
 		}
 
 		Button button_prev_question = (Button) findViewById(R.id.button_prev);

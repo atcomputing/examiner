@@ -1,24 +1,17 @@
 package nl.atcomputing.examtrainer.adapters;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import nl.atcomputing.dialogs.DialogFactory;
-import nl.atcomputing.examtrainer.ExamQuestion;
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
-import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.manage.InstallExamAsyncTask;
 import nl.atcomputing.examtrainer.manage.UninstallExamAsyncTask;
-import nl.atcomputing.examtrainer.manage.XmlPullExamParser;
 import android.app.Dialog;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
