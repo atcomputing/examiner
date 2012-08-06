@@ -77,7 +77,6 @@ public class XmlPullExamParser {
 		                    ExamQuestion examQuestion = parseItem(parser);
 		                    if ( examQuestion != null ) {
 		                    	examQuestions.add(examQuestion);
-		                    	Log.d("XmlPullExamParser", "Adding question: "+examQuestion.toString());
 		                    }
                     	}
                     	name = "";

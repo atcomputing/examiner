@@ -52,18 +52,17 @@ public final class ExamTrainer {
 	}
 	
 	public static void cancelAllInstallationThreads() {
-		Collection<InstallExamAsyncTask> values = ExamTrainer.getAllgetInstallExamAsyncTasks();
+		Collection<InstallExamAsyncTask> values = ExamTrainer.getAllInstallExamAsyncTasks();
 		for( InstallExamAsyncTask task : values ) {
 			task.cancel(false);
 		}
 	}
 	
 	public static InstallExamAsyncTask getInstallExamAsyncTask(long id) {
-		Log.d("ExamTrainer", "InstallExamAsyncTask: tasks in queue="+installationThreads.size());
 		return installationThreads.get(id);
 	}
 	
-	public static Collection<InstallExamAsyncTask> getAllgetInstallExamAsyncTasks() {
+	public static Collection<InstallExamAsyncTask> getAllInstallExamAsyncTasks() {
 		return installationThreads.values();
 	}
 	

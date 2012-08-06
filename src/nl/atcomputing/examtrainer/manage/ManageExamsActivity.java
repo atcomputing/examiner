@@ -2,13 +2,13 @@ package nl.atcomputing.examtrainer.manage;
 
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Iterator;
 
 import nl.atcomputing.examtrainer.Exam;
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter;
-import nl.atcomputing.examtrainer.adapters.ShowProgression;
+import nl.atcomputing.examtrainer.database.DatabaseManager;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
@@ -36,66 +36,58 @@ import android.widget.Toast;
  *
  */
 
-public class ManageExamsActivity extends ListActivity implements ShowProgression {
+public class ManageExamsActivity extends ListActivity  {
 	private ManageExamsAdapter adap;
 	static final int DIALOG_CONFIRMATION_ID = 0;
 	private TextView noExamsAvailable;
 	private TextView clickOnManageExams;
 	private Cursor cursor;
 	private ReceiveBroadcast receiveBroadcast;
-	
+
 	private class ReceiveBroadcast extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			updateListView();
 		}
 	}
-	
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.manageexams);
 
 		loadLocalExams();
-		
+
 		noExamsAvailable = (TextView) this.findViewById(R.id.manageexams_no_exams_available);
 		clickOnManageExams = (TextView) this.findViewById(R.id.manageexams_click_on_manage_exams);		
 
 		this.receiveBroadcast = new ReceiveBroadcast();
 	}
-	
+
 	public void onResume() {
 		super.onResume();
-		
+
+		cleanupDatabaseStates();
 		updateListView();
-		
-		Collection<InstallExamAsyncTask> tasks = ExamTrainer.getAllgetInstallExamAsyncTasks();
-		for( InstallExamAsyncTask task : tasks ) {
-			try {
-				task.attach(this);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
+
 		IntentFilter filter = new IntentFilter(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED);
-	    this.registerReceiver(this.receiveBroadcast, filter);
+		this.registerReceiver(this.receiveBroadcast, filter);
 	}
-	
+
 	public void onPause() {
 		super.onPause();
-		
+
 		this.unregisterReceiver(this.receiveBroadcast);
-		
+
 		if(this.cursor != null) {
 			this.cursor.close();
 		}
 	}
-	
+
 	protected void onDestroy() {
 		super.onDestroy();
-		
+		Log.d("ManageExamsActivity", "onDestroy");
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
@@ -150,11 +142,36 @@ public class ManageExamsActivity extends ListActivity implements ShowProgression
 		return dialog;
 	}
 
+	private void cleanupDatabaseStates() {
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+		examTrainerDbHelper.open();
+
+		Cursor cursor = examTrainerDbHelper.getInstallingExams();
+		if( cursor.getCount() < 1 ) {
+			examTrainerDbHelper.close();
+			return;
+		}
+
+		DatabaseManager dm = new DatabaseManager(this);
+
+		//Delete all exams that have state INSTALLING but no install thread associated
+		do {
+			long examID = cursor.getLong(cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID));
+
+			InstallExamAsyncTask task = ExamTrainer.getInstallExamAsyncTask(examID);
+			if( task == null ) { 
+				dm.deleteExam(examID);
+			}
+		} while(cursor.moveToNext());
+
+		examTrainerDbHelper.close();
+	}
+
 	private void updateListView() {
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		examTrainerDbHelper.open();
 		this.cursor = examTrainerDbHelper.getAllExams();
-		
+
 		if ( (cursor == null) || (cursor.getCount() == 0) ) {
 			noExamsAvailable.setVisibility(View.VISIBLE);
 			clickOnManageExams.setVisibility(View.VISIBLE);
@@ -164,35 +181,35 @@ public class ManageExamsActivity extends ListActivity implements ShowProgression
 			noExamsAvailable.setVisibility(View.GONE);
 			clickOnManageExams.setVisibility(View.GONE);
 		}
-		
+
 		examTrainerDbHelper.close();
-		
+
 		this.adap = new ManageExamsAdapter(this, R.layout.manageexams_entry, this.cursor);
 		setListAdapter(this.adap);
 	}
-	
+
 	private void deleteAllExams() {
 		int index;
 		long examId;
 		long examDate;
 		String examTitle;
-		
+
 		Log.d("ManageExamsActivity", "Deleting all exams");
-		
+
 		ExamTrainer.cancelAllInstallationThreads();
-		
+
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
-		
+
 		examTrainerDbHelper.open();
 		Cursor cursor = examTrainerDbHelper.getAllExams();
-		
+
 		if( cursor.getCount() < 1 ) {
 			cursor.close();
 			examTrainerDbHelper.close();
 			return;
 		}
-		
+
 		do {
 			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
 			examTitle = cursor.getString(index);
@@ -214,7 +231,7 @@ public class ManageExamsActivity extends ListActivity implements ShowProgression
 
 		cursor.close();
 		examTrainerDbHelper.close();
-		
+
 		updateListView();
 	}
 
@@ -251,9 +268,5 @@ public class ManageExamsActivity extends ListActivity implements ShowProgression
 			}
 		}
 		examTrainerDbHelper.close();
-	}
-
-	public void updateProgress(long id, long progress) {
-		this.adap.updateProgress(id, progress);
 	}
 }

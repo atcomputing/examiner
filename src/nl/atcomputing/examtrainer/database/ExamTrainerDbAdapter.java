@@ -142,6 +142,17 @@ public class ExamTrainerDbAdapter {
 		return null;
 	}
 
+	public String getURL(long rowId) {
+		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
+				new String[] {ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL},
+		ExamTrainerDatabaseHelper.Exams._ID + "=" + rowId, null, null, null, null, null);
+		if ( cursor.moveToFirst() ) {
+			return cursor.getString(cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL));
+		}
+		return null;
+	}
+
+	
 	public Cursor getAllExams() {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
 				this.allRows, null, null, null, null, null, null);
@@ -158,9 +169,16 @@ public class ExamTrainerDbAdapter {
 		ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "=\'" + 
 		ExamTrainerDbAdapter.State.INSTALLING.name() +"\'",
 		null, null, null, null, null);
-		if (cursor != null) {
-			cursor.moveToFirst();
-		}
+		cursor.moveToFirst();
+		return cursor;
+	}
+	
+	public Cursor getInstallingExams() {
+		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
+				this.allRows, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "=\'" + 
+		ExamTrainerDbAdapter.State.INSTALLING.name() +"\'",
+		null, null, null, null, null);
+		cursor.moveToFirst();
 		return cursor;
 	}
 }

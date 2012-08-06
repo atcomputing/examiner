@@ -94,4 +94,7 @@
     <string name="cancel">Cancel</string>
     <string name="are_you_sure_you_want_to_uninstall_this_exam">Are you sure you want to uninstall this exam?\nThis will also remove the current scores for this exam.</string>
     <string name="unknown">unknown</string>
+    <string name="Uninstalling_exam">Uninstalling exam</string>
+    <string name="Exam_not_installed">Exam not installed</string>
+    <string name="Installation_proces_still_running_refusing_to_uninstall_exam">Installation proces still running.\nRefusing to uninstall exam.</string>
 </resources>

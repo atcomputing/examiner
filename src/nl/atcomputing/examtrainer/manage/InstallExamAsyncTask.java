@@ -1,19 +1,21 @@
 package nl.atcomputing.examtrainer.manage;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import nl.atcomputing.examtrainer.ExamQuestion;
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.adapters.ShowProgression;
+import nl.atcomputing.examtrainer.database.DatabaseManager;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -23,30 +25,26 @@ import android.widget.Toast;
 
 public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 	private Context context;
-	private ShowProgression activity;
-	private int examID;
+	private long examID;
 	private String examTitle;
 	private long examDate;
-	private ArrayList<ExamQuestion> questions;
+	private TextView tvProgress;
+	private String url;
 	
-	public InstallExamAsyncTask(ShowProgression activity, int examID, ArrayList<ExamQuestion> questions) throws Exception {
+	public InstallExamAsyncTask(Context context, TextView progress, long examID) {
 		super();
 		this.examID = examID;
-		this.questions = questions;
-		attach(activity);
+		this.context = context;
+		this.tvProgress = progress;
 	}
 
-	public void attach(ShowProgression activity) throws Exception {
-		if( activity instanceof Activity ) {
-		this.context = ((Activity) activity).getApplicationContext();
-		this.activity = activity;
-		} else {
-			Exception e = new Exception("Error: trying to attach to an object that is not an Activity");
-			throw e;
-		}
+	public void setProgressTextView(TextView tv) {
+		this.tvProgress = tv;
 	}
-
+	
 	protected void onPreExecute() {
+		this.tvProgress.setText(R.string.Installing_exam);
+		
 		ExamTrainerDbAdapter examTrainerDbHelperAdapter = new ExamTrainerDbAdapter(this.context);
 		examTrainerDbHelperAdapter.open();
 		if(! examTrainerDbHelperAdapter.setInstallationState(this.examID, ExamTrainerDbAdapter.State.INSTALLING)) {
@@ -55,6 +53,9 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 		this.examDate = System.currentTimeMillis();
 		
 		this.examTitle = examTrainerDbHelperAdapter.getExamTitle(this.examID);
+		
+		this.url = examTrainerDbHelperAdapter.getURL(this.examID);
+				
 		examTrainerDbHelperAdapter.setExamInstallationDate(this.examID, this.examDate);
 		examTrainerDbHelperAdapter.close();
 
@@ -63,15 +64,22 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 
 	protected String doInBackground(String... dummy) {
 		String returnMessage = "";
-		int total = this.questions.size();
-		int count = 0;
-		int percentage = 0;
+		
 		try {
-
+			URL url = new URL(this.url);
+			XmlPullExamParser xmlPullFeedParser = new XmlPullExamParser(this.context, url);
+			xmlPullFeedParser.parseExam();
+			
 			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this.context);
 			examinationDbHelper.open(this.examTitle, this.examDate);
+
+			ArrayList<ExamQuestion> examQuestions = xmlPullFeedParser.getExam();
 			
-			for( ExamQuestion examQuestion: this.questions ) {
+			int total = examQuestions.size();
+			int count = 0;
+			int percentage = 0;
+			
+			for( ExamQuestion examQuestion: examQuestions ) {
 				if( isCancelled() ) {
 					break;
 				}
@@ -86,16 +94,23 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 
 		} catch (SQLiteException e) {
 			returnMessage = this.context.getString(R.string.failed_to_install_exam);
-			Log.d("ManageExamsAdapter", returnMessage+"\n"+e.getMessage());
+			Log.d("InstallExamAsyncTask", returnMessage+"\n"+e.getMessage());
 		} catch (RuntimeException e) {
 			returnMessage = this.context.getString(R.string.error_parsing_exam);
-			Log.d("ManageExamsAdapter", returnMessage+"\n"+e.getMessage());
-		}
+			Log.d("InstallExamAsyncTask", returnMessage+"\n"+e.getMessage());
+		} catch (MalformedURLException e) {
+			returnMessage = context.getString(R.string.error_url_is_not_correct) + " " + this.url;
+			Log.d("InstallExamAsyncTask", returnMessage+"\n"+e.getMessage());
+		} catch (Exception e) {
+			returnMessage = e.getMessage();
+			Log.d("InstallExamAsyncTask", e.getMessage());
+		}	
 		return returnMessage;
 	}
 
 	protected void onProgressUpdate(Integer... progress) {
-		this.activity.updateProgress(this.examID, progress[0]);
+		Log.d("InstallExamAsyncTask", "onProgressUpdate: tv="+this.tvProgress+", progress="+progress[0]);
+		this.tvProgress.setText(progress[0] + "%");
 	}
 
 	protected void onPostExecute(String errorMessage) {
@@ -122,15 +137,8 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 	}
 
 	protected void onCancelled(String result) {
-		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this.context);
-		examinationDbHelper.delete(this.examTitle, examDate);
-
-		ExamTrainerDbAdapter examTrainerDbHelperAdapter = new ExamTrainerDbAdapter(this.context);
-		examTrainerDbHelperAdapter.open();
-		if(! examTrainerDbHelperAdapter.setInstallationState(this.examID, ExamTrainerDbAdapter.State.NOT_INSTALLED)) {
-			Toast.makeText(this.context, "Failed to set exam " + this.examTitle + " to not installed.", Toast.LENGTH_LONG).show();
-		}
-		examTrainerDbHelperAdapter.close();
+		DatabaseManager dm = new DatabaseManager(this.context);
+		dm.deleteExam(this.examID);
 		
 		ExamTrainer.removeInstallationThread(this.examID);
 	}

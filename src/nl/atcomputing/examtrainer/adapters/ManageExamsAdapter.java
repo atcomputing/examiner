@@ -13,13 +13,11 @@ import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.manage.InstallExamAsyncTask;
+import nl.atcomputing.examtrainer.manage.UninstallExamAsyncTask;
 import nl.atcomputing.examtrainer.manage.XmlPullExamParser;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
-import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,29 +27,28 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
+
 /**
  * @author martijn brekhof
  *
  */
 
 public class ManageExamsAdapter extends BaseAdapter  {
-	private ShowProgression activity;
 	private Context context;
 	private int layout;
 	private Cursor cursor;
-	private HashMap<Long, TextView> progressTextViews;
 	private HashMap<Long, ViewHolder> viewHolderForPositionCache;
 
-	public ManageExamsAdapter(ShowProgression activity, int layout, Cursor c) {
+	public ManageExamsAdapter(Context context, int layout, Cursor c) {
 
 		this.layout = layout;
 
 		this.cursor = c;
 
-		this.progressTextViews = new HashMap<Long, TextView>();
 		this.viewHolderForPositionCache = new HashMap<Long, ViewHolder>();
 
-		attach(activity);
+		this.context = context;
 	}
 
 	public int getCount() {
@@ -63,7 +60,10 @@ public class ManageExamsAdapter extends BaseAdapter  {
 	}
 
 	public Object getItem(int position) {
-		if( (cursor.moveToPosition(position) ) && ( ! cursor.isClosed() ) ){
+		if( 	( ! cursor.isClosed() ) && 
+				( cursor.getCount() > 0 ) && 
+				(cursor.moveToPosition(position) ) 
+				){
 			return cursor;
 		} else {
 			return null;
@@ -71,7 +71,10 @@ public class ManageExamsAdapter extends BaseAdapter  {
 	}
 
 	public long getItemId(int position) {
-		if( ( cursor.move(position) )  && ( ! cursor.isClosed() ) ) {
+		if( 	( ! cursor.isClosed() ) && 
+				( cursor.getCount() > 0 ) && 
+				(cursor.moveToPosition(position) ) 
+				){
 			int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID);
 			return cursor.getLong(index);
 		} else {
@@ -80,31 +83,33 @@ public class ManageExamsAdapter extends BaseAdapter  {
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {	
-		Log.d("ManageExamsAdapter", "getView("+position+", "+convertView+", "+parent+")");
+		//Log.d("ManageExamsAdapter", "getView("+position+", "+convertView+", "+parent+")");
 
 		Cursor row = (Cursor) getItem(position);
 		if( row == null ) {
-			Log.d("ManageExamsAdapter", "Cursor row is null");
 			return convertView;
 		}
 
 		int index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID);
 		long examID = row.getLong(index);
 
+		InstallExamAsyncTask task = ExamTrainer.getInstallExamAsyncTask(examID);
+
 		ViewHolder holder = this.viewHolderForPositionCache.get(examID); 
 
-		if( holder == null ) {
-			holder = new ViewHolder();
-		} else {
+		if( holder != null ) {
+			if( task != null ) {
+				task.setProgressTextView(holder.installUninstallButton);
+			}
 			return holder.view;
 		}
 
+		holder = new ViewHolder();
+		holder.examID = examID;
 		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
 		holder.examTitle = row.getString(index);
 		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE);
 		holder.examDate = row.getLong(index);
-		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID);
-		holder.examID = row.getLong(index);
 		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL);
 		holder.url = row.getString(index);
 		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS);
@@ -124,8 +129,11 @@ public class ManageExamsAdapter extends BaseAdapter  {
 		holder.examAuthorView = (TextView) view.findViewById(R.id.manageExamsEntryAuthor);
 		holder.installUninstallButton = (Button) view.findViewById(R.id.manageExamsDelete);
 		holder.view = view;
-		
-		this.progressTextViews.put(holder.examID, holder.installUninstallButton);
+
+		if( task != null ) {
+			Log.d("ManageExamsAdapter", "getView: connecting button to running task");
+			task.setProgressTextView(holder.installUninstallButton);
+		}
 
 		holder.examTitleView.setText(holder.examTitle);
 
@@ -177,28 +185,8 @@ public class ManageExamsAdapter extends BaseAdapter  {
 		});
 
 		this.viewHolderForPositionCache.put(examID, holder);
-		
+
 		return holder.view;
-	}
-
-	public void attach(ShowProgression activity) {
-		if( activity instanceof Activity ) {
-			this.activity = activity;
-			this.context = ((Activity) activity).getApplicationContext();
-		} else {
-			Log.d("ManageExamsAdapter", "Error: trying to attach to something that is not an Activity");
-		}
-	}
-
-
-	public void updateProgress(long id, long progress) {
-		//		if(this.visibleTextViewsExamIds.containsValue(id)){
-		TextView tv = this.progressTextViews.get(id);
-		if( tv != null ) {
-			Log.d("ManageExamsAdapter", "Updating progress: "+id+" : "+progress+", textview="+tv);
-			tv.setText(progress + "%");
-		}
-		//		}
 	}
 
 	private void handleButtonClick(final ViewHolder holder) {
@@ -213,7 +201,9 @@ public class ManageExamsAdapter extends BaseAdapter  {
 
 				public void run() {
 					holder.installUninstallButton.setEnabled(false);
-					new UninstallExam(holder, context).execute();
+					holder.installUninstallButton.setText(R.string.Uninstalling_exam);
+					UninstallExamAsyncTask task = new UninstallExamAsyncTask(context, holder.examID);
+					task.execute();
 				}
 			}, R.string.cancel, new Runnable() {
 
@@ -224,31 +214,10 @@ public class ManageExamsAdapter extends BaseAdapter  {
 			dialog.show();
 		} else {
 			holder.installUninstallButton.setEnabled(false);
+			holder.installUninstallButton.setText(R.string.Installing_exam);
 			if( ExamTrainer.getInstallExamAsyncTask(holder.examID) == null ) {
-
-				try {
-					URL url = new URL(holder.url);
-					XmlPullExamParser xmlPullFeedParser = new XmlPullExamParser(context, url);
-					xmlPullFeedParser.parseExam();
-					ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(context);
-					examinationDbHelper.open(holder.examTitle, holder.examDate);
-
-					ArrayList<ExamQuestion> examQuestions = xmlPullFeedParser.getExam();
-
-					InstallExamAsyncTask installExam = new InstallExamAsyncTask(this.activity, 
-							(int) holder.examID, examQuestions);
-					installExam.execute();
-					examinationDbHelper.close();
-				}
-				catch (MalformedURLException e) {
-					String message = context.getString(R.string.error_url_is_not_correct) + " " + holder.url;
-					Log.d("ManageExamsAdapter", message+"\n"+e.getMessage());
-					Toast.makeText(context, message+"\n"+e.getMessage(), Toast.LENGTH_LONG).show();
-				} catch (Exception e) {
-					Log.d("ManageExamsAdapter", e.getMessage());
-					Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
-				}		
-
+				InstallExamAsyncTask installExam = new InstallExamAsyncTask(this.context, (TextView) holder.installUninstallButton, holder.examID); 
+				installExam.execute();
 			}
 		}
 	}
@@ -267,54 +236,4 @@ public class ManageExamsAdapter extends BaseAdapter  {
 		Button installUninstallButton;
 		View view;
 	}
-
-
-
-	private class UninstallExam extends AsyncTask<ViewHolder, Integer, Boolean> {
-		private ViewHolder holder;
-		private Context context;
-
-		public UninstallExam(ViewHolder viewHolder, Context context) {
-			super();
-			this.holder = viewHolder;
-			this.context = context;
-		}
-
-		protected void onPreExecute() {
-			this.holder.installUninstallButton.setEnabled(false);
-		}
-
-		protected Boolean doInBackground(ViewHolder... holders) {
-			ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(context);
-			examTrainerDbHelper.open();
-			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(context);
-			if( examinationDbHelper.delete(this.holder.examTitle, this.holder.examDate) )  {
-				if( ! examTrainerDbHelper.setInstallationState(this.holder.examID, ExamTrainerDbAdapter.State.NOT_INSTALLED) ) {
-					Toast.makeText(context, context.getString(R.string.Failed_to_uninstall_exam) + 
-							this.holder.examTitle, Toast.LENGTH_LONG).show();
-				}
-			} else {
-				Toast.makeText(context, context.getString(R.string.Could_not_remove_exam_database_file) + 
-						this.holder.examTitle, Toast.LENGTH_LONG).show();
-			}
-			examTrainerDbHelper.close();
-			return true;
-		}
-
-		protected void onProgressUpdate(Integer... progress) {
-			//setProgressPercent(progress[0]);
-		}
-
-		protected void onPostExecute(Boolean result) {
-			this.holder.installUninstallButton.setEnabled(true);
-			//updateView();
-			ManageExamsAdapter.this.notifyDataSetChanged();
-			//Sent notification to interested activities that examlist is updated
-			Intent intent=new Intent();
-			intent.setAction(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED);
-			this.context.sendBroadcast(intent);
-		}
-	}
-
-
 }
