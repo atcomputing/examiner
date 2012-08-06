@@ -83,8 +83,6 @@ public class ManageExamsAdapter extends BaseAdapter  {
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {	
-		//Log.d("ManageExamsAdapter", "getView("+position+", "+convertView+", "+parent+")");
-
 		Cursor row = (Cursor) getItem(position);
 		if( row == null ) {
 			return convertView;
@@ -131,7 +129,6 @@ public class ManageExamsAdapter extends BaseAdapter  {
 		holder.view = view;
 
 		if( task != null ) {
-			Log.d("ManageExamsAdapter", "getView: connecting button to running task");
 			task.setProgressTextView(holder.installUninstallButton);
 		}
 

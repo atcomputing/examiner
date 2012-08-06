@@ -85,7 +85,6 @@ public class ManageExamsActivity extends ListActivity  {
 
 	protected void onDestroy() {
 		super.onDestroy();
-		Log.d("ManageExamsActivity", "onDestroy");
 	}
 
 	@Override
@@ -193,8 +192,6 @@ public class ManageExamsActivity extends ListActivity  {
 		long examId;
 		long examDate;
 		String examTitle;
-
-		Log.d("ManageExamsActivity", "Deleting all exams");
 
 		ExamTrainer.cancelAllInstallationThreads();
 

@@ -109,7 +109,6 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 	}
 
 	protected void onProgressUpdate(Integer... progress) {
-		Log.d("InstallExamAsyncTask", "onProgressUpdate: tv="+this.tvProgress+", progress="+progress[0]);
 		this.tvProgress.setText(progress[0] + "%");
 	}
 

@@ -83,7 +83,6 @@ public class ExamQuestionActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d("ExamQuestionActivity", "onCreate");
 		this.myHandler = new MyHandler();
 
 		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
@@ -109,7 +108,6 @@ public class ExamQuestionActivity extends Activity {
 
 	protected void onResume() {
 		super.onResume();
-		Log.d("ExamQuestionActivity", "onResume");
 		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
 			finish();
 		}
@@ -276,7 +274,6 @@ public class ExamQuestionActivity extends Activity {
 		Cursor cursor = examinationDbHelper.getAnswers(this.questionId);
 		examinationDbHelper.close();
 		if ( cursor.getCount() < 1 ) {
-			Log.d(TAG, "showAnswers: no answer present");
 			return;
 		}
 		int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
@@ -340,7 +337,6 @@ public class ExamQuestionActivity extends Activity {
 					userAnswer);
 			Cursor correctAnswers = examinationDbHelper.getAnswers(this.questionId);
 			if( correctAnswers.getCount() < 1 ) {
-				Log.d(TAG, "showAnswers: no answer present");
 				examinationDbHelper.close();
 				return;
 			}

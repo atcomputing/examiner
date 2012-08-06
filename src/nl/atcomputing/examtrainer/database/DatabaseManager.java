@@ -14,8 +14,6 @@ public class DatabaseManager {
 	}
 	
 	public void deleteExam(long examID) {
-		Log.d("DatabaseManager", "Deleting exam "+examID);
-		
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this.context);
 		examTrainerDbHelper.open();
 		
