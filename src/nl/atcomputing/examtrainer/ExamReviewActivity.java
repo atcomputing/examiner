@@ -22,43 +22,33 @@ public class ExamReviewActivity extends Activity {
 	public static final String TAG = "ExamReviewActivity";
 	private GridView scoresGrid;
 	private ExamReviewAdapter adapter; 
-	
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-			
+
 		setContentView(R.layout.review_exam);
 	}
 
 	protected void onResume() {
 		super.onResume();
-		
+
 		long examId = ExamTrainer.getScoresId();
-		
+
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		Cursor cursor = examinationDbHelper.getResultsPerQuestion(examId);
-		
+
 		adapter = new ExamReviewAdapter(this, R.layout.review_exam_entry, cursor);
 		scoresGrid = (GridView) findViewById(R.id.review_exam_grid);
 		scoresGrid.setAdapter(adapter);
-		
-		scoresGrid.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionActivity.class);
-				ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.REVIEW);
-				ExamTrainer.setQuestionId(intent, adapter.getItemId(position));
-				startActivity(intent);
-			}
-		});
-		
+
+		//Disable reviewing exam items when not all questions have been answered yet.
 		final int amountOfQuestionsAnswered = adapter.getCount();
-		int amountOfQuestions = examinationDbHelper.getQuestionsCount();
-		//if( amountOfQuestionsAnswered < amountOfQuestions ) {
-		if( 1 > 0 ) {
+		final int amountOfQuestions = examinationDbHelper.getQuestionsCount();
+
+		if( amountOfQuestionsAnswered < amountOfQuestions ) {
 			Button button = (Button) findViewById(R.id.review_exam_resume_button);
-			button.setOnClickListener(new OnClickListener() {
-				
+			button.setOnClickListener(new OnClickListener() {				
 				public void onClick(View v) {
 					Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionActivity.class);
 					ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM);
@@ -73,10 +63,26 @@ public class ExamReviewActivity extends Activity {
 			});
 			button.setVisibility(View.VISIBLE);
 		}
-		
+
+		scoresGrid.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				if( amountOfQuestionsAnswered < amountOfQuestions ) {
+					Toast.makeText(ExamReviewActivity.this, R.string.Reviewing_questions_is_only_available_after_completing_the_exam,
+							Toast.LENGTH_SHORT).show();
+				} else {
+					Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionActivity.class);
+					ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.REVIEW);
+					ExamTrainer.setQuestionId(intent, adapter.getItemId(position));
+					startActivity(intent);
+				}
+			}
+		});
+
+
 		examinationDbHelper.close();
 	}
-	
+
 	protected void onDestroy() {
 		super.onDestroy();
 		Cursor cursor = adapter.getCursor();

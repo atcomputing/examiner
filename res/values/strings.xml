@@ -97,4 +97,5 @@
     <string name="Uninstalling_exam">Uninstalling exam</string>
     <string name="Exam_not_installed">Exam not installed</string>
     <string name="Installation_proces_still_running_refusing_to_uninstall_exam">Installation proces still running.\nRefusing to uninstall exam.</string>
+    <string name="Reviewing_questions_is_only_available_after_completing_the_exam">Reviewing questions is only available after completing the exam</string>
 </resources>

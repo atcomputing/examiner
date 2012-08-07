@@ -109,37 +109,9 @@ public class ExamQuestionActivity extends Activity {
 			finish();
 		}
 		setTitle(ExamTrainer.getExamTitle());
-		if ( ( ExamTrainer.getTimeLimit() > 0 ) && 
-				( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) ) {
-			timer = new Timer();
-			timer.scheduleAtFixedRate(new TimerTask() {
-
-				@Override
-				public void run() {
-					//update time
-					Message m = Message.obtain();
-					long currentTime = System.currentTimeMillis();
-					if( currentTime > ExamTrainer.getTimeEnd() ) {
-						//time limit reached 
-						Bundle b = new Bundle();
-						b.putInt(HANDLER_MESSAGE_KEY, HANDLER_MESSAGE_VALUE_TIMELIMITREACHED);
-						m.setData(b);
-						myHandler.sendMessage(m);
-						timer.cancel();
-						timer.purge();
-					} else {
-						Bundle b = new Bundle();
-						b.putInt(HANDLER_MESSAGE_KEY, HANDLER_MESSAGE_VALUE_UPDATE_TIMER);
-						b.putLong(HANDLER_KEY_CURRENT_TIME, currentTime);
-						m.setData(b);
-						myHandler.sendMessage(m);
-					}
-				}
-			}, 0, 1000);
-		} else {
-			timer = null;
-		}
-
+		
+		setupTimer();
+		
 		updateLayout();
 	}
 
@@ -171,9 +143,6 @@ public class ExamQuestionActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.question_menu, menu);
-		if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) {
-			menu.removeItem(R.id.question_menu_show_answer);
-		}
 		return true;
 	}
 
@@ -183,9 +152,6 @@ public class ExamQuestionActivity extends Activity {
 		switch (item.getItemId()) {
 		case R.id.question_menu_get_hint:
 			showDialog(DIALOG_SHOW_HINT_ID);
-			return true;
-		case R.id.question_menu_show_answer:
-			showAnswers();
 			return true;
 		case R.id.question_menu_quit_exam:
 			showDialog(DIALOG_QUITEXAM_ID);
@@ -265,6 +231,39 @@ public class ExamQuestionActivity extends Activity {
 		return null;
 	}
 
+	private void setupTimer() {
+		if ( ( ExamTrainer.getTimeLimit() > 0 ) && 
+				( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) ) {
+			this.timer = new Timer();
+			this.timer.scheduleAtFixedRate(new TimerTask() {
+
+				@Override
+				public void run() {
+					//update time
+					Message m = Message.obtain();
+					long currentTime = System.currentTimeMillis();
+					if( currentTime > ExamTrainer.getTimeEnd() ) {
+						//time limit reached 
+						Bundle b = new Bundle();
+						b.putInt(HANDLER_MESSAGE_KEY, HANDLER_MESSAGE_VALUE_TIMELIMITREACHED);
+						m.setData(b);
+						myHandler.sendMessage(m);
+						timer.cancel();
+						timer.purge();
+					} else {
+						Bundle b = new Bundle();
+						b.putInt(HANDLER_MESSAGE_KEY, HANDLER_MESSAGE_VALUE_UPDATE_TIMER);
+						b.putLong(HANDLER_KEY_CURRENT_TIME, currentTime);
+						m.setData(b);
+						myHandler.sendMessage(m);
+					}
+				}
+			}, 0, 1000);
+		} else {
+			this.timer = null;
+		}
+	}
+	
 	private void showAnswers() {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
@@ -402,6 +401,10 @@ public class ExamQuestionActivity extends Activity {
 			return;
 		}
 
+		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW ) {
+			showAnswers();
+		}
+		
 		int index = scoresAnswersCursor.getColumnIndex(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER);
 
 		if( this.examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
