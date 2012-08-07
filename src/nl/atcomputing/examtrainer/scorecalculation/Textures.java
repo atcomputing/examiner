@@ -21,23 +21,23 @@ public class Textures {
 	private int[] textures;
 	private int[] pixel_widths;
 	private int[] pixel_heights;
-	
+
 	private int[] drawables = {
 			Balloon.getReferenceDrawable(Balloon.TYPE_BLUE),
 			Balloon.getReferenceDrawable(Balloon.TYPE_RED)
 	};
-	
+
 	public Textures(Context context) {
 		this.context = context;
 	}
-	
+
 	public void loadTextures(GL10 gl) {
 		InputStream[] inputStreams = getInputStreams();
-		
+
 		this.textures = new int[inputStreams.length];
 		this.pixel_widths = new int[inputStreams.length];
 		this.pixel_heights = new int[inputStreams.length];
-		
+
 		gl.glGenTextures(inputStreams.length, this.textures, 0);
 
 		for( int i=0; i < inputStreams.length; i++) {
@@ -54,6 +54,7 @@ public class Textures {
 			}
 
 			gl.glBindTexture(GL10.GL_TEXTURE_2D, textures[i]);
+
 			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
 			gl.glTexParameterf(GL10.GL_TEXTURE_2D, GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
 			GLUtils.texImage2D(GL10.GL_TEXTURE_2D, 0, bitmap, 0);
@@ -61,7 +62,7 @@ public class Textures {
 			bitmap.recycle();
 		}
 	}
-	
+
 	/**
 	 * @param resource_id Resource identifier of drawable used to generate texture
 	 * @return texture number associated with drawable
@@ -74,7 +75,7 @@ public class Textures {
 		}
 		return -1;
 	}
-	
+
 	public int getWidth(int resource_id) {
 		for(int i = 0; i < this.drawables.length; i++) {
 			if( this.drawables[i] == resource_id ) {
@@ -83,7 +84,7 @@ public class Textures {
 		}
 		return 1;
 	}
-	
+
 	public int getHeight(int resource_id) {
 		for(int i = 0; i < this.drawables.length; i++) {
 			if( this.drawables[i] == resource_id ) {
@@ -92,7 +93,7 @@ public class Textures {
 		}
 		return 1;
 	}
-	
+
 	private InputStream[] getInputStreams() {
 		InputStream[] inputStreams = new InputStream[this.drawables.length];
 		for(int i=0; i < this.drawables.length; i++) {
