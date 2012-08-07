@@ -54,7 +54,8 @@ public class ExamReviewActivity extends Activity {
 		
 		final int amountOfQuestionsAnswered = adapter.getCount();
 		int amountOfQuestions = examinationDbHelper.getQuestionsCount();
-		if( amountOfQuestionsAnswered < amountOfQuestions ) {
+		//if( amountOfQuestionsAnswered < amountOfQuestions ) {
+		if( 1 > 0 ) {
 			Button button = (Button) findViewById(R.id.review_exam_resume_button);
 			button.setOnClickListener(new OnClickListener() {
 				

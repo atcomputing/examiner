@@ -24,7 +24,8 @@ public class ShowScoreActivity extends Activity {
 	private GLSurfaceViewRenderer renderer;
 	private GLSurfaceView glView;
 	private CalculateScore calculateScore;
-
+	private boolean glSurfaceReady = false;
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
@@ -46,14 +47,7 @@ public class ShowScoreActivity extends Activity {
 	}
 
 	public void startAnimation() {
-		runOnUiThread(new Runnable() {
-
-			public void run() {
-				if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_SCORE ) {
-					showResult();
-				}
-			}
-		} );
+		this.glSurfaceReady = true;
 	}
 
 	@Override
@@ -118,8 +112,10 @@ public class ShowScoreActivity extends Activity {
 					r.getString(R.string.You_passed) + ".\n" +
 					r.getString(R.string.You_scored) + " " + score + " " +
 					r.getString(R.string.out_of) + " " + totalAmountOfItems + ".";
-			this.renderer.showBalloons(score);
-			this.renderer.requestRender();
+			if( this.glSurfaceReady ) {
+				this.renderer.showBalloons(score);
+				this.renderer.requestRender();
+			}
 		} else {
 			text = r.getString(R.string.You_failed) + ".\n" +
 					r.getString(R.string.You_scored) + " " + score + " " +

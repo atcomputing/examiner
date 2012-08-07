@@ -8,6 +8,7 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
+import android.util.Log;
 
 /**
  * @author martijn brekhof
@@ -124,6 +125,8 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) 
 	{
+		Log.d("GLSurfaceViewRenderer", "onSurfaceCreated");
+		
 		gl.glEnable(GL10.GL_TEXTURE_2D);					//Enable Texture Mapping
 		gl.glDisable(GL10.GL_DITHER);
 		gl.glEnable(GL10.GL_BLEND);							//Enable blending
