@@ -113,6 +113,13 @@ public class ExamQuestionActivity extends Activity {
 		setupTimer();
 		
 		updateLayout();
+		
+		if( this.questionId == 1 ) {
+			Dialog dialog = DialogFactory.createUsageDialog(this, R.string.Press_menu_to_quit_the_exam_or_show_a_hint_if_available);
+			if( dialog != null ) {
+				dialog.show();
+			}
+		}
 	}
 
 	protected void onPause() {
@@ -220,12 +227,7 @@ public class ExamQuestionActivity extends Activity {
 			if( message == null ) {
 				message = getString(R.string.hint_not_available);
 			}
-			final Dialog d4 = DialogFactory.createOneButtonDialog(this, message, R.string.ok, 
-					new OnClickListener() {
-				public void onClick(View v) {
-					v.setVisibility(View.GONE);
-				}
-			});
+			final Dialog d4 = DialogFactory.createHintDialog(this, message);
 			return d4;
 		}
 		return null;

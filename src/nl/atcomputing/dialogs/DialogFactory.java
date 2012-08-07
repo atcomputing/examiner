@@ -48,8 +48,7 @@ public class DialogFactory {
 		return dialog;
 	}
 	
-	public static Dialog createOneButtonDialog(Context context, String message, 
-			int posButtonMsgResourceId, OnClickListener posButtonListener) {
+	public static Dialog createHintDialog(Context context, String message) {
 	
 		if( message == null ) {
 			message = context.getString(R.string.hint_not_available);
@@ -58,6 +57,29 @@ public class DialogFactory {
 		View view = LayoutInflater.from(context).inflate(R.layout.dialog_message, null);
 		TextView tv = (TextView) view.findViewById(R.id.dialog_message);
 		tv.setText(Html.fromHtml(message));
+		
+		Dialog dialog;
+		AlertDialog.Builder builder;
+		builder = new AlertDialog.Builder(context);
+		builder.setView(view)
+		.setCancelable(false)
+		.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				dialog.dismiss();
+			}
+		});
+		dialog = builder.create();
+		return dialog;
+	}
+	
+	public static Dialog createUsageDialog(Context context, int messageResourceId) {
+		
+		//Check if user wants to see this message
+		
+		
+		View view = LayoutInflater.from(context).inflate(R.layout.dialog_usage_message, null);
+		TextView tv = (TextView) view.findViewById(R.id.dialog_usage_message);
+		tv.setText(messageResourceId);
 		
 		Dialog dialog;
 		AlertDialog.Builder builder;
