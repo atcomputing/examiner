@@ -9,6 +9,7 @@ import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.manage.InstallExamAsyncTask;
 import nl.atcomputing.examtrainer.manage.PreferencesActivity;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -240,7 +241,10 @@ public class StartExamActivity extends Activity {
 		if ( ( useTimeLimit ) && ( examTimeLimit > 0 ) ) {
 			tv.setText(Long.toString(examTimeLimit));
 			ExamTrainer.setTimeLimit(examTimeLimit * 60);
-			DialogFactory.createUsageDialog(this, R.string.Time_limit_is_activated_for_this_exam);
+			Dialog dialog = DialogFactory.createUsageDialog(this, R.string.Usage_Dialog_Time_limit_is_activated_for_this_exam);
+			if( dialog != null ) {
+				dialog.show();
+			}
 		} else {
 			tv.setText(getString(R.string.No_time_limit));
 			ExamTrainer.setTimeLimit(0);
@@ -261,7 +265,7 @@ public class StartExamActivity extends Activity {
 		ListView lv = (ListView) findViewById(R.id.startexam_history_listview);
 		ll.setVisibility(View.GONE);
 		lv.setVisibility(View.GONE);
-		
+
 		if( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLING.name()) ) {
 			tv.setText(R.string.Installing_exam);
 			tv.setVisibility(View.VISIBLE);

@@ -25,7 +25,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -115,7 +114,7 @@ public class ExamQuestionActivity extends Activity {
 		updateLayout();
 		
 		if( this.questionId == 1 ) {
-			Dialog dialog = DialogFactory.createUsageDialog(this, R.string.Press_menu_to_quit_the_exam_or_show_a_hint_if_available);
+			Dialog dialog = DialogFactory.createUsageDialog(this, R.string.Usage_Dialog_Press_menu_to_quit_the_exam_or_show_a_hint_if_available);
 			if( dialog != null ) {
 				dialog.show();
 			}

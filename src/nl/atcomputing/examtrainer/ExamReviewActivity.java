@@ -1,11 +1,14 @@
 package nl.atcomputing.examtrainer;
 
+import nl.atcomputing.dialogs.DialogFactory;
 import nl.atcomputing.examtrainer.adapters.ExamReviewAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -33,7 +36,7 @@ public class ExamReviewActivity extends Activity {
 		super.onResume();
 
 		long examId = ExamTrainer.getScoresId();
-
+		
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		Cursor cursor = examinationDbHelper.getResultsPerQuestion(examId);
@@ -55,7 +58,7 @@ public class ExamReviewActivity extends Activity {
 					ExamTrainer.setQuestionId(intent, adapter.getItemId(amountOfQuestionsAnswered - 1));
 					if( (ExamTrainer.getTimeLimit() > 0)  && ( ExamTrainer.timeLimitExceeded() ) ) {
 						ExamTrainer.setTimeLimit(0);
-						Toast.makeText(ExamReviewActivity.this, "Time limit exceeded. Disabling time limit", Toast.LENGTH_SHORT).show();
+						Toast.makeText(ExamReviewActivity.this, R.string.Time_limit_exceeded, Toast.LENGTH_SHORT).show();
 					} 
 					startActivity(intent);
 					finish();
@@ -78,9 +81,12 @@ public class ExamReviewActivity extends Activity {
 				}
 			}
 		});
-
-
 		examinationDbHelper.close();
+		
+		Dialog usageDialog = DialogFactory.createUsageDialog(this, R.string.Usage_Dialog_examReviewScreenMessage);
+		if( usageDialog != null ) {
+			usageDialog.show();
+		}
 	}
 
 	protected void onDestroy() {
