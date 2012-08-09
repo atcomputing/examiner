@@ -181,4 +181,60 @@ public class ExamTrainerDbAdapter {
 		cursor.moveToFirst();
 		return cursor;
 	}
+	
+	/**
+	 * Queries the database if the usage dialog for message 
+	 * with messageResourceId should be displayed or not.
+	 * @param messageResourceId
+	 * @return true if message should be displayed, false otherwise
+	 */
+	public boolean showMessage(int messageResourceId) {
+		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.UsageDialogs.TABLE_NAME, 
+				new String[] {
+				ExamTrainerDatabaseHelper.UsageDialogs.COLUMN_NAME_SHOW,
+		},
+		ExamTrainerDatabaseHelper.UsageDialogs.COLUMN_NAME_MSGID + "=" + messageResourceId, 
+		null, null, null, null, null);
+		if ( cursor.moveToFirst() ) {
+			int res = cursor.getInt(cursor.getColumnIndex(ExamTrainerDatabaseHelper.UsageDialogs.COLUMN_NAME_SHOW));
+			cursor.close();
+			if( res == 0 ) {
+				return false;
+			} else {
+				return true;
+			}
+		} else {
+			cursor.close();
+			return true;
+		}
+	}
+
+	/**
+	 * Use this to set if the message with messageResourceId should be shown or not.
+	 * @param messageResourceId
+	 * @param state one of UsageDialogDbAdapter.State enumerations
+	 * @return amount of rows inserted or updated
+	 */
+	public long setShowDialog(int messageResourceId, boolean bool) {
+		ContentValues values = new ContentValues();
+		values.put(ExamTrainerDatabaseHelper.UsageDialogs.COLUMN_NAME_MSGID, messageResourceId);
+		values.put(ExamTrainerDatabaseHelper.UsageDialogs.COLUMN_NAME_SHOW, bool);
+		
+		if( isPresentInUsageDialogTable(messageResourceId) ) {
+			return db.update(ExamTrainerDatabaseHelper.UsageDialogs.TABLE_NAME, values, 
+					ExamTrainerDatabaseHelper.UsageDialogs.COLUMN_NAME_MSGID + " = " + messageResourceId, null);
+		} else {
+			return db.insert(ExamTrainerDatabaseHelper.UsageDialogs.TABLE_NAME, null, values);
+		}
+	}
+	
+	private boolean isPresentInUsageDialogTable(int messageResourceId) {
+		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.UsageDialogs.TABLE_NAME, 
+				new String[] {
+				ExamTrainerDatabaseHelper.UsageDialogs.COLUMN_NAME_SHOW,
+		},
+		ExamTrainerDatabaseHelper.UsageDialogs.COLUMN_NAME_MSGID + "=" + messageResourceId, 
+		null, null, null, null, null);
+		return cursor.getCount() > 0;
+	}
 }

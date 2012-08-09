@@ -2,6 +2,7 @@ package nl.atcomputing.dialogs;
 
 
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -9,7 +10,9 @@ import android.content.DialogInterface;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
 
@@ -29,7 +32,6 @@ public class DialogFactory {
 		.setPositiveButton(posButtonMsgResourceId, new DialogInterface.OnClickListener() {
 			
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 				posButtonAction.run();
 				dialog.dismiss();
 			}
@@ -37,7 +39,6 @@ public class DialogFactory {
 		.setNegativeButton(negButtonMsgResourceId, new DialogInterface.OnClickListener() {
 			
 			public void onClick(DialogInterface dialog, int which) {
-				// TODO Auto-generated method stub
 				negButtonAction.run();
 				dialog.dismiss();
 			}
@@ -72,14 +73,37 @@ public class DialogFactory {
 		return dialog;
 	}
 	
-	public static Dialog createUsageDialog(Context context, int messageResourceId) {
+	public static Dialog createUsageDialog(final Context context, final int messageResourceId) {
 		
 		//Check if user wants to see this message
-		
+		ExamTrainerDbAdapter db = new ExamTrainerDbAdapter(context);
+		db.open();
+		boolean showMessage = db.showMessage(messageResourceId);
+		if( ! showMessage ) {
+			db.close();
+			return null;
+		}
 		
 		View view = LayoutInflater.from(context).inflate(R.layout.dialog_usage_message, null);
 		TextView tv = (TextView) view.findViewById(R.id.dialog_usage_message);
 		tv.setText(messageResourceId);
+		
+		CheckBox cb = (CheckBox) view.findViewById(R.id.dialog_usage_checkbox);
+		
+		//Default dialog will be set to show next time
+		cb.setChecked(false);
+		db.setShowDialog(messageResourceId, true);
+		db.close();
+		
+		cb.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				ExamTrainerDbAdapter db = new ExamTrainerDbAdapter(context);
+				db.open();
+				db.setShowDialog(messageResourceId, ! isChecked);
+				db.close();
+			}
+		});
 		
 		Dialog dialog;
 		AlertDialog.Builder builder;

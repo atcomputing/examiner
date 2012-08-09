@@ -101,4 +101,5 @@
     <string name="Do_not_show_this_message_again">Do not show this message again</string>
     <string name="Press_menu_to_show_a_hint_if_available_">Press menu to show a hint, if available.</string>
     <string name="Press_menu_to_quit_the_exam_or_show_a_hint_if_available">Press menu to quit the exam or show a hint if available.</string>
+    <string name="Time_limit_is_activated_for_this_exam">Time limit is activated for this exam.\nIf you do not want to use a time limit, you can press menu and use Settings to disable the time limit.</string>
 </resources>

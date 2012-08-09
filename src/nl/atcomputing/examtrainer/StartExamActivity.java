@@ -1,5 +1,6 @@
 package nl.atcomputing.examtrainer;
 
+import nl.atcomputing.dialogs.DialogFactory;
 import nl.atcomputing.dialogs.RunThreadWithProgressDialog;
 import nl.atcomputing.examtrainer.adapters.HistoryAdapter;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
@@ -239,6 +240,7 @@ public class StartExamActivity extends Activity {
 		if ( ( useTimeLimit ) && ( examTimeLimit > 0 ) ) {
 			tv.setText(Long.toString(examTimeLimit));
 			ExamTrainer.setTimeLimit(examTimeLimit * 60);
+			DialogFactory.createUsageDialog(this, R.string.Time_limit_is_activated_for_this_exam);
 		} else {
 			tv.setText(getString(R.string.No_time_limit));
 			ExamTrainer.setTimeLimit(0);

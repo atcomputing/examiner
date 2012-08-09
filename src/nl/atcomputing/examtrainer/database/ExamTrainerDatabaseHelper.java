@@ -43,6 +43,21 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
     + Exams.COLUMN_NAME_TIMELIMIT + " INTEGER"
     + ");";
 	
+	public static final class UsageDialogs implements BaseColumns {
+		private UsageDialogs() {}
+
+		public static final String TABLE_NAME = "UsageDialogs";
+		public static final String COLUMN_NAME_MSGID = "messageResourceId";
+		public static final String COLUMN_NAME_SHOW = "show";
+	}
+	
+	private static final String DATABASE_CREATE_USAGEDIALOGS_TABLE = "CREATE TABLE " 
+	+ UsageDialogs.TABLE_NAME + " ("
+    + UsageDialogs._ID + " INTEGER PRIMARY KEY,"
+    + UsageDialogs.COLUMN_NAME_MSGID + " INTEGER,"
+    + UsageDialogs.COLUMN_NAME_SHOW + " INTEGER"
+    + ");";
+	
 	public ExamTrainerDatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -50,6 +65,7 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		db.execSQL(DATABASE_CREATE_EXAMS_TABLE);
+		db.execSQL(DATABASE_CREATE_USAGEDIALOGS_TABLE);
 	}
 
 	@Override
