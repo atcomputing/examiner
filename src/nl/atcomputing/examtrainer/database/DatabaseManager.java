@@ -3,7 +3,6 @@ package nl.atcomputing.examtrainer.database;
 import nl.atcomputing.examtrainer.R;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.widget.Toast;
 
 public class DatabaseManager {

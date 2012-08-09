@@ -7,16 +7,6 @@
         android:title="@string/Use_Timelimits"
         android:summary="@string/Use_timelimits_during_examination_if_available"
         android:defaultValue="true"/>
-<!--     <CheckBoxPreference  -->
-<!--         android:key="@string/pref_key_updates"  -->
-<!--         android:title="@string/Updates" -->
-<!--         android:summary="@string/Check_for_updates_at_start"/> -->
-<!--     <EditTextPreference  -->
-<!--         android:key="@string/pref_key_updates_url"  -->
-<!--         android:title="@string/Set_Updates_URL" -->
-<!--         android:summary="@string/Sets_the_URL_to_retrieve_updates_from" -->
-<!--         android:dialogTitle="@string/Enter_URL"  -->
-<!--         android:defaultValue="@string/default_update_URL"/> -->
     <CheckBoxPreference 
         android:key="@string/pref_key_show_score_instantaneous" 
         android:title="@string/instant_score"

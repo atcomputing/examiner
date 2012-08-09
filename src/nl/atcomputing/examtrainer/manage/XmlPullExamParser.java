@@ -10,7 +10,6 @@ import nl.atcomputing.examtrainer.ExamQuestion;
 import org.xmlpull.v1.XmlPullParser;
 
 import android.content.Context;
-import android.util.Log;
 import android.util.Xml;
 
 /**

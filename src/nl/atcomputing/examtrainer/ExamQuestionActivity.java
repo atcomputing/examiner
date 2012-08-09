@@ -42,7 +42,7 @@ public class ExamQuestionActivity extends Activity {
 	//private Cursor cursorQuestion;
 	private long questionId;
 	private EditText editText;
-	private TextView timeLimitTextView;
+	private static TextView timeLimitTextView;
 	private ArrayList <View> multipleChoices;
 	private static final int DIALOG_ENDOFEXAM_ID = 1;
 	private static final int DIALOG_SHOW_HINT_ID = 2;
@@ -54,13 +54,19 @@ public class ExamQuestionActivity extends Activity {
 	private static final String HANDLER_KEY_CURRENT_TIME = "handler_current_time"; 
 
 	private Timer timer;
-	private MyHandler myHandler;
+	private static MyHandler myHandler;
 
 	private ExamQuestion examQuestion;
 
-	private class MyHandler extends Handler {
+	private static class MyHandler extends Handler {
 		SimpleDateFormat dateFormatGmt = new SimpleDateFormat("HH:mm:ss");
-
+		Activity activity;
+		
+		public MyHandler(Activity activity) {
+			super();
+			this.activity = activity;
+		}
+		
 		public void handleMessage(Message msg) {
 			int key = msg.getData().getInt(HANDLER_MESSAGE_KEY);
 			if( key == HANDLER_MESSAGE_VALUE_UPDATE_TIMER ) {
@@ -70,7 +76,7 @@ public class ExamQuestionActivity extends Activity {
 				String timeLeft = dateFormatGmt.format(date);
 				timeLimitTextView.setText(timeLeft);
 			} else if ( key == HANDLER_MESSAGE_VALUE_TIMELIMITREACHED ) {
-				showDialog(DIALOG_TIMELIMITREACHED_ID);
+				activity.showDialog(DIALOG_TIMELIMITREACHED_ID);
 			}
 
 		}
@@ -79,7 +85,7 @@ public class ExamQuestionActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.myHandler = new MyHandler();
+		myHandler = new MyHandler(this);
 
 		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
 			finish();
@@ -439,7 +445,7 @@ public class ExamQuestionActivity extends Activity {
 
 		setContentView(R.layout.question);
 
-		this.timeLimitTextView = (TextView) findViewById(R.id.textExamTime);
+		timeLimitTextView = (TextView) findViewById(R.id.textExamTime);
 
 		LinearLayout layout = (LinearLayout) findViewById(R.id.question_layout);
 

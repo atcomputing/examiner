@@ -2,7 +2,6 @@ package nl.atcomputing.examtrainer;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 
 import nl.atcomputing.examtrainer.manage.InstallExamAsyncTask;
 import android.app.Activity;
@@ -10,7 +9,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.format.Time;
-import android.util.Log;
 
 /**
  * @author martijn brekhof
