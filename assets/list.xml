@@ -27,4 +27,31 @@
 		<url>file:///l101-proefexamen-3.xml</url>
 		<timelimit>90</timelimit>
 	</exam>
+	<exam>
+		<title>LPI 102 Exam 1</title>
+		<category>LPI</category>
+		<author>AT Computing</author>
+		<numberofitems>60</numberofitems>
+		<itemsneededtopass>40</itemsneededtopass>
+		<url>file:///l102-proefexamen-1.xml</url>
+		<timelimit>90</timelimit>
+	</exam>
+	<exam>
+		<title>LPI 102 Exam 2</title>
+		<category>LPI</category>
+		<author>AT Computing</author>
+		<numberofitems>60</numberofitems>
+		<itemsneededtopass>40</itemsneededtopass>
+		<url>file:///l102-proefexamen-2.xml</url>
+		<timelimit>90</timelimit>
+	</exam>
+	<exam>
+		<title>LPI 102 Exam 3</title>
+		<category>LPI</category>
+		<author>AT Computing</author>
+		<numberofitems>60</numberofitems>
+		<itemsneededtopass>40</itemsneededtopass>
+		<url>file:///l102-proefexamen-3.xml</url>
+		<timelimit>90</timelimit>
+	</exam>
 </exams>
