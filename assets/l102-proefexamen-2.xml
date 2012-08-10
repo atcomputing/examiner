@@ -582,11 +582,11 @@
     <exhibit>cat&amp;nbsp;&amp;lt;&amp;lt;&amp;nbsp;guru&amp;nbsp;&lt;br/&gt;Hello&amp;nbsp;guru&amp;nbsp;&lt;br/&gt;guru&amp;nbsp;</exhibit>
     <question>What is the output when the following shell script executes?</question>
     <choice>The contents of the file guru.</choice>
-    <choice><font face=\"monospace\">Hello&amp;nbsp;</font></choice>
+    <choice>&lt;font face="monospace"&gt;Hello&amp;nbsp;&lt;/font&gt;</choice>
     <choice>No output but a file named guru is created.</choice>
-    <choice><font face=\"monospace\">Hello&amp;nbsp;guru&amp;nbsp;</font></choice>
-    <choice><font face=\"monospace\">Hello&amp;nbsp;guru&amp;nbsp;&lt;br/&gt;guru&amp;nbsp;</font></choice>
-    <correct_answer><font face=\"monospace\">Hello&amp;nbsp;guru&amp;nbsp;</font></correct_answer>
+    <choice>&lt;font face="monospace"&gt;Hello&amp;nbsp;guru&amp;nbsp;&lt;/font&gt;</choice>
+    <choice>&lt;font face="monospace"&gt;Hello&amp;nbsp;guru&amp;nbsp;&lt;br/&gt;guru&amp;nbsp;&lt;/font&gt;</choice>
+    <correct_answer>&lt;font face="monospace"&gt;Hello&amp;nbsp;guru&amp;nbsp;&lt;/font&gt;</correct_answer>
     <hint>If you are not certain you might get lucky and another question may give you a clue for the correct answer.</hint>
     <type>multiple choice</type>
   </item>
