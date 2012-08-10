@@ -102,4 +102,5 @@
     <string name="Usage_Dialog_Time_limit_is_activated_for_this_exam">Time limit is activated for this exam.\nIf you do not want to use a time limit, you can press menu and use Settings to disable the time limit.</string>
     <string name="Usage_Dialog_examReviewScreenMessage">This is the exam review screen.\nSelecting a specific question will open the question and show you the correct answer.\nNote that, if you did not yet complete the exam you are not allowed to review a specific question.\nYou can continue the exam using the button at the bottom of the screen.</string>
     <string name="Time_limit_exceeded">Time limit exceeded. Disabling time limit</string>
+    <string name="Usage_Dialog_Sometimes_the_text_in_the_exhibit_or_choices_is_larger_than_fits_on_screen">Sometimes the text in the exhibit or choices is larger than fits on screen.\nYou can see the rest of the text by scrolling the text horizontally.</string>
 </resources>

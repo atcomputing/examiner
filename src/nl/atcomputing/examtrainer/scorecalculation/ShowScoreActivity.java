@@ -11,6 +11,7 @@ import android.database.sqlite.SQLiteException;
 import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,10 +26,11 @@ public class ShowScoreActivity extends Activity {
 	private GLSurfaceView glView;
 	private CalculateScore calculateScore;
 	private boolean glSurfaceReady = false;
+	private WaitForGLSurfaceReadyAsyncTask waitForGLSurfaceReadyAsyncTask = null;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		Log.d("ShowScoreActivity", "onCreate");
 		setContentView(R.layout.show_score);
 
 		this.glView = (GLSurfaceView) findViewById(R.id.show_score_glsurfaceview);
@@ -39,20 +41,27 @@ public class ShowScoreActivity extends Activity {
 			ShowScoreActivity.this.calculateScore = (CalculateScore) getLastNonConfigurationInstance();
 			if( ( ShowScoreActivity.this.calculateScore != null ) && 
 					( ShowScoreActivity.this.calculateScore.getStatus() != AsyncTask.Status.FINISHED) ) {
+				Log.d("ShowScoreActivity", "Attaching running calculateScore");
 				ShowScoreActivity.this.calculateScore.setContext(ShowScoreActivity.this);
 			} else {
+				Log.d("ShowScoreActivity", "Creating new calculateScore");
 				calculateScore();
 			}
+		} else {
+			showResult();
 		}
 	}
 
-	public void startAnimation() {
+	public void setGLSurfaceReady() {
 		this.glSurfaceReady = true;
 	}
 
 	@Override
 	protected void onPause() {
 		super.onPause();
+		if( this.waitForGLSurfaceReadyAsyncTask != null ) { 
+			this.waitForGLSurfaceReadyAsyncTask.cancel(true);
+		}
 		this.glView.onPause();
 		this.renderer.onPause();
 	}
@@ -112,10 +121,8 @@ public class ShowScoreActivity extends Activity {
 					r.getString(R.string.You_passed) + ".\n" +
 					r.getString(R.string.You_scored) + " " + score + " " +
 					r.getString(R.string.out_of) + " " + totalAmountOfItems + ".";
-			if( this.glSurfaceReady ) {
-				this.renderer.showBalloons(score);
-				this.renderer.requestRender();
-			}
+			this.waitForGLSurfaceReadyAsyncTask = new WaitForGLSurfaceReadyAsyncTask();
+			this.waitForGLSurfaceReadyAsyncTask.execute(score);
 		} else {
 			text = r.getString(R.string.You_failed) + ".\n" +
 					r.getString(R.string.You_scored) + " " + score + " " +
@@ -126,5 +133,26 @@ public class ShowScoreActivity extends Activity {
 		TextView tv = (TextView) findViewById(R.id.show_score_text);
 		tv.setText(text);
 		tv.setVisibility(View.VISIBLE);
+	}
+	
+	private class WaitForGLSurfaceReadyAsyncTask extends AsyncTask<Integer, Integer, Integer> {
+
+		@Override
+		protected Integer doInBackground(Integer... params) {
+			while( glSurfaceReady == false ) {
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			return params[0];
+		}
+		
+		@Override
+		protected void onPostExecute(Integer result) {
+			renderer.showBalloons(result.intValue());
+			renderer.requestRender();
+		}
 	}
 }

@@ -30,7 +30,8 @@ public class Balloon  {
 
 	public boolean popped = false; 
 
-
+	private static double ratio = 2.0;
+	
 	private int texture;
 	private int type;
 
@@ -56,13 +57,11 @@ public class Balloon  {
 	};
 
 
-	public Balloon(Context context, int balloon_type, int texture, 
-			int pixel_width, int pixel_height) {
+	public Balloon(Context context, int balloon_type, int texture) {
 
 		this.type = balloon_type;
 
 		this.texture = texture;
-		double ratio = pixel_height / (double) pixel_width;
 
 		vertices[1] *= ratio; 
 		vertices[4] *= ratio;

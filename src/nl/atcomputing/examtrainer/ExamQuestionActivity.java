@@ -20,16 +20,20 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,12 +65,12 @@ public class ExamQuestionActivity extends Activity {
 	private static class MyHandler extends Handler {
 		SimpleDateFormat dateFormatGmt = new SimpleDateFormat("HH:mm:ss");
 		Activity activity;
-		
+
 		public MyHandler(Activity activity) {
 			super();
 			this.activity = activity;
 		}
-		
+
 		public void handleMessage(Message msg) {
 			int key = msg.getData().getInt(HANDLER_MESSAGE_KEY);
 			if( key == HANDLER_MESSAGE_VALUE_UPDATE_TIMER ) {
@@ -78,7 +82,6 @@ public class ExamQuestionActivity extends Activity {
 			} else if ( key == HANDLER_MESSAGE_VALUE_TIMELIMITREACHED ) {
 				activity.showDialog(DIALOG_TIMELIMITREACHED_ID);
 			}
-
 		}
 	}
 
@@ -106,6 +109,42 @@ public class ExamQuestionActivity extends Activity {
 					this.getResources().getString(R.string.Try_reinstalling_the_exam));
 		}
 		setupLayout();
+
+		/**
+		 * Setup observer to be able to measure exhibit and choices width. We use this to determine if
+		 * question contains horizontally scrollable text. If so, we show a usage dialog.
+		 */
+		final RelativeLayout layout = (RelativeLayout) findViewById(R.id.question_toplayout_container);
+		ViewTreeObserver viewTreeObserver = layout.getViewTreeObserver();
+		if (viewTreeObserver.isAlive()) {
+			viewTreeObserver.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+
+				public void onGlobalLayout() {
+					Boolean showUsageDialog = false;
+					layout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
+					TextView exhibit = (TextView) findViewById(R.id.textExhibit);
+					if( exhibit != null ) {
+						HorizontalScrollView hs = (HorizontalScrollView) findViewById(R.id.horizontalScrollViewExhibit);
+						if( exhibit.getMeasuredWidth() > hs.getMeasuredWidth() ) {
+							showUsageDialog = true;
+						}
+					}
+					HorizontalScrollView hs = (HorizontalScrollView) findViewById(R.id.question_multiplechoice_horizontalScrollView);
+					if( hs != null ) {
+						LinearLayout ll = (LinearLayout) findViewById(R.id.question_multiplechoice_linear_layout);
+						if( ll.getMeasuredWidth() > hs.getMeasuredWidth() ) {
+							showUsageDialog = true;
+						}
+					}
+					if( showUsageDialog ) {
+						Dialog dialog = DialogFactory.createUsageDialog(ExamQuestionActivity.this, R.string.Usage_Dialog_Sometimes_the_text_in_the_exhibit_or_choices_is_larger_than_fits_on_screen);
+						if( dialog != null ) {
+							dialog.show();
+						}
+					}
+				}
+			});
+		}
 	}
 
 	protected void onResume() {
@@ -114,11 +153,11 @@ public class ExamQuestionActivity extends Activity {
 			finish();
 		}
 		setTitle(ExamTrainer.getExamTitle());
-		
+
 		setupTimer();
-		
+
 		updateLayout();
-		
+
 		if( this.questionId == 1 ) {
 			Dialog dialog = DialogFactory.createUsageDialog(this, R.string.Usage_Dialog_Press_menu_to_quit_the_exam_or_show_a_hint_if_available);
 			if( dialog != null ) {
@@ -270,7 +309,7 @@ public class ExamQuestionActivity extends Activity {
 			this.timer = null;
 		}
 	}
-	
+
 	private void showAnswers() {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
@@ -411,14 +450,14 @@ public class ExamQuestionActivity extends Activity {
 		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW ) {
 			showAnswers();
 		}
-		
+
 		int index = scoresAnswersCursor.getColumnIndex(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER);
 
 		if( this.examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
 			this.editText.setText(scoresAnswersCursor.getString(index));
 		} else {
 			for( View view : this.multipleChoices ) {
-				
+
 				TextView tv = (TextView) view.findViewById(R.id.choiceTextView);
 				String tvText = tv.getText().toString();
 				CheckBox cbox = (CheckBox) view.findViewById(R.id.choiceCheckBox);
@@ -426,7 +465,7 @@ public class ExamQuestionActivity extends Activity {
 				if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW ) {
 					cbox.setClickable(false);
 				}
-				
+
 				//Check if choice was selected by user previously
 				scoresAnswersCursor.moveToFirst();
 				do {
@@ -438,6 +477,7 @@ public class ExamQuestionActivity extends Activity {
 			}
 		}
 		examinationDbHelper.close();
+
 	}
 
 	private void setupLayout() {
