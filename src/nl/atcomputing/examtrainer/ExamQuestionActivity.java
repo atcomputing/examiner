@@ -402,6 +402,13 @@ public class ExamQuestionActivity extends Activity {
 			tv.setText(Html.fromHtml(choice));
 			cbox = (CheckBox) view.findViewById(R.id.choiceCheckBox);
 
+			//highlight and separate multi line choices
+			if( choice.contains("<br/>") ) {
+				tv.setBackgroundColor(getResources().getColor(R.color.choice));
+				int padding = getResources().getDimensionPixelSize(R.dimen.paddingSmall);
+				view.setPadding(0, padding, 0, padding);
+			}
+			
 			final String answer = choice;
 			cbox.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {

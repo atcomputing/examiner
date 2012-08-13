@@ -124,6 +124,8 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 
 		} else {
 			Toast.makeText(this.context, errorMessage, Toast.LENGTH_LONG).show();
+			DatabaseManager dm = new DatabaseManager(this.context);
+			dm.deleteExam(this.examID);
 		}
 
 		ExamTrainer.removeInstallationThread(this.examID);
