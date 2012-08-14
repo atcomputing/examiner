@@ -11,7 +11,6 @@
         <string-array name="class_C">
             <item>Als dit zo doorgaat zul je slagen.</item>
             <item>Ziet er goed uit.</item>
-            <item></item>
         </string-array>
         <string-array name="class_D">
             <item>Niet een geweldige start maar nog een hoop vragen te gaan.</item>
@@ -22,6 +21,7 @@
             <item>Het gaat moeilijk worden, maar je kan nog slagen.</item>
         </string-array>
         <string-array name="class_F">
-            <item>Alle hoop is verloren.</item>
+            <item>Oh nee, dit komt niet meer goed.</item>
+            <item>Ik heb slecht nieuws.</item>
         </string-array>
     </resources>

@@ -23,5 +23,6 @@
         </string-array>
         <string-array name="class_F">
             <item>Hmmm, this does not look good.</item>
+            <item>Brace yourself.</item>
         </string-array>
     </resources>

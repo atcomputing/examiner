@@ -395,6 +395,9 @@ public class ExamQuestionActivity extends Activity {
 		CheckBox cbox; 
 		this.multipleChoices = new ArrayList<View>();
 		ArrayList<String> choices = this.examQuestion.getChoices();
+		
+		int amountOfMultilineChoices = 0;
+		
 		for( String choice : choices ) {
 			View view = LayoutInflater.from(this).inflate(R.layout.choice, null);
 
@@ -404,9 +407,7 @@ public class ExamQuestionActivity extends Activity {
 
 			//highlight and separate multi line choices
 			if( choice.contains("<br/>") ) {
-				tv.setBackgroundColor(getResources().getColor(R.color.choice));
-				int padding = getResources().getDimensionPixelSize(R.dimen.paddingSmall);
-				view.setPadding(0, padding, 0, padding);
+				amountOfMultilineChoices++;
 			}
 			
 			final String answer = choice;
@@ -429,6 +430,16 @@ public class ExamQuestionActivity extends Activity {
 			});
 			layout.addView(view);
 			this.multipleChoices.add(view);
+		}
+		
+		//Make sure multiline choices are distinguishable from eachother
+		if( amountOfMultilineChoices == choices.size() ) {
+			for( View view : this.multipleChoices ) {
+				TextView tv = (TextView) view.findViewById(R.id.choiceTextView);
+				tv.setBackgroundColor(getResources().getColor(R.color.choice));
+				int padding = getResources().getDimensionPixelSize(R.dimen.paddingSmall);
+				view.setPadding(0, padding, 0, padding);
+			}
 		}
 	}
 
