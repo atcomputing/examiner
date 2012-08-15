@@ -316,6 +316,7 @@ public class ExamQuestionActivity extends Activity {
 		Cursor cursor = examinationDbHelper.getAnswers(this.questionId);
 		examinationDbHelper.close();
 		if ( cursor.getCount() < 1 ) {
+			Log.d("ExamQuestionActivity", "showAnswers: no answers available for question "+this.questionId);
 			return;
 		}
 		int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
@@ -395,9 +396,9 @@ public class ExamQuestionActivity extends Activity {
 		CheckBox cbox; 
 		this.multipleChoices = new ArrayList<View>();
 		ArrayList<String> choices = this.examQuestion.getChoices();
-		
+
 		int amountOfMultilineChoices = 0;
-		
+
 		for( String choice : choices ) {
 			View view = LayoutInflater.from(this).inflate(R.layout.choice, null);
 
@@ -409,7 +410,7 @@ public class ExamQuestionActivity extends Activity {
 			if( choice.contains("<br/>") ) {
 				amountOfMultilineChoices++;
 			}
-			
+
 			final String answer = choice;
 			cbox.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
@@ -431,7 +432,7 @@ public class ExamQuestionActivity extends Activity {
 			layout.addView(view);
 			this.multipleChoices.add(view);
 		}
-		
+
 		//Make sure multiline choices are distinguishable from eachother
 		if( amountOfMultilineChoices == choices.size() ) {
 			for( View view : this.multipleChoices ) {
@@ -460,13 +461,15 @@ public class ExamQuestionActivity extends Activity {
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 
 		Cursor scoresAnswersCursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionId);
-		if ( scoresAnswersCursor.getCount() < 1 ) {
-			examinationDbHelper.close();
-			return;
-		}
 
 		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW ) {
 			showAnswers();
+		} else {
+			//No need to get previous selected choices during an exam if there are none
+			if ( scoresAnswersCursor.getCount() < 1 ) {
+				examinationDbHelper.close();
+				return;
+			}
 		}
 
 		int index = scoresAnswersCursor.getColumnIndex(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER);
@@ -485,13 +488,15 @@ public class ExamQuestionActivity extends Activity {
 				}
 
 				//Check if choice was selected by user previously
-				scoresAnswersCursor.moveToFirst();
-				do {
-					String answer = Html.fromHtml(scoresAnswersCursor.getString(index)).toString();			
-					if( answer.contentEquals(tvText)) {
-						cbox.setChecked(true);
-					}
-				} while( scoresAnswersCursor.moveToNext() );
+				if ( scoresAnswersCursor.getCount() > 0 ) {
+					scoresAnswersCursor.moveToFirst();
+					do {
+						String answer = Html.fromHtml(scoresAnswersCursor.getString(index)).toString();			
+						if( answer.contentEquals(tvText)) {
+							cbox.setChecked(true);
+						}
+					} while( scoresAnswersCursor.moveToNext() );
+				}
 			}
 		}
 		examinationDbHelper.close();
@@ -543,6 +548,7 @@ public class ExamQuestionActivity extends Activity {
 				public void onClick(View v) {
 					Intent intent = new Intent(ExamQuestionActivity.this, ExamQuestionActivity.class);
 					ExamTrainer.setQuestionId(intent, questionId - 1);
+					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(intent);
 					finish();
 				}

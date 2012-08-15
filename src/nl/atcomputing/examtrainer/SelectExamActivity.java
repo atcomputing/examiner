@@ -3,6 +3,7 @@ package nl.atcomputing.examtrainer;
 import nl.atcomputing.examtrainer.adapters.SelectExamAdapter;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.manage.ManageExamsActivity;
+import nl.atcomputing.examtrainer.scorecalculation.ShowScoreActivity;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;

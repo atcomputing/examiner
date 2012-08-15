@@ -10,6 +10,7 @@ import nl.atcomputing.examtrainer.ExamQuestion;
 import org.xmlpull.v1.XmlPullParser;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.Xml;
 
 /**
@@ -134,6 +135,7 @@ public class XmlPullExamParser {
 	    if ( eventType == XmlPullParser.END_DOCUMENT ) {
 	    	throw new RuntimeException("End of document reached while parsing item");
 	    }
+	    Log.d("XmlPullExamParser", "parsed question: "+examQuestion.toString());
 	    return null;
 	}
 	

@@ -207,4 +207,8 @@ public class ExamQuestion {
 		
 		return this;
 	}
+	
+	public String toString() {
+		return this.question;
+	}
 }

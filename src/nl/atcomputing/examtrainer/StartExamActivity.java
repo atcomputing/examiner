@@ -8,6 +8,7 @@ import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.manage.InstallExamAsyncTask;
 import nl.atcomputing.examtrainer.manage.PreferencesActivity;
+import nl.atcomputing.examtrainer.scorecalculation.ShowScoreActivity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -119,7 +120,7 @@ public class StartExamActivity extends Activity {
 			cursor.close();
 		}
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getMenuInflater();

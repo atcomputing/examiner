@@ -4,8 +4,11 @@ import java.util.List;
 
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.SelectExamActivity;
+import nl.atcomputing.examtrainer.StartExamActivity;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteException;
 import android.opengl.GLSurfaceView;
@@ -73,6 +76,14 @@ public class ShowScoreActivity extends Activity {
 		this.renderer.onResume();
 	}
 
+	@Override
+	public void onBackPressed() {
+		Intent intent = new Intent(ShowScoreActivity.this, StartExamActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
+		finish();
+	}
+	
 	public Object onRetainNonConfigurationInstance() {
 		return this.calculateScore;
 	}
