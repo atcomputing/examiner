@@ -4,7 +4,6 @@ import java.util.List;
 
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.SelectExamActivity;
 import nl.atcomputing.examtrainer.StartExamActivity;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import android.app.Activity;
@@ -14,7 +13,6 @@ import android.database.sqlite.SQLiteException;
 import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +31,6 @@ public class ShowScoreActivity extends Activity {
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Log.d("ShowScoreActivity", "onCreate");
 		setContentView(R.layout.show_score);
 
 		this.glView = (GLSurfaceView) findViewById(R.id.show_score_glsurfaceview);
@@ -44,10 +41,8 @@ public class ShowScoreActivity extends Activity {
 			ShowScoreActivity.this.calculateScore = (CalculateScore) getLastNonConfigurationInstance();
 			if( ( ShowScoreActivity.this.calculateScore != null ) && 
 					( ShowScoreActivity.this.calculateScore.getStatus() != AsyncTask.Status.FINISHED) ) {
-				Log.d("ShowScoreActivity", "Attaching running calculateScore");
 				ShowScoreActivity.this.calculateScore.setContext(ShowScoreActivity.this);
 			} else {
-				Log.d("ShowScoreActivity", "Creating new calculateScore");
 				calculateScore();
 			}
 		} else {
@@ -133,7 +128,7 @@ public class ShowScoreActivity extends Activity {
 					r.getString(R.string.You_scored) + " " + score + " " +
 					r.getString(R.string.out_of) + " " + totalAmountOfItems + ".";
 			this.waitForGLSurfaceReadyAsyncTask = new WaitForGLSurfaceReadyAsyncTask();
-			this.waitForGLSurfaceReadyAsyncTask.execute(score);
+			this.waitForGLSurfaceReadyAsyncTask.execute(15);
 		} else {
 			text = r.getString(R.string.You_failed) + ".\n" +
 					r.getString(R.string.You_scored) + " " + score + " " +

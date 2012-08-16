@@ -12,7 +12,7 @@ import android.util.Log;
  */
 public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 	private static String DATABASE_NAME = "ExamTrainer.db";
-	private static final int DATABASE_VERSION = 1;
+	private static final int DATABASE_VERSION = 2;
 	
 	public static final class Exams implements BaseColumns {
 		private Exams() {}
@@ -70,11 +70,12 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		Log.w(ExamTrainerDatabaseHelper.class.getName(),
-				"Upgrading database from version " + oldVersion + " to "
-						+ newVersion + ", which will destroy all old data");
-		db.execSQL("DROP TABLE IF EXISTS " + Exams.TABLE_NAME);
-		onCreate(db);	
+		switch( oldVersion ) {
+		case 1:
+			Log.w(ExamTrainerDatabaseHelper.class.getName(),
+					"Upgrading database from version 1 to 2");
+			db.execSQL(DATABASE_CREATE_USAGEDIALOGS_TABLE);
+		}
 	}
 	
 	public String getDatabaseName() {
