@@ -20,7 +20,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -316,7 +315,6 @@ public class ExamQuestionActivity extends Activity {
 		Cursor cursor = examinationDbHelper.getAnswers(this.questionId);
 		examinationDbHelper.close();
 		if ( cursor.getCount() < 1 ) {
-			Log.d("ExamQuestionActivity", "showAnswers: no answers available for question "+this.questionId);
 			return;
 		}
 		int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
@@ -434,7 +432,7 @@ public class ExamQuestionActivity extends Activity {
 		}
 
 		//Make sure multiline choices are distinguishable from eachother
-		if( amountOfMultilineChoices == choices.size() ) {
+		if( amountOfMultilineChoices > 0 ) {
 			for( View view : this.multipleChoices ) {
 				TextView tv = (TextView) view.findViewById(R.id.choiceTextView);
 				tv.setBackgroundColor(getResources().getColor(R.color.choice));

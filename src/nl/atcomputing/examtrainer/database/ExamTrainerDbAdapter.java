@@ -50,10 +50,6 @@ public class ExamTrainerDbAdapter {
 		return this;
 	}
 
-	public void upgrade() {
-		dbHelper.onUpgrade(db, 1, 1);
-	}
-
 	public void close() {
 		dbHelper.close();
 	}

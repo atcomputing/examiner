@@ -8,7 +8,6 @@ import javax.microedition.khronos.opengles.GL10;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLSurfaceView.Renderer;
 import android.opengl.GLU;
-import android.util.Log;
 
 /**
  * @author martijn brekhof
@@ -30,9 +29,9 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 	private float screenBoundaryRight;
 	private float screenBoundaryLeft;
 	private float screenBoundaryBottom;
-	private float screenWidth;
-	private float screenHeight;
-
+//	private long startTime;
+//	private final int framerate = 33; //framerate is milliseconds per update
+	
 	public GLSurfaceViewRenderer(ShowScoreActivity activity) {
 		super(activity);
 		this.activity = activity;
@@ -62,7 +61,18 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 		if( this.mode != this.RUN ) {
 			return;
 		}
-
+//	    
+//		long endTime = System.currentTimeMillis();
+//	    long dt = endTime - this.startTime;
+//	    if (dt < framerate) {
+//			try {
+//				Thread.sleep(framerate - dt);
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//			}
+//	    }
+//	    this.startTime = System.currentTimeMillis();
+	    
 		//Clear Screen And Depth Buffer
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);	
 
@@ -102,9 +112,6 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 	{
 		gl.glViewport(0, 0, width, height);
 
-		this.screenWidth = width;
-		this.screenHeight = height;
-
 		// make adjustments for screen ratio
 		float hratio = (float) width / height;
 		float vratio = 1.0f;
@@ -127,8 +134,6 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) 
 	{
-		Log.d("GLSurfaceViewRenderer", "onSurfaceCreated");
-
 		gl.glEnable(GL10.GL_TEXTURE_2D);					//Enable Texture Mapping
 		gl.glDisable(GL10.GL_DITHER);
 		gl.glEnable(GL10.GL_BLEND);							//Enable blending
@@ -138,7 +143,6 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 
 		this.textures = new Textures(this.activity);
 		this.textures.loadTextures(gl);
-
 	}
 
 
@@ -156,7 +160,7 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 					this.textures.getTexture(resource_id));
 			b.x = this.screenBoundaryRight - (rng.nextFloat() * this.screenBoundaryRight * 2f);
 			b.y = this.screenBoundaryTop;
-			b.setLift(0.001f + rng.nextFloat()/8f);
+			b.setLift(0.005f + rng.nextFloat()/8f);
 
 			this.balloons[i] = b;
 		}
@@ -168,9 +172,9 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 		Frustum f = new Frustum();
 		f.extractFromOGL();
 
-		this.screenBoundaryBottom = f.getWorldCoordinateBottom(this.zoom);
-		this.screenBoundaryTop = f.getWorldCoordinateTop(this.zoom);
-		this.screenBoundaryLeft = f.getWorldCoordinateLeft(this.zoom);
-		this.screenBoundaryRight = f.getWorldCoordinateRight(this.zoom);
+		this.screenBoundaryBottom = f.getWorldCoordinateBottom(this.zoom) - 0.5f;
+		this.screenBoundaryTop = f.getWorldCoordinateTop(this.zoom) + 0.5f;
+		this.screenBoundaryLeft = f.getWorldCoordinateLeft(this.zoom) - 0.5f;
+		this.screenBoundaryRight = f.getWorldCoordinateRight(this.zoom) + 0.5f;
 	}
 }
