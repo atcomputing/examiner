@@ -32,6 +32,12 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 //	private long startTime;
 //	private final int framerate = 33; //framerate is milliseconds per update
 	
+	/**
+	 * Prevent a nasty bug that calls onSurfaceChanged twice when returning
+	 * after another app was active.
+	 */
+	private boolean onSurfaceChangedAlreadyCalled = false;
+	
 	public GLSurfaceViewRenderer(ShowScoreActivity activity) {
 		super(activity);
 		this.activity = activity;
@@ -55,6 +61,7 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 
 	public void onResume() {
 		this.mode = this.RUN;
+		this.onSurfaceChangedAlreadyCalled = false;
 	}
 
 	public void onDrawFrame(GL10 gl) {
@@ -110,6 +117,10 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 
 	public void onSurfaceChanged(GL10 gl, int width, int height) 
 	{
+		if( this.onSurfaceChangedAlreadyCalled ) {
+			return;
+		}
+		
 		gl.glViewport(0, 0, width, height);
 
 		// make adjustments for screen ratio
@@ -130,6 +141,8 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 				this.screenBoundaryRight);
 
 		this.activity.setGLSurfaceReady();
+		
+		this.onSurfaceChangedAlreadyCalled = true;
 	}
 
 	public void onSurfaceCreated(GL10 gl, EGLConfig config) 
