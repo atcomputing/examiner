@@ -37,6 +37,10 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 		this.context = context;
 		this.tvProgress = progress;
 	}
+	
+	public long getExamID() {
+		return this.examID;
+	}
 
 	public void setProgressTextView(TextView tv) {
 		this.tvProgress = tv;
@@ -81,6 +85,7 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 			
 			for( ExamQuestion examQuestion: examQuestions ) {
 				if( isCancelled() ) {
+					Log.d("InstallExamAsyncTask", "doInBackground: isCancelled()=true");
 					break;
 				}
 				examQuestion.addToDatabase(examinationDbHelper);
@@ -137,10 +142,14 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 
 	}
 
-	protected void onCancelled(String result) {
+	@Override
+	protected void onCancelled() {
+		super.onCancelled();
 		DatabaseManager dm = new DatabaseManager(this.context);
 		dm.deleteExam(this.examID);
 		
 		ExamTrainer.removeInstallationThread(this.examID);
+		Log.d("InstallExamAsyncTask", "onCancelled: cancelled: "+this.examID);
 	}
+	
 }

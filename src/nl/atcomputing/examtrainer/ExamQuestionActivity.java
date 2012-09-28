@@ -432,7 +432,7 @@ public class ExamQuestionActivity extends Activity {
 		}
 
 		//Make sure multiline choices are distinguishable from eachother
-		if( amountOfMultilineChoices > 0 ) {
+		if( amountOfMultilineChoices > 1 ) {
 			for( View view : this.multipleChoices ) {
 				TextView tv = (TextView) view.findViewById(R.id.choiceTextView);
 				tv.setBackgroundColor(getResources().getColor(R.color.choice));

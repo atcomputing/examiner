@@ -88,6 +88,11 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 		GLU.gluLookAt(gl, 0f, 0f, this.zoom, 0f, 0f, 0f, 0f, -1.0f, 0f);
 		if(this.showBalloons) {
 			this.wind.update();
+			
+			float bottomScreenBoundaryForBalloon = this.screenBoundaryBottom - 1.5f;
+			float leftScreenBoundaryForBalloon = this.screenBoundaryLeft - 1.5f;
+			float rightScreenBoundaryForBalloon = this.screenBoundaryRight - 1.5f;
+			
 			for(Balloon b: this.balloons) {
 				float windSpeedHorizontal = this.wind.getWind(-b.y);
 				if(wind.getDirection() == Wind.Direction.LEFT ) {
@@ -97,12 +102,12 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 				b.x += windSpeedHorizontal; 
 				b.y -= b.getLift();
 
-				if( (b.y + 1.5f) < this.screenBoundaryBottom ) {
+				if( b.y < bottomScreenBoundaryForBalloon ) {
 					b.y = this.screenBoundaryTop + 1.5f;
 				}
-				if( (b.x + 1.5f) < this.screenBoundaryLeft ) {
+				if( b.x < leftScreenBoundaryForBalloon ) {
 					b.x = this.screenBoundaryRight + 1.5f;
-				} else if ( (b.x - 1.5f) > this.screenBoundaryRight ) {
+				} else if ( b.x > rightScreenBoundaryForBalloon ) {
 					b.x = this.screenBoundaryLeft - 1.5f;
 				}
 

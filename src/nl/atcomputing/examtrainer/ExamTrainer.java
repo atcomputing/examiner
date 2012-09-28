@@ -52,7 +52,9 @@ public final class ExamTrainer {
 	public static void cancelAllInstallationThreads() {
 		Collection<InstallExamAsyncTask> values = ExamTrainer.getAllInstallExamAsyncTasks();
 		for( InstallExamAsyncTask task : values ) {
-			task.cancel(false);
+			if( ! task.cancel(true) ) {
+				removeInstallationThread(task.getExamID());
+			}
 		}
 	}
 	
