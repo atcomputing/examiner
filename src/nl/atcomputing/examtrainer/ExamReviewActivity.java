@@ -15,12 +15,17 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.app.SherlockActivity;
 
 /**
  * @author martijn brekhof
  *
  */
-public class ExamReviewActivity extends Activity {
+public class ExamReviewActivity extends SherlockActivity {
 	public static final String TAG = "ExamReviewActivity";
 	private GridView scoresGrid;
 	private ExamReviewAdapter adapter; 
@@ -29,6 +34,8 @@ public class ExamReviewActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.review_exam);
+		
+		setTitle(ExamTrainer.getExamTitle());
 	}
 
 	protected void onResume() {

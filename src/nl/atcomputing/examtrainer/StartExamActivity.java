@@ -53,7 +53,7 @@ public class StartExamActivity extends SherlockActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.startexam);
-
+		
 		this.receiveBroadcast = new ReceiveBroadcast();
 
 		this.buttonStartExam = (Button) findViewById(R.id.startexam_button_start_exam);
@@ -97,6 +97,7 @@ public class StartExamActivity extends SherlockActivity {
 		});
 	}
 
+	
 	public Object onRetainNonConfigurationInstance() {
 		return this.adapter.itemChecked;
 	}
@@ -106,6 +107,7 @@ public class StartExamActivity extends SherlockActivity {
 		IntentFilter filter = new IntentFilter(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED);
 		this.registerReceiver(this.receiveBroadcast, filter);
 		setupView();
+		setTitle(ExamTrainer.getExamTitle());
 	}
 
 	protected void onPause() {

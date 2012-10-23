@@ -1,15 +1,15 @@
 package nl.atcomputing.examtrainer;
 
-import nl.atcomputing.examtrainer.R;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
+
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
 
 /**
  * @author martijn brekhof
  *
  */
 
-public class PreferencesActivity extends PreferenceActivity {
+public class PreferencesActivity extends SherlockPreferenceActivity {
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
