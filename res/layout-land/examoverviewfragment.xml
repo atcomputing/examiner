@@ -24,14 +24,14 @@
                 android:layout_height="wrap_content" >
 
                 <TextView
-                    android:id="@+id/startexam_history_textview_noscoresavailable"
+                    android:id="@+id/startexam_history_textview_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/no_previous_scores_available"
                     android:textSize="@dimen/textSizeDefault" />
 
                 <TextView
-                    android:id="@+id/startexam_history_textview_progress"
+                    android:id="@+id/startexam_history_textview_message_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/paddingDefault"
@@ -80,40 +80,6 @@
             android:background="#AA404040"
             android:orientation="vertical"
             android:padding="@dimen/paddingSmall" >
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/startexam_examtitle_text"
-                    style="@style/TextWhite"
-                    android:layout_alignParentLeft="true"
-                    android:text="@string/name" />
-
-                <TextView
-                    android:id="@+id/startexam_examtitle_value"
-                    style="@style/TextWhite"
-                    android:layout_alignParentRight="true"
-                    android:text="" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/startexam_installed_on_text"
-                    style="@style/TextWhite"
-                    android:layout_alignParentLeft="true"
-                    android:text="@string/installed_on" />
-
-                <TextView
-                    android:id="@+id/startexam_installed_on_value"
-                    style="@style/TextWhite"
-                    android:layout_alignParentRight="true"
-                    android:text="" />
-            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="fill_parent"

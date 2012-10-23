@@ -3,118 +3,84 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-        <LinearLayout
-            android:id="@+id/startexam_examinfo"
+    <LinearLayout
+        android:id="@+id/startexam_examinfo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="@dimen/paddingSmall"
+        android:background="#AA404040"
+        android:orientation="vertical"
+        android:padding="@dimen/paddingSmall" >
+
+        <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/paddingSmall"
-            android:background="#AA404040"
-            android:orientation="vertical"
-            android:padding="@dimen/paddingSmall"
-            android:layout_alignParentBottom="true" >
+            android:layout_height="wrap_content" >
 
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
+            <TextView
+                android:id="@+id/startexam_amount_of_items_text"
+                style="@style/TextWhite"
+                android:layout_alignParentLeft="true"
+                android:text="@string/Amount_of_questions" />
 
-                <TextView
-                    android:id="@+id/startexam_examtitle_text"
-                    style="@style/TextWhite"
-                    android:layout_alignParentLeft="true"
-                    android:text="@string/name" />
+            <TextView
+                android:id="@+id/startexam_amount_of_items_value"
+                style="@style/TextWhite"
+                android:layout_alignParentRight="true"
+                android:text="" />
+        </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/startexam_examtitle_value"
-                    style="@style/TextWhite"
-                    android:layout_alignParentRight="true"
-                    android:text="" />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
 
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/startexam_items_needed_to_pass_text"
+                style="@style/TextWhite"
+                android:layout_alignParentLeft="true"
+                android:text="@string/Required_to_pass" />
 
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
+            <TextView
+                android:id="@+id/startexam_items_needed_to_pass_value"
+                style="@style/TextWhite"
+                android:layout_alignParentRight="true"
+                android:text="" />
+        </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/startexam_installed_on_text"
-                    style="@style/TextWhite"
-                    android:layout_alignParentLeft="true"
-                    android:text="@string/installed_on" />
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
 
-                <TextView
-                    android:id="@+id/startexam_installed_on_value"
-                    style="@style/TextWhite"
-                    android:layout_alignParentRight="true"
-                    android:text="" />
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/startexam_timelimit_text"
+                style="@style/TextWhite"
+                android:layout_alignParentLeft="true"
+                android:text="@string/Time_limit_in_minutes" />
 
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/startexam_amount_of_items_text"
-                    style="@style/TextWhite"
-                    android:layout_alignParentLeft="true"
-                    android:text="@string/Amount_of_questions" />
-
-                <TextView
-                    android:id="@+id/startexam_amount_of_items_value"
-                    style="@style/TextWhite"
-                    android:layout_alignParentRight="true"
-                    android:text="" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/startexam_items_needed_to_pass_text"
-                    style="@style/TextWhite"
-                    android:layout_alignParentLeft="true"
-                    android:text="@string/Required_to_pass" />
-
-                <TextView
-                    android:id="@+id/startexam_items_needed_to_pass_value"
-                    style="@style/TextWhite"
-                    android:layout_alignParentRight="true"
-                    android:text="" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content" >
-
-                <TextView
-                    android:id="@+id/startexam_timelimit_text"
-                    style="@style/TextWhite"
-                    android:layout_alignParentLeft="true"
-                    android:text="@string/Time_limit_in_minutes" />
-
-                <TextView
-                    android:id="@+id/startexam_timelimit_value"
-                    style="@style/TextWhite"
-                    android:layout_alignParentRight="true"
-                    android:text="" />
-            </RelativeLayout>
-        </LinearLayout>
+            <TextView
+                android:id="@+id/startexam_timelimit_value"
+                style="@style/TextWhite"
+                android:layout_alignParentRight="true"
+                android:text="" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/startexam_history_textview_linearlayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:background="@color/transparent_background" >
 
         <TextView
-            android:id="@+id/startexam_history_textview_noscoresavailable"
+            android:id="@+id/startexam_history_textview_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/no_previous_scores_available"
             android:textSize="@dimen/textSizeDefault" />
 
         <TextView
-            android:id="@+id/startexam_history_textview_progress"
+            android:id="@+id/startexam_history_textview_message_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="@dimen/paddingDefault"

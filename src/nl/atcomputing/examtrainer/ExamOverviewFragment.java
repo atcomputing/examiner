@@ -101,6 +101,10 @@ public class ExamOverviewFragment extends SherlockFragment {
 		case R.id.menu_delete:
 			deleteSelectedFromDatabase();
 			break;
+		case R.id.menu_preferences:
+			Intent intent = new Intent(getActivity(), PreferencesActivity.class);
+			startActivity(intent);
+			break;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -145,6 +149,34 @@ public class ExamOverviewFragment extends SherlockFragment {
 	private void setupView() {
 		final Activity activity = getActivity();
 
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
+		examTrainerDbHelper.open();
+		Cursor cursor = examTrainerDbHelper.getExam(ExamTrainer.getExamId());
+		examTrainerDbHelper.close();
+
+		setupHistoryView(cursor);
+		setupExamInfoView(cursor);
+		
+		cursor.close();
+	}
+
+	public void updateView() {
+		Activity activity = getActivity();
+
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
+		examTrainerDbHelper.open();
+		Cursor cursor = examTrainerDbHelper.getExam(ExamTrainer.getExamId());
+		examTrainerDbHelper.close();
+
+		updateHistoryView(cursor);
+		updateExamInfoView(cursor);
+		
+		cursor.close();
+	}
+	
+	private void setupHistoryView(Cursor cursor) {
+		final Activity activity = getActivity();
+		
 		ListView scoresList = (ListView) activity.findViewById(R.id.startexam_history_listview);
 		scoresList.setAdapter(adapter);
 
@@ -156,12 +188,11 @@ public class ExamOverviewFragment extends SherlockFragment {
 				startActivity(intent);
 			}
 		});
-
-		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
-		examTrainerDbHelper.open();
-		Cursor cursor = examTrainerDbHelper.getExam(ExamTrainer.getExamId());
-		examTrainerDbHelper.close();
-
+	}
+	
+	private void setupExamInfoView(Cursor cursor) {
+		Activity activity = getActivity();
+		
 		int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
 		String examTitle = cursor.getString(index);
 		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS);
@@ -170,73 +201,41 @@ public class ExamOverviewFragment extends SherlockFragment {
 		int examItemsNeededToPass = cursor.getInt(index);
 		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE);
 		long examInstallationDate = cursor.getLong(index);
-		String localDate = "";
-		if( examInstallationDate > 0 ) {
-			localDate = ExamTrainer.convertEpochToString(examInstallationDate);
-		}
-
+		
 		TextView tv = (TextView) activity.findViewById(R.id.startexam_amount_of_items_value);
 		tv.setText(Integer.toString(examAmountOfItems));
 		tv = (TextView) activity.findViewById(R.id.startexam_items_needed_to_pass_value);
 		tv.setText(Integer.toString(examItemsNeededToPass));
-		tv = (TextView) activity.findViewById(R.id.startexam_installed_on_value);
-		tv.setText(localDate);
-		tv = (TextView) activity.findViewById(R.id.startexam_examtitle_value);
-		tv.setText(examTitle);
-
+		
 		ExamTrainer.setExamDatabaseName(examTitle, examInstallationDate);
 		ExamTrainer.setItemsNeededToPass(examItemsNeededToPass);
 		ExamTrainer.setExamTitle(examTitle);
 		ExamTrainer.setAmountOfItems(examAmountOfItems);
-		cursor.close();
 	}
-
-	public void updateView() {
+	
+	private void updateHistoryView(Cursor cursor) {
 		Activity activity = getActivity();
-
-		TextView tv = (TextView) activity.findViewById(R.id.startexam_history_textview_noscoresavailable);
-		tv.setVisibility(View.GONE);
-		TextView progress = (TextView) activity.findViewById(R.id.startexam_history_textview_progress);
-		progress.setVisibility(View.GONE);
-		LinearLayout ll = (LinearLayout) activity.findViewById(R.id.startexam_history_header);
-		ListView lv = (ListView) activity.findViewById(R.id.startexam_history_listview);
-		ll.setVisibility(View.GONE);
-		lv.setVisibility(View.GONE);
-
-		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
-		examTrainerDbHelper.open();
-		Cursor examTrainerCursor = examTrainerDbHelper.getExam(ExamTrainer.getExamId());
-		examTrainerDbHelper.close();
-
-		int index = examTrainerCursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED);
-		String state = examTrainerCursor.getString(index);
-
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
-		boolean useTimeLimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
-
-		index = examTrainerCursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT);
-		long examTimeLimit = examTrainerCursor.getLong(index);
-
-		tv = (TextView) activity.findViewById(R.id.startexam_timelimit_value);
-		if ( ( useTimeLimit ) && ( examTimeLimit > 0 ) ) {
-			tv.setText(Long.toString(examTimeLimit));
-			ExamTrainer.setTimeLimit(examTimeLimit * 60);
-			Dialog dialog = DialogFactory.createUsageDialog(activity, R.string.Usage_Dialog_Time_limit_is_activated_for_this_exam);
-			if( dialog != null ) {
-				dialog.show();
-			}
-		} else {
-			tv.setText(getString(R.string.No_time_limit));
-			ExamTrainer.setTimeLimit(0);
-		}
+		
+		LinearLayout linearLayoutHistoryHeader = (LinearLayout) activity.findViewById(R.id.startexam_history_header);
+		ListView listViewHistory = (ListView) activity.findViewById(R.id.startexam_history_listview);
+		linearLayoutHistoryHeader.setVisibility(View.GONE);
+		listViewHistory.setVisibility(View.GONE);
+		
+		TextView textViewHistoryMessage = (TextView) activity.findViewById(R.id.startexam_history_textview_message);
+		textViewHistoryMessage.setVisibility(View.GONE);
+		TextView textViewHistoryMessageValue = (TextView) activity.findViewById(R.id.startexam_history_textview_message_value);
+		textViewHistoryMessageValue.setVisibility(View.GONE);
+		
+		int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED);
+		String state = cursor.getString(index);
 		
 		if( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLING.name()) ) {
-			tv.setText(R.string.Installing_exam);
-			tv.setVisibility(View.VISIBLE);
+			textViewHistoryMessage.setText(R.string.Installing_exam);
+			textViewHistoryMessage.setVisibility(View.VISIBLE);
 			InstallExamAsyncTask task = ExamTrainer.getInstallExamAsyncTask(ExamTrainer.getExamId());
 			if( task != null ) {
-				task.setProgressTextView(progress);
-				progress.setVisibility(View.VISIBLE);
+				task.setProgressTextView(textViewHistoryMessageValue);
+				textViewHistoryMessageValue.setVisibility(View.VISIBLE);
 			}
 		} else if( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLED.name()) ) {
 			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(activity);
@@ -245,23 +244,44 @@ public class ExamOverviewFragment extends SherlockFragment {
 			examinationDbHelper.close();
 
 			if( examinationCursor.getCount() > 0 ) {
-				tv.setVisibility(View.GONE);
-				ll.setVisibility(View.VISIBLE);
-				lv.setVisibility(View.VISIBLE);
+				textViewHistoryMessage.setVisibility(View.GONE);
+				linearLayoutHistoryHeader.setVisibility(View.VISIBLE);
+				listViewHistory.setVisibility(View.VISIBLE);
 			} else {
-				ll.setVisibility(View.GONE);
-				lv.setVisibility(View.GONE);
-				tv.setVisibility(View.VISIBLE);
-				tv.setText(R.string.no_previous_scores_available);
+				linearLayoutHistoryHeader.setVisibility(View.GONE);
+				listViewHistory.setVisibility(View.GONE);
+				textViewHistoryMessage.setVisibility(View.VISIBLE);
+				textViewHistoryMessage.setText(R.string.no_previous_scores_available);
 			}
 
 			adapter.changeCursor(examinationCursor);
 			adapter.notifyDataSetChanged();
 		} else if( state.contentEquals(ExamTrainerDbAdapter.State.NOT_INSTALLED.name()) ) {
-			tv.setText(R.string.Exam_not_installed);
-			tv.setVisibility(View.VISIBLE);
+			textViewHistoryMessage.setText(R.string.Exam_not_installed);
+			textViewHistoryMessage.setVisibility(View.VISIBLE);
 		}
+	}
+	
+	private void updateExamInfoView(Cursor cursor) {
+		Activity activity = getActivity();
 
-		
+		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+		boolean useTimeLimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
+
+		int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT);
+		long examTimeLimit = cursor.getLong(index);
+
+		TextView textViewTimeLimitValue = (TextView) activity.findViewById(R.id.startexam_timelimit_value);
+		if ( ( useTimeLimit ) && ( examTimeLimit > 0 ) ) {
+			textViewTimeLimitValue.setText(Long.toString(examTimeLimit));
+			ExamTrainer.setTimeLimit(examTimeLimit * 60);
+			Dialog dialog = DialogFactory.createUsageDialog(activity, R.string.Usage_Dialog_Time_limit_is_activated_for_this_exam);
+			if( dialog != null ) {
+				dialog.show();
+			}
+		} else {
+			textViewTimeLimitValue.setText(getString(R.string.No_time_limit));
+			ExamTrainer.setTimeLimit(0);
+		}
 	}
 }

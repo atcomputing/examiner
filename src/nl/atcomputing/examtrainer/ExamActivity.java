@@ -16,6 +16,9 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 /**
  * @author martijn brekhof
  *
@@ -53,7 +56,7 @@ public class ExamActivity extends SherlockFragmentActivity {
 		fragmentTransaction.commit();
 	}
 
-	protected void onResume() {
+	public void onResume() {
 		super.onResume();
 		IntentFilter filter = new IntentFilter(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED);
 		this.registerReceiver(this.receiveBroadcast, filter);
@@ -61,7 +64,7 @@ public class ExamActivity extends SherlockFragmentActivity {
 		setTitle(ExamTrainer.getExamTitle());
 	}
 
-	protected void onPause() {
+	public void onPause() {
 		super.onPause();
 		this.unregisterReceiver(this.receiveBroadcast);
 	}
