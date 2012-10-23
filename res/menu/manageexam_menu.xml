@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/manageexam_menu_settings"
-          android:icon="@drawable/ic_menu_preferences"
-          android:title="@string/Settings" />
+          android:icon="@drawable/ic_action_settings"
+          android:title="@string/Settings"
+          android:showAsAction="ifRoom|withText" />
     <item android:id="@+id/manageexam_menu_get_new_exams"
-          android:icon="@drawable/ic_menu_refresh"
-          android:title="@string/Get_new_exams" />
-    <item android:id="@+id/manageexam_menu_delete_all"
-          android:icon="@drawable/ic_menu_delete"
-          android:title="@string/Delete_all" />
+          android:icon="@drawable/ic_action_reload"
+          android:title="@string/Get_new_exams"
+          android:showAsAction="ifRoom|withText" />
 </menu>

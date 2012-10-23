@@ -21,9 +21,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
@@ -35,12 +32,16 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.app.SherlockActivity;
 /**
  * @author martijn brekhof
  *
  */
-public class ExamQuestionActivity extends Activity {
+public class ExamQuestionActivity extends SherlockActivity {
 	//private ExaminationDbAdapter examinationDbHelper;
 	//private Cursor cursorQuestion;
 	private long questionId;
@@ -191,7 +192,7 @@ public class ExamQuestionActivity extends Activity {
 	}
 
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
+		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.question_menu, menu);
 		return true;
 	}

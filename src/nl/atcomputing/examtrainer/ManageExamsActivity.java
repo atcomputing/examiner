@@ -1,19 +1,17 @@
-package nl.atcomputing.examtrainer.manage;
+package nl.atcomputing.examtrainer;
 
 import java.net.URL;
 import java.util.ArrayList;
 
-import nl.atcomputing.examtrainer.Exam;
-import nl.atcomputing.examtrainer.ExamTrainer;
-import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter;
 import nl.atcomputing.examtrainer.database.DatabaseManager;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
+import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
+import nl.atcomputing.examtrainer.examparser.XmlPullExamListParser;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ListActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,19 +21,22 @@ import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.app.SherlockListActivity;
 
 /**
  * @author martijn brekhof
  *
  */
 
-public class ManageExamsActivity extends ListActivity  {
+public class ManageExamsActivity extends SherlockListActivity  {
 	private ManageExamsAdapter adap;
 	static final int DIALOG_CONFIRMATION_ID = 0;
 	private TextView noExamsAvailable;
@@ -88,7 +89,7 @@ public class ManageExamsActivity extends ListActivity  {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
+		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.manageexam_menu, menu);
 		return true;
 	}
@@ -97,9 +98,6 @@ public class ManageExamsActivity extends ListActivity  {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent;
 		switch (item.getItemId()) {
-		case R.id.manageexam_menu_delete_all:
-			showDialog(DIALOG_CONFIRMATION_ID);
-			break;
 		case R.id.manageexam_menu_get_new_exams:
 			loadLocalExams();
 			updateListView();

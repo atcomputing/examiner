@@ -6,8 +6,7 @@ import nl.atcomputing.examtrainer.adapters.HistoryAdapter;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
-import nl.atcomputing.examtrainer.manage.InstallExamAsyncTask;
-import nl.atcomputing.examtrainer.manage.PreferencesActivity;
+import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -19,9 +18,6 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.SparseBooleanArray;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -31,13 +27,17 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.app.SherlockActivity;
 /**
  * @author martijn brekhof
  *
  */
 
-public class StartExamActivity extends Activity {
+public class StartExamActivity extends SherlockActivity {
 	private HistoryAdapter adapter;
 	private Button buttonDeleteSelected;
 	private Button buttonStartExam;
@@ -122,7 +122,7 @@ public class StartExamActivity extends Activity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
+		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.startexam_menu, menu);
 		return true;
 	}

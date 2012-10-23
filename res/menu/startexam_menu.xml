@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/startexam_menu_preferences"
-          android:icon="@drawable/ic_menu_preferences"
-          android:title="@string/Settings" />
+          android:icon="@drawable/ic_action_settings"
+          android:title="@string/Settings"
+          android:showAsAction="ifRoom|withText" />
 </menu>

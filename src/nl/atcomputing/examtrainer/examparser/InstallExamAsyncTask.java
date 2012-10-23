@@ -1,4 +1,4 @@
-package nl.atcomputing.examtrainer.manage;
+package nl.atcomputing.examtrainer.examparser;
 
 import java.net.MalformedURLException;
 import java.net.URL;

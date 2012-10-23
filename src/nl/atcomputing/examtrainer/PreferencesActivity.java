@@ -1,4 +1,4 @@
-package nl.atcomputing.examtrainer.manage;
+package nl.atcomputing.examtrainer;
 
 import nl.atcomputing.examtrainer.R;
 import android.os.Bundle;

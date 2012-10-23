@@ -6,7 +6,7 @@ import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
-import nl.atcomputing.examtrainer.manage.InstallExamAsyncTask;
+import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;

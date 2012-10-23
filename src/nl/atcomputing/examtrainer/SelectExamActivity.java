@@ -2,8 +2,6 @@ package nl.atcomputing.examtrainer;
 
 import nl.atcomputing.examtrainer.adapters.SelectExamAdapter;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
-import nl.atcomputing.examtrainer.manage.ManageExamsActivity;
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,9 +10,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -22,12 +17,18 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.app.SherlockActivity;
+
 /**
  * @author martijn brekhof
  *
  */
 
-public class SelectExamActivity extends Activity {
+public class SelectExamActivity extends SherlockActivity {
 	private SelectExamAdapter adap;
 	private static Cursor cursor;
 	private TextView clickOnManageExams;
@@ -65,7 +66,7 @@ public class SelectExamActivity extends Activity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getMenuInflater();
+		MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.selectexam_menu, menu);
 		return true;
 	}

@@ -3,7 +3,7 @@ package nl.atcomputing.examtrainer;
 import java.util.Collection;
 import java.util.HashMap;
 
-import nl.atcomputing.examtrainer.manage.InstallExamAsyncTask;
+import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;

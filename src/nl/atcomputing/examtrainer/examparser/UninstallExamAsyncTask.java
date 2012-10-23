@@ -1,4 +1,4 @@
-package nl.atcomputing.examtrainer.manage;
+package nl.atcomputing.examtrainer.examparser;
 
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
