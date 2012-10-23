@@ -57,8 +57,7 @@
     <string name="Question">Question</string>
     <string name="Manage_Exams">Manage Exams</string>
     <string name="Are_you_sure_you_want_to_delete_all_exams">Are you sure you want to delete all exams?\nThis will also remove all scores.</string>
-    <string name="manageexams_get_exams_explanation">Press menu and use "Get new exams" to load
-		available exams.</string>
+    <string name="manageexams_get_exams_explanation">Press settings to load	available exams.</string>
     <!-- Text for about -->
     <string name="Copyright">© Copyright AT Computing 2011–2012</string>
     <string name="Version">Version</string>
@@ -98,9 +97,9 @@
     <string name="Installation_proces_still_running_refusing_to_uninstall_exam">Installation proces still running.\nRefusing to uninstall exam.</string>
     <string name="Reviewing_questions_is_only_available_after_completing_the_exam">Reviewing questions is only available after completing the exam</string>
     <string name="Do_not_show_this_message_again">Do not show this message again</string>
-    <string name="Usage_Dialog_Press_menu_to_quit_the_exam_or_show_a_hint_if_available">You can quit the exam at any time by pressing menu and selecting Stop.\nYou can also use the menu to show a hint for the current question if a hint is available.</string>
-    <string name="Usage_Dialog_Time_limit_is_activated_for_this_exam">Time limit is activated for this exam.\nIf you do not want to use a time limit, you can press menu and use Settings to disable the time limit.</string>
-    <string name="Usage_Dialog_examReviewScreenMessage">This is the exam review screen.\nSelecting a specific question will open the question and show you the correct answer.\nNote that, if you did not yet complete the exam you are not allowed to review a specific question.\nYou can continue the exam using the button at the bottom of the screen.</string>
-    <string name="Time_limit_exceeded">Time limit exceeded. Disabling time limit</string>
-    <string name="Usage_Dialog_Sometimes_the_text_in_the_exhibit_or_choices_is_larger_than_fits_on_screen">Sometimes the text in the exhibit or choices is larger than fits on screen.\nYou can see the rest of the text by scrolling the text horizontally.</string>
+    <string name="Time_limit_exceeded">Disabling time limit because time expired.</string>
+    <string name="Usage_Dialog_Press_menu_to_quit_the_exam_or_show_a_hint_if_available">You can quit the exam at any time by selecting the exit button in the action bar.\nYou can also use the question mark to show a hint for the current question if a hint is available.</string>
+    <string name="Usage_Dialog_Time_limit_is_activated_for_this_exam">Time limit is activated for this exam.\nUse settings to disable the time limit.</string>
+    <string name="Usage_Dialog_examReviewScreenMessage">This is the exam review screen.\nSelecting a specific question will open the question and show you the correct answer.</string>
+    <string name="Usage_Dialog_Sometimes_the_text_in_the_exhibit_or_choices_is_larger_than_fits_on_screen">When the text is larger than fits on screen, you can use horizontal scrolling to make the rest of the text visible.</string>
 </resources>
