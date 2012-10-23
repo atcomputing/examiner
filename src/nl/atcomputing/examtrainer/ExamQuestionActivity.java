@@ -356,7 +356,7 @@ public class ExamQuestionActivity extends SherlockActivity {
 	}
 
 	private void stopExam() {
-		Intent intent = new Intent(ExamQuestionActivity.this, StartExamActivity.class);
+		Intent intent = new Intent(ExamQuestionActivity.this, ExamActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 		finish();
@@ -567,7 +567,7 @@ public class ExamQuestionActivity extends SherlockActivity {
 			public void onClick(View v) {
 				if ( questionId >= ExamTrainer.getAmountOfItems() ) {
 					if(ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW) {
-						Intent intent = new Intent(ExamQuestionActivity.this, StartExamActivity.class);
+						Intent intent = new Intent(ExamQuestionActivity.this, ExamActivity.class);
 						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 						startActivity(intent);
 						finish();

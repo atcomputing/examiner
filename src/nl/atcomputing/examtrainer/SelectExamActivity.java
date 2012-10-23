@@ -119,7 +119,7 @@ public class SelectExamActivity extends SherlockActivity {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				ExamTrainer.setExamId(id);
-				Intent intent = new Intent(SelectExamActivity.this, StartExamActivity.class);
+				Intent intent = new Intent(SelectExamActivity.this, ExamActivity.class);
 				startActivity(intent);
 			}
 		});

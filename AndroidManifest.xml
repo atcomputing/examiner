@@ -35,7 +35,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".StartExamActivity"
+            android:name=".ExamActivity"
             android:exported="false" />
         <activity
             android:name=".ExamReviewActivity"

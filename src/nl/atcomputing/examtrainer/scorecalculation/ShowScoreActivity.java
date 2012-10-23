@@ -4,7 +4,7 @@ import java.util.List;
 
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.StartExamActivity;
+import nl.atcomputing.examtrainer.ExamActivity;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import android.app.Activity;
 import android.content.Intent;
@@ -73,7 +73,7 @@ public class ShowScoreActivity extends Activity {
 
 	@Override
 	public void onBackPressed() {
-		Intent intent = new Intent(ShowScoreActivity.this, StartExamActivity.class);
+		Intent intent = new Intent(ShowScoreActivity.this, ExamActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 		finish();
