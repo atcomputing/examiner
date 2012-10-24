@@ -1,6 +1,7 @@
 package nl.atcomputing.examtrainer;
 
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
+import nl.atcomputing.examtrainer.scorecalculation.ShowScoreActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -27,7 +28,9 @@ import com.actionbarsherlock.view.MenuItem;
 public class ExamActivity extends SherlockFragmentActivity {
 	private Button buttonStartExam;
 	private ReceiveBroadcast receiveBroadcast;
-
+	private long questionId;
+	private ExamQuestionFragment examQuestionFragment;
+	
 	private class ReceiveBroadcast extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -62,6 +65,11 @@ public class ExamActivity extends SherlockFragmentActivity {
 		this.registerReceiver(this.receiveBroadcast, filter);
 		setupView();
 		setTitle(ExamTrainer.getExamTitle());
+		
+		//if mode is exam
+		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM ) {
+			//fragment.setupTimer();
+		}
 	}
 
 	public void onPause() {
@@ -69,8 +77,40 @@ public class ExamActivity extends SherlockFragmentActivity {
 		this.unregisterReceiver(this.receiveBroadcast);
 	}
 	
+	public void onBackPressed() {
+		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM ) {
+			if( this.questionId == 1 ) {
+				examQuestionFragment.showDialog(ExamQuestionFragment.DIALOG_QUITEXAM_ID);
+			} else {
+				Intent intent = new Intent(ExamActivity.this, ExamQuestionFragment.class);
+				ExamTrainer.setQuestionId(intent, this.questionId - 1);
+				startActivity(intent);
+				finish();
+			}
+		} else {
+			super.onBackPressed();
+		}
+	}
+	
+	private void startShowScoreActivity() {
+		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.ENDOFEXAM);
+		Intent intent = new Intent(ExamActivity.this, ShowScoreActivity.class);
+		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		startActivity(intent);
+		finish();
+	}
+
+	private void stopExam() {
+//		Intent intent = new Intent(ExamActivity.this, ExamActivity.class);
+//		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//		startActivity(intent);
+//		finish();
+		//We should dismiss the ExamQuestionFragment
+	}
+
+	
 	private void startExam() {
-		Intent intent = new Intent(this, ExamQuestionActivity.class);
+		Intent intent = new Intent(this, ExamQuestionFragment.class);
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		long scoresId = examinationDbHelper.createNewScore();

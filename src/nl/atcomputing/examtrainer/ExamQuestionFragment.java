@@ -7,12 +7,12 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import nl.atcomputing.dialogs.DialogFactory;
+import nl.atcomputing.dialogs.HintDialog;
+import nl.atcomputing.dialogs.TwoButtonDialog;
+import nl.atcomputing.dialogs.UsageDialog;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
-import nl.atcomputing.examtrainer.scorecalculation.ShowScoreActivity;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
@@ -22,6 +22,7 @@ import android.os.Message;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.widget.Button;
@@ -32,26 +33,27 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.actionbarsherlock.app.ActionBar;
+
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.MenuItem;
 /**
  * @author martijn brekhof
  *
  */
-public class ExamQuestionActivity extends SherlockActivity {
+public class ExamQuestionFragment extends SherlockFragment {
+	public static final int DIALOG_ENDOFEXAM_ID = 1;
+	public static final int DIALOG_SHOW_HINT_ID = 2;
+	public static final int DIALOG_QUITEXAM_ID = 3;
+	public static final int DIALOG_TIMELIMITREACHED_ID = 4;
+	
 	//private ExaminationDbAdapter examinationDbHelper;
 	//private Cursor cursorQuestion;
 	private long questionId;
 	private EditText editText;
 	private static TextView timeLimitTextView;
 	private ArrayList <View> multipleChoices;
-	private static final int DIALOG_ENDOFEXAM_ID = 1;
-	private static final int DIALOG_SHOW_HINT_ID = 2;
-	private static final int DIALOG_QUITEXAM_ID = 3;
-	private static final int DIALOG_TIMELIMITREACHED_ID = 4;
 	private static final String HANDLER_MESSAGE_KEY = "handler_update_timer"; 
 	private static final int HANDLER_MESSAGE_VALUE_UPDATE_TIMER = 0;
 	private static final int HANDLER_MESSAGE_VALUE_TIMELIMITREACHED = 1;
@@ -64,11 +66,11 @@ public class ExamQuestionActivity extends SherlockActivity {
 
 	private static class MyHandler extends Handler {
 		SimpleDateFormat dateFormatGmt = new SimpleDateFormat("HH:mm:ss");
-		Activity activity;
+		ExamQuestionFragment fragment;
 
-		public MyHandler(Activity activity) {
+		public MyHandler(ExamQuestionFragment fragment) {
 			super();
-			this.activity = activity;
+			this.fragment = fragment;
 		}
 
 		public void handleMessage(Message msg) {
@@ -80,32 +82,72 @@ public class ExamQuestionActivity extends SherlockActivity {
 				String timeLeft = dateFormatGmt.format(date);
 				timeLimitTextView.setText(timeLeft);
 			} else if ( key == HANDLER_MESSAGE_VALUE_TIMELIMITREACHED ) {
-				activity.showDialog(DIALOG_TIMELIMITREACHED_ID);
+				fragment.showDialog(DIALOG_TIMELIMITREACHED_ID);
 			}
 		}
 	}
 
+	private ExamQuestionListener listener;
+	
+	public interface ExamQuestionListener {
+		/**
+		 * Called when user quits a running exam
+		 */
+		public void onStopExam();
+		
+		/**
+		 * Called when user answered last question 
+		 */
+		public void onExamEnd();
+	}
+
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        
+        // Make sure activity implemented ExamQuestionListener
+        try {
+            this.listener = (ExamQuestionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement ExamQuestionListener");
+        }
+    }
+	
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.question, container, false);
+	}
+
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onActivityCreated(savedInstanceState);
+
+		final Activity activity = getActivity();
+
 		myHandler = new MyHandler(this);
 
 		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
-			finish();
+			activity.finish();
 		}
 
-		Intent intent = getIntent();
+		Intent intent = activity.getIntent();
 
 		this.questionId = ExamTrainer.getQuestionId(intent);
 		if ( ( questionId < 1 ) || ( ExamTrainer.getExamDatabaseName() == null ) ) {
-			this.finish();
+			activity.finish();
 		}
 
-		this.examQuestion = new ExamQuestion(this);
+		if( this.questionId == 1 ) {
+			UsageDialog dialog = UsageDialog.newInstance(R.string.Usage_Dialog_Press_menu_to_quit_the_exam_or_show_a_hint_if_available);
+			dialog.show(getFragmentManager(), "UsageDialog");
+		}
+
+		this.examQuestion = new ExamQuestion(activity);
 		try {
 			this.examQuestion.fillFromDatabase(ExamTrainer.getExamDatabaseName(), questionId);
 		} catch (SQLiteException e) {
-			ExamTrainer.showError(this, this.getResources().getString(R.string.Exam_is_empty) + "\n" +
+			ExamTrainer.showError(activity, activity.getResources().getString(R.string.Exam_is_empty) + "\n" +
 					this.getResources().getString(R.string.Try_reinstalling_the_exam));
 		}
 		setupLayout();
@@ -114,7 +156,7 @@ public class ExamQuestionActivity extends SherlockActivity {
 		 * Setup observer to be able to measure exhibit and choices width. We use this to determine if
 		 * question contains horizontally scrollable text. If so, we show a usage dialog.
 		 */
-		final RelativeLayout layout = (RelativeLayout) findViewById(R.id.question_toplayout_container);
+		final RelativeLayout layout = (RelativeLayout) activity.findViewById(R.id.question_toplayout_container);
 		ViewTreeObserver viewTreeObserver = layout.getViewTreeObserver();
 		if (viewTreeObserver.isAlive()) {
 			viewTreeObserver.addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
@@ -122,51 +164,30 @@ public class ExamQuestionActivity extends SherlockActivity {
 				public void onGlobalLayout() {
 					Boolean showUsageDialog = false;
 					layout.getViewTreeObserver().removeGlobalOnLayoutListener(this);
-					TextView exhibit = (TextView) findViewById(R.id.textExhibit);
+					TextView exhibit = (TextView) activity.findViewById(R.id.textExhibit);
 					if( exhibit != null ) {
-						HorizontalScrollView hs = (HorizontalScrollView) findViewById(R.id.horizontalScrollViewExhibit);
+						HorizontalScrollView hs = (HorizontalScrollView) activity.findViewById(R.id.horizontalScrollViewExhibit);
 						if( exhibit.getMeasuredWidth() > hs.getMeasuredWidth() ) {
 							showUsageDialog = true;
 						}
 					}
-					HorizontalScrollView hs = (HorizontalScrollView) findViewById(R.id.question_multiplechoice_horizontalScrollView);
+					HorizontalScrollView hs = (HorizontalScrollView) activity.findViewById(R.id.question_multiplechoice_horizontalScrollView);
 					if( hs != null ) {
-						LinearLayout ll = (LinearLayout) findViewById(R.id.question_multiplechoice_linear_layout);
+						LinearLayout ll = (LinearLayout) activity.findViewById(R.id.question_multiplechoice_linear_layout);
 						if( ll.getMeasuredWidth() > hs.getMeasuredWidth() ) {
 							showUsageDialog = true;
 						}
 					}
 					if( showUsageDialog ) {
-						Dialog dialog = DialogFactory.createUsageDialog(ExamQuestionActivity.this, R.string.Usage_Dialog_Sometimes_the_text_in_the_exhibit_or_choices_is_larger_than_fits_on_screen);
-						if( dialog != null ) {
-							dialog.show();
-						}
+						UsageDialog usageDialog = UsageDialog.newInstance(R.string.Usage_Dialog_Sometimes_the_text_in_the_exhibit_or_choices_is_larger_than_fits_on_screen);
+						usageDialog.show(getFragmentManager(), "UsageDialog");
 					}
 				}
 			});
 		}
 	}
 
-	protected void onResume() {
-		super.onResume();
-		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
-			finish();
-		}
-		setTitle(ExamTrainer.getExamTitle());
-
-		setupTimer();
-
-		updateLayout();
-
-		if( this.questionId == 1 ) {
-			Dialog dialog = DialogFactory.createUsageDialog(this, R.string.Usage_Dialog_Press_menu_to_quit_the_exam_or_show_a_hint_if_available);
-			if( dialog != null ) {
-				dialog.show();
-			}
-		}
-	}
-
-	protected void onPause() {
+	public void onPause() {
 		super.onPause();
 		if ( timer != null ) {
 			timer.cancel();
@@ -176,25 +197,11 @@ public class ExamQuestionActivity extends SherlockActivity {
 		}
 	}
 
-	public void onBackPressed() {
-		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW ) {
-			super.onBackPressed();
-		} else {
-			if( this.questionId == 1 ) {
-				showDialog(DIALOG_QUITEXAM_ID);
-			} else {
-				Intent intent = new Intent(ExamQuestionActivity.this, ExamQuestionActivity.class);
-				ExamTrainer.setQuestionId(intent, questionId - 1);
-				startActivity(intent);
-				finish();
-			}
-		}
-	}
 
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getSupportMenuInflater();
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.question_menu, menu);
-		return true;
+		super.onCreateOptionsMenu(menu, inflater);
 	}
 
 	@Override
@@ -212,72 +219,76 @@ public class ExamQuestionActivity extends SherlockActivity {
 		}
 	}
 
-	protected Dialog onCreateDialog(int id) {
+	public void showDialog(int id) {
+		final Activity activity = getActivity();
 		switch(id) {
 		case DIALOG_ENDOFEXAM_ID:
-			final Dialog d1 = DialogFactory.createTwoButtonDialog(this, R.string.end_of_exam_message, 
-					R.string.yes, new Runnable() {
+			TwoButtonDialog endOfExamDialog = TwoButtonDialog.newInstance(R.string.end_of_exam_message);
+			endOfExamDialog.setPositiveButton(R.string.yes, new Runnable() {
 
 				public void run() {
 					if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) {
-						startShowScoreActivity();
+						listener.onExamEnd();
 					} 
 					else {
-						stopExam();
+						listener.onStopExam();
 					}
 				}
-			},
-			R.string.no, new Runnable() {
+			});
+			endOfExamDialog.setNegativeButton(R.string.no, new Runnable() {
 
 				public void run() {
 				}
 			});
-			return d1;
+			endOfExamDialog.show(getFragmentManager(), "EndOfExamDialog");
+			break;
 		case DIALOG_TIMELIMITREACHED_ID:
-			final Dialog d2 = DialogFactory.createTwoButtonDialog(this, R.string.time_s_up_, 
-					R.string.calculate_score, new Runnable() {
+			TwoButtonDialog timeLimitReachedDialog = TwoButtonDialog.newInstance(R.string.time_s_up_);
+			timeLimitReachedDialog.setPositiveButton(R.string.calculate_score, new Runnable() {
 
 				public void run() {
-					startShowScoreActivity();
-				}
-			}, 
-			R.string.Quit, new Runnable() {
-
-				public void run() {
-					stopExam();
+					listener.onExamEnd();
 				}
 			});
-			return d2;
+			timeLimitReachedDialog.setNegativeButton(R.string.Quit, new Runnable() {
+
+				public void run() {
+					listener.onStopExam();
+				}
+			});
+			timeLimitReachedDialog.show(getFragmentManager(), "TimeLimitReachedDialog");
+			break;
 		case DIALOG_QUITEXAM_ID:
-			final Dialog d3 = DialogFactory.createTwoButtonDialog(this, R.string.quit_exam_message, 
-					R.string.Quit, new Runnable() {
+			TwoButtonDialog quitExamDialog = TwoButtonDialog.newInstance(R.string.quit_exam_message);
+			quitExamDialog.setPositiveButton(R.string.Quit, new Runnable() {
 
 				public void run() {
-					stopExam();
+					listener.onStopExam();
 				}
-			}, 
-			R.string.resume, new Runnable() {
+			});
+			quitExamDialog.setNegativeButton(R.string.resume, new Runnable() {
 
 				public void run() {
 
 				}
 			});
-			return d3;
+			quitExamDialog.show(getFragmentManager(), "QuitExamDialog");
+			break;
 		case DIALOG_SHOW_HINT_ID:
-			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(activity);
 			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 			String message = examinationDbHelper.getHint(questionId);
 			examinationDbHelper.close();
 			if( message == null ) {
 				message = getString(R.string.hint_not_available);
 			}
-			final Dialog d4 = DialogFactory.createHintDialog(this, message);
-			return d4;
+			HintDialog hintDialog = HintDialog.newInstance(message);
+			hintDialog.show(getFragmentManager(), "HintDialog");
+			break;
 		}
-		return null;
 	}
 
-	private void setupTimer() {
+	public void setupTimer() {
 		if ( ( ExamTrainer.getTimeLimit() > 0 ) && 
 				( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) ) {
 			this.timer = new Timer();
@@ -311,7 +322,9 @@ public class ExamQuestionActivity extends SherlockActivity {
 	}
 
 	private void showAnswers() {
-		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+		Activity activity = getActivity();
+
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(activity);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		Cursor cursor = examinationDbHelper.getAnswers(this.questionId);
 		examinationDbHelper.close();
@@ -340,31 +353,17 @@ public class ExamQuestionActivity extends SherlockActivity {
 				String answer = Html.fromHtml(cursor.getString(index)).toString();
 				str.append(answer + "\n");
 			} while(cursor.moveToNext());
-			Toast.makeText(ExamQuestionActivity.this, 
+			Toast.makeText(activity, 
 					getResources().getString(R.string.correct_answers) + ":\n\n" +
 							str.toString(), Toast.LENGTH_LONG).show();
 		}
 		cursor.close();
 	}
 
-	private void startShowScoreActivity() {
-		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.ENDOFEXAM);
-		Intent intent = new Intent(ExamQuestionActivity.this, ShowScoreActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
-		finish();
-	}
-
-	private void stopExam() {
-		Intent intent = new Intent(ExamQuestionActivity.this, ExamActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
-		finish();
-	}
 
 	private void saveScore() {
 		boolean answerCorrect = false;
-		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(getActivity());
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		if( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
 			String userAnswer = this.editText.getText().toString();
@@ -392,6 +391,7 @@ public class ExamQuestionActivity extends SherlockActivity {
 	}
 
 	private void createChoicesLayout(LinearLayout layout) {
+		final Activity activity = getActivity();
 		CheckBox cbox; 
 		this.multipleChoices = new ArrayList<View>();
 		ArrayList<String> choices = this.examQuestion.getChoices();
@@ -399,7 +399,7 @@ public class ExamQuestionActivity extends SherlockActivity {
 		int amountOfMultilineChoices = 0;
 
 		for( String choice : choices ) {
-			View view = LayoutInflater.from(this).inflate(R.layout.choice, null);
+			View view = LayoutInflater.from(activity).inflate(R.layout.choice, null);
 
 			TextView tv = (TextView) view.findViewById(R.id.choiceTextView);
 			tv.setText(Html.fromHtml(choice));
@@ -414,13 +414,13 @@ public class ExamQuestionActivity extends SherlockActivity {
 			cbox.setOnClickListener(new View.OnClickListener() {
 				public void onClick(View v) {
 					if (((CheckBox) v).isChecked()) {
-						ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
+						ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(activity);
 						examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 						examinationDbHelper.setScoresAnswersMultipleChoice(ExamTrainer.getScoresId(), questionId, answer);
 						examinationDbHelper.close();
 
 					} else {
-						ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(ExamQuestionActivity.this);
+						ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(activity);
 						examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 						examinationDbHelper.deleteScoresAnswer(ExamTrainer.getScoresId(), questionId, answer);
 						examinationDbHelper.close();
@@ -445,7 +445,7 @@ public class ExamQuestionActivity extends SherlockActivity {
 
 
 	private void createOpenQuestionLayout() {
-		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(getActivity());
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		Cursor cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionId);
 		examinationDbHelper.close();
@@ -456,7 +456,7 @@ public class ExamQuestionActivity extends SherlockActivity {
 	}
 
 	private void updateLayout() {
-		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(getActivity());
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 
 		Cursor scoresAnswersCursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionId);
@@ -499,62 +499,56 @@ public class ExamQuestionActivity extends SherlockActivity {
 			}
 		}
 		examinationDbHelper.close();
-
 	}
-
+	
 	private void setupLayout() {
+		Activity activity = getActivity();
 		String text;
+		
+		timeLimitTextView = (TextView) activity.findViewById(R.id.textExamTime);
 
-		setContentView(R.layout.question);
+		LinearLayout layout = (LinearLayout) activity.findViewById(R.id.question_layout);
 
-		timeLimitTextView = (TextView) findViewById(R.id.textExamTime);
-
-		LinearLayout layout = (LinearLayout) findViewById(R.id.question_layout);
-
-		TextView question = (TextView) findViewById(R.id.textQuestionNumber);
+		TextView question = (TextView) activity.findViewById(R.id.textQuestionNumber);
 		question.setText(Long.toString(questionId));
 
 		text = this.examQuestion.getExhibit();
-		TextView exhibit = (TextView) findViewById(R.id.textExhibit);
+		TextView exhibit = (TextView) activity.findViewById(R.id.textExhibit);
 		if( text != null ) {
 			exhibit.setText(Html.fromHtml(text));
 		} else {
-			HorizontalScrollView viewExhibit = (HorizontalScrollView) findViewById(R.id.horizontalScrollViewExhibit);
+			HorizontalScrollView viewExhibit = (HorizontalScrollView) activity.findViewById(R.id.horizontalScrollViewExhibit);
 			layout.removeView(viewExhibit);
 		}
 
 
 		text = this.examQuestion.getQuestion();
-		TextView question_textview = (TextView) findViewById(R.id.textQuestion);
+		TextView question_textview = (TextView) activity.findViewById(R.id.textQuestion);
 		question_textview.setText(Html.fromHtml(text));
 
 		if( this.examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
-			LinearLayout v_layout = (LinearLayout) findViewById(R.id.question_multiplechoice_linear_layout);
+			LinearLayout v_layout = (LinearLayout) activity.findViewById(R.id.question_multiplechoice_linear_layout);
 			createChoicesLayout(v_layout);
-			HorizontalScrollView sv = (HorizontalScrollView) findViewById(R.id.question_multiplechoice_horizontalScrollView);
+			HorizontalScrollView sv = (HorizontalScrollView) activity.findViewById(R.id.question_multiplechoice_horizontalScrollView);
 			sv.setVisibility(View.VISIBLE);
 		} else if ( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
-			this.editText = (EditText) findViewById(R.id.question_open_answer_edittext);
+			this.editText = (EditText) activity.findViewById(R.id.question_open_answer_edittext);
 			createOpenQuestionLayout();
 			this.editText.setVisibility(View.VISIBLE);
 		}
 
-		Button button_prev_question = (Button) findViewById(R.id.button_prev);
+		Button button_prev_question = (Button) activity.findViewById(R.id.button_prev);
 		if( questionId == 1 ) {
 			button_prev_question.setEnabled(false);
 		} else {
 			button_prev_question.setOnClickListener( new View.OnClickListener() {
 				public void onClick(View v) {
-					Intent intent = new Intent(ExamQuestionActivity.this, ExamQuestionActivity.class);
-					ExamTrainer.setQuestionId(intent, questionId - 1);
-					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					startActivity(intent);
-					finish();
+					//Show previous question
 				}
 			});
 		}
 
-		Button button_next_question = (Button) findViewById(R.id.button_next);
+		Button button_next_question = (Button) activity.findViewById(R.id.button_next);
 		if( questionId >= ExamTrainer.getAmountOfItems() ) {
 			if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW) {
 				button_next_question.setText(R.string.End_review);
@@ -567,20 +561,14 @@ public class ExamQuestionActivity extends SherlockActivity {
 			public void onClick(View v) {
 				if ( questionId >= ExamTrainer.getAmountOfItems() ) {
 					if(ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW) {
-						Intent intent = new Intent(ExamQuestionActivity.this, ExamActivity.class);
-						intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-						startActivity(intent);
-						finish();
+						//quit review
 					}
 					else {
 						showDialog(DIALOG_ENDOFEXAM_ID);
 					}
 				}
 				else {
-					Intent intent = new Intent(ExamQuestionActivity.this, ExamQuestionActivity.class);
-					ExamTrainer.setQuestionId(intent, questionId + 1);
-					startActivity(intent);
-					finish();
+					//show next question
 				}
 			}
 		});

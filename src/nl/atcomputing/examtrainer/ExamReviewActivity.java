@@ -1,9 +1,8 @@
 package nl.atcomputing.examtrainer;
 
-import nl.atcomputing.dialogs.DialogFactory;
+import nl.atcomputing.dialogs.UsageDialog;
 import nl.atcomputing.examtrainer.adapters.ExamReviewAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -15,10 +14,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.MenuInflater;
+
 import com.actionbarsherlock.app.SherlockActivity;
 
 /**
@@ -59,7 +55,7 @@ public class ExamReviewActivity extends SherlockActivity {
 			Button button = (Button) findViewById(R.id.review_exam_resume_button);
 			button.setOnClickListener(new OnClickListener() {				
 				public void onClick(View v) {
-					Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionActivity.class);
+					Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionFragment.class);
 					ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM);
 					ExamTrainer.setQuestionId(intent, adapter.getItemId(amountOfQuestionsAnswered - 1));
 					if( (ExamTrainer.getTimeLimit() > 0)  && ( ExamTrainer.timeLimitExceeded() ) ) {
@@ -80,7 +76,7 @@ public class ExamReviewActivity extends SherlockActivity {
 					Toast.makeText(ExamReviewActivity.this, R.string.Reviewing_questions_is_only_available_after_completing_the_exam,
 							Toast.LENGTH_SHORT).show();
 				} else {
-					Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionActivity.class);
+					Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionFragment.class);
 					ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.REVIEW);
 					ExamTrainer.setQuestionId(intent, adapter.getItemId(position));
 					startActivity(intent);
@@ -88,11 +84,8 @@ public class ExamReviewActivity extends SherlockActivity {
 			}
 		});
 		examinationDbHelper.close();
-		
-		Dialog usageDialog = DialogFactory.createUsageDialog(this, R.string.Usage_Dialog_examReviewScreenMessage);
-		if( usageDialog != null ) {
-			usageDialog.show();
-		}
+		UsageDialog usageDialog = UsageDialog.newInstance(R.string.Usage_Dialog_examReviewScreenMessage);
+		usageDialog.show(getFragmentManager(), "UsageDialog");
 	}
 
 	protected void onDestroy() {

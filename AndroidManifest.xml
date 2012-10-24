@@ -44,7 +44,7 @@
             android:name=".review.HistoryActivity"
             android:exported="false" />
         <activity
-            android:name=".ExamQuestionActivity"
+            android:name=".ExamQuestionFragment"
             android:exported="false"
             android:windowSoftInputMode="stateHidden" />
         <activity

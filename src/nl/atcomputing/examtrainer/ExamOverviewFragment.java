@@ -3,8 +3,8 @@ package nl.atcomputing.examtrainer;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import nl.atcomputing.dialogs.DialogFactory;
 import nl.atcomputing.dialogs.RunThreadWithProgressDialog;
+import nl.atcomputing.dialogs.UsageDialog;
 import nl.atcomputing.examtrainer.adapters.HistoryAdapter;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
@@ -275,10 +275,8 @@ public class ExamOverviewFragment extends SherlockFragment {
 		if ( ( useTimeLimit ) && ( examTimeLimit > 0 ) ) {
 			textViewTimeLimitValue.setText(Long.toString(examTimeLimit));
 			ExamTrainer.setTimeLimit(examTimeLimit * 60);
-			Dialog dialog = DialogFactory.createUsageDialog(activity, R.string.Usage_Dialog_Time_limit_is_activated_for_this_exam);
-			if( dialog != null ) {
-				dialog.show();
-			}
+			UsageDialog usageDialog = UsageDialog.newInstance(R.string.Usage_Dialog_Time_limit_is_activated_for_this_exam);
+			usageDialog.show(getFragmentManager(), "UsageDialog");
 		} else {
 			textViewTimeLimitValue.setText(getString(R.string.No_time_limit));
 			ExamTrainer.setTimeLimit(0);
