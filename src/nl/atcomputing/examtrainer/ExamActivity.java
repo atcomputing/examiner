@@ -1,5 +1,6 @@
 package nl.atcomputing.examtrainer;
 
+import nl.atcomputing.examtrainer.ExamQuestionFragment.ExamQuestionListener;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.scorecalculation.ShowScoreActivity;
 import android.content.BroadcastReceiver;
@@ -17,16 +18,16 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 /**
  * @author martijn brekhof
  *
  */
 
-public class ExamActivity extends SherlockFragmentActivity {
+public class ExamActivity extends SherlockFragmentActivity implements ExamQuestionListener {
 	private Button buttonStartExam;
+	private Button buttonNextQuestion;
+	private Button buttonPrevQuestion;
+	
 	private ReceiveBroadcast receiveBroadcast;
 	private long questionId;
 	private ExamQuestionFragment examQuestionFragment;
@@ -52,11 +53,33 @@ public class ExamActivity extends SherlockFragmentActivity {
 			}
 		});
 		
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-		ExamOverviewFragment fragment = new ExamOverviewFragment();
-		fragmentTransaction.add(R.id.exam_fragment_holder, fragment);
-		fragmentTransaction.commit();
+		this.buttonNextQuestion = (Button) findViewById(R.id.button_next);
+		this.buttonNextQuestion.setOnClickListener( new View.OnClickListener() {
+			public void onClick(View v) {
+				if ( questionId >= ExamTrainer.getAmountOfItems() ) {
+					if(ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW) {
+						//quit review
+					}
+					else {
+						examQuestionFragment.showDialog(ExamQuestionFragment.DIALOG_ENDOFEXAM_ID);
+					}
+				}
+				else {
+					showQuestionFragment(++questionId);
+				}
+			}
+		});
+		
+		this.buttonPrevQuestion = (Button) findViewById(R.id.button_prev);
+		this.buttonPrevQuestion.setOnClickListener( new View.OnClickListener() {
+			public void onClick(View v) {
+				showQuestionFragment(--questionId);
+			}
+		});
+		
+		showExamOverviewFragment();
+		
+		setupView();
 	}
 
 	public void onResume() {
@@ -82,10 +105,8 @@ public class ExamActivity extends SherlockFragmentActivity {
 			if( this.questionId == 1 ) {
 				examQuestionFragment.showDialog(ExamQuestionFragment.DIALOG_QUITEXAM_ID);
 			} else {
-				Intent intent = new Intent(ExamActivity.this, ExamQuestionFragment.class);
-				ExamTrainer.setQuestionId(intent, this.questionId - 1);
-				startActivity(intent);
-				finish();
+				//Show previous question
+				showQuestionFragment(this.questionId--);
 			}
 		} else {
 			super.onBackPressed();
@@ -101,16 +122,10 @@ public class ExamActivity extends SherlockFragmentActivity {
 	}
 
 	private void stopExam() {
-//		Intent intent = new Intent(ExamActivity.this, ExamActivity.class);
-//		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//		startActivity(intent);
-//		finish();
-		//We should dismiss the ExamQuestionFragment
+
 	}
 
-	
 	private void startExam() {
-		Intent intent = new Intent(this, ExamQuestionFragment.class);
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		long scoresId = examinationDbHelper.createNewScore();
@@ -125,13 +140,72 @@ public class ExamActivity extends SherlockFragmentActivity {
 				ExamTrainer.setTimer();
 			}
 			ExamTrainer.setScoresId(scoresId);
-			ExamTrainer.setQuestionId(intent, 1);
 			ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM);
-			startActivity(intent);
+			showQuestionFragment(1);
+			setupView();
 		}
 	}
 	
 	private void setupView() {
 		
+		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SELECT_EXAM ) {
+			this.buttonNextQuestion.setVisibility(View.GONE);
+			this.buttonPrevQuestion.setVisibility(View.GONE);
+			this.buttonStartExam.setVisibility(View.VISIBLE);
+		} else if( ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM ) || 
+				( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW )){
+			this.buttonNextQuestion.setVisibility(View.VISIBLE);
+			this.buttonPrevQuestion.setVisibility(View.VISIBLE);
+			this.buttonStartExam.setVisibility(View.GONE);
+		}
 	}
+	
+	private void showQuestionFragment(long number) {
+		this.questionId = number;
+		
+		if( this.questionId >= ExamTrainer.getAmountOfItems() ) {
+			if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW) {
+				this.buttonNextQuestion.setText(R.string.End_review);
+			} else {
+				this.buttonNextQuestion.setText(R.string.End_exam);
+			}
+		} 
+		
+		if( this.questionId == 1 ) {
+			this.buttonPrevQuestion.setEnabled(false);
+		} else {
+			this.buttonPrevQuestion.setEnabled(true);
+		}
+		
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+		this.examQuestionFragment = new ExamQuestionFragment();
+		this.examQuestionFragment.setQuestionId(this.questionId);
+		fragmentTransaction.replace(R.id.exam_fragment_holder, this.examQuestionFragment);
+		fragmentTransaction.commit();
+	}
+	
+	private void showExamOverviewFragment() {
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+		ExamOverviewFragment fragment = new ExamOverviewFragment();
+		fragmentTransaction.replace(R.id.exam_fragment_holder, fragment);
+		fragmentTransaction.commit();
+	}
+
+	public void onStopExam() {
+//		Intent intent = new Intent(ExamActivity.this, ExamActivity.class);
+//		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//		startActivity(intent);
+//		finish();
+		//We should dismiss the ExamQuestionFragment
+		showExamOverviewFragment();
+	}
+
+	public void onExamEnd() {
+		// TODO Auto-generated method stub
+		showExamOverviewFragment();
+	}
+	
+	
 }

@@ -275,7 +275,7 @@ public class ExamOverviewFragment extends SherlockFragment {
 		if ( ( useTimeLimit ) && ( examTimeLimit > 0 ) ) {
 			textViewTimeLimitValue.setText(Long.toString(examTimeLimit));
 			ExamTrainer.setTimeLimit(examTimeLimit * 60);
-			UsageDialog usageDialog = UsageDialog.newInstance(R.string.Usage_Dialog_Time_limit_is_activated_for_this_exam);
+			UsageDialog usageDialog = UsageDialog.newInstance(activity, R.string.Usage_Dialog_Time_limit_is_activated_for_this_exam);
 			usageDialog.show(getFragmentManager(), "UsageDialog");
 		} else {
 			textViewTimeLimitValue.setText(getString(R.string.No_time_limit));

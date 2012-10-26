@@ -16,14 +16,14 @@ import android.text.format.Time;
 public final class ExamTrainer {
 
 	public enum ExamTrainerMode {
-		EXAM, REVIEW, ENDOFEXAM, SHOW_SCORE
+		SELECT_EXAM, EXAM, REVIEW, ENDOFEXAM, SHOW_SCORE
 	}
 
 	public static String BROADCAST_ACTION_EXAMLIST_UPDATED = "nl.atcomputing.examtrainer.examlistupdated";
 	
 	private static String examTitle = "ExamTrainer";
 	private static String examDatabaseName = null;
-	private static ExamTrainerMode mode = ExamTrainerMode.EXAM;
+	private static ExamTrainerMode mode = ExamTrainerMode.SELECT_EXAM;
 	private static long examId = -1;
 	private static long scoresId = -1;
 	private static long answersCorrect = 0;
@@ -167,13 +167,13 @@ public final class ExamTrainer {
 	}
 	
 	
-	public static void setQuestionId(Intent intent, long id) {
-		intent.putExtra(questionNumber, id);
-	}
-
-	public static long getQuestionId(Intent intent) {
-		return intent.getLongExtra(questionNumber, 1);
-	}
+//	public static void setQuestionId(Intent intent, long id) {
+//		intent.putExtra(questionNumber, id);
+//	}
+//
+//	public static long getQuestionId(Intent intent) {
+//		return intent.getLongExtra(questionNumber, 1);
+//	}
 
 	public static String convertEpochToString(long epoch) {
 		Time time = new Time();

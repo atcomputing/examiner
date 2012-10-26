@@ -2,14 +2,12 @@ package nl.atcomputing.examtrainer.adapters;
 
 import java.util.HashMap;
 
-import nl.atcomputing.dialogs.DialogFactory;
 import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
-import nl.atcomputing.examtrainer.examparser.UninstallExamAsyncTask;
-import android.app.Dialog;
+import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
 import android.view.LayoutInflater;
@@ -29,19 +27,32 @@ import android.widget.Toast;
 
 public class ManageExamsAdapter extends BaseAdapter  {
 	private Context context;
+	private ManageExamsAdapterListener listener;
 	private int layout;
 	private Cursor cursor;
 	private HashMap<Long, ViewHolder> viewHolderForPositionCache;
 
-	public ManageExamsAdapter(Context context, int layout, Cursor c) {
+	public interface ManageExamsAdapterListener {
+		public void onButtonClick(Button button, long examID);
+	}
+	
+	public ManageExamsAdapter(Activity activity, int layout, Cursor c) {
 
+		// Make sure activity implemented ExamQuestionListener
+        try {
+            this.listener = (ManageExamsAdapterListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement ManageExamsAdapterListener");
+        }
+		
 		this.layout = layout;
 
 		this.cursor = c;
 
 		this.viewHolderForPositionCache = new HashMap<Long, ViewHolder>();
 
-		this.context = context;
+		this.context = (Context) activity;
 	}
 
 	public int getCount() {
@@ -145,10 +156,10 @@ public class ManageExamsAdapter extends BaseAdapter  {
 		}
 
 		final ViewHolder holderReference = holder;
-
+		
 		holder.installUninstallButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				handleButtonClick(holderReference);
+				listener.onButtonClick(holderReference.installUninstallButton, holderReference.examID);
 			}
 		});
 
@@ -177,39 +188,6 @@ public class ManageExamsAdapter extends BaseAdapter  {
 		this.viewHolderForPositionCache.put(examID, holder);
 
 		return holder.view;
-	}
-
-	private void handleButtonClick(final ViewHolder holder) {
-		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(context);
-		examTrainerDbHelper.open();
-		ExamTrainerDbAdapter.State state = examTrainerDbHelper.getInstallationState(holder.examID);
-		examTrainerDbHelper.close();
-		if( state == ExamTrainerDbAdapter.State.INSTALLED ) {
-			Dialog dialog = DialogFactory.createTwoButtonDialog(this.context, 
-					R.string.are_you_sure_you_want_to_uninstall_this_exam, 
-					R.string.uninstall, new Runnable() {
-
-				public void run() {
-					holder.installUninstallButton.setEnabled(false);
-					holder.installUninstallButton.setText(R.string.Uninstalling_exam);
-					UninstallExamAsyncTask task = new UninstallExamAsyncTask(context, holder.examID);
-					task.execute();
-				}
-			}, R.string.cancel, new Runnable() {
-
-				public void run() {
-
-				}
-			});
-			dialog.show();
-		} else {
-			holder.installUninstallButton.setEnabled(false);
-			holder.installUninstallButton.setText(R.string.Installing_exam);
-			if( ExamTrainer.getInstallExamAsyncTask(holder.examID) == null ) {
-				InstallExamAsyncTask installExam = new InstallExamAsyncTask(this.context, (TextView) holder.installUninstallButton, holder.examID); 
-				installExam.execute();
-			}
-		}
 	}
 
 	class ViewHolder {

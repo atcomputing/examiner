@@ -50,7 +50,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 	
 	//private ExaminationDbAdapter examinationDbHelper;
 	//private Cursor cursorQuestion;
-	private long questionId;
+	private long questionId = 1;
 	private EditText editText;
 	private static TextView timeLimitTextView;
 	private ArrayList <View> multipleChoices;
@@ -120,7 +120,6 @@ public class ExamQuestionFragment extends SherlockFragment {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 
 		final Activity activity = getActivity();
@@ -128,19 +127,14 @@ public class ExamQuestionFragment extends SherlockFragment {
 		myHandler = new MyHandler(this);
 
 		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
-			activity.finish();
-		}
-
-		Intent intent = activity.getIntent();
-
-		this.questionId = ExamTrainer.getQuestionId(intent);
-		if ( ( questionId < 1 ) || ( ExamTrainer.getExamDatabaseName() == null ) ) {
-			activity.finish();
+			this.listener.onExamEnd();
 		}
 
 		if( this.questionId == 1 ) {
-			UsageDialog dialog = UsageDialog.newInstance(R.string.Usage_Dialog_Press_menu_to_quit_the_exam_or_show_a_hint_if_available);
-			dialog.show(getFragmentManager(), "UsageDialog");
+			UsageDialog usageDialog = UsageDialog.newInstance(activity, R.string.Usage_Dialog_Press_menu_to_quit_the_exam_or_show_a_hint_if_available);
+			if( usageDialog != null ) {
+				usageDialog.show(getFragmentManager(), "UsageDialog");
+			}
 		}
 
 		this.examQuestion = new ExamQuestion(activity);
@@ -179,8 +173,10 @@ public class ExamQuestionFragment extends SherlockFragment {
 						}
 					}
 					if( showUsageDialog ) {
-						UsageDialog usageDialog = UsageDialog.newInstance(R.string.Usage_Dialog_Sometimes_the_text_in_the_exhibit_or_choices_is_larger_than_fits_on_screen);
-						usageDialog.show(getFragmentManager(), "UsageDialog");
+						UsageDialog usageDialog = UsageDialog.newInstance(activity, R.string.Usage_Dialog_Sometimes_the_text_in_the_exhibit_or_choices_is_larger_than_fits_on_screen);
+						if( usageDialog != null ) {
+							usageDialog.show(getFragmentManager(), "UsageDialog");
+						}
 					}
 				}
 			});
@@ -196,8 +192,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 			saveScore();
 		}
 	}
-
-
+	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.question_menu, menu);
@@ -219,6 +214,10 @@ public class ExamQuestionFragment extends SherlockFragment {
 		}
 	}
 
+	public void setQuestionId(long id) {
+		this.questionId = id;
+	}
+	
 	public void showDialog(int id) {
 		final Activity activity = getActivity();
 		switch(id) {
@@ -536,41 +535,5 @@ public class ExamQuestionFragment extends SherlockFragment {
 			createOpenQuestionLayout();
 			this.editText.setVisibility(View.VISIBLE);
 		}
-
-		Button button_prev_question = (Button) activity.findViewById(R.id.button_prev);
-		if( questionId == 1 ) {
-			button_prev_question.setEnabled(false);
-		} else {
-			button_prev_question.setOnClickListener( new View.OnClickListener() {
-				public void onClick(View v) {
-					//Show previous question
-				}
-			});
-		}
-
-		Button button_next_question = (Button) activity.findViewById(R.id.button_next);
-		if( questionId >= ExamTrainer.getAmountOfItems() ) {
-			if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW) {
-				button_next_question.setText(R.string.End_review);
-			} else {
-				button_next_question.setText(R.string.End_exam);
-			}
-		}
-
-		button_next_question.setOnClickListener( new View.OnClickListener() {
-			public void onClick(View v) {
-				if ( questionId >= ExamTrainer.getAmountOfItems() ) {
-					if(ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW) {
-						//quit review
-					}
-					else {
-						showDialog(DIALOG_ENDOFEXAM_ID);
-					}
-				}
-				else {
-					//show next question
-				}
-			}
-		});
 	}
 }

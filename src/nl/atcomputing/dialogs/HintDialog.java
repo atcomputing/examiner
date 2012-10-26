@@ -29,7 +29,6 @@ public class HintDialog extends SherlockDialogFragment {
 	
 	
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
 		String message = getArguments().getString("message");
 		
 		Activity activity = getActivity();

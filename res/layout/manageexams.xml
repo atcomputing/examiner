@@ -6,7 +6,7 @@
     <ImageView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:contentDescription="Tools image"
+        android:contentDescription="@string/Tools_image"
         android:scaleType="fitCenter"
         android:src="@drawable/nicubunu_tools" />
 
@@ -31,7 +31,7 @@
             android:textSize="@dimen/textSizeDefault" />
 
         <ListView
-            android:id="@android:id/list"
+            android:id="@+id/manageexams_listview"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:cacheColorHint="#00000000" />

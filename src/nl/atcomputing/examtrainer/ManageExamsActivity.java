@@ -3,12 +3,15 @@ package nl.atcomputing.examtrainer;
 import java.net.URL;
 import java.util.ArrayList;
 
+import nl.atcomputing.dialogs.TwoButtonDialog;
 import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter;
+import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter.ManageExamsAdapterListener;
 import nl.atcomputing.examtrainer.database.DatabaseManager;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
+import nl.atcomputing.examtrainer.examparser.UninstallExamAsyncTask;
 import nl.atcomputing.examtrainer.examparser.XmlPullExamListParser;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -22,21 +25,22 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.app.SherlockListActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 /**
  * @author martijn brekhof
  *
  */
 
-public class ManageExamsActivity extends SherlockListActivity  {
+public class ManageExamsActivity extends SherlockFragmentActivity implements ManageExamsAdapterListener {
 	private ManageExamsAdapter adap;
 	static final int DIALOG_CONFIRMATION_ID = 0;
 	private TextView noExamsAvailable;
@@ -181,7 +185,9 @@ public class ManageExamsActivity extends SherlockListActivity  {
 		examTrainerDbHelper.close();
 
 		this.adap = new ManageExamsAdapter(this, R.layout.manageexams_entry, this.cursor);
-		setListAdapter(this.adap);
+		ListView lv = (ListView) findViewById(R.id.manageexams_listview);
+		lv.setAdapter(this.adap);
+		
 	}
 
 	private void deleteAllExams() {
@@ -262,5 +268,39 @@ public class ManageExamsActivity extends SherlockListActivity  {
 			}
 		}
 		examTrainerDbHelper.close();
+	}
+
+	public void onButtonClick(Button button, final long examID) {
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+		examTrainerDbHelper.open();
+		ExamTrainerDbAdapter.State state = examTrainerDbHelper.getInstallationState(examID);
+		examTrainerDbHelper.close();
+		if( state == ExamTrainerDbAdapter.State.INSTALLED ) {
+			TwoButtonDialog twoButtonDialog = TwoButtonDialog.newInstance(R.string.are_you_sure_you_want_to_uninstall_this_exam);
+			twoButtonDialog.setPositiveButton(R.string.uninstall, new Runnable() {
+
+				public void run() {
+//					holder.installUninstallButton.setEnabled(false);
+//					holder.installUninstallButton.setText(R.string.Uninstalling_exam);
+					UninstallExamAsyncTask task = new UninstallExamAsyncTask(ManageExamsActivity.this, examID);
+					task.execute();
+				}
+			});
+			twoButtonDialog.setNegativeButton(R.string.cancel, new Runnable() {
+
+				public void run() {
+
+				}
+			});
+			twoButtonDialog.show(getSupportFragmentManager(), "ConfirmationDialog");
+		} else {
+//			holder.installUninstallButton.setEnabled(false);
+//			holder.installUninstallButton.setText(R.string.Installing_exam);
+			if( ExamTrainer.getInstallExamAsyncTask(examID) == null ) {
+				InstallExamAsyncTask installExam = new InstallExamAsyncTask(this, (TextView) button, examID); 
+				installExam.execute();
+			}
+		}
+		
 	}
 }

@@ -3,7 +3,6 @@ package nl.atcomputing.examtrainer;
 import nl.atcomputing.dialogs.UsageDialog;
 import nl.atcomputing.examtrainer.adapters.ExamReviewAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
-import android.app.Dialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -15,13 +14,13 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 /**
  * @author martijn brekhof
  *
  */
-public class ExamReviewActivity extends SherlockActivity {
+public class ExamReviewActivity extends SherlockFragmentActivity {
 	public static final String TAG = "ExamReviewActivity";
 	private GridView scoresGrid;
 	private ExamReviewAdapter adapter; 
@@ -57,7 +56,7 @@ public class ExamReviewActivity extends SherlockActivity {
 				public void onClick(View v) {
 					Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionFragment.class);
 					ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM);
-					ExamTrainer.setQuestionId(intent, adapter.getItemId(amountOfQuestionsAnswered - 1));
+					//ExamTrainer.setQuestionId(adapter.getItemId(amountOfQuestionsAnswered - 1));
 					if( (ExamTrainer.getTimeLimit() > 0)  && ( ExamTrainer.timeLimitExceeded() ) ) {
 						ExamTrainer.setTimeLimit(0);
 						Toast.makeText(ExamReviewActivity.this, R.string.Time_limit_exceeded, Toast.LENGTH_SHORT).show();
@@ -78,14 +77,14 @@ public class ExamReviewActivity extends SherlockActivity {
 				} else {
 					Intent intent = new Intent(ExamReviewActivity.this, ExamQuestionFragment.class);
 					ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.REVIEW);
-					ExamTrainer.setQuestionId(intent, adapter.getItemId(position));
+					//ExamTrainer.setQuestionId(intent, adapter.getItemId(position));
 					startActivity(intent);
 				}
 			}
 		});
 		examinationDbHelper.close();
-		UsageDialog usageDialog = UsageDialog.newInstance(R.string.Usage_Dialog_examReviewScreenMessage);
-		usageDialog.show(getFragmentManager(), "UsageDialog");
+		UsageDialog usageDialog = UsageDialog.newInstance(this, R.string.Usage_Dialog_examReviewScreenMessage);
+		usageDialog.show(getSupportFragmentManager(), "UsageDialog");
 	}
 
 	protected void onDestroy() {

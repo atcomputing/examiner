@@ -30,7 +30,7 @@ public class ExamTrainerActivity extends Activity {
 		startExam.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				Intent intent = new Intent(ExamTrainerActivity.this, SelectExamActivity.class);
-				ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM);
+				ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.SELECT_EXAM);
 				startActivity(intent);
 			}
 		});

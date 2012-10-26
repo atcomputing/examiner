@@ -102,4 +102,6 @@
     <string name="Usage_Dialog_Time_limit_is_activated_for_this_exam">Time limit is activated for this exam.\nUse settings to disable the time limit.</string>
     <string name="Usage_Dialog_examReviewScreenMessage">This is the exam review screen.\nSelecting a specific question will open the question and show you the correct answer.</string>
     <string name="Usage_Dialog_Sometimes_the_text_in_the_exhibit_or_choices_is_larger_than_fits_on_screen">When the text is larger than fits on screen, you can use horizontal scrolling to make the rest of the text visible.</string>
+    <string name="Tools_image">Tools image</string>
+    <string name="Close">Close</string>
 </resources>
