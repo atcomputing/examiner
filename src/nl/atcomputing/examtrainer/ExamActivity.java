@@ -31,11 +31,12 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 	private ReceiveBroadcast receiveBroadcast;
 	private long questionId;
 	private ExamQuestionFragment examQuestionFragment;
+	private ExamOverviewFragment examOverviewFragment;
 	
 	private class ReceiveBroadcast extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			setupView();
+			updateView();
 		}
 	}
 	
@@ -78,15 +79,13 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 		});
 		
 		showExamOverviewFragment();
-		
-		setupView();
 	}
 
 	public void onResume() {
 		super.onResume();
 		IntentFilter filter = new IntentFilter(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED);
 		this.registerReceiver(this.receiveBroadcast, filter);
-		setupView();
+		updateView();
 		setTitle(ExamTrainer.getExamTitle());
 		
 		//if mode is exam
@@ -121,10 +120,6 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 		finish();
 	}
 
-	private void stopExam() {
-
-	}
-
 	private void startExam() {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
@@ -142,16 +137,18 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 			ExamTrainer.setScoresId(scoresId);
 			ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM);
 			showQuestionFragment(1);
-			setupView();
+			updateView();
 		}
 	}
 	
-	private void setupView() {
+	private void updateView() {
 		
-		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SELECT_EXAM ) {
+		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_EXAM_OVERVIEW ) {
 			this.buttonNextQuestion.setVisibility(View.GONE);
 			this.buttonPrevQuestion.setVisibility(View.GONE);
 			this.buttonStartExam.setVisibility(View.VISIBLE);
+			//this.examOverviewFragment.updateView();
+			
 		} else if( ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM ) || 
 				( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW )){
 			this.buttonNextQuestion.setVisibility(View.VISIBLE);
@@ -186,11 +183,13 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 	}
 	
 	private void showExamOverviewFragment() {
+		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.SHOW_EXAM_OVERVIEW);
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-		ExamOverviewFragment fragment = new ExamOverviewFragment();
-		fragmentTransaction.replace(R.id.exam_fragment_holder, fragment);
+		this.examOverviewFragment = new ExamOverviewFragment();
+		fragmentTransaction.replace(R.id.exam_fragment_holder, this.examOverviewFragment);
 		fragmentTransaction.commit();
+		updateView();
 	}
 
 	public void onStopExam() {

@@ -11,7 +11,6 @@ import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -183,7 +182,7 @@ public class ExamOverviewFragment extends SherlockFragment {
 		scoresList.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Intent intent = new Intent(activity, ExamReviewActivity.class);
+				Intent intent = new Intent(activity, ExamReviewFragment.class);
 				ExamTrainer.setScoresId(id);
 				startActivity(intent);
 			}
@@ -276,7 +275,9 @@ public class ExamOverviewFragment extends SherlockFragment {
 			textViewTimeLimitValue.setText(Long.toString(examTimeLimit));
 			ExamTrainer.setTimeLimit(examTimeLimit * 60);
 			UsageDialog usageDialog = UsageDialog.newInstance(activity, R.string.Usage_Dialog_Time_limit_is_activated_for_this_exam);
-			usageDialog.show(getFragmentManager(), "UsageDialog");
+			if( usageDialog != null ) {
+				usageDialog.show(getFragmentManager(), "UsageDialog");
+			}
 		} else {
 			textViewTimeLimitValue.setText(getString(R.string.No_time_limit));
 			ExamTrainer.setTimeLimit(0);

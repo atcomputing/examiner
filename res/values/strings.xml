@@ -104,4 +104,5 @@
     <string name="Usage_Dialog_Sometimes_the_text_in_the_exhibit_or_choices_is_larger_than_fits_on_screen">When the text is larger than fits on screen, you can use horizontal scrolling to make the rest of the text visible.</string>
     <string name="Tools_image">Tools image</string>
     <string name="Close">Close</string>
+    <string name="UsageDialogTitle">Usage</string>
 </resources>

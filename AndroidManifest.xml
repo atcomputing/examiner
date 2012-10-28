@@ -38,7 +38,7 @@
             android:name=".ExamActivity"
             android:exported="false" />
         <activity
-            android:name=".ExamReviewActivity"
+            android:name=".ExamReviewFragment"
             android:exported="false" />
         <activity
             android:name=".review.HistoryActivity"

@@ -15,7 +15,6 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 
 
 public class TwoButtonDialog extends SherlockDialogFragment {
-	protected int msgResourceId;
 	protected int posButtonMsgResourceId;
 	protected int negButtonMsgResourceId;
 	protected Runnable posButtonAction;
@@ -43,6 +42,9 @@ public class TwoButtonDialog extends SherlockDialogFragment {
 
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		Activity activity = getActivity();
+		
+		int msgResourceId = getArguments().getInt("msgResourceId");
+		
 		Dialog dialog;
 		AlertDialog.Builder builder;
 		builder = new AlertDialog.Builder(activity);

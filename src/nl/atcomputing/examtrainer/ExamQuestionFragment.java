@@ -112,6 +112,8 @@ public class ExamQuestionFragment extends SherlockFragment {
             throw new ClassCastException(activity.toString()
                     + " must implement ExamQuestionListener");
         }
+        
+        setHasOptionsMenu(true);
     }
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

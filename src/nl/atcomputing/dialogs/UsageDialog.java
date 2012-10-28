@@ -6,6 +6,7 @@ import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,16 +22,22 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 
 public class UsageDialog extends SherlockDialogFragment {
 
+	/**
+	 * Creates a new instance of a usage dialog for the given message
+	 * @param context
+	 * @param msgResourceId Resource identifier to message to be displayed
+	 * @return UsageDialog or null if dialog should not be shown
+	 */
 	public static UsageDialog newInstance(Context context, int msgResourceId) {
 		//Check if user wants to see this message
 		ExamTrainerDbAdapter db = new ExamTrainerDbAdapter(context);
 		db.open();
 		boolean showMessage = db.showMessage(msgResourceId);
+		db.close();
 		if( ! showMessage ) {
-			db.close();
 			return null;
 		}
-
+		
 		UsageDialog f = new UsageDialog();
 
 		Bundle args = new Bundle();
@@ -39,12 +46,19 @@ public class UsageDialog extends SherlockDialogFragment {
 
 		return f;
 	}
-
+	
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.dialog_usage_message, container, false);
 
+		
 		final int msgResourceId = getArguments().getInt("msgResourceId");
 
 		final Activity activity = getActivity();
