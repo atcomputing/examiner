@@ -1,9 +1,10 @@
-package nl.atcomputing.examtrainer;
+package nl.atcomputing.examtrainer.activities;
 
 import java.net.URL;
 import java.util.ArrayList;
 
 import nl.atcomputing.dialogs.TwoButtonDialog;
+import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter;
 import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter.ManageExamsAdapterListener;
 import nl.atcomputing.examtrainer.database.DatabaseManager;

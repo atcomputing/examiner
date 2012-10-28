@@ -1,15 +1,19 @@
-package nl.atcomputing.examtrainer;
+package nl.atcomputing.examtrainer.fragments;
 
 import java.io.Serializable;
 import java.util.HashMap;
 
 import nl.atcomputing.dialogs.RunThreadWithProgressDialog;
 import nl.atcomputing.dialogs.UsageDialog;
+import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.activities.ExamTrainer;
+import nl.atcomputing.examtrainer.activities.PreferencesActivity;
 import nl.atcomputing.examtrainer.adapters.HistoryAdapter;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
+import nl.atcomputing.examtrainer.fragments.ExamReviewFragment.ExamReviewListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,6 +43,30 @@ public class ExamOverviewFragment extends SherlockFragment {
 
 	private HistoryAdapter adapter;
 
+	private ExamOverviewListener listener;
+	
+	public interface ExamOverviewListener {
+		/**
+		 * Called when user selects a score
+		 */
+		public void onItemClickListener(long examId);
+	}
+	
+	@Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        
+        // Make sure activity implemented ExamQuestionListener
+        try {
+            this.listener = (ExamOverviewListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement ExamOverviewListener");
+        }
+        
+        setHasOptionsMenu(true);
+    }
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -182,9 +210,7 @@ public class ExamOverviewFragment extends SherlockFragment {
 		scoresList.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Intent intent = new Intent(activity, ExamReviewFragment.class);
-				ExamTrainer.setScoresId(id);
-				startActivity(intent);
+				listener.onItemClickListener(id);
 			}
 		});
 	}

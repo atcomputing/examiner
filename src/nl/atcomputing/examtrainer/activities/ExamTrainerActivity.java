@@ -1,5 +1,6 @@
-package nl.atcomputing.examtrainer;
+package nl.atcomputing.examtrainer.activities;
 
+import nl.atcomputing.examtrainer.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;

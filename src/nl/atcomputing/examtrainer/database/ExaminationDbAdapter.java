@@ -3,7 +3,7 @@ package nl.atcomputing.examtrainer.database;
 import java.util.ArrayList;
 import java.util.List;
 
-import nl.atcomputing.examtrainer.ExamQuestion;
+import nl.atcomputing.examtrainer.activities.ExamQuestion;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

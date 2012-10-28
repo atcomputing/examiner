@@ -1,6 +1,6 @@
 package nl.atcomputing.examtrainer.database;
 
-import nl.atcomputing.examtrainer.Exam;
+import nl.atcomputing.examtrainer.activities.Exam;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

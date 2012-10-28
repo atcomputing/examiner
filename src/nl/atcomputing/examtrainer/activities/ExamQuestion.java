@@ -1,7 +1,8 @@
-package nl.atcomputing.examtrainer;
+package nl.atcomputing.examtrainer.activities;
 
 import java.util.ArrayList;
 
+import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import android.content.Context;

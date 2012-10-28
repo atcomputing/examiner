@@ -1,7 +1,7 @@
 package nl.atcomputing.examtrainer.scorecalculation;
 
-import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;

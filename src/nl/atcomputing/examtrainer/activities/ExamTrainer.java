@@ -1,8 +1,9 @@
-package nl.atcomputing.examtrainer;
+package nl.atcomputing.examtrainer.activities;
 
 import java.util.Collection;
 import java.util.HashMap;
 
+import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -16,7 +17,7 @@ import android.text.format.Time;
 public final class ExamTrainer {
 
 	public enum ExamTrainerMode {
-		SELECT_EXAM, EXAM, REVIEW, ENDOFEXAM, SHOW_SCORE, SHOW_EXAM_OVERVIEW
+		SELECT_EXAM, EXAM, EXAM_REVIEW, ENDOFEXAM, CALCULATE_SCORE, SHOW_EXAM_OVERVIEW, SHOW_SCORE_OVERVIEW
 	}
 
 	public static String BROADCAST_ACTION_EXAMLIST_UPDATED = "nl.atcomputing.examtrainer.examlistupdated";

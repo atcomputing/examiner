@@ -1,4 +1,4 @@
-package nl.atcomputing.examtrainer;
+package nl.atcomputing.examtrainer.fragments;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -10,6 +10,10 @@ import java.util.TimerTask;
 import nl.atcomputing.dialogs.HintDialog;
 import nl.atcomputing.dialogs.TwoButtonDialog;
 import nl.atcomputing.dialogs.UsageDialog;
+import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.activities.ExamQuestion;
+import nl.atcomputing.examtrainer.activities.ExamTrainer;
+import nl.atcomputing.examtrainer.activities.ExamTrainer.ExamTrainerMode;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import android.app.Activity;
@@ -190,7 +194,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 		if ( timer != null ) {
 			timer.cancel();
 		}
-		if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) {
+		if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) {
 			saveScore();
 		}
 	}
@@ -228,7 +232,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 			endOfExamDialog.setPositiveButton(R.string.yes, new Runnable() {
 
 				public void run() {
-					if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) {
+					if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) {
 						listener.onExamEnd();
 					} 
 					else {
@@ -291,7 +295,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 
 	public void setupTimer() {
 		if ( ( ExamTrainer.getTimeLimit() > 0 ) && 
-				( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.REVIEW ) ) {
+				( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) ) {
 			this.timer = new Timer();
 			this.timer.scheduleAtFixedRate(new TimerTask() {
 
@@ -455,52 +459,6 @@ public class ExamQuestionFragment extends SherlockFragment {
 			this.editText.setText(cursor.getString(index));
 		}
 	}
-
-	private void updateLayout() {
-		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(getActivity());
-		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-
-		Cursor scoresAnswersCursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionId);
-
-		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW ) {
-			showAnswers();
-		} else {
-			//No need to get previous selected choices during an exam if there are none
-			if ( scoresAnswersCursor.getCount() < 1 ) {
-				examinationDbHelper.close();
-				return;
-			}
-		}
-
-		int index = scoresAnswersCursor.getColumnIndex(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER);
-
-		if( this.examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
-			this.editText.setText(scoresAnswersCursor.getString(index));
-		} else {
-			for( View view : this.multipleChoices ) {
-
-				TextView tv = (TextView) view.findViewById(R.id.choiceTextView);
-				String tvText = tv.getText().toString();
-				CheckBox cbox = (CheckBox) view.findViewById(R.id.choiceCheckBox);
-				cbox.setChecked(false);
-				if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.REVIEW ) {
-					cbox.setClickable(false);
-				}
-
-				//Check if choice was selected by user previously
-				if ( scoresAnswersCursor.getCount() > 0 ) {
-					scoresAnswersCursor.moveToFirst();
-					do {
-						String answer = Html.fromHtml(scoresAnswersCursor.getString(index)).toString();			
-						if( answer.contentEquals(tvText)) {
-							cbox.setChecked(true);
-						}
-					} while( scoresAnswersCursor.moveToNext() );
-				}
-			}
-		}
-		examinationDbHelper.close();
-	}
 	
 	private void setupLayout() {
 		Activity activity = getActivity();
@@ -537,5 +495,49 @@ public class ExamQuestionFragment extends SherlockFragment {
 			createOpenQuestionLayout();
 			this.editText.setVisibility(View.VISIBLE);
 		}
+		
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(getActivity());
+		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+
+		Cursor scoresAnswersCursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionId);
+
+		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) {
+			showAnswers();
+		} else {
+			//No need to get previous selected choices during an exam if there are none
+			if ( scoresAnswersCursor.getCount() < 1 ) {
+				examinationDbHelper.close();
+				return;
+			}
+		}
+
+		int index = scoresAnswersCursor.getColumnIndex(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER);
+
+		if( this.examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
+			this.editText.setText(scoresAnswersCursor.getString(index));
+		} else {
+			for( View view : this.multipleChoices ) {
+
+				TextView tv = (TextView) view.findViewById(R.id.choiceTextView);
+				String tvText = tv.getText().toString();
+				CheckBox cbox = (CheckBox) view.findViewById(R.id.choiceCheckBox);
+				cbox.setChecked(false);
+				if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) {
+					cbox.setClickable(false);
+				}
+
+				//Check if choice was selected by user previously
+				if ( scoresAnswersCursor.getCount() > 0 ) {
+					scoresAnswersCursor.moveToFirst();
+					do {
+						String answer = Html.fromHtml(scoresAnswersCursor.getString(index)).toString();			
+						if( answer.contentEquals(tvText)) {
+							cbox.setChecked(true);
+						}
+					} while( scoresAnswersCursor.moveToNext() );
+				}
+			}
+		}
+		examinationDbHelper.close();
 	}
 }

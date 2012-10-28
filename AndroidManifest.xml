@@ -19,7 +19,7 @@
         android:icon="@drawable/launcher"
         android:label="@string/app_name" >
         <activity
-            android:name=".ExamTrainerActivity"
+            android:name=".activities.ExamTrainerActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,34 +28,24 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SelectExamActivity"
+            android:name=".activities.SelectExamActivity"
             android:exported="false" >
             <intent-filter>
                 <action android:name="nl.atcomputing.examtrainer.examlistupdated" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".ExamActivity"
+            android:name=".activities.ExamActivity"
             android:exported="false" />
-        <activity
-            android:name=".ExamReviewFragment"
-            android:exported="false" />
-        <activity
-            android:name=".review.HistoryActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ExamQuestionFragment"
-            android:exported="false"
-            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".scorecalculation.ShowScoreActivity"
             android:exported="false" >
         </activity>
         <activity
-            android:name=".ManageExamsActivity"
+            android:name=".activities.ManageExamsActivity"
             android:exported="false" />
         <activity
-            android:name=".PreferencesActivity"
+            android:name=".activities.PreferencesActivity"
             android:exported="false" >
         </activity>
 

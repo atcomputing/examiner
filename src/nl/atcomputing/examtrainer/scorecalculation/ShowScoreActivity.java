@@ -2,9 +2,9 @@ package nl.atcomputing.examtrainer.scorecalculation;
 
 import java.util.List;
 
-import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.ExamActivity;
+import nl.atcomputing.examtrainer.activities.ExamActivity;
+import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import android.app.Activity;
 import android.content.Intent;
@@ -37,7 +37,7 @@ public class ShowScoreActivity extends Activity {
 		this.renderer = new GLSurfaceViewRenderer(this);
 		this.glView.setRenderer(this.renderer);
 
-		if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.SHOW_SCORE ) {
+		if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.CALCULATE_SCORE ) {
 			ShowScoreActivity.this.calculateScore = (CalculateScore) getLastNonConfigurationInstance();
 			if( ( ShowScoreActivity.this.calculateScore != null ) && 
 					( ShowScoreActivity.this.calculateScore.getStatus() != AsyncTask.Status.FINISHED) ) {
@@ -103,7 +103,7 @@ public class ShowScoreActivity extends Activity {
 
 	protected void showResult() {
 		int score = 0;
-		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.SHOW_SCORE);
+		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.CALCULATE_SCORE);
 
 		ExaminationDbAdapter examinationDbHelper;
 		examinationDbHelper = new ExaminationDbAdapter(this);

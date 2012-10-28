@@ -1,7 +1,7 @@
 package nl.atcomputing.examtrainer.adapters;
 
-import nl.atcomputing.examtrainer.ExamTrainer;
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
 import android.content.Context;
 import android.content.res.Resources;
