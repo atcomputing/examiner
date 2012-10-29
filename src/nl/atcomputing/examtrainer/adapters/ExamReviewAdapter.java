@@ -3,10 +3,12 @@ package nl.atcomputing.examtrainer.adapters;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
+import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,16 +32,20 @@ public class ExamReviewAdapter extends BaseAdapter
 	private boolean showResults = true;
 	private int layout;
 
-	public ExamReviewAdapter(Context context, int layout, Cursor cursor)
+	public ExamReviewAdapter(Context context, int layout, long scoresId)
 	{
 		this.context = context;
-		this.cursor = cursor;
 		this.layout = layout;
 		Resources res = context.getResources();
 		this.not_okImage = res.getDrawable(R.drawable.red_cross);
 		this.okImage = res.getDrawable(R.drawable.green_check);
 		this.unknownImage = res.getDrawable(R.drawable.questionmark);
-
+		
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this.context);
+		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+		this.cursor = examinationDbHelper.getResultsPerQuestion(scoresId);
+		examinationDbHelper.close();
+		
 		if( cursor.getCount() < ExamTrainer.getAmountOfItems() ) {
 			this.showResults = false;
 		}

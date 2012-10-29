@@ -3,10 +3,10 @@ package nl.atcomputing.examtrainer.activities;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.fragments.ExamOverviewFragment;
-import nl.atcomputing.examtrainer.fragments.ExamQuestionFragment;
-import nl.atcomputing.examtrainer.fragments.ExamReviewFragment;
 import nl.atcomputing.examtrainer.fragments.ExamOverviewFragment.ExamOverviewListener;
+import nl.atcomputing.examtrainer.fragments.ExamQuestionFragment;
 import nl.atcomputing.examtrainer.fragments.ExamQuestionFragment.ExamQuestionListener;
+import nl.atcomputing.examtrainer.fragments.ExamReviewFragment;
 import nl.atcomputing.examtrainer.fragments.ExamReviewFragment.ExamReviewListener;
 import nl.atcomputing.examtrainer.scorecalculation.ShowScoreActivity;
 import android.content.BroadcastReceiver;
@@ -19,6 +19,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -108,12 +109,13 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 	}
 
 	public void onBackPressed() {
+		Log.d("ExamActivity", "onBackPressed: exam mode = "+ExamTrainer.getExamMode().name());
 		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM ) {
 			if( this.questionId == 1 ) {
 				examQuestionFragment.showDialog(ExamQuestionFragment.DIALOG_QUITEXAM_ID);
 			} else {
 				//Show previous question
-				showQuestionFragment(this.questionId--);
+				showQuestionFragment(--this.questionId);
 			}
 		} else if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_SCORE_OVERVIEW ) {
 			showExamOverviewFragment();
@@ -137,17 +139,21 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 
 		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_EXAM_OVERVIEW ) {
 			scoresId = examinationDbHelper.createNewScore();
+			examinationDbHelper.close();
+			if( scoresId == -1 ) {
+				Toast.makeText(this, this.getString(R.string.failed_to_create_a_new_score_for_the_exam), Toast.LENGTH_LONG).show();
+				return;
+			} 
 			this.questionId = 1;
 		} else {
 			scoresId = ExamTrainer.getScoresId();
+			this.questionId = examinationDbHelper.getLastAnsweredQuestionId(scoresId);
+			examinationDbHelper.close();
+			if( this.questionId == -1 ) {
+				Toast.makeText(this, this.getString(R.string.Failed_to_resume_exam), Toast.LENGTH_LONG).show();
+				return;
+			} 
 		}
-
-		examinationDbHelper.close();
-
-		if( scoresId == -1 ) {
-			Toast.makeText(this, this.getString(R.string.failed_to_create_a_new_score_for_the_exam), Toast.LENGTH_LONG).show();
-			return;
-		} 
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		boolean useTimelimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
@@ -171,6 +177,7 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 				( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW )){
 			this.buttonNextQuestion.setVisibility(View.VISIBLE);
 			this.buttonPrevQuestion.setVisibility(View.VISIBLE);
+			this.buttonStartExam.setText(R.string.start_a_new_exam);
 			this.buttonStartExam.setVisibility(View.GONE);
 		} else if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_SCORE_OVERVIEW ) {
 			//Disable reviewing exam items when not all questions have been answered yet.
@@ -244,7 +251,7 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 
 	public void onExamEnd() {
 		// TODO Auto-generated method stub
-		showExamOverviewFragment();
+		startCalculateScoreActivity();
 	}
 
 	public void onItemClickListener(long id) {

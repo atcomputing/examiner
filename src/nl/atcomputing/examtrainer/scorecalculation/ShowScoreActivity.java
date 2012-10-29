@@ -121,7 +121,7 @@ public class ShowScoreActivity extends Activity {
 		long itemsRequiredToPass = ExamTrainer.getItemsNeededToPass();
 		Resources r = this.getResources();
 		String text = "";
-
+		int color = r.getColor(R.color.exam_passed_text);
 		if( score >= itemsRequiredToPass) {
 			text = r.getString(R.string.Congratulations) + ".\n" + 
 					r.getString(R.string.You_passed) + ".\n" +
@@ -135,9 +135,11 @@ public class ShowScoreActivity extends Activity {
 					r.getString(R.string.out_of) + " " + totalAmountOfItems + ", " +
 					r.getString(R.string.but_you_needed) + " " + itemsRequiredToPass + " " +
 					r.getString(R.string.to_pass) + ".";
+			color = r.getColor(R.color.exam_failed_text);
 		}
 		TextView tv = (TextView) findViewById(R.id.show_score_text);
 		tv.setText(text);
+		tv.setTextColor(color);
 		tv.setVisibility(View.VISIBLE);
 	}
 	

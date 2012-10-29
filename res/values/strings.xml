@@ -105,4 +105,5 @@
     <string name="Tools_image">Tools image</string>
     <string name="Close">Close</string>
     <string name="UsageDialogTitle">Usage</string>
+    <string name="Failed_to_resume_exam">Failed to resume exam</string>
 </resources>

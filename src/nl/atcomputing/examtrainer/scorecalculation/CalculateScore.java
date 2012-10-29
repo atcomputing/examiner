@@ -95,7 +95,7 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 				long questionId = (Long) questionIds[i];
 				
 				boolean answerCorrect = false;
-				answerCorrect = examinationDbHelper.getResultPerQuestion(scoresId, questionId) == 1;
+				answerCorrect = examinationDbHelper.getResult(scoresId, questionId) == 1;
 
 				if( answerCorrect ) {
 					answers_correct++;

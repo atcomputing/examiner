@@ -13,23 +13,21 @@ import nl.atcomputing.dialogs.UsageDialog;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.activities.ExamQuestion;
 import nl.atcomputing.examtrainer.activities.ExamTrainer;
-import nl.atcomputing.examtrainer.activities.ExamTrainer.ExamTrainerMode;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import android.app.Activity;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -51,7 +49,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 	public static final int DIALOG_SHOW_HINT_ID = 2;
 	public static final int DIALOG_QUITEXAM_ID = 3;
 	public static final int DIALOG_TIMELIMITREACHED_ID = 4;
-	
+
 	//private ExaminationDbAdapter examinationDbHelper;
 	//private Cursor cursorQuestion;
 	private long questionId = 1;
@@ -92,13 +90,13 @@ public class ExamQuestionFragment extends SherlockFragment {
 	}
 
 	private ExamQuestionListener listener;
-	
+
 	public interface ExamQuestionListener {
 		/**
 		 * Called when user quits a running exam
 		 */
 		public void onStopExam();
-		
+
 		/**
 		 * Called when user answered last question 
 		 */
@@ -106,20 +104,20 @@ public class ExamQuestionFragment extends SherlockFragment {
 	}
 
 	@Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        
-        // Make sure activity implemented ExamQuestionListener
-        try {
-            this.listener = (ExamQuestionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement ExamQuestionListener");
-        }
-        
-        setHasOptionsMenu(true);
-    }
-	
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+
+		// Make sure activity implemented ExamQuestionListener
+		try {
+			this.listener = (ExamQuestionListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement ExamQuestionListener");
+		}
+
+		setHasOptionsMenu(true);
+	}
+
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.question, container, false);
 	}
@@ -198,7 +196,15 @@ public class ExamQuestionFragment extends SherlockFragment {
 			saveScore();
 		}
 	}
-	
+
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		setupTimer();
+
+	}
+
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.question_menu, menu);
@@ -223,7 +229,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 	public void setQuestionId(long id) {
 		this.questionId = id;
 	}
-	
+
 	public void showDialog(int id) {
 		final Activity activity = getActivity();
 		switch(id) {
@@ -459,11 +465,11 @@ public class ExamQuestionFragment extends SherlockFragment {
 			this.editText.setText(cursor.getString(index));
 		}
 	}
-	
+
 	private void setupLayout() {
 		Activity activity = getActivity();
 		String text;
-		
+
 		timeLimitTextView = (TextView) activity.findViewById(R.id.textExamTime);
 
 		LinearLayout layout = (LinearLayout) activity.findViewById(R.id.question_layout);
@@ -495,7 +501,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 			createOpenQuestionLayout();
 			this.editText.setVisibility(View.VISIBLE);
 		}
-		
+
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(getActivity());
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 
