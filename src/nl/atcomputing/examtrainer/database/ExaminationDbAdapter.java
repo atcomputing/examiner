@@ -292,7 +292,7 @@ public class ExaminationDbAdapter {
 		
 		long id = -1;
 		
-		if(mCursor.moveToFirst()) {
+		if(mCursor.moveToLast()) {
 			id = mCursor.getLong(mCursor.getColumnIndex(ExaminationDatabaseHelper.ResultPerQuestion.COLUMN_NAME_QUESTION_ID));
 		}
 		mCursor.close();

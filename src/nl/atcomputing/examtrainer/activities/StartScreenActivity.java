@@ -1,6 +1,7 @@
 package nl.atcomputing.examtrainer.activities;
 
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.fragments.SelectExamFragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -16,7 +17,7 @@ import android.widget.TextView;
  * @author martijn brekhof
  * Copyright AT Computing 2012
  */
-public class ExamTrainerActivity extends Activity {
+public class StartScreenActivity extends Activity {
 
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -30,7 +31,7 @@ public class ExamTrainerActivity extends Activity {
 		Button startExam = (Button) findViewById(R.id.button_start);
 		startExam.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent intent = new Intent(ExamTrainerActivity.this, SelectExamActivity.class);
+				Intent intent = new Intent(StartScreenActivity.this, ExamActivity.class);
 				ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.SELECT_EXAM);
 				startActivity(intent);
 			}

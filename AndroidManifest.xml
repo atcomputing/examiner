@@ -15,11 +15,11 @@
         android:xlargeScreens="true" />
 
     <application
-        android:theme="@style/Theme.Sherlock"
         android:icon="@drawable/launcher"
-        android:label="@string/app_name" >
+        android:label="@string/app_name"
+        android:theme="@style/Theme.Sherlock" >
         <activity
-            android:name=".activities.ExamTrainerActivity"
+            android:name=".activities.StartScreenActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,15 +28,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.SelectExamActivity"
+            android:name=".activities.ExamActivity"
             android:exported="false" >
             <intent-filter>
                 <action android:name="nl.atcomputing.examtrainer.examlistupdated" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.ExamActivity"
-            android:exported="false" />
         <activity
             android:name=".scorecalculation.ShowScoreActivity"
             android:exported="false" >
