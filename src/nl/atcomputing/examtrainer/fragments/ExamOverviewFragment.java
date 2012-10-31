@@ -66,12 +66,6 @@ public class ExamOverviewFragment extends SherlockFragment {
         
         setHasOptionsMenu(true);
     }
-	
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setHasOptionsMenu(true);
-	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

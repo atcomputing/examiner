@@ -3,12 +3,12 @@ package nl.atcomputing.examtrainer.activities;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.fragments.ExamOverviewFragment;
-import nl.atcomputing.examtrainer.fragments.SelectExamFragment;
 import nl.atcomputing.examtrainer.fragments.ExamOverviewFragment.ExamOverviewListener;
 import nl.atcomputing.examtrainer.fragments.ExamQuestionFragment;
 import nl.atcomputing.examtrainer.fragments.ExamQuestionFragment.ExamQuestionListener;
 import nl.atcomputing.examtrainer.fragments.ExamReviewFragment;
 import nl.atcomputing.examtrainer.fragments.ExamReviewFragment.ExamReviewListener;
+import nl.atcomputing.examtrainer.fragments.SelectExamFragment;
 import nl.atcomputing.examtrainer.fragments.SelectExamFragment.SelectExamListener;
 import nl.atcomputing.examtrainer.scorecalculation.ShowScoreActivity;
 import android.content.BroadcastReceiver;
@@ -20,6 +20,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
@@ -44,7 +45,7 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 	private ExamOverviewFragment examOverviewFragment;
 	private ExamReviewFragment examReviewFragment;
 	private SelectExamFragment examSelectFragment;
-	
+
 	private class ReceiveBroadcast extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -54,7 +55,7 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.exam);
+		setContentView(R.layout.examactivity);
 
 		this.receiveBroadcast = new ReceiveBroadcast();
 
@@ -112,20 +113,28 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 	}
 
 	public void onBackPressed() {
-		Log.d("ExamActivity", "onBackPressed: exam mode = "+ExamTrainer.getExamMode().name());
 		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM ) {
 			if( this.questionId == 1 ) {
 				examQuestionFragment.showDialog(ExamQuestionFragment.DIALOG_QUITEXAM_ID);
 			} else {
 				showPrevQuestionFragment();
 			}
-		} else if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_SCORE_OVERVIEW ) {
-			showExamOverviewFragment();
 		} else {
-			super.onBackPressed();
+			FragmentManager fm = getSupportFragmentManager();
+			int backStackEntryCount = fm.getBackStackEntryCount();
+			if( backStackEntryCount < 2 ) {
+				finish();
+			} else {
+				fm.popBackStack();
+				BackStackEntry bse = fm.getBackStackEntryAt(backStackEntryCount - 2);
+				String fragmentName = bse.getName();
+				ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.valueOf(fragmentName));
+				Log.d("ExamActivity", "onBackPressed: fragmentName="+fragmentName);
+				updateView();
+			}
 		}
 	}
-
+	
 	private void startCalculateScoreActivity() {
 		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.ENDOFEXAM);
 		Intent intent = new Intent(ExamActivity.this, ShowScoreActivity.class);
@@ -173,13 +182,13 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 		showQuestionFragment(number);
 		this.questionId = number;
 	}
-	
+
 	private void showPrevQuestionFragment() {
 		long number = this.questionId - 1;
 		showQuestionFragment(number);
 		this.questionId = number;
 	}
-	
+
 	private void showQuestionFragment(long number) {
 
 		if( number >= ExamTrainer.getAmountOfItems() ) {
@@ -188,7 +197,9 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 			} else {
 				this.buttonNextQuestion.setText(R.string.End_exam);
 			}
-		} 
+		} else {
+			this.buttonNextQuestion.setText(R.string.Next);
+		}
 
 		if( number == 1 ) {
 			this.buttonPrevQuestion.setEnabled(false);
@@ -199,13 +210,14 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 		this.examQuestionFragment = new ExamQuestionFragment();
-		this.examQuestionFragment.setQuestionId(this.questionId);
+		this.examQuestionFragment.setQuestionId(number);
 		fragmentTransaction.replace(R.id.exam_fragment_holder, this.examQuestionFragment);
 		if( number > this.questionId ) { 
 			fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 		} else {
 			fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
 		}
+		fragmentTransaction.addToBackStack(ExamTrainer.ExamTrainerMode.EXAM.name());
 		fragmentTransaction.commit();
 	}
 
@@ -216,10 +228,11 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 		this.examSelectFragment = new SelectExamFragment();
 		fragmentTransaction.replace(R.id.exam_fragment_holder, this.examSelectFragment);
 		fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		fragmentTransaction.addToBackStack(ExamTrainer.ExamTrainerMode.SELECT_EXAM.name());
 		fragmentTransaction.commit();
 		updateView();
 	}
-	
+
 	private void showExamOverviewFragment() {
 		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.SHOW_EXAM_OVERVIEW);
 		FragmentManager fragmentManager = getSupportFragmentManager();
@@ -227,6 +240,7 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 		this.examOverviewFragment = new ExamOverviewFragment();
 		fragmentTransaction.replace(R.id.exam_fragment_holder, this.examOverviewFragment);
 		fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		fragmentTransaction.addToBackStack(ExamTrainer.ExamTrainerMode.SHOW_EXAM_OVERVIEW.name());
 		fragmentTransaction.commit();
 		updateView();
 	}
@@ -239,6 +253,7 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 		this.examReviewFragment = new ExamReviewFragment();
 		fragmentTransaction.replace(R.id.exam_fragment_holder, this.examReviewFragment);
 		fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		fragmentTransaction.addToBackStack(ExamTrainer.ExamTrainerMode.SHOW_SCORE_OVERVIEW.name());
 		fragmentTransaction.commit();
 		updateView();
 	}
@@ -263,7 +278,7 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 			//Disable reviewing exam items when not all questions have been answered yet.
 			this.buttonStartExam.setVisibility(View.GONE);
 			long examId = ExamTrainer.getScoresId();
-	        ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
+			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 			Cursor cursor = examinationDbHelper.getResultsPerQuestion(examId);
 			examinationDbHelper.close();
@@ -273,18 +288,16 @@ public class ExamActivity extends SherlockFragmentActivity implements ExamQuesti
 			}
 		}
 	}
-	
+
 	public void onStopExam() {
-		//		Intent intent = new Intent(ExamActivity.this, ExamActivity.class);
-		//		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		//		startActivity(intent);
-		//		finish();
-		//We should dismiss the ExamQuestionFragment
+		FragmentManager fm = getSupportFragmentManager();
+		fm.popBackStack(ExamTrainer.ExamTrainerMode.EXAM.name(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		showExamOverviewFragment();
 	}
 
 	public void onExamEnd() {
-		// TODO Auto-generated method stub
+		FragmentManager fm = getSupportFragmentManager();
+		fm.popBackStack(ExamTrainer.ExamTrainerMode.EXAM.name(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		startCalculateScoreActivity();
 	}
 

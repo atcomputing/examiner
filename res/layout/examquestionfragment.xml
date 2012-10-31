@@ -52,7 +52,8 @@
             android:id="@+id/question_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical"
+            android:background="#000000" >
 
             <HorizontalScrollView
                 android:id="@+id/horizontalScrollViewExhibit"
@@ -75,7 +76,6 @@
                 android:id="@+id/textQuestion"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="#000000"
                 android:padding="@dimen/paddingDefault"
                 android:textColor="#CCCCCC"
                 android:textSize="@dimen/textSizeDefault"

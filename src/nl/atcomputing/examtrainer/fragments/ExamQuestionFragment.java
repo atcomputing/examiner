@@ -119,7 +119,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.question, container, false);
+		return inflater.inflate(R.layout.examquestionfragment, container, false);
 	}
 
 	@Override

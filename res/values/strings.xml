@@ -20,8 +20,8 @@
     <string name="No_time_limit">No time limit</string>
     <string name="Time_limit_in_minutes">Time limit in minutes</string>
     <string name="minutes">minutes</string>
-    <string name="button_next">Next</string>
-    <string name="button_prev">Back</string>
+    <string name="Next">Next</string>
+    <string name="Prev">Previous</string>
     <string name="Start">Start</string>
     <string name="Delete_all">Delete all</string>
     <string name="Get_new_exams">Get new exams</string>
