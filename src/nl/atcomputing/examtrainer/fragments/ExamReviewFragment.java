@@ -57,9 +57,6 @@ public class ExamReviewFragment extends SherlockFragment {
 					+ " must implement ExamReviewListener");
 		}
 
-		long scoresId = ExamTrainer.getScoresId();
-		this.adapter = new ExamReviewAdapter(activity, R.layout.review_exam_entry, scoresId);
-
 		setHasOptionsMenu(true);
 	}
 
@@ -76,16 +73,7 @@ public class ExamReviewFragment extends SherlockFragment {
 
 		final Activity activity = getActivity();
 
-		this.scoresGrid = (GridView) activity.findViewById(R.id.review_exam_grid);
-		this.scoresGrid.setAdapter(this.adapter);
-
-		scoresGrid.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM_REVIEW);
-				listener.onItemClickListener(id);
-			}
-		});
+		setupScoresGrid();
 
 		Button buttonStartExam = (Button) activity.findViewById(R.id.button_start_exam);
 		long examId = ExamTrainer.getScoresId();
@@ -102,9 +90,6 @@ public class ExamReviewFragment extends SherlockFragment {
 			});
 		}
 
-
-
-
 		UsageDialog usageDialog = UsageDialog.newInstance(activity, R.string.Usage_Dialog_examReviewScreenMessage);
 		if( usageDialog != null ) {
 			usageDialog.show(getFragmentManager(), "UsageDialog");
@@ -113,6 +98,12 @@ public class ExamReviewFragment extends SherlockFragment {
 
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		setupScoresGrid();
+	}
+	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -124,5 +115,22 @@ public class ExamReviewFragment extends SherlockFragment {
 
 	public int getAmountOfQuestionsAnswered() {
 		return this.adapter.getCount();
+	}
+	
+	private void setupScoresGrid() {
+		Activity activity = getActivity();
+		
+		this.adapter = new ExamReviewAdapter(activity, R.layout.review_exam_entry, ExamTrainer.getScoresId());
+
+		this.scoresGrid = (GridView) activity.findViewById(R.id.review_exam_grid);
+		this.scoresGrid.setAdapter(this.adapter);
+
+		scoresGrid.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM_REVIEW);
+				listener.onItemClickListener(id);
+			}
+		});
 	}
 }

@@ -156,8 +156,6 @@ public class ExamQuestionFragment extends SherlockFragment {
 			ExamTrainer.showError(activity, activity.getResources().getString(R.string.Exam_is_empty) + "\n" +
 					this.getResources().getString(R.string.Try_reinstalling_the_exam));
 		}
-		
-		setupLayout();
 
 		/**
 		 * Setup observer to be able to measure exhibit and choices width. We use this to determine if
@@ -196,6 +194,14 @@ public class ExamQuestionFragment extends SherlockFragment {
 		}
 	}
 
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		setupTimer();
+		setupLayout();
+	}
+	
 	public void onPause() {
 		super.onPause();
 		if ( timer != null ) {
@@ -204,14 +210,6 @@ public class ExamQuestionFragment extends SherlockFragment {
 		if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) {
 			saveScore();
 		}
-	}
-
-	@Override
-	public void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		setupTimer();
-
 	}
 
 	@Override
@@ -239,6 +237,10 @@ public class ExamQuestionFragment extends SherlockFragment {
 		this.questionId = id;
 	}
 
+	public long getQuestionId() {
+		return this.questionId;
+	}
+	
 	public void showDialog(int id) {
 		final Activity activity = getActivity();
 		switch(id) {
@@ -475,42 +477,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 		}
 	}
 
-	private void setupLayout() {
-		Activity activity = getActivity();
-		String text;
-
-		timeLimitTextView = (TextView) activity.findViewById(R.id.textExamTime);
-
-		LinearLayout layout = (LinearLayout) activity.findViewById(R.id.question_layout);
-
-		TextView question = (TextView) activity.findViewById(R.id.textQuestionNumber);
-		question.setText(Long.toString(this.questionId));
-
-		text = this.examQuestion.getExhibit();
-		TextView exhibit = (TextView) activity.findViewById(R.id.textExhibit);
-		if( text != null ) {
-			exhibit.setText(Html.fromHtml(text));
-		} else {
-			HorizontalScrollView viewExhibit = (HorizontalScrollView) activity.findViewById(R.id.horizontalScrollViewExhibit);
-			layout.removeView(viewExhibit);
-		}
-
-
-		text = this.examQuestion.getQuestion();
-		TextView question_textview = (TextView) activity.findViewById(R.id.textQuestion);
-		question_textview.setText(Html.fromHtml(text));
-
-		if( this.examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
-			LinearLayout v_layout = (LinearLayout) activity.findViewById(R.id.question_multiplechoice_linear_layout);
-			createChoicesLayout(v_layout);
-			HorizontalScrollView sv = (HorizontalScrollView) activity.findViewById(R.id.question_multiplechoice_horizontalScrollView);
-			sv.setVisibility(View.VISIBLE);
-		} else if ( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
-			this.editText = (EditText) activity.findViewById(R.id.question_open_answer_edittext);
-			createOpenQuestionLayout();
-			this.editText.setVisibility(View.VISIBLE);
-		}
-
+	private void showPreviouslySetChoices() {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(getActivity());
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 
@@ -553,8 +520,47 @@ public class ExamQuestionFragment extends SherlockFragment {
 				}
 			}
 		}
+		examinationDbHelper.close();
+	}
+	
+	private void setupLayout() {
+		Activity activity = getActivity();
+		String text;
+
+		Log.d("ExamQuestionFragment", "Setting up layout");
 		
-		Log.d("ExamQuestionFragment", "Setting up button");
+		timeLimitTextView = (TextView) activity.findViewById(R.id.textExamTime);
+
+		LinearLayout layout = (LinearLayout) activity.findViewById(R.id.question_layout);
+
+		TextView question = (TextView) activity.findViewById(R.id.textQuestionNumber);
+		question.setText(Long.toString(this.questionId));
+
+		text = this.examQuestion.getExhibit();
+		TextView exhibit = (TextView) activity.findViewById(R.id.textExhibit);
+		if( text != null ) {
+			exhibit.setText(Html.fromHtml(text));
+		} else {
+			HorizontalScrollView viewExhibit = (HorizontalScrollView) activity.findViewById(R.id.horizontalScrollViewExhibit);
+			layout.removeView(viewExhibit);
+		}
+
+
+		text = this.examQuestion.getQuestion();
+		TextView question_textview = (TextView) activity.findViewById(R.id.textQuestion);
+		question_textview.setText(Html.fromHtml(text));
+
+		if( this.examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
+			LinearLayout v_layout = (LinearLayout) activity.findViewById(R.id.question_multiplechoice_linear_layout);
+			createChoicesLayout(v_layout);
+			HorizontalScrollView sv = (HorizontalScrollView) activity.findViewById(R.id.question_multiplechoice_horizontalScrollView);
+			sv.setVisibility(View.VISIBLE);
+		} else if ( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN)) {
+			this.editText = (EditText) activity.findViewById(R.id.question_open_answer_edittext);
+			createOpenQuestionLayout();
+			this.editText.setVisibility(View.VISIBLE);
+		}
+
 		Button buttonNextQuestion = (Button) activity.findViewById(R.id.button_next);
 		buttonNextQuestion.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
@@ -566,7 +572,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 						showDialog(ExamQuestionFragment.DIALOG_ENDOFEXAM_ID);
 					}
 				} else {
-					listener.onButtonClickListener(ExamQuestionFragment.this, questionId++);
+					listener.onButtonClickListener(ExamQuestionFragment.this, ++questionId);
 				}
 			}
 		});
@@ -574,7 +580,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 		Button buttonPrevQuestion = (Button) activity.findViewById(R.id.button_prev);
 		buttonPrevQuestion.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
-				listener.onButtonClickListener(ExamQuestionFragment.this, questionId--);
+				listener.onButtonClickListener(ExamQuestionFragment.this, --questionId);
 			}
 		});
 		
@@ -594,6 +600,6 @@ public class ExamQuestionFragment extends SherlockFragment {
 			buttonPrevQuestion.setEnabled(true);
 		}
 		
-		examinationDbHelper.close();
+		showPreviouslySetChoices();
 	}
 }

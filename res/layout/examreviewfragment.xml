@@ -8,7 +8,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="@string/start_a_new_exam"
+        android:text="@string/resume_exam"
         android:textSize="@dimen/textSizeDefault"
         android:visibility="gone" />
 

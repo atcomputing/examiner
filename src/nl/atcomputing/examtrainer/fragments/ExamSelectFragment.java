@@ -34,7 +34,7 @@ import com.actionbarsherlock.view.MenuItem;
  *
  */
 
-public class SelectExamFragment extends SherlockFragment {
+public class ExamSelectFragment extends SherlockFragment {
 	private SelectExamAdapter adap;
 	private TextView clickOnManageExams;
 	private TextView noExamsAvailable;
@@ -75,6 +75,11 @@ public class SelectExamFragment extends SherlockFragment {
 		setupListView();
 	}
 	
+	@Override
+	public void onResume() {
+		super.onResume();
+		setupListView();
+	}
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

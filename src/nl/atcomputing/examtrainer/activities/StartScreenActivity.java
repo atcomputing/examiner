@@ -1,7 +1,7 @@
 package nl.atcomputing.examtrainer.activities;
 
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.fragments.SelectExamFragment;
+import nl.atcomputing.examtrainer.fragments.ExamSelectFragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
