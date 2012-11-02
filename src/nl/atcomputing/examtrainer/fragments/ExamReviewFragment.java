@@ -12,7 +12,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
@@ -28,33 +30,40 @@ public class ExamReviewFragment extends SherlockFragment {
 	private ExamReviewAdapter adapter; 
 
 	private ExamReviewListener listener;
-	
+
 	public interface ExamReviewListener {
 		/**
 		 * Called when user selects a question number
 		 */
 		public void onItemClickListener(long questionId);
+
+		/**
+		 * Called when user clicks the resume/start exam button
+		 * @param fragment
+		 * @param examId
+		 */
+		public void onButtonClickListener(SherlockFragment fragment, long examId);
 	}
 
 	@Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        
-        // Make sure activity implemented ExamQuestionListener
-        try {
-            this.listener = (ExamReviewListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement ExamReviewListener");
-        }
-		
-        long scoresId = ExamTrainer.getScoresId();
-		this.adapter = new ExamReviewAdapter(activity, R.layout.review_exam_entry, scoresId);
-		
-        setHasOptionsMenu(true);
-    }
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
 
-	
+		// Make sure activity implemented ExamQuestionListener
+		try {
+			this.listener = (ExamReviewListener) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement ExamReviewListener");
+		}
+
+		long scoresId = ExamTrainer.getScoresId();
+		this.adapter = new ExamReviewAdapter(activity, R.layout.review_exam_entry, scoresId);
+
+		setHasOptionsMenu(true);
+	}
+
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -64,7 +73,7 @@ public class ExamReviewFragment extends SherlockFragment {
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		
+
 		final Activity activity = getActivity();
 
 		this.scoresGrid = (GridView) activity.findViewById(R.id.review_exam_grid);
@@ -77,11 +86,30 @@ public class ExamReviewFragment extends SherlockFragment {
 				listener.onItemClickListener(id);
 			}
 		});
-		
+
+		Button buttonStartExam = (Button) activity.findViewById(R.id.button_start_exam);
+		long examId = ExamTrainer.getScoresId();
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(activity);
+		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+		Cursor cursor = examinationDbHelper.getResultsPerQuestion(examId);
+		examinationDbHelper.close();
+		if( cursor.getCount() < ExamTrainer.getAmountOfItems() ) {
+			buttonStartExam.setVisibility(View.VISIBLE);
+			buttonStartExam.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					listener.onButtonClickListener(ExamReviewFragment.this, ExamTrainer.getExamId());
+				}
+			});
+		}
+
+
+
+
 		UsageDialog usageDialog = UsageDialog.newInstance(activity, R.string.Usage_Dialog_examReviewScreenMessage);
 		if( usageDialog != null ) {
 			usageDialog.show(getFragmentManager(), "UsageDialog");
 		}
+
 
 	}
 
@@ -93,7 +121,7 @@ public class ExamReviewFragment extends SherlockFragment {
 			cursor.close();
 		}
 	}
-	
+
 	public int getAmountOfQuestionsAnswered() {
 		return this.adapter.getCount();
 	}

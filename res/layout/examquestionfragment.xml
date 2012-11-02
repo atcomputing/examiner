@@ -2,7 +2,34 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/question_toplayout_container"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:background="#000000" >
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/button_prev"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_weight="1"
+            android:text="@string/Prev"
+            android:textSize="@dimen/textSizeDefault" />
+
+        <Button
+            android:id="@+id/button_next"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="1"
+            android:text="@string/Next"
+            android:textSize="@dimen/textSizeDefault" />
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/titleBar"
@@ -46,14 +73,14 @@
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/titleBar" >
+        android:layout_below="@id/titleBar"
+        android:layout_above="@id/buttonLayout" >
 
         <LinearLayout
             android:id="@+id/question_layout"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="#000000" >
+            android:orientation="vertical" >
 
             <HorizontalScrollView
                 android:id="@+id/horizontalScrollViewExhibit"
@@ -79,8 +106,7 @@
                 android:padding="@dimen/paddingDefault"
                 android:textColor="#CCCCCC"
                 android:textSize="@dimen/textSizeDefault"
-                android:typeface="serif" >
-            </TextView>
+                android:typeface="serif" />
 
             <EditText
                 android:id="@+id/question_open_answer_edittext"
@@ -96,12 +122,12 @@
                 android:layout_height="wrap_content"
                 android:scrollbars="none"
                 android:visibility="gone" >
+
                 <LinearLayout
                     android:id="@+id/question_multiplechoice_linear_layout"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical" >
-                </LinearLayout>
+                    android:orientation="vertical" />
             </HorizontalScrollView>
         </LinearLayout>
     </ScrollView>

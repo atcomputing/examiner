@@ -18,13 +18,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.media.MediaPlayer.OnBufferingUpdateListener;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -50,6 +53,13 @@ public class ExamOverviewFragment extends SherlockFragment {
 		 * Called when user selects a score
 		 */
 		public void onItemClickListener(long examId);
+		
+		/**
+		 * Called when user clicks the resume/start exam button
+		 * @param fragment
+		 * @param examId
+		 */
+		public void onButtonClickListener(SherlockFragment fragment, long examId);
 	}
 	
 	@Override
@@ -170,6 +180,14 @@ public class ExamOverviewFragment extends SherlockFragment {
 	private void setupView() {
 		final Activity activity = getActivity();
 
+		Button buttonStartExam = (Button) activity.findViewById(R.id.button_start_exam);
+		buttonStartExam.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				listener.onButtonClickListener(ExamOverviewFragment.this, ExamTrainer.getExamId());
+			}
+		});
+		
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
 		examTrainerDbHelper.open();
 		Cursor cursor = examTrainerDbHelper.getExam(ExamTrainer.getExamId());

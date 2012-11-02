@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.ViewTreeObserver.OnGlobalLayoutListener;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -101,6 +102,13 @@ public class ExamQuestionFragment extends SherlockFragment {
 		 * Called when user answered last question 
 		 */
 		public void onExamEnd();
+		
+		/**
+		 * Called when next or prev button in fragment is clicked
+		 * @param fragment
+		 * @param this.questionId identifier of the question that should be shown
+		 */
+		public void onButtonClickListener(SherlockFragment fragment, long questionId);
 	}
 
 	@Override
@@ -143,11 +151,12 @@ public class ExamQuestionFragment extends SherlockFragment {
 
 		this.examQuestion = new ExamQuestion(activity);
 		try {
-			this.examQuestion.fillFromDatabase(ExamTrainer.getExamDatabaseName(), questionId);
+			this.examQuestion.fillFromDatabase(ExamTrainer.getExamDatabaseName(), this.questionId);
 		} catch (SQLiteException e) {
 			ExamTrainer.showError(activity, activity.getResources().getString(R.string.Exam_is_empty) + "\n" +
 					this.getResources().getString(R.string.Try_reinstalling_the_exam));
 		}
+		
 		setupLayout();
 
 		/**
@@ -288,7 +297,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 		case DIALOG_SHOW_HINT_ID:
 			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(activity);
 			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-			String message = examinationDbHelper.getHint(questionId);
+			String message = examinationDbHelper.getHint(this.questionId);
 			examinationDbHelper.close();
 			if( message == null ) {
 				message = getString(R.string.hint_not_available);
@@ -378,7 +387,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		if( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
 			String userAnswer = this.editText.getText().toString();
-			examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getScoresId(), questionId,
+			examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getScoresId(), this.questionId,
 					userAnswer);
 			Cursor correctAnswers = examinationDbHelper.getAnswers(this.questionId);
 			if( correctAnswers.getCount() < 1 ) {
@@ -394,9 +403,9 @@ public class ExamQuestionFragment extends SherlockFragment {
 				}
 			} while( correctAnswers.moveToNext() );
 		} else {
-			answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(questionId, ExamTrainer.getScoresId());
+			answerCorrect = examinationDbHelper.checkScoresAnswersMultipleChoice(this.questionId, ExamTrainer.getScoresId());
 		}
-		examinationDbHelper.setResultPerQuestion(ExamTrainer.getScoresId(), questionId, answerCorrect);
+		examinationDbHelper.setResultPerQuestion(ExamTrainer.getScoresId(), this.questionId, answerCorrect);
 
 		examinationDbHelper.close();
 	}
@@ -458,7 +467,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 	private void createOpenQuestionLayout() {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(getActivity());
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		Cursor cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionId);
+		Cursor cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), this.questionId);
 		examinationDbHelper.close();
 		if ( cursor.getCount() > 0 ) {
 			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
@@ -475,7 +484,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 		LinearLayout layout = (LinearLayout) activity.findViewById(R.id.question_layout);
 
 		TextView question = (TextView) activity.findViewById(R.id.textQuestionNumber);
-		question.setText(Long.toString(questionId));
+		question.setText(Long.toString(this.questionId));
 
 		text = this.examQuestion.getExhibit();
 		TextView exhibit = (TextView) activity.findViewById(R.id.textExhibit);
@@ -505,7 +514,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(getActivity());
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 
-		Cursor scoresAnswersCursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), questionId);
+		Cursor scoresAnswersCursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), this.questionId);
 
 		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) {
 			showAnswers();
@@ -544,6 +553,47 @@ public class ExamQuestionFragment extends SherlockFragment {
 				}
 			}
 		}
+		
+		Log.d("ExamQuestionFragment", "Setting up button");
+		Button buttonNextQuestion = (Button) activity.findViewById(R.id.button_next);
+		buttonNextQuestion.setOnClickListener( new View.OnClickListener() {
+			public void onClick(View v) {
+				Log.d("ExamQuestionFragment", "Next button pressed");
+				if ( questionId >= ExamTrainer.getAmountOfItems() ) {
+					if(ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW) {
+						//quit review
+					} else {
+						showDialog(ExamQuestionFragment.DIALOG_ENDOFEXAM_ID);
+					}
+				} else {
+					listener.onButtonClickListener(ExamQuestionFragment.this, questionId++);
+				}
+			}
+		});
+
+		Button buttonPrevQuestion = (Button) activity.findViewById(R.id.button_prev);
+		buttonPrevQuestion.setOnClickListener( new View.OnClickListener() {
+			public void onClick(View v) {
+				listener.onButtonClickListener(ExamQuestionFragment.this, questionId--);
+			}
+		});
+		
+		if( this.questionId >= ExamTrainer.getAmountOfItems() ) {
+			if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW) {
+				buttonNextQuestion.setText(R.string.End_review);
+			} else {
+				buttonNextQuestion.setText(R.string.End_exam);
+			}
+		} else {
+			buttonNextQuestion.setText(R.string.Next);
+		}
+
+		if( this.questionId == 1 ) {
+			buttonPrevQuestion.setEnabled(false);
+		} else {
+			buttonPrevQuestion.setEnabled(true);
+		}
+		
 		examinationDbHelper.close();
 	}
 }

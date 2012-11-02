@@ -3,10 +3,20 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
+    <Button
+        android:id="@+id/button_start_exam"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/start_a_new_exam"
+        android:textSize="@dimen/textSizeDefault"
+        android:visibility="gone" />
+
     <GridView
         android:id="@+id/review_exam_grid"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_above="@id/button_start_exam"
         android:background="@color/transparent_background"
         android:cacheColorHint="#00000000"
         android:columnWidth="@dimen/columnWidthDefault"
