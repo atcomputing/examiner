@@ -39,7 +39,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 	private ExamOverviewFragment examOverviewFragment;
 	private ExamReviewFragment examReviewFragment;
 	private ExamSelectFragment examSelectFragment;
-
+	
 	private class ReceiveBroadcast extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
@@ -61,12 +61,16 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 
 	public void onResume() {
 		super.onResume();
+		Log.d("ExamActivity", "onResume()");
+		
 		IntentFilter filter = new IntentFilter(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED);
 		this.registerReceiver(this.receiveBroadcast, filter);
 		setTitle(ExamTrainer.getExamTitle());
 
 		FragmentManager fm = getSupportFragmentManager();
 		fm.addOnBackStackChangedListener(this);
+		
+		setActiveFragment();
 	}
 
 	public void onPause() {
@@ -86,8 +90,6 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 
 		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) {
 			fm.popBackStack(ExamTrainer.ExamTrainerMode.EXAM_REVIEW.name(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-		} else if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.CALCULATING_SCORE ) {
-			fm.popBackStack();
 		} else {
 			fm.popBackStack();
 		}
@@ -95,7 +97,19 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		
 	}
 
-	private void setActiveFragment(Fragment fragment) {
+	private void setActiveFragment() {
+		FragmentManager fm = getSupportFragmentManager();
+		int currentBackStackEntryCount = fm.getBackStackEntryCount();
+
+		if( currentBackStackEntryCount == 0 ) {
+			finish();
+			return;
+		}
+
+		BackStackEntry bse = fm.getBackStackEntryAt(currentBackStackEntryCount-1);
+		String fragmentName = bse.getName();
+		Fragment fragment = fm.findFragmentByTag(fragmentName);
+		
 		if( fragment instanceof ExamQuestionFragment ) {
 			this.examQuestionFragment = (ExamQuestionFragment) fragment;
 		} else if ( fragment instanceof ExamReviewFragment ) {
@@ -203,8 +217,6 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 	}
 
 	public void onExamEnd() {
-		FragmentManager fm = getSupportFragmentManager();
-		fm.popBackStack(ExamTrainer.ExamTrainerMode.EXAM.name(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		startCalculateScoreActivity();
 	}
 
@@ -238,16 +250,6 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 	}
 
 	public void onBackStackChanged() {
-		FragmentManager fm = getSupportFragmentManager();
-		int currentBackStackEntryCount = fm.getBackStackEntryCount();
-
-		if( currentBackStackEntryCount == 0 ) {
-			finish();
-			return;
-		}
-
-		BackStackEntry bse = fm.getBackStackEntryAt(currentBackStackEntryCount-1);
-		String fragmentName = bse.getName();
-		setActiveFragment(fm.findFragmentByTag(fragmentName));
+		setActiveFragment();
 	}
 }
