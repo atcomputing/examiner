@@ -45,7 +45,7 @@ import com.actionbarsherlock.view.MenuItem;
  * @author martijn brekhof
  *
  */
-public class ExamQuestionFragment extends SherlockFragment {
+public class ExamQuestionFragment extends AbstractFragment {
 	public static final int DIALOG_ENDOFEXAM_ID = 1;
 	public static final int DIALOG_SHOW_HINT_ID = 2;
 	public static final int DIALOG_QUITEXAM_ID = 3;
@@ -90,7 +90,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 		}
 	}
 
-	private ExamQuestionListener listener;
+	private ExamQuestionListener examQuestionListener;
 
 	public interface ExamQuestionListener {
 		/**
@@ -102,13 +102,6 @@ public class ExamQuestionFragment extends SherlockFragment {
 		 * Called when user answered last question 
 		 */
 		public void onExamEnd();
-		
-		/**
-		 * Called when next or prev button in fragment is clicked
-		 * @param fragment
-		 * @param this.questionId identifier of the question that should be shown
-		 */
-		public void onButtonClickListener(SherlockFragment fragment, long questionId);
 	}
 
 	@Override
@@ -117,7 +110,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 
 		// Make sure activity implemented ExamQuestionListener
 		try {
-			this.listener = (ExamQuestionListener) activity;
+			this.examQuestionListener = (ExamQuestionListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement ExamQuestionListener");
@@ -138,9 +131,9 @@ public class ExamQuestionFragment extends SherlockFragment {
 
 		myHandler = new MyHandler(this);
 
-		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
-			this.listener.onExamEnd();
-		}
+//		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
+//			this.examQuestionListener.onExamEnd();
+//		}
 
 		if( this.questionId == 1 ) {
 			UsageDialog usageDialog = UsageDialog.newInstance(activity, R.string.Usage_Dialog_Press_menu_to_quit_the_exam_or_show_a_hint_if_available);
@@ -250,10 +243,10 @@ public class ExamQuestionFragment extends SherlockFragment {
 
 				public void run() {
 					if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) {
-						listener.onExamEnd();
+						examQuestionListener.onExamEnd();
 					} 
 					else {
-						listener.onStopExam();
+						examQuestionListener.onStopExam();
 					}
 				}
 			});
@@ -269,13 +262,13 @@ public class ExamQuestionFragment extends SherlockFragment {
 			timeLimitReachedDialog.setPositiveButton(R.string.calculate_score, new Runnable() {
 
 				public void run() {
-					listener.onExamEnd();
+					examQuestionListener.onExamEnd();
 				}
 			});
 			timeLimitReachedDialog.setNegativeButton(R.string.Quit, new Runnable() {
 
 				public void run() {
-					listener.onStopExam();
+					examQuestionListener.onStopExam();
 				}
 			});
 			timeLimitReachedDialog.show(getFragmentManager(), "TimeLimitReachedDialog");
@@ -285,7 +278,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 			quitExamDialog.setPositiveButton(R.string.Quit, new Runnable() {
 
 				public void run() {
-					listener.onStopExam();
+					examQuestionListener.onStopExam();
 				}
 			});
 			quitExamDialog.setNegativeButton(R.string.resume, new Runnable() {
@@ -552,6 +545,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 
 		if( this.examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_MULTIPLE_CHOICE)) {
 			LinearLayout v_layout = (LinearLayout) activity.findViewById(R.id.question_multiplechoice_linear_layout);
+			v_layout.removeAllViews();
 			createChoicesLayout(v_layout);
 			HorizontalScrollView sv = (HorizontalScrollView) activity.findViewById(R.id.question_multiplechoice_horizontalScrollView);
 			sv.setVisibility(View.VISIBLE);
@@ -564,7 +558,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 		Button buttonNextQuestion = (Button) activity.findViewById(R.id.button_next);
 		buttonNextQuestion.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
-				Log.d("ExamQuestionFragment", "Next button pressed");
+				saveScore();
 				if ( questionId >= ExamTrainer.getAmountOfItems() ) {
 					if(ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW) {
 						//quit review
@@ -572,7 +566,7 @@ public class ExamQuestionFragment extends SherlockFragment {
 						showDialog(ExamQuestionFragment.DIALOG_ENDOFEXAM_ID);
 					}
 				} else {
-					listener.onButtonClickListener(ExamQuestionFragment.this, ++questionId);
+					abstractFragmentListener.onButtonClickListener(ExamQuestionFragment.this, ++questionId);
 				}
 			}
 		});
@@ -580,7 +574,8 @@ public class ExamQuestionFragment extends SherlockFragment {
 		Button buttonPrevQuestion = (Button) activity.findViewById(R.id.button_prev);
 		buttonPrevQuestion.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
-				listener.onButtonClickListener(ExamQuestionFragment.this, --questionId);
+				saveScore();
+				abstractFragmentListener.onButtonClickListener(ExamQuestionFragment.this, --questionId);
 			}
 		});
 		
@@ -601,5 +596,11 @@ public class ExamQuestionFragment extends SherlockFragment {
 		}
 		
 		showPreviouslySetChoices();
+	}
+
+	@Override
+	public void updateView() {
+		// TODO Auto-generated method stub
+		
 	}
 }

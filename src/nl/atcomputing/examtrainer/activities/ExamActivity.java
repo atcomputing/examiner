@@ -2,14 +2,13 @@ package nl.atcomputing.examtrainer.activities;
 
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
+import nl.atcomputing.examtrainer.fragments.AbstractFragment;
+import nl.atcomputing.examtrainer.fragments.AbstractFragment.FragmentListener;
 import nl.atcomputing.examtrainer.fragments.ExamOverviewFragment;
-import nl.atcomputing.examtrainer.fragments.ExamOverviewFragment.ExamOverviewListener;
 import nl.atcomputing.examtrainer.fragments.ExamQuestionFragment;
 import nl.atcomputing.examtrainer.fragments.ExamQuestionFragment.ExamQuestionListener;
 import nl.atcomputing.examtrainer.fragments.ExamReviewFragment;
-import nl.atcomputing.examtrainer.fragments.ExamReviewFragment.ExamReviewListener;
 import nl.atcomputing.examtrainer.fragments.ExamSelectFragment;
-import nl.atcomputing.examtrainer.fragments.ExamSelectFragment.SelectExamListener;
 import nl.atcomputing.examtrainer.scorecalculation.ShowScoreActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -26,7 +25,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 /**
  * @author martijn brekhof
@@ -34,8 +32,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
  */
 
 public class ExamActivity extends SherlockFragmentActivity 
-implements ExamQuestionListener, ExamReviewListener, ExamOverviewListener, SelectExamListener,
-OnBackStackChangedListener {
+implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 
 	private ReceiveBroadcast receiveBroadcast;
 	private ExamQuestionFragment examQuestionFragment;
@@ -46,7 +43,10 @@ OnBackStackChangedListener {
 	private class ReceiveBroadcast extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-
+			String action = intent.getAction();
+			if( action.contentEquals(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED) ) {
+				examOverviewFragment.updateView();
+			}
 		}
 	}
 
@@ -65,11 +65,6 @@ OnBackStackChangedListener {
 		this.registerReceiver(this.receiveBroadcast, filter);
 		setTitle(ExamTrainer.getExamTitle());
 
-		//if mode is exam
-		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM ) {
-			//fragment.setupTimer();
-		}
-
 		FragmentManager fm = getSupportFragmentManager();
 		fm.addOnBackStackChangedListener(this);
 	}
@@ -82,22 +77,30 @@ OnBackStackChangedListener {
 	}
 
 	public void onBackPressed() {
+		FragmentManager fm = getSupportFragmentManager();
+
 		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM ) {
 			examQuestionFragment.showDialog(ExamQuestionFragment.DIALOG_QUITEXAM_ID);
 			return;
 		}
 
-		FragmentManager fm = getSupportFragmentManager();
-		fm.popBackStack();
+		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) {
+			fm.popBackStack(ExamTrainer.ExamTrainerMode.EXAM_REVIEW.name(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		} else if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.CALCULATING_SCORE ) {
+			fm.popBackStack();
+		} else {
+			fm.popBackStack();
+		}
+		
+		
 	}
 
 	private void setActiveFragment(Fragment fragment) {
 		if( fragment instanceof ExamQuestionFragment ) {
 			this.examQuestionFragment = (ExamQuestionFragment) fragment;
-			ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM);
 		} else if ( fragment instanceof ExamReviewFragment ) {
 			this.examReviewFragment = (ExamReviewFragment) fragment;
-			ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM_REVIEW);
+			ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.SHOW_EXAM_REVIEW);
 		} else if ( fragment instanceof ExamOverviewFragment ) {
 			this.examOverviewFragment = (ExamOverviewFragment) fragment;
 			ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.SHOW_EXAM_OVERVIEW);
@@ -108,11 +111,10 @@ OnBackStackChangedListener {
 	}
 
 	private void startCalculateScoreActivity() {
-		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.ENDOFEXAM);
+		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.CALCULATING_SCORE);
 		Intent intent = new Intent(ExamActivity.this, ShowScoreActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
-		finish();
 	}
 
 	private void startExam() {
@@ -147,9 +149,9 @@ OnBackStackChangedListener {
 		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM);
 		showQuestionFragment(questionId);
 	}
-
+	
 	private void showQuestionFragment(long number) {
-		String mode = ExamTrainer.ExamTrainerMode.EXAM.name();
+		String mode = ExamTrainer.getExamMode().name();
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 		this.examQuestionFragment = new ExamQuestionFragment();
@@ -185,7 +187,6 @@ OnBackStackChangedListener {
 	private void showExamReviewFragment(long id) {
 		String mode = ExamTrainer.ExamTrainerMode.SHOW_EXAM_REVIEW.name();
 		ExamTrainer.setScoresId(id);
-		//		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.SHOW_SCORE_OVERVIEW);
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 		this.examReviewFragment = new ExamReviewFragment();
@@ -208,12 +209,14 @@ OnBackStackChangedListener {
 	}
 
 	public void onItemClickListener(long id) {
-		if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW) {
+		Log.d("ExamActivity", "onItemClickListener: id="+id+", ExamMode="+ExamTrainer.getExamMode().name());
+		if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_EXAM_REVIEW) {
 			int amountOfQuestionsAnswered = this.examReviewFragment.getAmountOfQuestionsAnswered();
 			if( amountOfQuestionsAnswered < ExamTrainer.getAmountOfItems() ) {
 				Toast.makeText(this, R.string.Reviewing_questions_is_only_available_after_completing_the_exam,
 						Toast.LENGTH_SHORT).show();
 			} else {
+				ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM_REVIEW);
 				showQuestionFragment(id);
 			}
 		} else if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_EXAM_OVERVIEW) {
@@ -224,7 +227,7 @@ OnBackStackChangedListener {
 		}
 	}
 
-	public void onButtonClickListener(SherlockFragment fragment, long id) {
+	public void onButtonClickListener(AbstractFragment fragment, long id) {
 		if( fragment instanceof ExamOverviewFragment ) {
 			startExam();
 		} else if ( fragment instanceof ExamQuestionFragment ) {
@@ -237,7 +240,7 @@ OnBackStackChangedListener {
 	public void onBackStackChanged() {
 		FragmentManager fm = getSupportFragmentManager();
 		int currentBackStackEntryCount = fm.getBackStackEntryCount();
-		
+
 		if( currentBackStackEntryCount == 0 ) {
 			finish();
 			return;
@@ -247,6 +250,4 @@ OnBackStackChangedListener {
 		String fragmentName = bse.getName();
 		setActiveFragment(fm.findFragmentByTag(fragmentName));
 	}
-
-
 }

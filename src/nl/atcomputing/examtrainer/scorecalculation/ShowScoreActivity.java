@@ -37,7 +37,7 @@ public class ShowScoreActivity extends Activity {
 		this.renderer = new GLSurfaceViewRenderer(this);
 		this.glView.setRenderer(this.renderer);
 
-		if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.CALCULATE_SCORE ) {
+		if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.CALCULATING_SCORE ) {
 			ShowScoreActivity.this.calculateScore = (CalculateScore) getLastNonConfigurationInstance();
 			if( ( ShowScoreActivity.this.calculateScore != null ) && 
 					( ShowScoreActivity.this.calculateScore.getStatus() != AsyncTask.Status.FINISHED) ) {
@@ -103,7 +103,7 @@ public class ShowScoreActivity extends Activity {
 
 	protected void showResult() {
 		int score = 0;
-		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.CALCULATE_SCORE);
+		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.CALCULATING_SCORE);
 
 		ExaminationDbAdapter examinationDbHelper;
 		examinationDbHelper = new ExaminationDbAdapter(this);

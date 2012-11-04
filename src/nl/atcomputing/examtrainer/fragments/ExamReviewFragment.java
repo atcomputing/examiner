@@ -24,38 +24,14 @@ import com.actionbarsherlock.app.SherlockFragment;
  * @author martijn brekhof
  *
  */
-public class ExamReviewFragment extends SherlockFragment {
+public class ExamReviewFragment extends AbstractFragment {
 	public static final String TAG = "ExamReviewActivity";
 	private GridView scoresGrid;
 	private ExamReviewAdapter adapter; 
 
-	private ExamReviewListener listener;
-
-	public interface ExamReviewListener {
-		/**
-		 * Called when user selects a question number
-		 */
-		public void onItemClickListener(long questionId);
-
-		/**
-		 * Called when user clicks the resume/start exam button
-		 * @param fragment
-		 * @param examId
-		 */
-		public void onButtonClickListener(SherlockFragment fragment, long examId);
-	}
-
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-
-		// Make sure activity implemented ExamQuestionListener
-		try {
-			this.listener = (ExamReviewListener) activity;
-		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement ExamReviewListener");
-		}
 
 		setHasOptionsMenu(true);
 	}
@@ -85,7 +61,7 @@ public class ExamReviewFragment extends SherlockFragment {
 			buttonStartExam.setVisibility(View.VISIBLE);
 			buttonStartExam.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
-					listener.onButtonClickListener(ExamReviewFragment.this, ExamTrainer.getExamId());
+					abstractFragmentListener.onButtonClickListener(ExamReviewFragment.this, ExamTrainer.getExamId());
 				}
 			});
 		}
@@ -128,9 +104,15 @@ public class ExamReviewFragment extends SherlockFragment {
 		scoresGrid.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM_REVIEW);
-				listener.onItemClickListener(id);
+				abstractFragmentListener.onItemClickListener(id);
 			}
 		});
+	}
+
+
+	@Override
+	public void updateView() {
+		// TODO Auto-generated method stub
+		
 	}
 }

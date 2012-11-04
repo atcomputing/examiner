@@ -1,15 +1,10 @@
 package nl.atcomputing.examtrainer.fragments;
 
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.activities.ExamActivity;
-import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.activities.ManageExamsActivity;
 import nl.atcomputing.examtrainer.adapters.SelectExamAdapter;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
-import nl.atcomputing.examtrainer.fragments.ExamOverviewFragment.ExamOverviewListener;
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -24,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -34,31 +28,15 @@ import com.actionbarsherlock.view.MenuItem;
  *
  */
 
-public class ExamSelectFragment extends SherlockFragment {
+public class ExamSelectFragment extends AbstractFragment {
 	private SelectExamAdapter adap;
 	private TextView clickOnManageExams;
 	private TextView noExamsAvailable;
-	private SelectExamListener listener;
-	
-	public interface SelectExamListener {
-		/**
-		 * Called when user selects a score
-		 */
-		public void onItemClickListener(long examId);
-	}
 	
 	@Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        
-        // Make sure activity implemented ExamQuestionListener
-        try {
-            this.listener = (SelectExamListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement SelectExamListener");
-        }
-        
+       
         setHasOptionsMenu(true);
     }
 	
@@ -137,7 +115,7 @@ public class ExamSelectFragment extends SherlockFragment {
 		selectExam.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				listener.onItemClickListener(id);
+				abstractFragmentListener.onItemClickListener(id);
 			}
 		});
 		
@@ -150,5 +128,11 @@ public class ExamSelectFragment extends SherlockFragment {
 			noExamsAvailable.setVisibility(View.VISIBLE);
 			clickOnManageExams.setVisibility(View.VISIBLE);
 		}
+	}
+
+	@Override
+	public void updateView() {
+		// TODO Auto-generated method stub
+		
 	}
 }

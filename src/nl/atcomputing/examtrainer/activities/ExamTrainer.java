@@ -17,7 +17,13 @@ import android.text.format.Time;
 public final class ExamTrainer {
 
 	public enum ExamTrainerMode {
-		SELECT_EXAM, EXAM, EXAM_REVIEW, ENDOFEXAM, CALCULATE_SCORE, SHOW_EXAM_OVERVIEW, SHOW_EXAM_REVIEW
+		SELECT_EXAM, 
+		EXAM, 
+		EXAM_REVIEW, 
+		ENDOFEXAM, 
+		CALCULATING_SCORE, 
+		SHOW_EXAM_OVERVIEW, 
+		SHOW_EXAM_REVIEW
 	}
 
 	public static String BROADCAST_ACTION_EXAMLIST_UPDATED = "nl.atcomputing.examtrainer.examlistupdated";
