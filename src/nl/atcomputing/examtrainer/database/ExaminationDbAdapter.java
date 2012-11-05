@@ -464,8 +464,8 @@ public class ExaminationDbAdapter {
 	 * @param answer		The answer
 	 * @return true if succeeded, false otherwise
 	 */
-	public boolean setScoresAnswersMultipleChoice(long scoresId, long questionId, String answer) {	
-		//Check if answer is already in the database
+	//Check if answer is already in the database
+	public boolean setScoresAnswersMultipleChoice(long scoresId, long questionId, String answer) {
 		if( ! scoresAnswerPresent(scoresId, questionId, answer) ) {
 			return insertScoresAnswer(scoresId, questionId, answer);
 		}
@@ -523,6 +523,9 @@ public class ExaminationDbAdapter {
 		answersCountCursor.close();
 		correctAnswersCountCursor.close();
 		
+		Log.d("ExaminationDbAdapter", "checkScoresAnswersMultipleChoice: answersCount="+answersCount+
+				", correctAnswersCount="+correctAnswersCount);
+		
 		if ( answersCount == correctAnswersCount ) {
 			String correctAnswersQuestionId = ExaminationDatabaseHelper.Answers.TABLE_NAME + "." + ExaminationDatabaseHelper.Answers.COLUMN_NAME_QUESTION_ID;
 			String correctAnswersAnswer = ExaminationDatabaseHelper.Answers.TABLE_NAME + "." + ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER;
@@ -544,6 +547,7 @@ public class ExaminationDbAdapter {
 				;
 			String[] sqlArgs = new String[] { Long.toString(questionId), Long.toString(questionId)
 					, Long.toString(scoresId) };
+			Log.d("ExaminationDbAdapter", "checkScoresAnswersMultipleChoice: sqlQuery="+sqlQuery);
 		    Cursor mCursor = db.rawQuery(sqlQuery, sqlArgs);
 		    int count = mCursor.getCount();
 		    mCursor.close();

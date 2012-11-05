@@ -59,7 +59,8 @@ public class ExamTrainerDbAdapter {
 				new String[] {
 				ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE,
 		},
-		ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE + "=" + "\"" + exam.getTitle() + "\"", 
+		ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE + "=" + "\"" + exam.getTitle() + "\"" +
+		" AND " + ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR + "=" + "\"" + exam.getAuthor() + "\"", 
 		null, null, null, null, null);
 		if ( cursor != null ) {
 			boolean res = cursor.getCount() > 0;
@@ -86,6 +87,11 @@ public class ExamTrainerDbAdapter {
 	public boolean deleteExam(long rowId) {
 		return db.delete(ExamTrainerDatabaseHelper.Exams.TABLE_NAME, 
 				ExamTrainerDatabaseHelper.Exams._ID + "=" + rowId, null) > 0;
+	}
+	
+	public boolean deleteAllExams() {
+		return db.delete(ExamTrainerDatabaseHelper.Exams.TABLE_NAME, 
+				null, null) > 0;
 	}
 	
 	public boolean setInstallationState(long rowId, State state) {

@@ -213,6 +213,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 	public void onStopExam() {
 		FragmentManager fm = getSupportFragmentManager();
 		fm.popBackStack(ExamTrainer.ExamTrainerMode.EXAM.name(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		fm.popBackStack(ExamTrainer.ExamTrainerMode.EXAM_REVIEW.name(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.SHOW_EXAM_OVERVIEW);
 	}
 
@@ -221,7 +222,6 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 	}
 
 	public void onItemClickListener(long id) {
-		Log.d("ExamActivity", "onItemClickListener: id="+id+", ExamMode="+ExamTrainer.getExamMode().name());
 		if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_EXAM_REVIEW) {
 			int amountOfQuestionsAnswered = this.examReviewFragment.getAmountOfQuestionsAnswered();
 			if( amountOfQuestionsAnswered < ExamTrainer.getAmountOfItems() ) {

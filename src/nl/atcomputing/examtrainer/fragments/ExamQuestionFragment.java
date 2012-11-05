@@ -85,6 +85,9 @@ public class ExamQuestionFragment extends AbstractFragment {
 				String timeLeft = dateFormatGmt.format(date);
 				timeLimitTextView.setText(timeLeft);
 			} else if ( key == HANDLER_MESSAGE_VALUE_TIMELIMITREACHED ) {
+				Date date = new Date(0);
+				String timeLeft = dateFormatGmt.format(date);
+				timeLimitTextView.setText(timeLeft);
 				fragment.showDialog(DIALOG_TIMELIMITREACHED_ID);
 			}
 		}
@@ -131,9 +134,9 @@ public class ExamQuestionFragment extends AbstractFragment {
 
 		myHandler = new MyHandler(this);
 
-//		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
-//			this.examQuestionListener.onExamEnd();
-//		}
+		//		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
+		//			this.examQuestionListener.onExamEnd();
+		//		}
 
 		if( this.questionId == 1 ) {
 			UsageDialog usageDialog = UsageDialog.newInstance(activity, R.string.Usage_Dialog_Press_menu_to_quit_the_exam_or_show_a_hint_if_available);
@@ -194,7 +197,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 		setupTimer();
 		setupLayout();
 	}
-	
+
 	public void onPause() {
 		super.onPause();
 		if ( timer != null ) {
@@ -233,7 +236,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 	public long getQuestionId() {
 		return this.questionId;
 	}
-	
+
 	public void showDialog(int id) {
 		final Activity activity = getActivity();
 		switch(id) {
@@ -262,6 +265,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 			timeLimitReachedDialog.setPositiveButton(R.string.calculate_score, new Runnable() {
 
 				public void run() {
+					setTheRestOfQuestionsToFalse();
 					examQuestionListener.onExamEnd();
 				}
 			});
@@ -336,6 +340,20 @@ public class ExamQuestionFragment extends AbstractFragment {
 		}
 	}
 
+	private void setTheRestOfQuestionsToFalse() {
+		ExaminationDbAdapter examinationDbHelper;
+		examinationDbHelper = new ExaminationDbAdapter(getActivity());
+		try {
+			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+		} catch (SQLiteException e) {
+			throw(e);
+		}
+		for( long i = questionId + 1; i < ExamTrainer.getAmountOfItems(); i++ ) {
+			examinationDbHelper.setResultPerQuestion(ExamTrainer.getScoresId(), i, false);
+		}
+		examinationDbHelper.close();
+	}
+	
 	private void showAnswers() {
 		Activity activity = getActivity();
 
@@ -382,8 +400,10 @@ public class ExamQuestionFragment extends AbstractFragment {
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		if( examQuestion.getType().equalsIgnoreCase(ExamQuestion.TYPE_OPEN) ) {
 			String userAnswer = this.editText.getText().toString();
-			examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getScoresId(), this.questionId,
-					userAnswer);
+			if( userAnswer.length() > 0 ) {
+				examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getScoresId(), this.questionId,
+						userAnswer);
+			}
 			Cursor correctAnswers = examinationDbHelper.getAnswers(this.questionId);
 			if( correctAnswers.getCount() < 1 ) {
 				examinationDbHelper.close();
@@ -433,7 +453,6 @@ public class ExamQuestionFragment extends AbstractFragment {
 						examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 						examinationDbHelper.setScoresAnswersMultipleChoice(ExamTrainer.getScoresId(), questionId, answer);
 						examinationDbHelper.close();
-
 					} else {
 						ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(activity);
 						examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
@@ -515,13 +534,13 @@ public class ExamQuestionFragment extends AbstractFragment {
 		}
 		examinationDbHelper.close();
 	}
-	
+
 	private void setupLayout() {
 		Activity activity = getActivity();
 		String text;
 
 		Log.d("ExamQuestionFragment", "Setting up layout");
-		
+
 		timeLimitTextView = (TextView) activity.findViewById(R.id.textExamTime);
 
 		LinearLayout layout = (LinearLayout) activity.findViewById(R.id.question_layout);
@@ -578,7 +597,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 				abstractFragmentListener.onButtonClickListener(ExamQuestionFragment.this, --questionId);
 			}
 		});
-		
+
 		if( this.questionId >= ExamTrainer.getAmountOfItems() ) {
 			if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW) {
 				buttonNextQuestion.setText(R.string.End_review);
@@ -594,13 +613,13 @@ public class ExamQuestionFragment extends AbstractFragment {
 		} else {
 			buttonPrevQuestion.setEnabled(true);
 		}
-		
+
 		showPreviouslySetChoices();
 	}
 
 	@Override
 	public void updateView() {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

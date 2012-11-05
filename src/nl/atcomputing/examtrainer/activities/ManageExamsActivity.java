@@ -256,6 +256,15 @@ public class ManageExamsActivity extends SherlockFragmentActivity implements Man
 						xmlPullExamListParser = new XmlPullExamListParser(this, url);
 						xmlPullExamListParser.parse();
 						ArrayList<Exam> exams = xmlPullExamListParser.getExamList();
+						
+						/**
+						 * if we are able to get a list of exams
+						 * first delete old list of exams from database 
+						 */
+						if( exams.size() > 0 ) { 
+							examTrainerDbHelper.deleteAllExams();
+						}
+						
 						for ( Exam exam : exams ) {
 							if ( ! examTrainerDbHelper.checkIfExamAlreadyInDatabase(exam) ) {
 								exam.addToDatabase(this);
