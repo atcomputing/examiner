@@ -13,6 +13,7 @@ import nl.atcomputing.examtrainer.examparser.UninstallExamAsyncTask;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,8 +30,6 @@ import com.actionbarsherlock.view.MenuItem;
  */
 
 public class ManageExamsFragment extends AbstractFragment implements ManageExamsAdapterListener {
-	private ManageExamsAdapter adap;
-	static final int DIALOG_CONFIRMATION_ID = 0;
 	
 	@Override
 	public void onAttach(Activity activity) {
@@ -45,16 +44,11 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 		return inflater.inflate(R.layout.manageexams, container, false);
 	}
 
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-	}
-
 	public void onResume() {
 		super.onResume();
 		
 		cleanupDatabaseStates();
-		updateListView();
+		setupView();
 	}
 
 	@Override
@@ -72,7 +66,7 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.manageexam_menu_get_new_exams:
-			updateListView();
+			updateView();
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -107,22 +101,24 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 		examTrainerDbHelper.close();
 	}
 
-	private void updateListView() {
+	private void setupView() {
 		Activity activity = getActivity();
 
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
 		examTrainerDbHelper.open();
 		Cursor cursor = examTrainerDbHelper.getAllExams();
 		examTrainerDbHelper.close();
-		this.adap = new ManageExamsAdapter(activity, this, R.layout.manageexams_entry, cursor);
+		ManageExamsAdapter adap = new ManageExamsAdapter(activity, this, R.layout.manageexams_entry, cursor);
 		ListView lv = (ListView) activity.findViewById(R.id.manageexams_listview);
-		lv.setAdapter(this.adap);	
+		lv.setAdapter(adap);	
 	}
 
 	
 
 	public void onButtonClick(final View v, final long examID) {
 		final Activity activity = getActivity();
+		
+		Log.d("ManageExamsFragment", "onButtonClick: examID="+examID);
 		
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
 		examTrainerDbHelper.open();
@@ -156,6 +152,6 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 
 	@Override
 	public void updateView() {
-		updateListView();
+		setupView();
 	}
 }

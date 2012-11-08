@@ -30,14 +30,14 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 	private long examDate;
 	private TextView tvProgress;
 	private String url;
-	
+
 	public InstallExamAsyncTask(Context context, TextView progress, long examID) {
 		super();
 		this.examID = examID;
 		this.context = context;
 		this.tvProgress = progress;
 	}
-	
+
 	public long getExamID() {
 		return this.examID;
 	}
@@ -45,21 +45,23 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 	public void setProgressTextView(TextView tv) {
 		this.tvProgress = tv;
 	}
-	
+
 	protected void onPreExecute() {
-		this.tvProgress.setText(R.string.Installing_exam);
-		
+		if( this.tvProgress != null ) {
+			this.tvProgress.setText(R.string.Installing_exam);
+		}
+
 		ExamTrainerDbAdapter examTrainerDbHelperAdapter = new ExamTrainerDbAdapter(this.context);
 		examTrainerDbHelperAdapter.open();
 		if(! examTrainerDbHelperAdapter.setInstallationState(this.examID, ExamTrainerDbAdapter.State.INSTALLING)) {
 			Toast.makeText(this.context, "Failed to set exam " + this.examID + " to state installing.", Toast.LENGTH_LONG).show();
 		}
 		this.examDate = System.currentTimeMillis();
-		
+
 		this.examTitle = examTrainerDbHelperAdapter.getExamTitle(this.examID);
-		
+
 		this.url = examTrainerDbHelperAdapter.getURL(this.examID);
-				
+
 		examTrainerDbHelperAdapter.setExamInstallationDate(this.examID, this.examDate);
 		examTrainerDbHelperAdapter.close();
 
@@ -68,21 +70,21 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 
 	protected String doInBackground(String... dummy) {
 		String returnMessage = "";
-		
+
 		try {
 			URL url = new URL(this.url);
 			XmlPullExamParser xmlPullFeedParser = new XmlPullExamParser(this.context, url);
 			xmlPullFeedParser.parseExam();
-			
+
 			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this.context);
 			examinationDbHelper.open(this.examTitle, this.examDate);
 
 			ArrayList<ExamQuestion> examQuestions = xmlPullFeedParser.getExam();
-			
+
 			int total = examQuestions.size();
 			int count = 0;
 			int percentage = 0;
-			
+
 			for( ExamQuestion examQuestion: examQuestions ) {
 				if( isCancelled() ) {
 					Log.d("InstallExamAsyncTask", "doInBackground: isCancelled()=true");
@@ -114,7 +116,9 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 	}
 
 	protected void onProgressUpdate(Integer... progress) {
-		this.tvProgress.setText(progress[0] + "%");
+		if( this.tvProgress != null ) {
+			this.tvProgress.setText(progress[0] + "%");
+		}
 	}
 
 	protected void onPostExecute(String errorMessage) {
@@ -147,9 +151,9 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 		super.onCancelled();
 		DatabaseManager dm = new DatabaseManager(this.context);
 		dm.deleteExam(this.examID);
-		
+
 		ExamTrainer.removeInstallationThread(this.examID);
 		Log.d("InstallExamAsyncTask", "onCancelled: cancelled: "+this.examID);
 	}
-	
+
 }

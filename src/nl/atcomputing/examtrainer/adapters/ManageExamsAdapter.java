@@ -7,9 +7,9 @@ import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
-import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,21 +30,18 @@ public class ManageExamsAdapter extends BaseAdapter  {
 	private ManageExamsAdapterListener listener;
 	private int layout;
 	private Cursor cursor;
-	private HashMap<Long, ViewHolder> viewHolderForPositionCache;
 
 	public interface ManageExamsAdapterListener {
 		public void onButtonClick(View v, long examID);
 	}
-	
+
 	public ManageExamsAdapter(Context context, ManageExamsAdapterListener listener, int layout, Cursor c) {
 
 		this.listener = listener;
-		
+
 		this.layout = layout;
 
 		this.cursor = c;
-
-		this.viewHolderForPositionCache = new HashMap<Long, ViewHolder>();
 
 		this.context = context;
 	}
@@ -86,53 +83,36 @@ public class ManageExamsAdapter extends BaseAdapter  {
 			return convertView;
 		}
 
+		ViewHolder holder;
 		int index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID);
-		long examID = row.getLong(index);
+		final long examID = row.getLong(index);
 
-		InstallExamAsyncTask task = ExamTrainer.getInstallExamAsyncTask(examID);
-
-		ViewHolder holder = this.viewHolderForPositionCache.get(examID); 
-
-		if( holder != null ) {
-			if( task != null ) {
-				task.setProgressTextView(holder.installUninstallButton);
-			}
-			return holder.view;
+		if( convertView == null ) {
+			LayoutInflater mInflater = LayoutInflater.from(this.context);
+			convertView = (View) mInflater.inflate(this.layout, parent, false);
+			holder = new ViewHolder();
+			holder.examTitleView = (TextView) convertView.findViewById(R.id.manageExamsEntryTitle);
+			holder.examAuthorView = (TextView) convertView.findViewById(R.id.manageExamsEntryAuthor);
+			holder.installUninstallButton = (Button) convertView.findViewById(R.id.manageExamsDelete);
+			convertView.setTag(holder);
+		} else {
+			holder = (ViewHolder) convertView.getTag();
 		}
 
-		holder = new ViewHolder();
-		holder.examID = examID;
 		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
-		holder.examTitle = row.getString(index);
-		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE);
-		holder.examDate = row.getLong(index);
-		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL);
-		holder.url = row.getString(index);
+		final String examTitle = row.getString(index);
 		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS);
-		holder.examAmountOfItems = row.getInt(index);
+		final int examAmountOfItems = row.getInt(index);
 		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
-		holder.examItemsNeededToPass = row.getInt(index);
+		final int examItemsNeededToPass = row.getInt(index);
 		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR);
-		holder.author = row.getString(index);
+		final String author = row.getString(index);
 		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT);
-		holder.timeLimit = row.getLong(index);
+		final long timeLimit = row.getLong(index);
+		
+		holder.examTitleView.setText(examTitle);
 
-
-		final LayoutInflater mInflater = LayoutInflater.from(this.context);
-		View view = (View) mInflater.inflate(this.layout, parent, false);
-
-		holder.examTitleView = (TextView) view.findViewById(R.id.manageExamsEntryTitle);
-		holder.examAuthorView = (TextView) view.findViewById(R.id.manageExamsEntryAuthor);
-		holder.installUninstallButton = (Button) view.findViewById(R.id.manageExamsDelete);
-		holder.view = view;
-
-		if( task != null ) {
-			task.setProgressTextView(holder.installUninstallButton);
-		}
-
-		holder.examTitleView.setText(holder.examTitle);
-
-		holder.examAuthorView.setText(holder.author);
+		holder.examAuthorView.setText(author);
 
 		holder.installUninstallButton.setEnabled(true);
 
@@ -149,29 +129,27 @@ public class ManageExamsAdapter extends BaseAdapter  {
 			holder.installUninstallButton.setText(R.string.install);
 		}
 
-		final ViewHolder holderReference = holder;
-		
 		holder.installUninstallButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				listener.onButtonClick(v, holderReference.examID);
+				listener.onButtonClick(v, examID);
 			}
 		});
 
-		view.setOnClickListener(new View.OnClickListener() {
+		convertView.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				StringBuffer strBuf = new StringBuffer();
 
-				strBuf.append(holderReference.examTitle + "\n");
+				strBuf.append(examTitle + "\n");
 
 				strBuf.append(context.getString(R.string.questions) + 
-						": " +  holderReference.examAmountOfItems + "\n" +
+						": " +  examAmountOfItems + "\n" +
 						context.getString(R.string.correct_answer_required_to_pass) +
-						": " +  holderReference.examItemsNeededToPass + "\n");
+						": " +  examItemsNeededToPass + "\n");
 
-				if ( holderReference.timeLimit == 0 ) {
+				if ( timeLimit == 0 ) {
 					strBuf.append(context.getString(R.string.No_time_limit));
 				} else {
-					strBuf.append(context.getString(R.string.Time_limit_in_minutes) + ": " + holderReference.timeLimit
+					strBuf.append(context.getString(R.string.Time_limit_in_minutes) + ": " + timeLimit
 							+ " " + context.getString(R.string.minutes));
 				}
 
@@ -179,23 +157,18 @@ public class ManageExamsAdapter extends BaseAdapter  {
 			}
 		});
 
-		this.viewHolderForPositionCache.put(examID, holder);
+		InstallExamAsyncTask task = ExamTrainer.getInstallExamAsyncTask(examID);
 
-		return holder.view;
+		if( task != null ) {
+			task.setProgressTextView(holder.installUninstallButton);
+		}
+		
+		return convertView;
 	}
 
 	class ViewHolder {
-		String examTitle;
-		long examID;
-		long examDate;
-		String url;
-		String author;
-		int examAmountOfItems;
-		int examItemsNeededToPass;
-		long timeLimit;
 		TextView examTitleView;
 		TextView examAuthorView;
 		Button installUninstallButton;
-		View view;
 	}
 }

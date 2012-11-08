@@ -198,6 +198,9 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		} else if ( fragment instanceof ExamSelectFragment ) {
 			this.examSelectFragment = (ExamSelectFragment) fragment;
 			ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.SELECT_EXAM);
+		} else  if ( fragment instanceof ManageExamsFragment ) {
+			this.manageExamsFragment = (ManageExamsFragment) fragment;
+			ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.MANAGE_EXAMS);
 		}
 	}
 
