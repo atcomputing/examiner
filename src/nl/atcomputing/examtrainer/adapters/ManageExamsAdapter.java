@@ -33,7 +33,7 @@ public class ManageExamsAdapter extends BaseAdapter  {
 	private HashMap<Long, ViewHolder> viewHolderForPositionCache;
 
 	public interface ManageExamsAdapterListener {
-		public void onButtonClick(Button button, long examID);
+		public void onButtonClick(View v, long examID);
 	}
 	
 	public ManageExamsAdapter(Context context, ManageExamsAdapterListener listener, int layout, Cursor c) {
@@ -153,7 +153,7 @@ public class ManageExamsAdapter extends BaseAdapter  {
 		
 		holder.installUninstallButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				listener.onButtonClick(holderReference.installUninstallButton, holderReference.examID);
+				listener.onButtonClick(v, holderReference.examID);
 			}
 		});
 

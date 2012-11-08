@@ -1,16 +1,24 @@
 package nl.atcomputing.examtrainer.activities;
 
+import java.net.URL;
+import java.util.ArrayList;
+
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
+import nl.atcomputing.examtrainer.examparser.XmlPullExamListParser;
 import nl.atcomputing.examtrainer.fragments.ExamSelectFragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -48,5 +56,43 @@ public class StartScreenActivity extends Activity {
 		if( tv != null ) {
 			tv.setText(version);
 		}
+		
+		loadLocalExams();
+	}
+	
+	private void loadLocalExams() {
+		int file_index = 0;
+		String[] filenames = null;
+
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
+		examTrainerDbHelper.open();
+		AssetManager assetManager = this.getAssets();
+
+		if( assetManager != null ) {
+			try {
+				XmlPullExamListParser xmlPullExamListParser;
+				filenames = assetManager.list("");
+				int size = filenames.length;
+				for( file_index = 0; file_index < size; file_index++) {
+					String filename = filenames[file_index];
+					if(filename.matches("list.xml")) {
+						URL url = new URL("file:///"+filename);
+						xmlPullExamListParser = new XmlPullExamListParser(this, url);
+						xmlPullExamListParser.parse();
+						ArrayList<Exam> exams = xmlPullExamListParser.getExamList();
+												
+						for ( Exam exam : exams ) {
+							if ( ! examTrainerDbHelper.checkIfExamAlreadyInDatabase(exam) ) {
+								exam.addToDatabase(this);
+							}
+						}
+					}
+				}
+			} catch (Exception e) {
+				Log.d(this.getClass().getName() , "Updating exams failed: Error " + e.getMessage());
+				Toast.makeText(this, "Error: updating exam " + filenames[file_index] + " failed.", Toast.LENGTH_LONG).show();
+			}
+		}
+		examTrainerDbHelper.close();
 	}
 }
