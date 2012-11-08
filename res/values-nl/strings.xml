@@ -94,7 +94,7 @@
 	<string name="Reviewing_questions_is_only_available_after_completing_the_exam">Resultaten bekijken is alleen beschikbaar nadat het examen is voltooid.</string>
 	<string name="Do_not_show_this_message_again">Dit bericht voortaan niet meer laten zien.</string>
 	<string name="Time_limit_exceeded">Tijdslimiet uitgezet.</string>
-	<string name="Usage_Dialog_Time_limit_is_activated_for_this_exam">Gebruik van een tijdslimiet is geactiveerd voor dit examen.\nGebruik settings in de action bar om dit uit te zetten.</string>
+	<string name="Usage_Dialog_Time_limit_is_activated_for_this_exam">Tijdslimiet is geactiveerd voor dit examen.\nGebruik settings (via het menu) om dit uit te zetten.</string>
     <string name="Usage_Dialog_examReviewScreenMessage">Dit is het examenoverzicht.\nDoor een nummer te selecteren wordt de bijbehorende vraag geopend en het juiste antwoord getoond.</string>
 	<string name="Usage_Dialog_Sometimes_the_text_in_the_exhibit_or_choices_is_larger_than_fits_on_screen">Wanneer de tekst langer is dan op het scherm past kun je horizontaal scrollen gebruiken om de rest zichtbaar te maken.</string>
 	<string name="Usage_Dialog_Press_menu_to_quit_the_exam_or_show_a_hint_if_available">U kunt het examen vroegtijdig beëindigen door de exit-knop te selecteren in de action bar.\nHet vraagteken in de action bar kan gebruikt worden om een hint te tonen, indien beschikbaar.</string>

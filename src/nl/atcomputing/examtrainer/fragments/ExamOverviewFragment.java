@@ -29,8 +29,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -128,13 +128,18 @@ public class ExamOverviewFragment extends AbstractFragment {
 	}
 
 	private void deleteSelectedFromDatabase() {
+		final HashMap<Integer, Boolean> itemsChecked = adapter.getItemsChecked();
+		if( itemsChecked.size() == 0 ) {
+			Toast.makeText(getActivity(), R.string.No_exams_selected_to_delete, Toast.LENGTH_SHORT).show();
+			return;
+		}
+		
 		RunThreadWithProgressDialog pd = new RunThreadWithProgressDialog(getActivity(), 
 				new Thread(new Runnable() {
 					public void run() {
 						ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(getActivity());
 						examinationDbHelper.open(ExamTrainer.getExamDatabaseName()); 
-
-						HashMap<Integer, Boolean> itemsChecked = adapter.getItemsChecked();
+				
 						for( Integer key : itemsChecked.keySet() ) {
 							if( itemsChecked.get(key) ) {
 								examinationDbHelper.deleteScore(key);
