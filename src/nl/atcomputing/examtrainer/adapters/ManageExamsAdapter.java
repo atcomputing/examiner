@@ -36,15 +36,9 @@ public class ManageExamsAdapter extends BaseAdapter  {
 		public void onButtonClick(Button button, long examID);
 	}
 	
-	public ManageExamsAdapter(Activity activity, int layout, Cursor c) {
+	public ManageExamsAdapter(Context context, ManageExamsAdapterListener listener, int layout, Cursor c) {
 
-		// Make sure activity implemented ExamQuestionListener
-        try {
-            this.listener = (ManageExamsAdapterListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement ManageExamsAdapterListener");
-        }
+		this.listener = listener;
 		
 		this.layout = layout;
 
@@ -52,7 +46,7 @@ public class ManageExamsAdapter extends BaseAdapter  {
 
 		this.viewHolderForPositionCache = new HashMap<Long, ViewHolder>();
 
-		this.context = (Context) activity;
+		this.context = context;
 	}
 
 	public int getCount() {

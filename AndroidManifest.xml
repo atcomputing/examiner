@@ -39,7 +39,7 @@
             android:exported="false" >
         </activity>
         <activity
-            android:name=".activities.ManageExamsActivity"
+            android:name=".fragments.ManageExamsFragment"
             android:exported="false" />
         <activity
             android:name=".activities.PreferencesActivity"

@@ -1,7 +1,6 @@
 package nl.atcomputing.examtrainer.fragments;
 
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.activities.ManageExamsActivity;
 import nl.atcomputing.examtrainer.adapters.SelectExamAdapter;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import android.app.Activity;
@@ -60,6 +59,18 @@ public class ExamSelectFragment extends AbstractFragment {
 	}
 	
 	@Override
+	public String getTitle() {
+		Activity activity = getActivity();
+		PackageInfo info;
+		try {
+			info = activity.getPackageManager().getPackageInfo("nl.atcomputing.examtrainer", 0);
+			return activity.getString(info.applicationInfo.labelRes);
+		} catch (NameNotFoundException e) {
+			return null;
+		}
+	}
+	
+	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		// TODO Auto-generated method stub
 		inflater.inflate(R.menu.selectexam_menu, menu);
@@ -70,10 +81,6 @@ public class ExamSelectFragment extends AbstractFragment {
 		Activity activity = getActivity();
 		
 		switch (item.getItemId()) {
-		case R.id.selectexam_menu_manage:
-			Intent intent = new Intent(activity, ManageExamsActivity.class);
-			startActivity(intent);
-			break;
 		case R.id.selectexam_menu_about:
 			String version;
 			try {

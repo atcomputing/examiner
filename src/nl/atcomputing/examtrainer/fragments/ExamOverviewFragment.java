@@ -127,6 +127,26 @@ public class ExamOverviewFragment extends AbstractFragment {
 		return true;
 	}
 
+	public void updateView() {
+		Activity activity = getActivity();
+
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
+		examTrainerDbHelper.open();
+		Cursor cursor = examTrainerDbHelper.getExam(ExamTrainer.getExamId());
+		examTrainerDbHelper.close();
+
+		updateHistoryView(cursor);
+		updateExamInfoView(cursor);
+		updateButton(cursor);
+		
+		cursor.close();
+	}
+	
+	@Override
+	public String getTitle() {
+		return ExamTrainer.getExamTitle();
+	}
+	
 	private void deleteSelectedFromDatabase() {
 		final HashMap<Integer, Boolean> itemsChecked = adapter.getItemsChecked();
 		if( itemsChecked.size() == 0 ) {
@@ -186,21 +206,6 @@ public class ExamOverviewFragment extends AbstractFragment {
 		setupHistoryView(cursor);
 		setupExamInfoView(cursor);
 
-		cursor.close();
-	}
-
-	public void updateView() {
-		Activity activity = getActivity();
-
-		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
-		examTrainerDbHelper.open();
-		Cursor cursor = examTrainerDbHelper.getExam(ExamTrainer.getExamId());
-		examTrainerDbHelper.close();
-
-		updateHistoryView(cursor);
-		updateExamInfoView(cursor);
-		updateButton(cursor);
-		
 		cursor.close();
 	}
 

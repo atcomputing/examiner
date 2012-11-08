@@ -22,8 +22,9 @@ public final class ExamTrainer {
 		EXAM_REVIEW, 
 		ENDOFEXAM, 
 		CALCULATING_SCORE, 
-		SHOW_EXAM_OVERVIEW, 
-		SHOW_EXAM_REVIEW
+		EXAM_OVERVIEW, 
+		SHOW_EXAM_REVIEW,
+		MANAGE_EXAMS
 	}
 
 	public static String BROADCAST_ACTION_EXAMLIST_UPDATED = "nl.atcomputing.examtrainer.examlistupdated";

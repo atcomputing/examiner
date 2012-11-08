@@ -9,6 +9,7 @@ import nl.atcomputing.examtrainer.fragments.ExamQuestionFragment;
 import nl.atcomputing.examtrainer.fragments.ExamQuestionFragment.ExamQuestionListener;
 import nl.atcomputing.examtrainer.fragments.ExamReviewFragment;
 import nl.atcomputing.examtrainer.fragments.ExamSelectFragment;
+import nl.atcomputing.examtrainer.fragments.ManageExamsFragment;
 import nl.atcomputing.examtrainer.scorecalculation.ShowScoreActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -26,6 +27,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 /**
  * @author martijn brekhof
  *
@@ -39,13 +41,20 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 	private ExamOverviewFragment examOverviewFragment;
 	private ExamReviewFragment examReviewFragment;
 	private ExamSelectFragment examSelectFragment;
+	private ManageExamsFragment manageExamsFragment;
+	private AbstractFragment activeFragment;
 	
 	private class ReceiveBroadcast extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			if( action.contentEquals(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED) ) {
-				examOverviewFragment.updateView();
+				String mode = ExamTrainer.getExamMode().toString();
+				if( mode.contentEquals(ExamTrainer.ExamTrainerMode.EXAM_OVERVIEW.name()) ) {
+					examOverviewFragment.updateView();
+				} else if( mode.contentEquals(ExamTrainer.ExamTrainerMode.MANAGE_EXAMS.name()) ) {
+					manageExamsFragment.updateView();
+				}
 			}
 		}
 	}
@@ -65,12 +74,12 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		
 		IntentFilter filter = new IntentFilter(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED);
 		this.registerReceiver(this.receiveBroadcast, filter);
-		setTitle(ExamTrainer.getExamTitle());
-
+		
 		FragmentManager fm = getSupportFragmentManager();
 		fm.addOnBackStackChangedListener(this);
 		
 		setActiveFragment();
+		updateActionBarTitle();
 	}
 
 	public void onPause() {
@@ -97,6 +106,68 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		
 	}
 
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.selectexam_menu_manage:
+			showManageExamsFragment();
+		}
+		return super.onOptionsItemSelected(item);
+	}
+	
+	public void onStopExam() {
+		FragmentManager fm = getSupportFragmentManager();
+		fm.popBackStack(ExamTrainer.ExamTrainerMode.EXAM.name(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		fm.popBackStack(ExamTrainer.ExamTrainerMode.EXAM_REVIEW.name(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM_OVERVIEW);
+	}
+
+	public void onExamEnd() {
+		startCalculateScoreActivity();
+	}
+
+	public void onItemClickListener(long id) {
+		if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_EXAM_REVIEW) {
+			int amountOfQuestionsAnswered = this.examReviewFragment.getAmountOfQuestionsAnswered();
+			if( amountOfQuestionsAnswered < ExamTrainer.getAmountOfItems() ) {
+				Toast.makeText(this, R.string.Reviewing_questions_is_only_available_after_completing_the_exam,
+						Toast.LENGTH_SHORT).show();
+			} else {
+				ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM_REVIEW);
+				showQuestionFragment(id);
+			}
+		} else if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_OVERVIEW) {
+			showExamReviewFragment(id);
+		} else if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SELECT_EXAM) {
+			ExamTrainer.setExamId(id);
+			showExamOverviewFragment();
+		}
+	}
+
+	public void onButtonClickListener(AbstractFragment fragment, long id) {
+		if( fragment instanceof ExamOverviewFragment ) {
+			startExam();
+		} else if ( fragment instanceof ExamQuestionFragment ) {
+			showQuestionFragment(id);
+		} else if ( fragment instanceof ExamReviewFragment ) {
+			startExam();
+		} else if ( fragment instanceof ManageExamsFragment ) {
+			this.manageExamsFragment.updateView();
+		}
+	}
+
+	public void onBackStackChanged() {
+		setActiveFragment();
+		updateActionBarTitle();
+	}
+	
+	private void updateActionBarTitle() {
+		String title = this.activeFragment.getTitle();
+		if( title != null ) {
+			setTitle(title);
+		}
+	}
+	
 	private void setActiveFragment() {
 		FragmentManager fm = getSupportFragmentManager();
 		int currentBackStackEntryCount = fm.getBackStackEntryCount();
@@ -110,6 +181,12 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		String fragmentName = bse.getName();
 		Fragment fragment = fm.findFragmentByTag(fragmentName);
 		
+		if( fragment instanceof AbstractFragment ) {
+			this.activeFragment = (AbstractFragment) fragment;
+		} else {
+			Log.e("ExamActivity", "Error: fragment "+fragment+" is not of type AbstractFragment");
+		}
+		
 		if( fragment instanceof ExamQuestionFragment ) {
 			this.examQuestionFragment = (ExamQuestionFragment) fragment;
 		} else if ( fragment instanceof ExamReviewFragment ) {
@@ -117,7 +194,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 			ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.SHOW_EXAM_REVIEW);
 		} else if ( fragment instanceof ExamOverviewFragment ) {
 			this.examOverviewFragment = (ExamOverviewFragment) fragment;
-			ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.SHOW_EXAM_OVERVIEW);
+			ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM_OVERVIEW);
 		} else if ( fragment instanceof ExamSelectFragment ) {
 			this.examSelectFragment = (ExamSelectFragment) fragment;
 			ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.SELECT_EXAM);
@@ -137,7 +214,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 
-		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_EXAM_OVERVIEW ) {
+		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_OVERVIEW ) {
 			scoresId = examinationDbHelper.createNewScore();
 			examinationDbHelper.close();
 			if( scoresId == -1 ) {
@@ -188,7 +265,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 	}
 
 	private void showExamOverviewFragment() {
-		String mode = ExamTrainer.ExamTrainerMode.SHOW_EXAM_OVERVIEW.name();
+		String mode = ExamTrainer.ExamTrainerMode.EXAM_OVERVIEW.name();
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 		this.examOverviewFragment = new ExamOverviewFragment();
@@ -209,47 +286,15 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		fragmentTransaction.addToBackStack(mode);
 		fragmentTransaction.commit();
 	}
-
-	public void onStopExam() {
-		FragmentManager fm = getSupportFragmentManager();
-		fm.popBackStack(ExamTrainer.ExamTrainerMode.EXAM.name(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-		fm.popBackStack(ExamTrainer.ExamTrainerMode.EXAM_REVIEW.name(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.SHOW_EXAM_OVERVIEW);
-	}
-
-	public void onExamEnd() {
-		startCalculateScoreActivity();
-	}
-
-	public void onItemClickListener(long id) {
-		if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_EXAM_REVIEW) {
-			int amountOfQuestionsAnswered = this.examReviewFragment.getAmountOfQuestionsAnswered();
-			if( amountOfQuestionsAnswered < ExamTrainer.getAmountOfItems() ) {
-				Toast.makeText(this, R.string.Reviewing_questions_is_only_available_after_completing_the_exam,
-						Toast.LENGTH_SHORT).show();
-			} else {
-				ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM_REVIEW);
-				showQuestionFragment(id);
-			}
-		} else if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_EXAM_OVERVIEW) {
-			showExamReviewFragment(id);
-		} else if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SELECT_EXAM) {
-			ExamTrainer.setExamId(id);
-			showExamOverviewFragment();
-		}
-	}
-
-	public void onButtonClickListener(AbstractFragment fragment, long id) {
-		if( fragment instanceof ExamOverviewFragment ) {
-			startExam();
-		} else if ( fragment instanceof ExamQuestionFragment ) {
-			showQuestionFragment(id);
-		} else if ( fragment instanceof ExamReviewFragment ) {
-			startExam();
-		}
-	}
-
-	public void onBackStackChanged() {
-		setActiveFragment();
+	
+	private void showManageExamsFragment() {
+		String mode = ExamTrainer.ExamTrainerMode.MANAGE_EXAMS.name();
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+		this.manageExamsFragment = new ManageExamsFragment();
+		fragmentTransaction.replace(R.id.exam_fragment_holder, this.manageExamsFragment, mode);
+		fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+		fragmentTransaction.addToBackStack(mode);
+		fragmentTransaction.commit();
 	}
 }

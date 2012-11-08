@@ -40,5 +40,30 @@ abstract public class AbstractFragment extends SherlockFragment {
         setHasOptionsMenu(true);
     }
 
+	/**
+	 * Override in fragment to return the fragment's title
+	 * @return null if not set, String otherwise
+	 */
+	public String getTitle() {
+		return null;
+	}
+	
+	/**
+	 * Calls onItemClickListener in activity that implemented FragmentListener
+	 * @param id identifier of item that was clicked
+	 */
+	public void onItemClickListener(long id) {
+		this.abstractFragmentListener.onItemClickListener(id);
+	}
+	
+	/**
+	 * Calls onButtonClickListener in activity that implemented FragmentListener
+	 * @param fragment fragment in which button event was generated
+	 * @param id identifier of button clicked
+	 */
+	public void onButtonClickListener(AbstractFragment fragment, long id) {
+		this.abstractFragmentListener.onButtonClickListener(fragment, id);
+	}
+	
 	abstract public void updateView();
 }
