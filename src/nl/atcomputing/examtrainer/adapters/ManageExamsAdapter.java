@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.activities.ExamTrainer;
+import nl.atcomputing.examtrainer.adapters.SelectExamAdapter.ViewHolder;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
@@ -30,7 +31,8 @@ public class ManageExamsAdapter extends BaseAdapter  {
 	private ManageExamsAdapterListener listener;
 	private int layout;
 	private Cursor cursor;
-
+	private HashMap<Long, DataHolder> dataHolderCache;
+	
 	public interface ManageExamsAdapterListener {
 		public void onButtonClick(View v, long examID);
 	}
@@ -44,6 +46,8 @@ public class ManageExamsAdapter extends BaseAdapter  {
 		this.cursor = c;
 
 		this.context = context;
+		
+		this.dataHolderCache = new HashMap<Long, ManageExamsAdapter.DataHolder>();
 	}
 
 	public int getCount() {
@@ -77,98 +81,125 @@ public class ManageExamsAdapter extends BaseAdapter  {
 		}
 	}
 
-	public View getView(int position, View convertView, ViewGroup parent) {	
+	public View getView(int position, View convertView, ViewGroup parent) {
 		Cursor row = (Cursor) getItem(position);
 		if( row == null ) {
 			return convertView;
 		}
 
-		ViewHolder holder;
+		ViewHolder vHolder;
 		int index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID);
 		final long examID = row.getLong(index);
-
+		
+		Log.d("ManageExamsAdapter", "getView: position="+position+", examID="+examID);
+		
 		if( convertView == null ) {
 			LayoutInflater mInflater = LayoutInflater.from(this.context);
 			convertView = (View) mInflater.inflate(this.layout, parent, false);
-			holder = new ViewHolder();
-			holder.examTitleView = (TextView) convertView.findViewById(R.id.manageExamsEntryTitle);
-			holder.examAuthorView = (TextView) convertView.findViewById(R.id.manageExamsEntryAuthor);
-			holder.installUninstallButton = (Button) convertView.findViewById(R.id.manageExamsDelete);
-			convertView.setTag(holder);
+			vHolder = new ViewHolder();
+			vHolder.examTitleView = (TextView) convertView.findViewById(R.id.manageExamsEntryTitle);
+			vHolder.examAuthorView = (TextView) convertView.findViewById(R.id.manageExamsEntryAuthor);
+			vHolder.installUninstallButton = (Button) convertView.findViewById(R.id.manageExamsDelete);
+			vHolder.installUninstallButton.setOnClickListener(new View.OnClickListener() {
+				public void onClick(View v) {
+					listener.onButtonClick(v, examID);
+				}
+			});
+			Log.d("ManageExamsAdapter", "getView: convertView created for position="+position+", examID="+examID+", button="+vHolder.installUninstallButton);
+			convertView.setTag(vHolder);
 		} else {
-			holder = (ViewHolder) convertView.getTag();
+			vHolder = (ViewHolder) convertView.getTag();
 		}
-
-		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
-		final String examTitle = row.getString(index);
-		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS);
-		final int examAmountOfItems = row.getInt(index);
-		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
-		final int examItemsNeededToPass = row.getInt(index);
-		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR);
-		final String author = row.getString(index);
-		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT);
-		final long timeLimit = row.getLong(index);
 		
-		holder.examTitleView.setText(examTitle);
-
-		holder.examAuthorView.setText(author);
-
-		holder.installUninstallButton.setEnabled(true);
-
-		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED);
-		String state = row.getString(index);
-		if( state.contentEquals(ExamTrainerDbAdapter.State.NOT_INSTALLED.name()) ) {
-			holder.installUninstallButton.setText(R.string.install);
-		} else if ( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLED.name()) ) {
-			holder.installUninstallButton.setText(R.string.uninstall);
-		} else if ( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLING.name()) ) {
-			holder.installUninstallButton.setText(R.string.Installing_exam);
-			holder.installUninstallButton.setEnabled(false);
-		} else {
-			holder.installUninstallButton.setText(R.string.install);
+		DataHolder dHolder = this.dataHolderCache.get(examID);
+		
+		if( dHolder == null ) {
+			dHolder = createDataHolder(examID, row, vHolder.installUninstallButton);
+			this.dataHolderCache.put(examID, dHolder);
 		}
 
-		holder.installUninstallButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				listener.onButtonClick(v, examID);
-			}
-		});
-
+		vHolder.examTitleView.setText(dHolder.examTitle);
+		vHolder.examAuthorView.setText(dHolder.author);
+		vHolder.installUninstallButton.setEnabled(true);
+		
+		final DataHolder holderReference = dHolder;
+		
 		convertView.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				StringBuffer strBuf = new StringBuffer();
 
-				strBuf.append(examTitle + "\n");
+				strBuf.append(holderReference.examTitle + "\n");
 
 				strBuf.append(context.getString(R.string.questions) + 
-						": " +  examAmountOfItems + "\n" +
+						": " +  holderReference.examAmountOfItems + "\n" +
 						context.getString(R.string.correct_answer_required_to_pass) +
-						": " +  examItemsNeededToPass + "\n");
+						": " +  holderReference.examItemsNeededToPass + "\n");
 
-				if ( timeLimit == 0 ) {
+				if ( holderReference.timeLimit == 0 ) {
 					strBuf.append(context.getString(R.string.No_time_limit));
 				} else {
-					strBuf.append(context.getString(R.string.Time_limit_in_minutes) + ": " + timeLimit
+					strBuf.append(context.getString(R.string.Time_limit_in_minutes) + ": " + holderReference.timeLimit
 							+ " " + context.getString(R.string.minutes));
 				}
 
 				Toast.makeText(context,  strBuf.toString(), Toast.LENGTH_LONG).show();
 			}
 		});
+		
+		index = row.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED);
+		String state = row.getString(index);
+		if( state.contentEquals(ExamTrainerDbAdapter.State.NOT_INSTALLED.name()) ) {
+			vHolder.installUninstallButton.setText(R.string.install);
+		} else if ( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLED.name()) ) {
+			vHolder.installUninstallButton.setText(R.string.uninstall);
+		} else if ( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLING.name()) ) {
+			vHolder.installUninstallButton.setText(R.string.Installing_exam);
+			vHolder.installUninstallButton.setEnabled(false);
+		} else {
+			vHolder.installUninstallButton.setText(R.string.install);
+		}
 
 		InstallExamAsyncTask task = ExamTrainer.getInstallExamAsyncTask(examID);
 
 		if( task != null ) {
-			task.setProgressTextView(holder.installUninstallButton);
+			Log.d("ManageExamsAdapter", "button: "+vHolder.installUninstallButton+" is reconnected to task="+task+" for examID: "+examID);
+			task.setProgressTextView(dHolder.firstCreatedInstallUninstallButton);
 		}
 		
 		return convertView;
 	}
 
+	private DataHolder createDataHolder(final long examID, Cursor cursor, Button button) {
+		DataHolder holder = new DataHolder();
+		
+		int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
+		holder.examTitle = cursor.getString(index);
+		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS);
+		holder.examAmountOfItems = cursor.getInt(index);
+		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
+		holder.examItemsNeededToPass = cursor.getInt(index);
+		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR);
+		holder.author = cursor.getString(index);
+		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT);
+		holder.timeLimit = cursor.getLong(index);
+		
+		holder.firstCreatedInstallUninstallButton = button;
+		
+		return holder;
+	}
+	
 	class ViewHolder {
 		TextView examTitleView;
 		TextView examAuthorView;
 		Button installUninstallButton;
+	}
+	
+	class DataHolder {
+		String examTitle;
+		int examAmountOfItems;
+		int examItemsNeededToPass;
+		String author;
+		long timeLimit;
+		Button firstCreatedInstallUninstallButton;
 	}
 }

@@ -25,7 +25,7 @@ public class SelectExamAdapter extends CursorAdapter  {
 	private HashMap<Long, ViewHolder> viewHolderCache;
 
 	public SelectExamAdapter(Context context, int layout, Cursor c) {
-		super(context, c);
+		super(context, c, false);
 		this.layout = layout;
 		this.viewHolderCache = new HashMap<Long, ViewHolder>();
 	}
@@ -42,6 +42,13 @@ public class SelectExamAdapter extends CursorAdapter  {
 
 		if( holder == null ) {
 			holder = new ViewHolder();
+			holder.examTitleView = (TextView) view.findViewById(R.id.selectexamEntryTitle);
+			holder.examAuthorView = (TextView) view.findViewById(R.id.selectexamEntryAuthor);
+			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
+			holder.examTitle = cursor.getString(index);
+			index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR);
+			holder.author = cursor.getString(index);
+			this.viewHolderCache.put(examID, holder);
 		} else {
 			if( task != null ) {
 				task.setProgressTextView(holder.examAuthorView);
@@ -49,17 +56,11 @@ public class SelectExamAdapter extends CursorAdapter  {
 			return;
 		}
 			
-		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
-		holder.examTitle = cursor.getString(index);
-		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR);
-		holder.author = cursor.getString(index);
 		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED);
 		String state = cursor.getString(index);
 
-		holder.examTitleView = (TextView) view.findViewById(R.id.selectexamEntryTitle);
 		holder.examTitleView.setText(holder.examTitle);
-		holder.examAuthorView = (TextView) view.findViewById(R.id.selectexamEntryAuthor);
-
+		
 		if( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLED.name()) ) {
 			holder.examAuthorView.setText(holder.author);
 		} else if ( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLING.name()) ) {
@@ -69,8 +70,6 @@ public class SelectExamAdapter extends CursorAdapter  {
 		if( task != null ) {
 			task.setProgressTextView(holder.examAuthorView);
 		}
-		
-		this.viewHolderCache.put(examID, holder);
 	}
 
 	@Override

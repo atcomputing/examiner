@@ -117,9 +117,7 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 
 	public void onButtonClick(final View v, final long examID) {
 		final Activity activity = getActivity();
-		
-		Log.d("ManageExamsFragment", "onButtonClick: examID="+examID);
-		
+
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
 		examTrainerDbHelper.open();
 		ExamTrainerDbAdapter.State state = examTrainerDbHelper.getInstallationState(examID);
@@ -146,6 +144,7 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 			if( ExamTrainer.getInstallExamAsyncTask(examID) == null ) {
 				InstallExamAsyncTask installExam = new InstallExamAsyncTask(activity, (TextView) v, examID); 
 				installExam.execute();
+				Log.d("ManageExamsFragment", "onButtonClick: installing exam button="+v+" for examID="+examID+" on task="+installExam);
 			}
 		}
 	}
