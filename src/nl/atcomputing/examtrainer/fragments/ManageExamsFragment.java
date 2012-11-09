@@ -144,7 +144,8 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 			if( ExamTrainer.getInstallExamAsyncTask(examID) == null ) {
 				InstallExamAsyncTask installExam = new InstallExamAsyncTask(activity, (TextView) v, examID); 
 				installExam.execute();
-				Log.d("ManageExamsFragment", "onButtonClick: installing exam button="+v+" for examID="+examID+" on task="+installExam);
+				Log.d("ManageExamsFragment", "onButtonClick: installing exam view="+v.getClass().getSimpleName()+
+						" with id="+v+" for examID="+examID+" on task="+installExam);
 			}
 		}
 	}

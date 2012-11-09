@@ -84,6 +84,7 @@ public class ManageExamsAdapter extends BaseAdapter  {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Cursor row = (Cursor) getItem(position);
 		if( row == null ) {
+			Log.d("ManageExamsAdapter", "getView: row is null");
 			return convertView;
 		}
 
@@ -105,16 +106,21 @@ public class ManageExamsAdapter extends BaseAdapter  {
 					listener.onButtonClick(v, examID);
 				}
 			});
-			Log.d("ManageExamsAdapter", "getView: convertView created for position="+position+", examID="+examID+", button="+vHolder.installUninstallButton);
+			Log.d("ManageExamsAdapter", "getView: convertView created for position="+position+", examID="+examID+
+					"\ninstallUninstallButton="+vHolder.installUninstallButton+
+					"\nexamTitleView"+vHolder.examTitleView+
+					"\nexamAuthorView"+vHolder.examAuthorView);
 			convertView.setTag(vHolder);
 		} else {
 			vHolder = (ViewHolder) convertView.getTag();
 		}
 		
+		
+		
 		DataHolder dHolder = this.dataHolderCache.get(examID);
 		
 		if( dHolder == null ) {
-			dHolder = createDataHolder(examID, row, vHolder.installUninstallButton);
+			dHolder = createDataHolder(examID, row);
 			this.dataHolderCache.put(examID, dHolder);
 		}
 
@@ -159,17 +165,24 @@ public class ManageExamsAdapter extends BaseAdapter  {
 			vHolder.installUninstallButton.setText(R.string.install);
 		}
 
-		InstallExamAsyncTask task = ExamTrainer.getInstallExamAsyncTask(examID);
-
-		if( task != null ) {
-			Log.d("ManageExamsAdapter", "button: "+vHolder.installUninstallButton+" is reconnected to task="+task+" for examID: "+examID);
-			task.setProgressTextView(dHolder.firstCreatedInstallUninstallButton);
-		}
+		/**
+		 * bug 
+		 * Apparently adapter creates a single row and reuses it for all other rows
+		 * This makes it pretty much impossible to reconnect installation threads
+		 * after the ListView is recreated due to a configuration change or user
+		 * moved away and back again to the fragment/activity using the adapter
+		 */
+//		InstallExamAsyncTask task = ExamTrainer.getInstallExamAsyncTask(examID);
+//
+//		if( task != null ) {
+//			Log.d("ManageExamsAdapter", "button: "+vHolder.installUninstallButton+" is reconnected to task="+task+" for examID: "+examID);
+//			task.setProgressTextView(vHolder.installUninstallButton);
+//		}
 		
 		return convertView;
 	}
 
-	private DataHolder createDataHolder(final long examID, Cursor cursor, Button button) {
+	private DataHolder createDataHolder(final long examID, Cursor cursor) {
 		DataHolder holder = new DataHolder();
 		
 		int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
@@ -183,23 +196,20 @@ public class ManageExamsAdapter extends BaseAdapter  {
 		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT);
 		holder.timeLimit = cursor.getLong(index);
 		
-		holder.firstCreatedInstallUninstallButton = button;
-		
 		return holder;
 	}
 	
-	class ViewHolder {
+	private class ViewHolder {
 		TextView examTitleView;
 		TextView examAuthorView;
 		Button installUninstallButton;
 	}
 	
-	class DataHolder {
+	private class DataHolder {
 		String examTitle;
 		int examAmountOfItems;
 		int examItemsNeededToPass;
 		String author;
 		long timeLimit;
-		Button firstCreatedInstallUninstallButton;
 	}
 }
