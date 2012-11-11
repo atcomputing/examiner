@@ -191,21 +191,21 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 			return;
 		}
 
-		String activeFragment = savedInstanceState.getString(KEY_ACTIVE_FRAGMENT);
-		if( activeFragment == null ) {
-			showSelectExamFragment(true);
-			return;
-		}
-
-		if( activeFragment.contentEquals(ExamOverviewFragment.class.getSimpleName())) {
-			showExamOverviewFragment(false);
-		} else if( activeFragment.contentEquals(ExamQuestionFragment.class.getSimpleName())) {
-			showExamQuestionFragment(savedInstanceState.getLong(KEY_QUESTION_ID), false);
-		} else if( activeFragment.contentEquals(ExamReviewFragment.class.getSimpleName())) {
-			showExamReviewFragment(savedInstanceState.getLong(KEY_EXAM_ID), false);
-		} else if( activeFragment.contentEquals(ExamSelectFragment.class.getSimpleName())) {
-			showSelectExamFragment(false);
-		}
+//		String activeFragment = savedInstanceState.getString(KEY_ACTIVE_FRAGMENT);
+//		if( activeFragment == null ) {
+//			showSelectExamFragment(true);
+//			return;
+//		}
+//
+//		if( activeFragment.contentEquals(ExamOverviewFragment.class.getSimpleName())) {
+//			showExamOverviewFragment(false);
+//		} else if( activeFragment.contentEquals(ExamQuestionFragment.class.getSimpleName())) {
+//			showExamQuestionFragment(savedInstanceState.getLong(KEY_QUESTION_ID), false);
+//		} else if( activeFragment.contentEquals(ExamReviewFragment.class.getSimpleName())) {
+//			showExamReviewFragment(savedInstanceState.getLong(KEY_EXAM_ID), false);
+//		} else if( activeFragment.contentEquals(ExamSelectFragment.class.getSimpleName())) {
+//			showSelectExamFragment(false);
+//		}
 
 		setActiveFragment();
 	}

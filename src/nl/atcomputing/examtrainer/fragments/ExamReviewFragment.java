@@ -35,6 +35,7 @@ public class ExamReviewFragment extends AbstractFragment {
 		super.onAttach(activity);
 
 		setHasOptionsMenu(true);
+		setRetainInstance(true);
 	}
 
 
@@ -71,8 +72,6 @@ public class ExamReviewFragment extends AbstractFragment {
 		if( usageDialog != null ) {
 			usageDialog.show(getFragmentManager(), "UsageDialog");
 		}
-
-
 	}
 
 	@Override

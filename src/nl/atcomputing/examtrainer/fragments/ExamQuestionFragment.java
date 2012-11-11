@@ -120,6 +120,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 		}
 
 		setHasOptionsMenu(true);
+		setRetainInstance(true);
 	}
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

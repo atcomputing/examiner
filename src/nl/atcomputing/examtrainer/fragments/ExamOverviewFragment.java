@@ -49,6 +49,7 @@ public class ExamOverviewFragment extends AbstractFragment {
 		super.onAttach(activity);
 
 		setHasOptionsMenu(true);
+		setRetainInstance(true);
 	}
 
 	@Override
@@ -88,6 +89,7 @@ public class ExamOverviewFragment extends AbstractFragment {
 				usageDialog.show(getFragmentManager(), "UsageDialog");
 			}
 		}
+		
 	}
 
 

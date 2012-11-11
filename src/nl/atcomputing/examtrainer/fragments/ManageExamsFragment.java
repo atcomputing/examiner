@@ -37,6 +37,7 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
         super.onAttach(activity);
        
         setHasOptionsMenu(true);
+        setRetainInstance(true);
     }
 	
 	@Override

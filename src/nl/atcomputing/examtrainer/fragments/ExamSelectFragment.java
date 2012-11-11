@@ -37,6 +37,7 @@ public class ExamSelectFragment extends AbstractFragment {
         super.onAttach(activity);
        
         setHasOptionsMenu(true);
+        setRetainInstance(true);
     }
 	
 	@Override
