@@ -1,7 +1,7 @@
 package nl.atcomputing.examtrainer.fragments;
 
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.adapters.SelectExamAdapter;
+import nl.atcomputing.examtrainer.adapters.ExamSelectAdapter;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import android.app.Activity;
 import android.content.Intent;
@@ -28,7 +28,7 @@ import com.actionbarsherlock.view.MenuItem;
  */
 
 public class ExamSelectFragment extends AbstractFragment {
-	private SelectExamAdapter adap;
+	private ExamSelectAdapter adap;
 	private TextView clickOnManageExams;
 	private TextView noExamsAvailable;
 	
@@ -42,7 +42,7 @@ public class ExamSelectFragment extends AbstractFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.selectexamfragment, container, false);
+		return inflater.inflate(R.layout.examselectfragment, container, false);
 	}
 
 	@Override
@@ -114,9 +114,10 @@ public class ExamSelectFragment extends AbstractFragment {
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
 		examTrainerDbHelper.open();
 		Cursor cursor = examTrainerDbHelper.getInstalledAndInstallingExams();
+//		Cursor cursor = examTrainerDbHelper.getAllExams();
 		examTrainerDbHelper.close();
 		
-		this.adap = new SelectExamAdapter(activity, R.layout.selectexam_entry, cursor);
+		this.adap = new ExamSelectAdapter(activity, R.layout.examselect_entry, cursor);
 		selectExam.setAdapter(this.adap);
 
 		selectExam.setOnItemClickListener(new OnItemClickListener() {
