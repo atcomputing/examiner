@@ -36,6 +36,10 @@ import com.actionbarsherlock.view.MenuItem;
 public class ExamActivity extends SherlockFragmentActivity 
 implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 
+	private String KEY_ACTIVE_FRAGMENT = "keyActiveFragment";
+	private String KEY_QUESTION_ID = "keyQuestionId";
+	private String KEY_EXAM_ID = "keyExamId";
+	
 	private ReceiveBroadcast receiveBroadcast;
 	private ExamQuestionFragment examQuestionFragment;
 	private ExamOverviewFragment examOverviewFragment;
@@ -64,8 +68,8 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		setContentView(R.layout.examactivity);
 
 		this.receiveBroadcast = new ReceiveBroadcast();
-
-		showSelectExamFragment();
+		
+		restoreState(savedInstanceState);
 	}
 
 	public void onResume() {
@@ -81,7 +85,20 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		setActiveFragment();
 		updateActionBarTitle();
 	}
-
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString(KEY_ACTIVE_FRAGMENT, this.activeFragment.getClass().getSimpleName());
+		if( this.examQuestionFragment != null ) {
+			outState.putLong(KEY_QUESTION_ID, this.examQuestionFragment.getQuestionId());
+		}
+		
+		if( this.examReviewFragment != null ) {
+			outState.putLong(KEY_EXAM_ID, this.examReviewFragment.getExamID());
+		}
+	}
+	
 	public void onPause() {
 		super.onPause();
 		this.unregisterReceiver(this.receiveBroadcast);
@@ -134,7 +151,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 						Toast.LENGTH_SHORT).show();
 			} else {
 				ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM_REVIEW);
-				showQuestionFragment(id);
+				showExamQuestionFragment(id);
 			}
 		} else if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_OVERVIEW) {
 			showExamReviewFragment(id);
@@ -148,7 +165,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		if( fragment instanceof ExamOverviewFragment ) {
 			startExam();
 		} else if ( fragment instanceof ExamQuestionFragment ) {
-			showQuestionFragment(id);
+			showExamQuestionFragment(id);
 		} else if ( fragment instanceof ExamReviewFragment ) {
 			startExam();
 		} else if ( fragment instanceof ManageExamsFragment ) {
@@ -165,6 +182,30 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		String title = this.activeFragment.getTitle();
 		if( title != null ) {
 			setTitle(title);
+		}
+	}
+	
+	private void restoreState(Bundle savedInstanceState) {
+		if( savedInstanceState == null ) {
+			showSelectExamFragment();
+			return;
+		}
+		
+		String activeFragment = savedInstanceState.getString(KEY_ACTIVE_FRAGMENT);
+		if( activeFragment == null ) {
+			showSelectExamFragment();
+			return;
+		}
+		
+	
+		if( activeFragment.contentEquals(ExamOverviewFragment.class.getSimpleName())) {
+			showExamOverviewFragment();
+		} else if( activeFragment.contentEquals(ExamQuestionFragment.class.getSimpleName())) {
+			showExamQuestionFragment(savedInstanceState.getLong(KEY_QUESTION_ID));
+		} else if( activeFragment.contentEquals(ExamReviewFragment.class.getSimpleName())) {
+			showExamReviewFragment(savedInstanceState.getLong(KEY_EXAM_ID));
+		} else if( activeFragment.contentEquals(ExamSelectFragment.class.getSimpleName())) {
+			showSelectExamFragment();
 		}
 	}
 	
@@ -241,10 +282,10 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		}
 		ExamTrainer.setScoresId(scoresId);
 		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM);
-		showQuestionFragment(questionId);
+		showExamQuestionFragment(questionId);
 	}
 	
-	private void showQuestionFragment(long number) {
+	private void showExamQuestionFragment(long number) {
 		String mode = ExamTrainer.getExamMode().name();
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

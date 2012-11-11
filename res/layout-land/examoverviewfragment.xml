@@ -1,14 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <Button
+        android:id="@+id/button_start_exam"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="@string/start_a_new_exam"
+        android:textSize="@dimen/textSizeDefault" />
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/startexam_examinfo"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_marginBottom="@dimen/paddingSmall"
         android:layout_marginTop="@dimen/paddingSmall"
+        android:background="@color/transparent_background"
         android:baselineAligned="false"
-        android:orientation="vertical"
-        android:background="@color/transparent_background" >
+        android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="0dp"
@@ -71,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:cacheColorHint="#00000000" />
         </LinearLayout>
-        
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="fill_parent"
@@ -133,3 +145,5 @@
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
+
+</RelativeLayout>

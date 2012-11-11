@@ -97,13 +97,13 @@ public class ExamOverviewFragment extends AbstractFragment {
 		updateView();
 	}
 
-	public void onDestroy() {
-		super.onDestroy();
-		Cursor cursor = adapter.getCursor();
-		if ( cursor != null ) {
-			cursor.close();
-		}
-	}
+//	public void onDestroy() {
+//		super.onDestroy();
+//		Cursor cursor = this.adapter.getCursor();
+//		if ( cursor != null ) {
+//			cursor.close();
+//		}
+//	}
 
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {

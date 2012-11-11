@@ -28,7 +28,8 @@ public class ExamReviewFragment extends AbstractFragment {
 	public static final String TAG = "ExamReviewActivity";
 	private GridView scoresGrid;
 	private ExamReviewAdapter adapter; 
-
+	private long examID;
+	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -52,10 +53,10 @@ public class ExamReviewFragment extends AbstractFragment {
 		setupScoresGrid();
 
 		Button buttonStartExam = (Button) activity.findViewById(R.id.button_start_exam);
-		long examId = ExamTrainer.getScoresId();
+		this.examID = ExamTrainer.getScoresId();
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(activity);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		Cursor cursor = examinationDbHelper.getResultsPerQuestion(examId);
+		Cursor cursor = examinationDbHelper.getResultsPerQuestion(this.examID);
 		examinationDbHelper.close();
 		if( cursor.getCount() < ExamTrainer.getAmountOfItems() ) {
 			buttonStartExam.setVisibility(View.VISIBLE);
@@ -80,17 +81,25 @@ public class ExamReviewFragment extends AbstractFragment {
 		setupScoresGrid();
 	}
 	
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		Cursor cursor = this.adapter.getCursor();
-		if ( cursor != null ) { 
-			cursor.close();
-		}
-	}
+//	@Override
+//	public void onDestroy() {
+//		super.onDestroy();
+//		Cursor cursor = this.adapter.getCursor();
+//		if ( cursor != null ) { 
+//			cursor.close();
+//		}
+//	}
 
 	public int getAmountOfQuestionsAnswered() {
 		return this.adapter.getCount();
+	}
+	
+	public void setExamID(long id) {
+		this.examID = id;
+	}
+	
+	public long getExamID() {
+		return this.examID;
 	}
 	
 	private void setupScoresGrid() {
