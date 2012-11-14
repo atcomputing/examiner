@@ -16,11 +16,11 @@
         android:id="@+id/startexam_examinfo"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginBottom="@dimen/paddingSmall"
-        android:layout_marginTop="@dimen/paddingSmall"
+        android:layout_above="@+id/button_start_exam"
+        android:layout_alignParentTop="true"
         android:background="@color/transparent_background"
         android:baselineAligned="false"
-        android:orientation="vertical" >
+        android:orientation="horizontal" >
 
         <LinearLayout
             android:layout_width="0dp"
@@ -85,7 +85,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="0dip"
             android:layout_height="fill_parent"
             android:layout_margin="@dimen/paddingSmall"
             android:layout_weight="1"
@@ -106,8 +106,7 @@
                 <TextView
                     android:id="@+id/startexam_amount_of_items_value"
                     style="@style/TextWhite"
-                    android:layout_alignParentRight="true"
-                    android:text="" />
+                    android:layout_alignParentRight="true" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -123,8 +122,7 @@
                 <TextView
                     android:id="@+id/startexam_items_needed_to_pass_value"
                     style="@style/TextWhite"
-                    android:layout_alignParentRight="true"
-                    android:text="" />
+                    android:layout_alignParentRight="true" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -140,10 +138,10 @@
                 <TextView
                     android:id="@+id/startexam_timelimit_value"
                     style="@style/TextWhite"
-                    android:layout_alignParentRight="true"
-                    android:text="" />
+                    android:layout_alignParentRight="true" />
             </RelativeLayout>
         </LinearLayout>
+
     </LinearLayout>
 
 </RelativeLayout>

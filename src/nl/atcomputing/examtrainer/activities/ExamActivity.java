@@ -114,7 +114,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 
 		int currentBackStackEntryCount = fm.getBackStackEntryCount();
 
-		if( currentBackStackEntryCount == 0 ) {
+		if( currentBackStackEntryCount == 1 ) {
 			finish();
 			return;
 		}
