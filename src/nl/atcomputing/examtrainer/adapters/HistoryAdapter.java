@@ -39,20 +39,24 @@ public class HistoryAdapter extends CursorAdapter  {
 	public void bindView(View view, Context context, Cursor cursor) {
 		int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_DATE);
 		String examDate = ExamTrainer.convertEpochToString(cursor.getLong(index));
-		index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE);
-		int examScore = cursor.getInt(index);
 		TextView scoreEntryDate = (TextView) view.findViewById(R.id.historyEntryDate);
 		scoreEntryDate.setText(examDate);
-		TextView scoreEntryScore = (TextView) view.findViewById(R.id.historyEntryScore);
-		scoreEntryScore.setText(Integer.toString(examScore));
-
+		
+		index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE);
+		int examScore = cursor.getInt(index);
+		if( examScore > -1 ) {
+			TextView scoreEntryScore = (TextView) view.findViewById(R.id.historyEntryScore);
+			scoreEntryScore.setText(Integer.toString(examScore));
+		}
+		
 		ImageView scoreEntryImage = (ImageView) view.findViewById(R.id.historyEntryPass);
 
 		if( examScore >= ExamTrainer.getItemsNeededToPass() ) { 
 			scoreEntryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.green_check));
-		} 
-		else {
+		} else if ( examScore > -1 ) {
 			scoreEntryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.red_cross));
+		} else {
+			scoreEntryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_hint));
 		}
 
 		index = cursor.getColumnIndex(ExaminationDatabaseHelper.Scores._ID);

@@ -6,19 +6,16 @@ import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.adapters.ExamReviewAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import android.app.Activity;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.GridView;
-
-import com.actionbarsherlock.app.SherlockFragment;
+import android.widget.Toast;
 
 /**
  * @author martijn brekhof
@@ -29,6 +26,7 @@ public class ExamReviewFragment extends AbstractFragment {
 	private GridView scoresGrid;
 	private ExamReviewAdapter adapter; 
 	private long examID;
+	private long score;
 	
 	@Override
 	public void onAttach(Activity activity) {
@@ -57,9 +55,9 @@ public class ExamReviewFragment extends AbstractFragment {
 		this.examID = ExamTrainer.getScoresId();
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(activity);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		Cursor cursor = examinationDbHelper.getResultsPerQuestion(this.examID);
+		this.score = examinationDbHelper.getScore(this.examID);
 		examinationDbHelper.close();
-		if( cursor.getCount() < ExamTrainer.getAmountOfItems() ) {
+		if( this.score == -1 ) {
 			buttonStartExam.setVisibility(View.VISIBLE);
 			buttonStartExam.setOnClickListener(new OnClickListener() {
 				public void onClick(View v) {
@@ -89,10 +87,6 @@ public class ExamReviewFragment extends AbstractFragment {
 //		}
 //	}
 
-	public int getAmountOfQuestionsAnswered() {
-		return this.adapter.getCount();
-	}
-	
 	public void setExamID(long id) {
 		this.examID = id;
 	}
@@ -102,7 +96,7 @@ public class ExamReviewFragment extends AbstractFragment {
 	}
 	
 	private void setupScoresGrid() {
-		Activity activity = getActivity();
+		final Activity activity = getActivity();
 		
 		this.adapter = new ExamReviewAdapter(activity, R.layout.review_exam_entry, ExamTrainer.getScoresId());
 
@@ -112,7 +106,12 @@ public class ExamReviewFragment extends AbstractFragment {
 		scoresGrid.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				abstractFragmentListener.onItemClickListener(id);
+				if( score == -1 ) {
+					Toast.makeText(activity, R.string.Reviewing_questions_is_only_available_after_completing_the_exam,
+							Toast.LENGTH_SHORT).show();
+				} else {
+					abstractFragmentListener.onItemClickListener(id);
+				}
 			}
 		});
 	}

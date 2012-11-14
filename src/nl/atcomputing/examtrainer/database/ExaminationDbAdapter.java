@@ -102,7 +102,7 @@ public class ExaminationDbAdapter {
 	
 	/**
 	 * Adds a new row to Scores table with date set to current date in UTC
-	 * and score set to 0
+	 * and score set to -1
 	 * @return _ID of the row that must be used as exam_id in the other tables
 	 */
 	public long createNewScore() {
@@ -110,7 +110,7 @@ public class ExaminationDbAdapter {
 			long date = System.currentTimeMillis();
 	    	ContentValues values = new ContentValues();
 			values.put(ExaminationDatabaseHelper.Scores.COLUMN_NAME_DATE, date);
-			values.put(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE, 0);
+			values.put(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE, -1);
 			return db.insert(ExaminationDatabaseHelper.Scores.TABLE_NAME, null, values);
 		} catch (NullPointerException e) {
 			Log.d(TAG, "createNewScore null pointer exception: " + e.getMessage());
@@ -121,6 +121,23 @@ public class ExaminationDbAdapter {
 		}
 	}
 	
+	/**
+	 * Returns the score for the given exam ID
+	 * @param id
+	 * @return score or -1 if exam was not finished
+	 */
+	public int getScore(long id) {
+		Cursor cursor = db.query(true, ExaminationDatabaseHelper.Scores.TABLE_NAME, 
+				new String[] {
+				ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE
+				},
+				ExaminationDatabaseHelper.Scores._ID + "= ?" , 
+				new String[] { Long.toString(id) }, null, null, null, null);
+		cursor.moveToFirst();
+		int count = cursor.getInt(cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE));
+		cursor.close();
+		return count;
+	}
 	
 	/**
 	 * updates the score for the exam with id
@@ -153,6 +170,24 @@ public class ExaminationDbAdapter {
 		return db.delete(ExaminationDatabaseHelper.Scores.TABLE_NAME, 
 				ExaminationDatabaseHelper.Scores._ID + "= ?",
 				new String[] { Long.toString(scoresId) }) > 0;
+	}
+	
+	/**
+	 * Returns the start time for the given exam
+	 * @param id exam ID
+	 * @return epoch time in milliseconds
+	 */
+	public long getDate(long id) {
+		Cursor cursor = db.query(true, ExaminationDatabaseHelper.Scores.TABLE_NAME, 
+				new String[] {
+				ExaminationDatabaseHelper.Scores.COLUMN_NAME_DATE
+				},
+				ExaminationDatabaseHelper.Scores._ID + "= ?" , 
+				new String[] { Long.toString(id) }, null, null, null, null);
+		cursor.moveToFirst();
+		long epoch = cursor.getLong(cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_DATE));
+		cursor.close();
+		return epoch;
 	}
 	
 	/**
@@ -370,19 +405,6 @@ public class ExaminationDbAdapter {
 				null, null, null, null, ExaminationDatabaseHelper.Scores.COLUMN_NAME_DATE + " DESC", null);
 		cursor.moveToFirst();
 		return cursor;
-	}
-	
-	public int getScore(long id) {
-		Cursor cursor = db.query(true, ExaminationDatabaseHelper.Scores.TABLE_NAME, 
-				new String[] {
-				ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE
-				},
-				ExaminationDatabaseHelper.Scores._ID + "= ?" , 
-				new String[] { Long.toString(id) }, null, null, null, null);
-		cursor.moveToFirst();
-		int count = cursor.getInt(cursor.getColumnIndex(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE));
-		cursor.close();
-		return count;
 	}
 	
 	/**

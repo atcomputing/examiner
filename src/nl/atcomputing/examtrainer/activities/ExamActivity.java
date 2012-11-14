@@ -66,7 +66,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		setContentView(R.layout.examactivity);
 
 		this.receiveBroadcast = new ReceiveBroadcast();
-		
+
 		if( savedInstanceState == null ) {
 			showSelectExamFragment(true);
 		}
@@ -74,7 +74,6 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 
 	public void onResume() {
 		super.onResume();
-		Log.d("ExamActivity", "onResume()");
 
 		IntentFilter filter = new IntentFilter(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED);
 		this.registerReceiver(this.receiveBroadcast, filter);
@@ -92,7 +91,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		String fragmentName = bse.getName();
 		Fragment fragment = fm.findFragmentByTag(fragmentName);
 		setActiveFragment(fragment);
-		
+
 		updateActionBarTitle();
 	}
 
@@ -118,7 +117,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 			finish();
 			return;
 		}
-		
+
 		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM ) {
 			examQuestionFragment.showDialog(ExamQuestionFragment.DIALOG_QUITEXAM_ID);
 			return;
@@ -154,15 +153,9 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 	}
 
 	public void onItemClickListener(long id) {
-		if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_EXAM_REVIEW) {
-			int amountOfQuestionsAnswered = this.examReviewFragment.getAmountOfQuestionsAnswered();
-			if( amountOfQuestionsAnswered < ExamTrainer.getAmountOfItems() ) {
-				Toast.makeText(this, R.string.Reviewing_questions_is_only_available_after_completing_the_exam,
-						Toast.LENGTH_SHORT).show();
-			} else {
-				ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM_REVIEW);
-				showExamQuestionFragment(id, true);
-			}
+		if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_EXAM_REVIEW) {		
+			ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM_REVIEW);
+			showExamQuestionFragment(id, true);
 		} else if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_OVERVIEW) {
 			showExamReviewFragment(id, true);
 		} else if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SELECT_EXAM) {
@@ -194,7 +187,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		BackStackEntry bse = fm.getBackStackEntryAt(currentBackStackEntryCount-1);
 		String fragmentName = bse.getName();
 		Fragment fragment = fm.findFragmentByTag(fragmentName);
-		
+
 		setActiveFragment(fragment);
 		updateActionBarTitle();
 	}
@@ -245,17 +238,17 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 
 		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_OVERVIEW ) {
 			scoresId = examinationDbHelper.createNewScore();
-			examinationDbHelper.close();
 			if( scoresId == -1 ) {
 				Toast.makeText(this, this.getString(R.string.failed_to_create_a_new_score_for_the_exam), Toast.LENGTH_LONG).show();
+				examinationDbHelper.close();
 				return;
 			}
 		} else {
 			scoresId = ExamTrainer.getScoresId();
 			questionId = examinationDbHelper.getLastAnsweredQuestionId(scoresId);
-			examinationDbHelper.close();
 			if( questionId == -1 ) {
 				Toast.makeText(this, this.getString(R.string.Failed_to_resume_exam), Toast.LENGTH_LONG).show();
+				examinationDbHelper.close();
 				return;
 			} 
 		}
@@ -263,13 +256,14 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		boolean useTimelimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
 		if( useTimelimit ) {
-			ExamTrainer.setTimer();
+			ExamTrainer.setTimer(examinationDbHelper.getDate(scoresId));
 		}
+
 		ExamTrainer.setScoresId(scoresId);
 		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM);
 		showExamQuestionFragment(questionId, true);
 	}
-	
+
 	private void doFragmentTransation(AbstractFragment fragment, String mode, boolean addToBackStack) {
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();

@@ -8,7 +8,6 @@ import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.text.format.Time;
 
 /**
@@ -37,7 +36,6 @@ public final class ExamTrainer {
 	private static long answersCorrect = 0;
 	private static long itemsNeededToPass = 0;
 	private static long totalAmountOfItems = 0;
-	private static final String questionNumber = "questionNumber";
 	private static long timeLimit = 0;
 	private static long timeEnd = 0;
 	private static long timerStart; 
@@ -93,10 +91,23 @@ public final class ExamTrainer {
 		return timeLimit;
 	}
 	
+	/**
+	 * Sets the timer to the current time
+	 */
 	public static void setTimer() {
 		timerStart = System.currentTimeMillis();
 		timeEnd = timerStart + (timeLimit * 1000);
 	}
+	
+	/**
+	 * Sets the timer
+	 * @param startTime epoch time in milliseconds
+	 */
+	public static void setTimer(long startTime) {
+		timerStart = startTime;
+		timeEnd = timerStart + (timeLimit * 1000);
+	}
+	
 	
 	public static boolean timeLimitExceeded() {
 		long currentTime = System.currentTimeMillis();

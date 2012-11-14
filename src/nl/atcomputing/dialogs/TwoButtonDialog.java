@@ -16,7 +16,7 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 
 public class TwoButtonDialog extends SherlockDialogFragment {
 	protected int posButtonMsgResourceId;
-	protected int negButtonMsgResourceId;
+	protected int negButtonMsgResourceId = R.string.cancel;
 	protected Runnable posButtonAction;
 	protected Runnable negButtonAction;
 
@@ -42,9 +42,9 @@ public class TwoButtonDialog extends SherlockDialogFragment {
 
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		Activity activity = getActivity();
-		
+
 		int msgResourceId = getArguments().getInt("msgResourceId");
-		
+
 		Dialog dialog;
 		AlertDialog.Builder builder;
 		builder = new AlertDialog.Builder(activity);
@@ -61,15 +61,14 @@ public class TwoButtonDialog extends SherlockDialogFragment {
 				}
 			});
 		}
-		if( ( posButtonMsgResourceId != 0 ) && ( posButtonAction != null ) ) {
-			builder.setNegativeButton(negButtonMsgResourceId, new DialogInterface.OnClickListener() {
-
-				public void onClick(DialogInterface dialog, int which) {
+		builder.setNegativeButton(negButtonMsgResourceId, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				if( negButtonAction != null ) {
 					negButtonAction.run();
-					dialog.dismiss();
 				}
-			});
-		}
+				dialog.dismiss();
+			}
+		});
 		builder.setCancelable(false);
 		dialog = builder.create();
 

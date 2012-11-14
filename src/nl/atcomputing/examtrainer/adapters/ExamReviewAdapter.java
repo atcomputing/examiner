@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,14 +38,15 @@ public class ExamReviewAdapter extends BaseAdapter
 		Resources res = context.getResources();
 		this.not_okImage = res.getDrawable(R.drawable.red_cross);
 		this.okImage = res.getDrawable(R.drawable.green_check);
-		this.unknownImage = res.getDrawable(R.drawable.questionmark);
+		this.unknownImage = res.getDrawable(R.drawable.ic_action_hint);
 		
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this.context);
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		this.cursor = examinationDbHelper.getResultsPerQuestion(scoresId);
+		int score = examinationDbHelper.getScore(scoresId);
 		examinationDbHelper.close();
 		
-		if( cursor.getCount() < ExamTrainer.getAmountOfItems() ) {
+		if( score == -1 ) {
 			this.showResults = false;
 		}
 	}

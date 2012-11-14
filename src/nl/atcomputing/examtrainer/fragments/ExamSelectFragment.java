@@ -4,7 +4,6 @@ import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.adapters.ExamSelectAdapter;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;

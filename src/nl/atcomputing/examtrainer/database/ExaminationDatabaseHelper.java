@@ -63,6 +63,7 @@ public class ExaminationDatabaseHelper extends SQLiteOpenHelper {
 
 		public static final String COLUMN_NAME_DATE = "date";
 		public static final String COLUMN_NAME_SCORE = "score";
+		public static final String COLUMN_NAME_EXAM_START = "exam_start";
 	}
 
 	public static final class ScoresAnswers implements BaseColumns {
@@ -124,7 +125,8 @@ public class ExaminationDatabaseHelper extends SQLiteOpenHelper {
 		+ Scores.TABLE_NAME + " ("
 		+ Scores._ID + " INTEGER PRIMARY KEY,"
 	    + Scores.COLUMN_NAME_SCORE + " INTEGER,"
-	    + Scores.COLUMN_NAME_DATE + " INTEGER"
+	    + Scores.COLUMN_NAME_DATE + " INTEGER,"
+	    + Scores.COLUMN_NAME_EXAM_START + " INTEGER"
 	    + ");";
 
 	private static final String DATABASE_CREATE_RESULTPERQUESTION_TABLE = "CREATE TABLE " 

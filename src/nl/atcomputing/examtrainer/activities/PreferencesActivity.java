@@ -7,7 +7,7 @@ import com.actionbarsherlock.app.SherlockPreferenceActivity;
 
 /**
  * @author martijn brekhof
- *
+ * TODO replace by PreferenceFragment
  */
 
 public class PreferencesActivity extends SherlockPreferenceActivity {

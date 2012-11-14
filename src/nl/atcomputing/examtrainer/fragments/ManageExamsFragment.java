@@ -1,7 +1,6 @@
 package nl.atcomputing.examtrainer.fragments;
 
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.adapters.ExamSelectAdapter;
 import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter;
 import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter.ManageExamsAdapterListener;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
@@ -11,7 +10,6 @@ import nl.atcomputing.examtrainer.examparser.UninstallExamAsyncTask;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +28,6 @@ import com.actionbarsherlock.view.MenuItem;
  */
 
 public class ManageExamsFragment extends AbstractFragment implements ManageExamsAdapterListener {
-	private ExamSelectAdapter adap;
 	
 	@Override
     public void onAttach(Activity activity) {
@@ -48,7 +45,6 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		setupListView();
 	}
@@ -66,13 +62,11 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		// TODO Auto-generated method stub
 		inflater.inflate(R.menu.manageexam_menu, menu);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		Activity activity = getActivity();
 		
 		switch (item.getItemId()) {
 		case R.id.manageexam_menu_get_new_exams:
@@ -99,8 +93,6 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 
 	@Override
 	public void updateView() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	public void onButtonClick(View v, long examID) {

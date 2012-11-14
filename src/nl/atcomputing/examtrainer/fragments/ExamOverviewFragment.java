@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 import nl.atcomputing.dialogs.RunThreadWithProgressDialog;
+import nl.atcomputing.dialogs.TwoButtonDialog;
 import nl.atcomputing.dialogs.UsageDialog;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.activities.ExamTrainer;
@@ -99,14 +100,6 @@ public class ExamOverviewFragment extends AbstractFragment {
 		updateView();
 	}
 
-//	public void onDestroy() {
-//		super.onDestroy();
-//		Cursor cursor = this.adapter.getCursor();
-//		if ( cursor != null ) {
-//			cursor.close();
-//		}
-//	}
-
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.examoverviewfragment_menu, menu);
@@ -117,7 +110,21 @@ public class ExamOverviewFragment extends AbstractFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.menu_delete:
-			deleteSelectedFromDatabase();
+			final HashMap<Integer, Boolean> itemsChecked = adapter.getItemsChecked();
+			if( itemsChecked.size() == 0 ) {
+				Toast.makeText(getActivity(), R.string.No_exams_selected_to_delete, Toast.LENGTH_SHORT).show();
+			} else {
+				TwoButtonDialog confirmDialog = TwoButtonDialog.newInstance(R.string.Delete_selected_scores_);
+				confirmDialog.setPositiveButton(R.string.ok, new Runnable() {
+					
+					@Override
+					public void run() {
+						deleteSelectedFromDatabase(itemsChecked);
+					}
+				});
+				confirmDialog.show(getFragmentManager(), "ConfirmDeleteDialog");
+			}
+			
 			break;
 		case R.id.menu_preferences:
 			Intent intent = new Intent(getActivity(), PreferencesActivity.class);
@@ -149,13 +156,7 @@ public class ExamOverviewFragment extends AbstractFragment {
 		return ExamTrainer.getExamTitle();
 	}
 	
-	private void deleteSelectedFromDatabase() {
-		final HashMap<Integer, Boolean> itemsChecked = adapter.getItemsChecked();
-		if( itemsChecked.size() == 0 ) {
-			Toast.makeText(getActivity(), R.string.No_exams_selected_to_delete, Toast.LENGTH_SHORT).show();
-			return;
-		}
-		
+	private void deleteSelectedFromDatabase(final HashMap<Integer, Boolean> itemsChecked) {
 		RunThreadWithProgressDialog pd = new RunThreadWithProgressDialog(getActivity(), 
 				new Thread(new Runnable() {
 					public void run() {
@@ -215,7 +216,7 @@ public class ExamOverviewFragment extends AbstractFragment {
 		final Activity activity = getActivity();
 
 		ListView scoresList = (ListView) activity.findViewById(R.id.startexam_history_listview);
-		scoresList.setAdapter(adapter);
+		scoresList.setAdapter(this.adapter);
 
 		scoresList.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,
