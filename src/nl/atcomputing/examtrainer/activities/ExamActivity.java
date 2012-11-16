@@ -155,7 +155,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 	public void onItemClickListener(long id) {
 		if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SHOW_EXAM_REVIEW) {		
 			ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM_REVIEW);
-			showExamQuestionFragment(id, true);
+			showExamQuestionFragment(id, FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 		} else if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_OVERVIEW) {
 			showExamReviewFragment(id, true);
 		} else if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.SELECT_EXAM) {
@@ -168,7 +168,12 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		if( fragment instanceof ExamOverviewFragment ) {
 			startExam();
 		} else if ( fragment instanceof ExamQuestionFragment ) {
-			showExamQuestionFragment(id, true);
+			long questionId = ((ExamQuestionFragment) fragment).getQuestionId();
+			if( id > questionId ) { // if new question number is larger than current question number
+				showExamQuestionFragment(id, FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+			} else {
+				showExamQuestionFragment(id, FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+			}
 		} else if ( fragment instanceof ExamReviewFragment ) {
 			startExam();
 		} else if ( fragment instanceof ManageExamsFragment ) {
@@ -261,14 +266,14 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 
 		ExamTrainer.setScoresId(scoresId);
 		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM);
-		showExamQuestionFragment(questionId, true);
+		showExamQuestionFragment(questionId, FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 	}
 
-	private void doFragmentTransation(AbstractFragment fragment, String mode, boolean addToBackStack) {
+	private void doFragmentTransation(AbstractFragment fragment, String mode, boolean addToBackStack, int fragmentTransition) {
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 		fragmentTransaction.replace(R.id.exam_fragment_holder, fragment, mode);
-		fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+		fragmentTransaction.setTransition(fragmentTransition);
 		if( addToBackStack) {
 			fragmentTransaction.addToBackStack(mode);
 		}
@@ -276,24 +281,24 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		this.activeFragment = fragment;
 	}
 
-	private void showExamQuestionFragment(long number, boolean addToBackStack) {
+	private void showExamQuestionFragment(long number, int fragmentTransition) {
 		ExamTrainer.ExamTrainerMode mode = ExamTrainer.getExamMode();
 		this.examQuestionFragment = new ExamQuestionFragment();
 		this.examQuestionFragment.setQuestionId(number);
-		doFragmentTransation(this.examQuestionFragment, mode.name(), addToBackStack);
+		doFragmentTransation(this.examQuestionFragment, mode.name(), true, fragmentTransition);
 	}
 
 	private void showSelectExamFragment(boolean addToBackStack) {
 		ExamTrainer.ExamTrainerMode mode = ExamTrainer.ExamTrainerMode.SELECT_EXAM;
 		this.examSelectFragment = new ExamSelectFragment();
-		doFragmentTransation(this.examSelectFragment, mode.name(), addToBackStack);
+		doFragmentTransation(this.examSelectFragment, mode.name(), addToBackStack, FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ExamTrainer.setExamMode(mode);
 	}
 
 	private void showExamOverviewFragment(boolean addToBackStack) {
 		ExamTrainer.ExamTrainerMode mode = ExamTrainer.ExamTrainerMode.EXAM_OVERVIEW;
 		this.examOverviewFragment = new ExamOverviewFragment();
-		doFragmentTransation(this.examOverviewFragment, mode.name(), addToBackStack);
+		doFragmentTransation(this.examOverviewFragment, mode.name(), addToBackStack, FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ExamTrainer.setExamMode(mode);
 	}
 
@@ -301,14 +306,14 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		ExamTrainer.ExamTrainerMode mode = ExamTrainer.ExamTrainerMode.SHOW_EXAM_REVIEW;
 		ExamTrainer.setScoresId(id);
 		this.examReviewFragment = new ExamReviewFragment();
-		doFragmentTransation(this.examReviewFragment, mode.name(), addToBackStack);
+		doFragmentTransation(this.examReviewFragment, mode.name(), addToBackStack, FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ExamTrainer.setExamMode(mode);
 	}
 
 	private void showManageExamsFragment(boolean addToBackStack) {
 		ExamTrainer.ExamTrainerMode mode = ExamTrainer.ExamTrainerMode.MANAGE_EXAMS;
 		this.manageExamsFragment = new ManageExamsFragment();
-		doFragmentTransation(this.manageExamsFragment, mode.name(), addToBackStack);
+		doFragmentTransation(this.manageExamsFragment, mode.name(), addToBackStack, FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 		ExamTrainer.setExamMode(mode);
 	}
 }

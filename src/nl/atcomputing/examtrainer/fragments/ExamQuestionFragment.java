@@ -353,7 +353,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 		}
 		examinationDbHelper.close();
 	}
-	
+
 	private void showAnswers() {
 		Activity activity = getActivity();
 
@@ -479,6 +479,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 
 
 	private void createOpenQuestionLayout() {
+		Log.d("ExamQuestionFragment", "createOpenQuestionLayout: this.questionId="+this.questionId);
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(getActivity());
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		Cursor cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), this.questionId);
@@ -497,12 +498,12 @@ public class ExamQuestionFragment extends AbstractFragment {
 
 		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) {
 			showAnswers();
-		} else {
-			//No need to get previous selected choices during an exam if there are none
-			if ( scoresAnswersCursor.getCount() < 1 ) {
-				examinationDbHelper.close();
-				return;
-			}
+		} 
+		
+		//No need to get previous selected choices during an exam if there are none
+		if ( scoresAnswersCursor.getCount() < 1 ) {
+			examinationDbHelper.close();
+			return;
 		}
 
 		int index = scoresAnswersCursor.getColumnIndex(ExaminationDatabaseHelper.ScoresAnswers.COLUMN_NAME_ANSWER);
@@ -538,8 +539,6 @@ public class ExamQuestionFragment extends AbstractFragment {
 	private void setupLayout() {
 		Activity activity = getActivity();
 		String text;
-
-		Log.d("ExamQuestionFragment", "Setting up layout");
 
 		timeLimitTextView = (TextView) activity.findViewById(R.id.textExamTime);
 
@@ -585,7 +584,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 						showDialog(ExamQuestionFragment.DIALOG_ENDOFEXAM_ID);
 					}
 				} else {
-					abstractFragmentListener.onButtonClickListener(ExamQuestionFragment.this, ++questionId);
+					abstractFragmentListener.onButtonClickListener(ExamQuestionFragment.this, questionId + 1);
 				}
 			}
 		});
@@ -594,7 +593,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 		buttonPrevQuestion.setOnClickListener( new View.OnClickListener() {
 			public void onClick(View v) {
 				saveScore();
-				abstractFragmentListener.onButtonClickListener(ExamQuestionFragment.this, --questionId);
+				abstractFragmentListener.onButtonClickListener(ExamQuestionFragment.this, questionId - 1);
 			}
 		});
 

@@ -93,6 +93,7 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 
 	@Override
 	public void updateView() {
+		setupListView();
 	}
 
 	public void onButtonClick(View v, long examID) {

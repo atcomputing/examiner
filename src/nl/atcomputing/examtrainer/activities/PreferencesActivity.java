@@ -1,9 +1,10 @@
 package nl.atcomputing.examtrainer.activities;
 
+import com.actionbarsherlock.app.SherlockPreferenceActivity;
+
 import nl.atcomputing.examtrainer.R;
 import android.os.Bundle;
-
-import com.actionbarsherlock.app.SherlockPreferenceActivity;
+import android.preference.PreferenceFragment;
 
 /**
  * @author martijn brekhof
