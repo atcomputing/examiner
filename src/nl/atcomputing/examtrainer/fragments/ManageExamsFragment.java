@@ -1,5 +1,6 @@
 package nl.atcomputing.examtrainer.fragments;
 
+import nl.atcomputing.dialogs.TwoButtonDialog;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter;
 import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter.ManageExamsAdapterListener;
@@ -10,6 +11,7 @@ import nl.atcomputing.examtrainer.examparser.UninstallExamAsyncTask;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -96,23 +98,36 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 		setupListView();
 	}
 
-	public void onButtonClick(View v, long examID) {
-		Activity activity = getActivity();
+	public void onButtonClick(final View v, final long examID) {
+		final Activity activity = getActivity();
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
 		examTrainerDbHelper.open();
 		ExamTrainerDbAdapter.State state = examTrainerDbHelper.getInstallationState(examID);
 		examTrainerDbHelper.close();
 		
-		if( v instanceof Button ) {
-			((Button) v).setEnabled(false);
-		}
+		v.setEnabled(false);
 		
 		if( state == ExamTrainerDbAdapter.State.NOT_INSTALLED ) {
 			InstallExamAsyncTask task = new InstallExamAsyncTask(activity, (TextView) v, examID);
 			task.execute();
 		} else  if ( state == ExamTrainerDbAdapter.State.INSTALLED ) {
-			UninstallExamAsyncTask task = new UninstallExamAsyncTask(activity, examID);
-			task.execute();
+			TwoButtonDialog dialog = TwoButtonDialog.newInstance(R.string.are_you_sure_you_want_to_uninstall_this_exam);
+			dialog.setPositiveButton(R.string.yes, new Runnable() {
+				
+				@Override
+				public void run() {
+					UninstallExamAsyncTask task = new UninstallExamAsyncTask(activity, examID);
+					task.execute();
+				}
+			});
+			dialog.setNegativeButton(R.string.no, new Runnable() {
+				
+				@Override
+				public void run() {
+					v.setEnabled(true);
+				}
+			});
+			dialog.show(getFragmentManager(), "ConfirmUninstallation");
 		}
 	}
 
