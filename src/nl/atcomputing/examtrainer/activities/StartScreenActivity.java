@@ -8,15 +8,11 @@ import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.examparser.XmlPullExamListParser;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.AssetManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.MotionEvent;
 import android.widget.Toast;
 
 
@@ -25,40 +21,50 @@ import android.widget.Toast;
  * Copyright AT Computing 2012
  */
 public class StartScreenActivity extends Activity {
-
+	private Thread waitThread;
+	private boolean cancelThread = false;
+	
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.main);		
+		setContentView(R.layout.startscreenactivity);		
 
 		//Load default preference values
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-		Button startExam = (Button) findViewById(R.id.button_start);
-		startExam.setOnClickListener( new View.OnClickListener() {
-			public void onClick(View v) {
-				Intent intent = new Intent(StartScreenActivity.this, ExamActivity.class);
-				ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.SELECT_EXAM);
-				startActivity(intent);
+		this.waitThread = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				loadLocalExams();
+				try {
+					int waited = 0;
+					while ( (cancelThread == false) && (waited < 2000) ) {
+						synchronized (this) {
+							wait(100);
+						}
+						waited += 100;
+					}
+				} catch (InterruptedException e) {
+
+				} finally {
+					Intent intent = new Intent(StartScreenActivity.this, ExamActivity.class);
+					startActivity(intent);
+					finish();
+				}
 			}
 		});
-		
-		String version;
-		try {
-			PackageInfo info = getPackageManager().getPackageInfo("nl.atcomputing.examtrainer", 0);
-			version = info.versionName;
-		} catch (NameNotFoundException e) {
-			version = getString(R.string.unknown);
-		}
-		TextView tv = (TextView) findViewById(R.id.about_version_number);
-		if( tv != null ) {
-			tv.setText(version);
-		}
-		
-		loadLocalExams();
+
+		this.waitThread.start();
 	}
-	
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		this.cancelThread = true;
+		return true;
+	}
+
 	private void loadLocalExams() {
 		int file_index = 0;
 		String[] filenames = null;
@@ -79,7 +85,7 @@ public class StartScreenActivity extends Activity {
 						xmlPullExamListParser = new XmlPullExamListParser(this, url);
 						xmlPullExamListParser.parse();
 						ArrayList<Exam> exams = xmlPullExamListParser.getExamList();
-												
+
 						for ( Exam exam : exams ) {
 							if ( ! examTrainerDbHelper.checkIfExamAlreadyInDatabase(exam) ) {
 								exam.addToDatabase(this);
