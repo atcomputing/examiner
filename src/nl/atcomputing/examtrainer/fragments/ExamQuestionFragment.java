@@ -237,6 +237,11 @@ public class ExamQuestionFragment extends AbstractFragment {
 		return this.questionId;
 	}
 
+	@Override
+	public String getTitle() {
+		return ExamTrainer.getExamTitle();
+	}
+	
 	public void showDialog(int id) {
 		final Activity activity = getActivity();
 		switch(id) {
@@ -348,8 +353,9 @@ public class ExamQuestionFragment extends AbstractFragment {
 		} catch (SQLiteException e) {
 			throw(e);
 		}
-		for( long i = questionId + 1; i < ExamTrainer.getAmountOfItems(); i++ ) {
-			examinationDbHelper.setResultPerQuestion(ExamTrainer.getScoresId(), i, false);
+		long amountOfQuestions = ExamTrainer.getAmountOfItems();
+		for( long i = questionId + 1; i <= amountOfQuestions; i++ ) {
+			examinationDbHelper.addResultPerQuestion(ExamTrainer.getScoresId(), i, false);
 		}
 		examinationDbHelper.close();
 	}

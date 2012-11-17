@@ -90,15 +90,10 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		BackStackEntry bse = fm.getBackStackEntryAt(currentBackStackEntryCount-1);
 		String fragmentName = bse.getName();
 		Fragment fragment = fm.findFragmentByTag(fragmentName);
+		Log.d("ExamActivity", "onResume: fragmentName="+fragmentName+", fragment.getTitle()="+((AbstractFragment) fragment).getTitle());
 		setActiveFragment(fragment);
 
 		updateActionBarTitle();
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putString(KEY_ACTIVE_FRAGMENT, this.activeFragment.getClass().getSimpleName());
 	}
 
 	public void onPause() {

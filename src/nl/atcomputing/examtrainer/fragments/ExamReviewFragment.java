@@ -122,4 +122,9 @@ public class ExamReviewFragment extends AbstractFragment {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	@Override
+	public String getTitle() {
+		return ExamTrainer.getExamTitle();
+	}
 }
