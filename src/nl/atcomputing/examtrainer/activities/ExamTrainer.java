@@ -20,7 +20,6 @@ public final class ExamTrainer {
 		EXAM, 
 		EXAM_REVIEW, 
 		ENDOFEXAM, 
-		CALCULATING_SCORE, 
 		EXAM_OVERVIEW, 
 		SHOW_EXAM_REVIEW,
 		MANAGE_EXAMS

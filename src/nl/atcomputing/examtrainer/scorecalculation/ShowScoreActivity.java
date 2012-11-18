@@ -3,16 +3,15 @@ package nl.atcomputing.examtrainer.scorecalculation;
 import java.util.List;
 
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.activities.ExamActivity;
 import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteException;
 import android.opengl.GLSurfaceView;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +27,7 @@ public class ShowScoreActivity extends Activity {
 	private CalculateScore calculateScore;
 	private boolean glSurfaceReady = false;
 	private WaitForGLSurfaceReadyAsyncTask waitForGLSurfaceReadyAsyncTask = null;
-	
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.show_score);
@@ -37,17 +36,21 @@ public class ShowScoreActivity extends Activity {
 		this.renderer = new GLSurfaceViewRenderer(this);
 		this.glView.setRenderer(this.renderer);
 
-		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.CALCULATING_SCORE ) {
-			ShowScoreActivity.this.calculateScore = (CalculateScore) getLastNonConfigurationInstance();
-			if( ( ShowScoreActivity.this.calculateScore != null ) && 
-					( ShowScoreActivity.this.calculateScore.getStatus() != AsyncTask.Status.FINISHED) ) {
+		ShowScoreActivity.this.calculateScore = (CalculateScore) getLastNonConfigurationInstance();
+		if( ShowScoreActivity.this.calculateScore != null ) { // we got a previous state
+			if ( ShowScoreActivity.this.calculateScore.getStatus() != AsyncTask.Status.FINISHED) {
+				//Reconnect running calculation thread
 				ShowScoreActivity.this.calculateScore.setContext(ShowScoreActivity.this);
 			} else {
-				calculateScore();
+				//Calculation thread already finished so we can show the result
+				showResult();
 			}
 		} else {
-			showResult();
+			//no previous state available. We are called for the first time
+			//so we calculate the score.
+			calculateScore();
 		}
+
 	}
 
 	public void setGLSurfaceReady() {
@@ -71,14 +74,6 @@ public class ShowScoreActivity extends Activity {
 		this.renderer.onResume();
 	}
 
-	@Override
-	public void onBackPressed() {
-		Intent intent = new Intent(ShowScoreActivity.this, ExamActivity.class);
-		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		startActivity(intent);
-		finish();
-	}
-	
 	public Object onRetainNonConfigurationInstance() {
 		return this.calculateScore;
 	}
@@ -96,16 +91,15 @@ public class ShowScoreActivity extends Activity {
 		List<Long> questionIDsList = examinationDbHelper.getAllQuestionIDs();
 		examinationDbHelper.close();
 
-		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.CALCULATING_SCORE);
 		this.calculateScore = new CalculateScore(this);
 		this.calculateScore.execute(questionIDsList.toArray());
-		
+
 	}
 
 	protected void showResult() {
 		int score = 0;
 		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.ENDOFEXAM);
-		
+
 		ExaminationDbAdapter examinationDbHelper;
 		examinationDbHelper = new ExaminationDbAdapter(this);
 		try {
@@ -143,7 +137,7 @@ public class ShowScoreActivity extends Activity {
 		tv.setTextColor(color);
 		tv.setVisibility(View.VISIBLE);
 	}
-	
+
 	private class WaitForGLSurfaceReadyAsyncTask extends AsyncTask<Integer, Integer, Integer> {
 
 		@Override
@@ -157,7 +151,7 @@ public class ShowScoreActivity extends Activity {
 			}
 			return params[0];
 		}
-		
+
 		@Override
 		protected void onPostExecute(Integer result) {
 			renderer.showBalloons(result.intValue());

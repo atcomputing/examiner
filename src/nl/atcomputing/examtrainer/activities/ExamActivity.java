@@ -36,8 +36,6 @@ import com.actionbarsherlock.view.MenuItem;
 public class ExamActivity extends SherlockFragmentActivity 
 implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 
-	private String KEY_ACTIVE_FRAGMENT = "keyActiveFragment";
-
 	private ReceiveBroadcast receiveBroadcast;
 	private ExamQuestionFragment examQuestionFragment;
 	private ExamOverviewFragment examOverviewFragment;
@@ -144,6 +142,9 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 	}
 
 	public void onExamEnd() {
+		FragmentManager fm = getSupportFragmentManager();
+		fm.popBackStack(ExamTrainer.ExamTrainerMode.EXAM.name(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+		fm.popBackStack(ExamTrainer.ExamTrainerMode.EXAM_REVIEW.name(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		startCalculateScoreActivity();
 	}
 
@@ -177,6 +178,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 	}
 
 	public void onBackStackChanged() {
+		Log.d("ExamActivity", "enter onBackStackChanged: ExamTrainer.getExamMode()="+ExamTrainer.getExamMode());
 		FragmentManager fm = getSupportFragmentManager();
 		int currentBackStackEntryCount = fm.getBackStackEntryCount();
 
@@ -190,6 +192,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 
 		setActiveFragment(fragment);
 		updateActionBarTitle();
+		Log.d("ExamActivity", "exit onBackStackChanged: ExamTrainer.getExamMode()="+ExamTrainer.getExamMode());
 	}
 
 	private void updateActionBarTitle() {
@@ -224,9 +227,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 	}
 
 	private void startCalculateScoreActivity() {
-		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.CALCULATING_SCORE);
 		Intent intent = new Intent(ExamActivity.this, ShowScoreActivity.class);
-		//		intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		startActivity(intent);
 	}
 
@@ -252,15 +253,18 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 				return;
 			} 
 		}
-
+		
+		
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		boolean useTimelimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
 		if( useTimelimit ) {
 			ExamTrainer.setTimer(examinationDbHelper.getDate(scoresId));
 		}
-
+		examinationDbHelper.close();
+		
 		ExamTrainer.setScoresId(scoresId);
 		ExamTrainer.setExamMode(ExamTrainer.ExamTrainerMode.EXAM);
+		
 		showExamQuestionFragment(questionId, FragmentTransaction.TRANSIT_FRAGMENT_FADE);
 	}
 

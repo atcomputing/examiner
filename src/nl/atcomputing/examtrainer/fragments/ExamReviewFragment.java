@@ -47,24 +47,11 @@ public class ExamReviewFragment extends AbstractFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		final Activity activity = getActivity();
+		Activity activity = getActivity();
 
 		setupScoresGrid();
 
-		Button buttonStartExam = (Button) activity.findViewById(R.id.button_start_exam);
 		this.examID = ExamTrainer.getScoresId();
-		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(activity);
-		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-		this.score = examinationDbHelper.getScore(this.examID);
-		examinationDbHelper.close();
-		if( this.score == -1 ) {
-			buttonStartExam.setVisibility(View.VISIBLE);
-			buttonStartExam.setOnClickListener(new OnClickListener() {
-				public void onClick(View v) {
-					abstractFragmentListener.onButtonClickListener(ExamReviewFragment.this, ExamTrainer.getExamId());
-				}
-			});
-		}
 
 		UsageDialog usageDialog = UsageDialog.newInstance(activity, R.string.Usage_Dialog_examReviewScreenMessage);
 		if( usageDialog != null ) {
@@ -75,18 +62,28 @@ public class ExamReviewFragment extends AbstractFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
+		Activity activity = getActivity();
+		
+		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(activity);
+		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+		this.score = examinationDbHelper.getScore(this.examID);
+		examinationDbHelper.close();
+		
+		Button buttonStartExam = (Button) activity.findViewById(R.id.button_start_exam);
+		if( this.score == -1 ) {
+			buttonStartExam.setVisibility(View.VISIBLE);
+			buttonStartExam.setOnClickListener(new OnClickListener() {
+				public void onClick(View v) {
+					abstractFragmentListener.onButtonClickListener(ExamReviewFragment.this, ExamTrainer.getExamId());
+				}
+			});
+		} else {
+			buttonStartExam.setVisibility(View.GONE);
+		}
+		
 		setupScoresGrid();
 	}
 	
-//	@Override
-//	public void onDestroy() {
-//		super.onDestroy();
-//		Cursor cursor = this.adapter.getCursor();
-//		if ( cursor != null ) { 
-//			cursor.close();
-//		}
-//	}
-
 	public void setExamID(long id) {
 		this.examID = id;
 	}

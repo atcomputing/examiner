@@ -34,7 +34,7 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 
 	CalculateScore(ShowScoreActivity context) {
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-		showScoreInstantaneously = prefs.getBoolean(context.getResources().getString(R.string.pref_key_show_score_instantaneous), false);
+		this.showScoreInstantaneously = prefs.getBoolean(context.getResources().getString(R.string.pref_key_show_score_instantaneous), false);
 
 		this.showScoreActivity = context;
 		this.progress = 0;

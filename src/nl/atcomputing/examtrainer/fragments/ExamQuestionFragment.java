@@ -134,10 +134,6 @@ public class ExamQuestionFragment extends AbstractFragment {
 
 		myHandler = new MyHandler(this);
 
-		//		if ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.ENDOFEXAM ) {
-		//			this.examQuestionListener.onExamEnd();
-		//		}
-
 		if( this.questionId == 1 ) {
 			UsageDialog usageDialog = UsageDialog.newInstance(activity, R.string.Usage_Dialog_Press_menu_to_quit_the_exam_or_show_a_hint_if_available);
 			if( usageDialog != null ) {
