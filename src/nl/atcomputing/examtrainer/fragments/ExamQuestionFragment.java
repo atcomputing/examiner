@@ -3,6 +3,7 @@ package nl.atcomputing.examtrainer.fragments;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -22,7 +23,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +67,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 	private ExamQuestion examQuestion;
 
 	private static class MyHandler extends Handler {
-		SimpleDateFormat dateFormatGmt = new SimpleDateFormat("HH:mm:ss");
+		SimpleDateFormat dateFormatGmt = new SimpleDateFormat("HH:mm:ss", Locale.US);
 		ExamQuestionFragment fragment;
 
 		public MyHandler(ExamQuestionFragment fragment) {
@@ -481,7 +481,6 @@ public class ExamQuestionFragment extends AbstractFragment {
 
 
 	private void createOpenQuestionLayout() {
-		Log.d("ExamQuestionFragment", "createOpenQuestionLayout: this.questionId="+this.questionId);
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(getActivity());
 		examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 		Cursor cursor = examinationDbHelper.getScoresAnswers(ExamTrainer.getScoresId(), this.questionId);

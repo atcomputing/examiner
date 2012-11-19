@@ -11,18 +11,12 @@ import nl.atcomputing.examtrainer.examparser.UninstallExamAsyncTask;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 
 /**
  * @author martijn brekhof
@@ -60,24 +54,6 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 	@Override
 	public String getTitle() {
 		return "Manage Exams";
-	}
-	
-	@Override
-	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		inflater.inflate(R.menu.manageexam_menu, menu);
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		
-		switch (item.getItemId()) {
-		case R.id.manageexam_menu_get_new_exams:
-			
-			break;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-		return true;
 	}
 	
 	private void setupListView() {

@@ -132,7 +132,7 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 			examinationDbHelper.updateScore(ExamTrainer.getScoresId(), answersCorrect);
 			examinationDbHelper.close();
 		} catch (SQLiteException e) {
-			Log.d("CalculateScore", e.getMessage());
+			Log.w("CalculateScore", e.getMessage());
 		}
 
 		if( ! this.showScoreInstantaneously ) {

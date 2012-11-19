@@ -31,7 +31,7 @@ public class ExaminationDbAdapter {
 		try {
 			db = dbHelper.getWritableDatabase();
 		} catch (SQLiteException e) {
-			Log.d(TAG, "Could not get writable database " + databaseName);
+			Log.w(TAG, "Could not get writable database " + databaseName);
 			throw e;
 		}
 		return this;
@@ -113,10 +113,10 @@ public class ExaminationDbAdapter {
 			values.put(ExaminationDatabaseHelper.Scores.COLUMN_NAME_SCORE, -1);
 			return db.insert(ExaminationDatabaseHelper.Scores.TABLE_NAME, null, values);
 		} catch (NullPointerException e) {
-			Log.d(TAG, "createNewScore null pointer exception: " + e.getMessage());
+			Log.w(TAG, "createNewScore null pointer exception: " + e.getMessage());
 			return -1;
 		} catch (IllegalArgumentException e) {
-			Log.d(TAG, "createNewScore Illegal Argument: " + e.getMessage());
+			Log.w(TAG, "createNewScore Illegal Argument: " + e.getMessage());
 			return -1;
 		}
 	}
@@ -545,9 +545,6 @@ public class ExaminationDbAdapter {
 		answersCountCursor.close();
 		correctAnswersCountCursor.close();
 		
-		Log.d("ExaminationDbAdapter", "checkScoresAnswersMultipleChoice: answersCount="+answersCount+
-				", correctAnswersCount="+correctAnswersCount);
-		
 		if ( answersCount == correctAnswersCount ) {
 			String correctAnswersQuestionId = ExaminationDatabaseHelper.Answers.TABLE_NAME + "." + ExaminationDatabaseHelper.Answers.COLUMN_NAME_QUESTION_ID;
 			String correctAnswersAnswer = ExaminationDatabaseHelper.Answers.TABLE_NAME + "." + ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER;
@@ -569,8 +566,7 @@ public class ExaminationDbAdapter {
 				;
 			String[] sqlArgs = new String[] { Long.toString(questionId), Long.toString(questionId)
 					, Long.toString(scoresId) };
-			Log.d("ExaminationDbAdapter", "checkScoresAnswersMultipleChoice: sqlQuery="+sqlQuery);
-		    Cursor mCursor = db.rawQuery(sqlQuery, sqlArgs);
+			Cursor mCursor = db.rawQuery(sqlQuery, sqlArgs);
 		    int count = mCursor.getCount();
 		    mCursor.close();
 		    return count == correctAnswersCount;

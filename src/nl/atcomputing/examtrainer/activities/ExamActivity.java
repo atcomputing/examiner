@@ -88,7 +88,6 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		BackStackEntry bse = fm.getBackStackEntryAt(currentBackStackEntryCount-1);
 		String fragmentName = bse.getName();
 		Fragment fragment = fm.findFragmentByTag(fragmentName);
-		Log.d("ExamActivity", "onResume: fragmentName="+fragmentName+", fragment.getTitle()="+((AbstractFragment) fragment).getTitle());
 		setActiveFragment(fragment);
 
 		updateActionBarTitle();
@@ -178,7 +177,6 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 	}
 
 	public void onBackStackChanged() {
-		Log.d("ExamActivity", "enter onBackStackChanged: ExamTrainer.getExamMode()="+ExamTrainer.getExamMode());
 		FragmentManager fm = getSupportFragmentManager();
 		int currentBackStackEntryCount = fm.getBackStackEntryCount();
 
@@ -192,7 +190,6 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 
 		setActiveFragment(fragment);
 		updateActionBarTitle();
-		Log.d("ExamActivity", "exit onBackStackChanged: ExamTrainer.getExamMode()="+ExamTrainer.getExamMode());
 	}
 
 	private void updateActionBarTitle() {

@@ -94,7 +94,7 @@ public class StartScreenActivity extends Activity {
 					}
 				}
 			} catch (Exception e) {
-				Log.d(this.getClass().getName() , "Updating exams failed: Error " + e.getMessage());
+				Log.w(this.getClass().getName() , "Updating exams failed: Error " + e.getMessage());
 				Toast.makeText(this, "Error: updating exam " + filenames[file_index] + " failed.", Toast.LENGTH_LONG).show();
 			}
 		}

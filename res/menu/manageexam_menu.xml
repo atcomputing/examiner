@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/manageexam_menu_get_new_exams"
-          android:icon="@drawable/ic_action_reload"
-          android:title="@string/Get_new_exams"
-          android:showAsAction="ifRoom|withText" />
-</menu>

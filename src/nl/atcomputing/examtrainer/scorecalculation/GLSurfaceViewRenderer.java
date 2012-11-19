@@ -29,9 +29,14 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 	private float screenBoundaryRight;
 	private float screenBoundaryLeft;
 	private float screenBoundaryBottom;
-//	private long startTime;
-//	private final int framerate = 33; //framerate is milliseconds per update
-	
+	float topScreenBoundaryForBalloon;
+	float bottomScreenBoundaryForBalloon;
+	float leftScreenBoundaryForBalloon;
+	float rightScreenBoundaryForBalloon;
+
+	//	private long startTime;
+	//	private final int framerate = 33; //framerate is milliseconds per update
+
 	/**
 	 * Prevent a nasty bug that calls onSurfaceChanged twice when returning
 	 * after another app was active.
@@ -68,18 +73,7 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 		if( this.mode != this.RUN ) {
 			return;
 		}
-//	    
-//		long endTime = System.currentTimeMillis();
-//	    long dt = endTime - this.startTime;
-//	    if (dt < framerate) {
-//			try {
-//				Thread.sleep(framerate - dt);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//	    }
-//	    this.startTime = System.currentTimeMillis();
-	    
+
 		//Clear Screen And Depth Buffer
 		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);	
 
@@ -88,33 +82,28 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 		GLU.gluLookAt(gl, 0f, 0f, this.zoom, 0f, 0f, 0f, 0f, -1.0f, 0f);
 		if(this.showBalloons) {
 			this.wind.update();
-			
-			float bottomScreenBoundaryForBalloon = this.screenBoundaryBottom - 1.5f;
-			float leftScreenBoundaryForBalloon = this.screenBoundaryLeft - 1.5f;
-			float rightScreenBoundaryForBalloon = this.screenBoundaryRight - 1.5f;
-			
-			for(Balloon b: this.balloons) {
-				float windSpeedHorizontal = this.wind.getWind(-b.y);
-				if(wind.getDirection() == Wind.Direction.LEFT ) {
-					windSpeedHorizontal = -windSpeedHorizontal;
-				}
 
-				b.x += windSpeedHorizontal; 
+			float direction = 1;
+			if(wind.getDirection() == Wind.Direction.LEFT ) {
+				direction = -1;
+			}
+
+			for(Balloon b: this.balloons) {
+				b.x += this.wind.getWind(-b.y) * direction; 
 				b.y -= b.getLift();
 
 				if( b.y < bottomScreenBoundaryForBalloon ) {
-					b.y = this.screenBoundaryTop + 1.5f;
+					b.y = this.topScreenBoundaryForBalloon;
 				}
 				if( b.x < leftScreenBoundaryForBalloon ) {
-					b.x = this.screenBoundaryRight + 1.5f;
+					b.x = rightScreenBoundaryForBalloon;
 				} else if ( b.x > rightScreenBoundaryForBalloon ) {
-					b.x = this.screenBoundaryLeft - 1.5f;
+					b.x = leftScreenBoundaryForBalloon;
 				}
 
 				gl.glPushMatrix();
 				gl.glTranslatef(b.x, b.y, 0f);
 				b.draw(gl);
-				//gl.glTranslatef(-b.x, -b.y, 0f);
 				gl.glPopMatrix();
 			}
 		}
@@ -125,7 +114,7 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 		if( this.onSurfaceChangedAlreadyCalled ) {
 			return;
 		}
-		
+
 		gl.glViewport(0, 0, width, height);
 
 		// make adjustments for screen ratio
@@ -135,7 +124,7 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 			vratio = (float) height / width;
 			hratio = 1.0f;
 		}
-		
+
 		gl.glMatrixMode(GL10.GL_PROJECTION);
 		gl.glLoadIdentity();                        // reset the matrix to its default state
 		gl.glFrustumf(-hratio , hratio, -vratio, vratio, 1.0f, 250f);
@@ -146,7 +135,7 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 				this.screenBoundaryRight);
 
 		this.activity.setGLSurfaceReady();
-		
+
 		this.onSurfaceChangedAlreadyCalled = true;
 	}
 
@@ -169,7 +158,7 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 		Random rng = new Random();
 
 		int resource_id = Balloon.getReferenceDrawable(Balloon.TYPE_BLUE);
-		
+
 		this.balloons = new Balloon[this.amountOfBalloons];
 		for( int i = 0; i < this.amountOfBalloons; i++ ) {
 			int type = rng.nextInt(Balloon.AMOUNT_OF_TYPES);
@@ -177,7 +166,7 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 			Balloon b = new Balloon(this.activity, type,
 					this.textures.getTexture(resource_id));
 			b.x = this.screenBoundaryRight - (rng.nextFloat() * this.screenBoundaryRight * 2f);
-			b.y = this.screenBoundaryTop;
+			b.y = this.topScreenBoundaryForBalloon;
 			b.setLift(0.005f + rng.nextFloat()/8f);
 
 			this.balloons[i] = b;
@@ -194,5 +183,10 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 		this.screenBoundaryTop = f.getWorldCoordinateTop(this.zoom) + 0.5f;
 		this.screenBoundaryLeft = f.getWorldCoordinateLeft(this.zoom) - 0.5f;
 		this.screenBoundaryRight = f.getWorldCoordinateRight(this.zoom) + 0.5f;
+
+		this.topScreenBoundaryForBalloon = this.screenBoundaryTop + 1.5f;
+		this.bottomScreenBoundaryForBalloon = this.screenBoundaryBottom - 1.5f;
+		this.leftScreenBoundaryForBalloon = this.screenBoundaryLeft - 1.5f;
+		this.rightScreenBoundaryForBalloon = this.screenBoundaryRight + 1.5f;
 	}
 }

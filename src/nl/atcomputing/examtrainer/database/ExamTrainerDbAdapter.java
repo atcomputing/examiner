@@ -44,7 +44,7 @@ public class ExamTrainerDbAdapter {
 		try {
 			db = dbHelper.getWritableDatabase();
 		} catch (SQLiteException e) {
-			Log.d(TAG, "Could not get writable database");
+			Log.w(TAG, "Could not get writable database");
 			throw e;
 		}
 		return this;

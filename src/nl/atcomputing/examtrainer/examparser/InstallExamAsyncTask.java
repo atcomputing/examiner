@@ -87,7 +87,6 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 
 			for( ExamQuestion examQuestion: examQuestions ) {
 				if( isCancelled() ) {
-					Log.d("InstallExamAsyncTask", "doInBackground: isCancelled()=true");
 					break;
 				}
 				examQuestion.addToDatabase(examinationDbHelper);
@@ -101,16 +100,16 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 
 		} catch (SQLiteException e) {
 			returnMessage = this.context.getString(R.string.failed_to_install_exam);
-			Log.d("InstallExamAsyncTask", returnMessage+"\n"+e.getMessage());
+			Log.w("InstallExamAsyncTask", returnMessage+"\n"+e.getMessage());
 		} catch (RuntimeException e) {
 			returnMessage = this.context.getString(R.string.error_parsing_exam);
-			Log.d("InstallExamAsyncTask", returnMessage+"\n"+e.getMessage());
+			Log.w("InstallExamAsyncTask", returnMessage+"\n"+e.getMessage());
 		} catch (MalformedURLException e) {
 			returnMessage = context.getString(R.string.error_url_is_not_correct) + " " + this.url;
-			Log.d("InstallExamAsyncTask", returnMessage+"\n"+e.getMessage());
+			Log.w("InstallExamAsyncTask", returnMessage+"\n"+e.getMessage());
 		} catch (Exception e) {
 			returnMessage = e.getMessage();
-			Log.d("InstallExamAsyncTask", e.getMessage());
+			Log.w("InstallExamAsyncTask", e.getMessage());
 		}	
 		return returnMessage;
 	}
@@ -153,7 +152,6 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 		dm.deleteExam(this.examID);
 
 		ExamTrainer.removeInstallationThread(this.examID);
-		Log.d("InstallExamAsyncTask", "onCancelled: cancelled: "+this.examID);
 	}
 
 }
