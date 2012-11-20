@@ -26,6 +26,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 /**
@@ -90,7 +91,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		Fragment fragment = fm.findFragmentByTag(fragmentName);
 		setActiveFragment(fragment);
 
-		updateActionBarTitle();
+		updateActionBar();
 	}
 
 	public void onPause() {
@@ -129,6 +130,11 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		switch (item.getItemId()) {
 		case R.id.selectexam_menu_manage:
 			showManageExamsFragment(true);
+			break;
+		case android.R.id.home:
+			if( this.activeFragment != this.examSelectFragment ) {
+				onBackPressed();
+			}
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -189,13 +195,20 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		Fragment fragment = fm.findFragmentByTag(fragmentName);
 
 		setActiveFragment(fragment);
-		updateActionBarTitle();
+		updateActionBar();
 	}
 
-	private void updateActionBarTitle() {
+	private void updateActionBar() {
 		String title = this.activeFragment.getTitle();
 		if( title != null ) {
 			setTitle(title);
+		}
+		
+		ActionBar actionBar = getSupportActionBar();
+		if( this.activeFragment != this.examSelectFragment ) {
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		} else {
+			actionBar.setDisplayHomeAsUpEnabled(false);
 		}
 	}
 
