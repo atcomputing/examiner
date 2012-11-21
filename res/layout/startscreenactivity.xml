@@ -5,32 +5,11 @@
     android:layout_height="fill_parent" >
 
     <ImageView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:contentDescription="@string/student_hat"
-        android:scaleType="centerCrop"
-        android:src="@drawable/astronaut_port" />
-
-    <TextView
-        android:id="@+id/startscreen_quote"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:padding="@dimen/paddingDefault"
-        android:text="@string/startscreen_quote"
-        android:textColor="#FFFFFF"
-        android:textSize="@dimen/textSizeHuge"
-        android:typeface="serif" />
-
-    <ImageView
         android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="#BB000000"
-        android:clickable="true"
+        android:layout_centerInParent="true"
         android:contentDescription="@string/at_computing_logo"
-        android:padding="@dimen/paddingSmall"
         android:scaleType="centerInside"
         android:src="@drawable/atlogo_wittetekst" />
 

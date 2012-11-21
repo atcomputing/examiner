@@ -13,6 +13,11 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.Animation.AnimationListener;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
@@ -21,9 +26,15 @@ import android.widget.Toast;
  * Copyright AT Computing 2012
  */
 public class StartScreenActivity extends Activity {
-	private Thread waitThread;
-	private boolean cancelThread = false;
+	private final int FADEIN = 0;
+	private final int FADEOUT = 1;
+	private final int ENDACTIVITY = 2;
+	private int animationState = FADEIN;
 	
+	private ImageView imageView;
+	private Animation animation;
+	private boolean cancelThread = false;
+
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
@@ -33,21 +44,24 @@ public class StartScreenActivity extends Activity {
 		//Load default preference values
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
-		this.waitThread = new Thread(new Runnable() {
+		this.imageView= (ImageView)findViewById(R.id.logo);
+		this.animation = AnimationUtils.loadAnimation(this, R.anim.fadein);
+		//this.animation.setAnimationListener(this);
+		this.imageView.startAnimation(this.animation);
 
+		Thread loadlLocalExamsThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				loadLocalExams();
 				try {
-					int waited = 0;
-					while ( (cancelThread == false) && (waited < 2000) ) {
+					int waited = 0; // wait a maximum amount of time to prevent indefinite loop
+					while ( (cancelThread == false) && (waited < 20) ) {
 						synchronized (this) {
 							wait(100);
 						}
-						waited += 100;
+						waited += 1;
 					}
 				} catch (InterruptedException e) {
-
 				} finally {
 					Intent intent = new Intent(StartScreenActivity.this, ExamActivity.class);
 					startActivity(intent);
@@ -55,13 +69,16 @@ public class StartScreenActivity extends Activity {
 				}
 			}
 		});
-
-		this.waitThread.start();
+		loadlLocalExamsThread.start();
 	}
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		this.cancelThread = true;
+		if( ( event.getAction() == MotionEvent.ACTION_UP ) && ( this.animationState > -1 ) ) {
+			this.animationState = -1;
+			this.imageView.clearAnimation();
+			this.cancelThread = true;
+		}
 		return true;
 	}
 
