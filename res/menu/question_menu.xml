@@ -4,8 +4,4 @@
           android:icon="@drawable/ic_action_hint"
           android:title="@string/Hint"
           android:showAsAction="ifRoom|withText" />
-    <item android:id="@+id/question_menu_quit_exam"
-          android:icon="@drawable/ic_action_exit"
-          android:title="@string/Quit"
-          android:showAsAction="ifRoom|withText" />
 </menu>

@@ -94,14 +94,14 @@
     <string name="unknown">unknown</string>
     <string name="Uninstalling_exam">Uninstalling exam</string>
     <string name="Exam_not_installed">Exam not installed</string>
-    <string name="Installation_proces_still_running_refusing_to_uninstall_exam">Installation proces still running.\nRefusing to uninstall exam.</string>
+    <string name="Installation_proces_still_running_refusing_to_uninstall_exam">Installation process still running.\nRefusing to uninstall exam.</string>
     <string name="Reviewing_questions_is_only_available_after_completing_the_exam">Reviewing questions is only available after completing the exam</string>
     <string name="Do_not_show_this_message_again">Do not show this message again</string>
     <string name="Time_limit_exceeded">Disabling time limit because time expired.</string>
-    <string name="Usage_Dialog_Press_menu_to_quit_the_exam_or_show_a_hint_if_available">You can quit the exam at any time by selecting the exit button in the action bar.\nYou can also use the question mark to show a hint for the current question if a hint is available.</string>
+    <string name="Usage_Dialog_Press_menu_to_quit_the_exam_or_show_a_hint_if_available">You can quit the exam at any time by pressing the back button or navigate back in the action bar.\nYou can also use the question mark to show a hint for the current question if a hint is available.</string>
     <string name="Usage_Dialog_Time_limit_is_activated_for_this_exam">Time limit is activated for this exam.\nUse settings (under menu) to disable the time limit.</string>
     <string name="Usage_Dialog_examReviewScreenMessage">This is the exam review screen.\nSelecting a specific question will open the question and show you the correct answer.</string>
-    <string name="Usage_Dialog_Sometimes_the_text_in_the_exhibit_or_choices_is_larger_than_fits_on_screen">When the text is larger than fits on screen, you can use horizontal scrolling to make the rest of the text visible.</string>
+    <string name="Usage_Dialog_Sometimes_the_text_in_the_exhibit_or_choices_is_larger_than_fits_on_screen">Use horizontal scrolling to make the text fully visible.</string>
     <string name="Tools_image">Tools image</string>
     <string name="Close">Close</string>
     <string name="UsageDialogTitle">Usage</string>

@@ -217,9 +217,6 @@ public class ExamQuestionFragment extends AbstractFragment {
 		case R.id.question_menu_get_hint:
 			showDialog(DIALOG_SHOW_HINT_ID);
 			return true;
-		case R.id.question_menu_quit_exam:
-			showDialog(DIALOG_QUITEXAM_ID);
-			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
