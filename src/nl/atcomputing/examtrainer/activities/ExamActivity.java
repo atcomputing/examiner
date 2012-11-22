@@ -64,6 +64,8 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.examactivity);
 
+		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+		
 		this.receiveBroadcast = new ReceiveBroadcast();
 
 		if( savedInstanceState == null ) {

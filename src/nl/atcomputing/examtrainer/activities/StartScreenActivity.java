@@ -41,6 +41,8 @@ public class StartScreenActivity extends Activity {
 
 		setContentView(R.layout.startscreenactivity);		
 
+		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
+		
 		//Load default preference values
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
