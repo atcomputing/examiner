@@ -2,6 +2,7 @@ package nl.atcomputing.examtrainer.fragments;
 
 import nl.atcomputing.dialogs.TwoButtonDialog;
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.activities.Exam;
 import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter;
 import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter.ManageExamsAdapterListener;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
@@ -111,17 +112,12 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 		Activity activity = getActivity();
 		StringBuffer strBuf = new StringBuffer();
 
-		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
-		examTrainerDbHelper.open();
-		Cursor cursor = examTrainerDbHelper.getExam(examID);
-		int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
-		String examTitle = cursor.getString(index);
-		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS);
-		int examAmountOfItems = cursor.getInt(index);
-		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
-		int examItemsNeededToPass = cursor.getInt(index);
-		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT);
-		long timeLimit = cursor.getLong(index);
+		Exam exam = Exam.newInstance(activity, examID);
+
+		String examTitle = exam.getTitle();
+		int examAmountOfItems = exam.getNumberOfItems();
+		int examItemsNeededToPass = exam.getItemsNeededToPass();
+		long timeLimit = exam.getTimeLimit();
 		
 		strBuf.append(examTitle + "\n");
 

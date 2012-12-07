@@ -32,6 +32,7 @@ public class XmlPullExamListParser {
 	static final String EXAM_AUTHOR = "author";
 	static final String EXAM_CATEGORY = "category";
 	static final String EXAM_URL = "url";
+	static final String EXAM_COURSE_URL = "courseurl";
 	static final String EXAM_TIMELIMIT = "timelimit";
 	
 	/**
@@ -128,6 +129,8 @@ public class XmlPullExamListParser {
 	                	exam.setNumberOfItems(Integer.parseInt(parser.getText()));
 	                } else if (start_tag.equalsIgnoreCase(EXAM_URL)) {
 	                	exam.setURL(parser.getText());
+	                } else if (start_tag.equalsIgnoreCase(EXAM_COURSE_URL)) {
+	                	exam.setCourseURL(parser.getText());
 	                } else if (start_tag.equalsIgnoreCase(EXAM_TIMELIMIT)) {
 	                	exam.setTimeLimit(Long.parseLong(parser.getText()));
 	                }

@@ -9,6 +9,7 @@ import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +71,9 @@ public class ExamSelectAdapter extends CursorAdapter  {
 		if( task != null ) {
 			task.setProgressTextView(holder.examAuthorView);
 		}
+		
+		Log.d("StartScreenActivity", "cleanupDatabaseStates: examID="+examID+
+				", state="+state);
 	}
 
 	@Override

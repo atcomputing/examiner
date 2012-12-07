@@ -24,6 +24,7 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 		public static final String COLUMN_NAME_AMOUNTOFITEMS = "amountOfItems";
 		public static final String COLUMN_NAME_INSTALLED = "installed";
 		public static final String COLUMN_NAME_URL = "URL";
+		public static final String COLUMN_NAME_COURSEURL = "courseURL";
 		public static final String COLUMN_NAME_AUTHOR = "author";
 		public static final String COLUMN_NAME_CATEGORY = "category";
 		public static final String COLUMN_NAME_TIMELIMIT = "timelimit";
@@ -38,6 +39,7 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
     + Exams.COLUMN_NAME_AMOUNTOFITEMS + " INTEGER,"
     + Exams.COLUMN_NAME_INSTALLED + " TEXT,"
     + Exams.COLUMN_NAME_URL + " TEXT,"
+    + Exams.COLUMN_NAME_COURSEURL + " TEXT,"
     + Exams.COLUMN_NAME_AUTHOR + " TEXT,"
     + Exams.COLUMN_NAME_CATEGORY + " TEXT,"
     + Exams.COLUMN_NAME_TIMELIMIT + " INTEGER"

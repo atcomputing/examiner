@@ -29,6 +29,7 @@ public class ExamTrainerDbAdapter {
 			ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS,
 			ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED,
 			ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL,
+			ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_COURSEURL,
 			ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS,
 			ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR,
 			ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_CATEGORY,
@@ -81,6 +82,7 @@ public class ExamTrainerDbAdapter {
 		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED, 0);
 		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL, exam.getURL());
 		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT, exam.getTimeLimit());
+		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_COURSEURL, exam.getCourseURL());
 		return db.insert(ExamTrainerDatabaseHelper.Exams.TABLE_NAME, null, values);
 	}
 
@@ -171,7 +173,6 @@ public class ExamTrainerDbAdapter {
 		ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "=\'" + 
 		ExamTrainerDbAdapter.State.INSTALLING.name() +"\'",
 		null, null, null, null, null);
-		cursor.moveToFirst();
 		return cursor;
 	}
 	
