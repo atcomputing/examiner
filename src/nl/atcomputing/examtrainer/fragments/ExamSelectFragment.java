@@ -27,7 +27,6 @@ import com.actionbarsherlock.view.MenuItem;
  */
 
 public class ExamSelectFragment extends AbstractFragment {
-	private ExamSelectAdapter adap;
 	private TextView clickOnManageExams;
 	private TextView noExamsAvailable;
 	
@@ -56,6 +55,12 @@ public class ExamSelectFragment extends AbstractFragment {
 	public void onResume() {
 		super.onResume();
 		setupListView();
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		
 	}
 	
 	@Override
@@ -114,11 +119,11 @@ public class ExamSelectFragment extends AbstractFragment {
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
 		examTrainerDbHelper.open();
 		Cursor cursor = examTrainerDbHelper.getInstalledAndInstallingExams();
-//		Cursor cursor = examTrainerDbHelper.getAllExams();
+		cursor.moveToFirst();
 		examTrainerDbHelper.close();
 		
-		this.adap = new ExamSelectAdapter(activity, R.layout.examselect_entry, cursor);
-		selectExam.setAdapter(this.adap);
+		ExamSelectAdapter adap = new ExamSelectAdapter(activity, R.layout.examselect_entry, cursor);
+		selectExam.setAdapter(adap);
 
 		selectExam.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,

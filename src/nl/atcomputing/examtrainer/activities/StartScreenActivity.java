@@ -4,19 +4,20 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
+import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
 import nl.atcomputing.examtrainer.examparser.XmlPullExamListParser;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -27,8 +28,6 @@ import android.widget.Toast;
  */
 public class StartScreenActivity extends Activity {
 	private final int FADEIN = 0;
-	private final int FADEOUT = 1;
-	private final int ENDACTIVITY = 2;
 	private int animationState = FADEIN;
 	
 	private ImageView imageView;
@@ -55,6 +54,7 @@ public class StartScreenActivity extends Activity {
 			@Override
 			public void run() {
 				loadLocalExams();
+				cleanupDatabaseStates();
 				try {
 					int waited = 0; // wait a maximum amount of time to prevent indefinite loop
 					while ( (cancelThread == false) && (waited < 20) ) {
@@ -84,6 +84,26 @@ public class StartScreenActivity extends Activity {
 		return true;
 	}
 
+	private void cleanupDatabaseStates() {
+		ExamTrainerDbAdapter db = new ExamTrainerDbAdapter(this);
+		db.open();
+		
+		//Remove exams with state installing that have no installation 
+		//thread associated
+		Cursor cursor = db.getInstallingExams();
+		while( cursor.moveToNext() ) {
+			int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID);
+			long examID = cursor.getLong(index);
+			InstallExamAsyncTask task = ExamTrainer.getInstallExamAsyncTask(examID);
+			if( task == null ) {
+				db.deleteExam(examID);
+			}
+		}
+		
+		cursor.close();
+		db.close();
+	}
+	
 	private void loadLocalExams() {
 		int file_index = 0;
 		String[] filenames = null;

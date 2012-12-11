@@ -3,19 +3,32 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <Button
-        android:id="@+id/button_start_exam"
+    <LinearLayout android:id="@+id/startexam_bottom_buttonbar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentBottom="true">
+        
+    <Button
+        android:id="@+id/button_start_exam"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:text="@string/start_a_new_exam"
         android:textSize="@dimen/textSizeDefault" />
-
+    <Button
+        android:id="@+id/button_enroll"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="@string/enroll"
+        android:textSize="@dimen/textSizeDefault" />
+    
+    </LinearLayout>
     <LinearLayout
         android:id="@+id/startexam_examinfo"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/button_start_exam"
+        android:layout_above="@id/startexam_bottom_buttonbar"
         android:layout_margin="@dimen/paddingSmall"
         android:background="#AA404040"
         android:orientation="vertical"

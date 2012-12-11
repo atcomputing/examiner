@@ -7,10 +7,10 @@ import nl.atcomputing.dialogs.RunThreadWithProgressDialog;
 import nl.atcomputing.dialogs.TwoButtonDialog;
 import nl.atcomputing.dialogs.UsageDialog;
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.activities.Exam;
 import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.activities.PreferencesActivity;
 import nl.atcomputing.examtrainer.adapters.HistoryAdapter;
-import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
@@ -18,6 +18,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
@@ -40,11 +41,13 @@ import com.actionbarsherlock.view.MenuItem;
  *
  */
 
-public class ExamOverviewFragment extends AbstractFragment {
+public class ExamOverviewFragment extends AbstractFragment implements OnClickListener {
 	private final String KEY_ITEMSCHECKED = "itemsChecked";
 
 	private HistoryAdapter adapter;
 
+	private Exam exam;
+	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -79,6 +82,8 @@ public class ExamOverviewFragment extends AbstractFragment {
 			}
 		}
 
+		this.exam = Exam.newInstance(activity, ExamTrainer.getExamId());
+		
 		setupView();
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -137,18 +142,9 @@ public class ExamOverviewFragment extends AbstractFragment {
 	}
 
 	public void updateView() {
-		Activity activity = getActivity();
-
-		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
-		examTrainerDbHelper.open();
-		Cursor cursor = examTrainerDbHelper.getExam(ExamTrainer.getExamId());
-		examTrainerDbHelper.close();
-
-		updateHistoryView(cursor);
-		updateExamInfoView(cursor);
-		updateButton(cursor);
-		
-		cursor.close();
+		updateHistoryView();
+		updateExamInfoView();
+		updateButton();
 	}
 	
 	@Override
@@ -194,25 +190,20 @@ public class ExamOverviewFragment extends AbstractFragment {
 		final Activity activity = getActivity();
 
 		Button buttonStartExam = (Button) activity.findViewById(R.id.button_start_exam);
-		buttonStartExam.setOnClickListener(new OnClickListener() {
-
-			public void onClick(View v) {
-				abstractFragmentListener.onButtonClickListener(ExamOverviewFragment.this, ExamTrainer.getExamId());
-			}
-		});
-
-		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
-		examTrainerDbHelper.open();
-		Cursor cursor = examTrainerDbHelper.getExam(ExamTrainer.getExamId());
-		examTrainerDbHelper.close();
-
-		setupHistoryView(cursor);
-		setupExamInfoView(cursor);
-
-		cursor.close();
+		buttonStartExam.setOnClickListener(this);
+		
+		String courseURL = this.exam.getCourseURL();
+		if( courseURL == null ) {
+			Button buttonEnroll = (Button) getActivity().findViewById(R.id.button_enroll);
+			buttonEnroll.setOnClickListener(this);
+			buttonEnroll.setVisibility(View.GONE);
+		}
+		
+		setupHistoryView();
+		setupExamInfoView();
 	}
 
-	private void setupHistoryView(Cursor cursor) {
+	private void setupHistoryView() {
 		final Activity activity = getActivity();
 
 		ListView scoresList = (ListView) activity.findViewById(R.id.startexam_history_listview);
@@ -226,42 +217,33 @@ public class ExamOverviewFragment extends AbstractFragment {
 		});
 	}
 
-	private void setupExamInfoView(Cursor cursor) {
+	private void setupExamInfoView() {
 		Activity activity = getActivity();
-
-		int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
-		String examTitle = cursor.getString(index);
-		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS);
-		int examAmountOfItems = cursor.getInt(index);
-		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
-		int examItemsNeededToPass = cursor.getInt(index);
-		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE);
-		long examInstallationDate = cursor.getLong(index);
-
+		
 		TextView tv = (TextView) activity.findViewById(R.id.startexam_amount_of_items_value);
-		tv.setText(Integer.toString(examAmountOfItems));
+		tv.setText(Integer.toString(this.exam.getNumberOfItems()));
 		tv = (TextView) activity.findViewById(R.id.startexam_items_needed_to_pass_value);
-		tv.setText(Integer.toString(examItemsNeededToPass));
+		tv.setText(Integer.toString(this.exam.getItemsNeededToPass()));
 
-		ExamTrainer.setExamDatabaseName(examTitle, examInstallationDate);
-		ExamTrainer.setItemsNeededToPass(examItemsNeededToPass);
-		ExamTrainer.setExamTitle(examTitle);
-		ExamTrainer.setAmountOfItems(examAmountOfItems);
+		ExamTrainer.setExamDatabaseName(this.exam.getTitle(), this.exam.getInstallationDate());
+		ExamTrainer.setItemsNeededToPass(this.exam.getItemsNeededToPass());
+		ExamTrainer.setExamTitle(this.exam.getTitle());
+		ExamTrainer.setAmountOfItems(this.exam.getNumberOfItems());
 	}
 	
-	private void updateButton(Cursor cursor) {
-		int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED);
-		String state = cursor.getString(index);
+	private void updateButton() {
+		String state = this.exam.getInstallationState();
 
-		Button button = (Button) getActivity().findViewById(R.id.button_start_exam);
+		Button buttonStart = (Button) getActivity().findViewById(R.id.button_start_exam);
+		
 		if( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLED.name()) ) {
-			button.setEnabled(true);
+			buttonStart.setEnabled(true);
 		} else {
-			button.setEnabled(false);
+			buttonStart.setEnabled(false);
 		}
 	}
 
-	private void updateHistoryView(Cursor cursor) {
+	private void updateHistoryView() {
 		Activity activity = getActivity();
 
 		LinearLayout linearLayoutHistoryHeader = (LinearLayout) activity.findViewById(R.id.startexam_history_header);
@@ -274,8 +256,7 @@ public class ExamOverviewFragment extends AbstractFragment {
 		TextView textViewHistoryMessageValue = (TextView) activity.findViewById(R.id.startexam_history_textview_message_value);
 		textViewHistoryMessageValue.setVisibility(View.GONE);
 
-		int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED);
-		String state = cursor.getString(index);
+		String state = this.exam.getInstallationState();
 
 		if( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLING.name()) ) {
 			textViewHistoryMessage.setText(R.string.Installing_exam);
@@ -310,14 +291,13 @@ public class ExamOverviewFragment extends AbstractFragment {
 		}
 	}
 
-	private void updateExamInfoView(Cursor cursor) {
+	private void updateExamInfoView() {
 		Activity activity = getActivity();
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 		boolean useTimeLimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
 
-		int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT);
-		long examTimeLimit = cursor.getLong(index);
+		long examTimeLimit = this.exam.getTimeLimit();
 
 		TextView textViewTimeLimitValue = (TextView) activity.findViewById(R.id.startexam_timelimit_value);
 		if ( ( useTimeLimit ) && ( examTimeLimit > 0 ) ) {
@@ -326,6 +306,19 @@ public class ExamOverviewFragment extends AbstractFragment {
 		} else {
 			textViewTimeLimitValue.setText(getString(R.string.No_time_limit));
 			ExamTrainer.setTimeLimit(0);
+		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch(v.getId()) {
+		case R.id.button_enroll:
+			Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(this.exam.getCourseURL()));
+			startActivity(browserIntent);
+			break;
+		case R.id.button_start_exam:
+			abstractFragmentListener.onButtonClickListener(ExamOverviewFragment.this, ExamTrainer.getExamId());
+			break;
 		}
 	}
 }

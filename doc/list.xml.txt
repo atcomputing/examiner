@@ -1,0 +1,41 @@
+Format
+======
+
+The list.xml has the following format:
+
+<?xml version="1.0" encoding="utf-8"?>
+<exams>
+  <exam>
+    ...
+  </exam>
+  <exam>
+    ...
+  </exam>
+  ...
+</exams>
+
+Where each exam block must contain the following fields:
+
+<title>STRING</title>
+<numberofitems>INTEGER</numberofitems>
+<itemsneededtopass>INTEGER</itemsneededtopass>
+<url>STRING</url>
+
+and you can optionally include the following elements:
+ 
+<author>STRING</author>
+<category>STRING</category>
+<timelimit>INTEGER</timelimit>
+<courseurl>STRING</courseurl>
+
+Description:
+============
+
+title:			The title of the exam as will be shown in the Application
+numberofitems:		Total number of questions in the exam
+itemsneededtopass: 	Number of questions that need to be answered correctly to pass
+url:			The url pointing to the xml file containing the actual questions (e.g. file::///l101-proefexamen-1.xml)
+author:			The name of the author of the exam
+category:		Name of the category this exam belongs to (e.g. Linux, LPI, vmware, cisco, etc. etc.)
+timelimit:		The amount of minutes for this exam.
+courseurl:		The URL pointing to the webpage for the course regarding the exam.
