@@ -36,8 +36,8 @@ public class ExamReviewAdapter extends BaseAdapter
 		this.context = context;
 		this.layout = layout;
 		Resources res = context.getResources();
-		this.not_okImage = res.getDrawable(R.drawable.red_cross);
-		this.okImage = res.getDrawable(R.drawable.green_check);
+		this.not_okImage = res.getDrawable(R.drawable.ic_red_cross);
+		this.okImage = res.getDrawable(R.drawable.ic_green_check);
 		this.unknownImage = res.getDrawable(R.drawable.ic_action_hint);
 		
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this.context);
