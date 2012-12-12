@@ -1,5 +1,12 @@
 package nl.atcomputing.examtrainer.fragments;
 
+import java.net.URL;
+import java.util.ArrayList;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
+
 import nl.atcomputing.dialogs.TwoButtonDialog;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.activities.Exam;
@@ -9,12 +16,17 @@ import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
 import nl.atcomputing.examtrainer.examparser.UninstallExamAsyncTask;
+import nl.atcomputing.examtrainer.examparser.XmlPullExamListParser;
 import android.app.Activity;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +65,25 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 	}
 	
 	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.manageexams_menu, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.manageexams_menu_reload:
+			reloadExams();
+			setupListView();
+			break;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+		return true;
+	}
+	
+	
+	@Override
 	public String getTitle() {
 		return "Manage Exams";
 	}
@@ -79,15 +110,15 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 		final Activity activity = getActivity();
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
 		examTrainerDbHelper.open();
-		ExamTrainerDbAdapter.State state = examTrainerDbHelper.getInstallationState(examID);
+		Exam.State state = examTrainerDbHelper.getInstallationState(examID);
 		examTrainerDbHelper.close();
 		
 		v.setEnabled(false);
 		
-		if( state == ExamTrainerDbAdapter.State.NOT_INSTALLED ) {
+		if( state == Exam.State.NOT_INSTALLED ) {
 			InstallExamAsyncTask task = new InstallExamAsyncTask(activity, (TextView) v, examID);
 			task.execute();
-		} else  if ( state == ExamTrainerDbAdapter.State.INSTALLED ) {
+		} else  if ( state == Exam.State.INSTALLED ) {
 			TwoButtonDialog dialog = TwoButtonDialog.newInstance(R.string.are_you_sure_you_want_to_uninstall_this_exam);
 			dialog.setPositiveButton(R.string.yes, new Runnable() {
 				
@@ -110,17 +141,21 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 
 	public void onItemClick(View v, long examID) {
 		Activity activity = getActivity();
-		StringBuffer strBuf = new StringBuffer();
 
 		Exam exam = Exam.newInstance(activity, examID);
 
+		if( exam == null ) {
+			return;
+		}
+		
 		String examTitle = exam.getTitle();
 		int examAmountOfItems = exam.getNumberOfItems();
 		int examItemsNeededToPass = exam.getItemsNeededToPass();
 		long timeLimit = exam.getTimeLimit();
 		
-		strBuf.append(examTitle + "\n");
 
+		StringBuffer strBuf = new StringBuffer();
+		strBuf.append(examTitle + "\n");
 		strBuf.append(activity.getString(R.string.questions) + 
 				": " +  examAmountOfItems + "\n" +
 				activity.getString(R.string.correct_answer_required_to_pass) +
@@ -134,5 +169,37 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 		}
 
 		Toast.makeText(activity,  strBuf.toString(), Toast.LENGTH_LONG).show();
+	}
+	
+	private void reloadExams() {
+		Activity activity = getActivity();
+		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
+		examTrainerDbHelper.open();
+
+		try {
+			XmlPullExamListParser xmlPullExamListParser;
+			URL url = new URL("file:///list.xml");
+			xmlPullExamListParser = new XmlPullExamListParser(activity, url);
+			xmlPullExamListParser.parse();
+			ArrayList<Exam> exams = xmlPullExamListParser.getExamList();
+
+			for ( Exam exam : exams ) {
+				long rowId = examTrainerDbHelper.getRowId(exam);
+				if ( rowId == -1 ) {
+					exam.addToDatabase(activity);
+				} else {
+					Exam.State state = examTrainerDbHelper.getInstallationState(rowId);
+					if ( state != Exam.State.INSTALLED ) {
+						examTrainerDbHelper.deleteExam(rowId);
+						exam.addToDatabase(activity);
+					}
+				}
+			}
+		} catch (Exception e) {
+			Log.w(this.getClass().getName() , "Updating exams failed: Error " + e.getMessage());
+			Toast.makeText(activity, "Error: updating exams failed.", Toast.LENGTH_LONG).show();
+		}
+
+		examTrainerDbHelper.close();
 	}
 }

@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <exams>
+    <exam>
+		<title>UNIX en Linux deel 1</title>
+		<category>AT Computing</category>
+		<author>AT Computing</author>
+		<numberofitems>5</numberofitems>
+		<itemsneededtopass>3</itemsneededtopass>
+		<url>file:///ul1-nl.xml</url>
+		<timelimit>0</timelimit>
+	</exam>
 	<exam>
 		<title>LPI 101 Exam 1</title>
 		<category>LPI</category>
@@ -7,7 +16,7 @@
 		<numberofitems>60</numberofitems>
 		<itemsneededtopass>40</itemsneededtopass>
 		<url>file:///l101-proefexamen-1.xml</url>
-		<timelimit>1</timelimit>
+		<timelimit>90</timelimit>
 	</exam>
 	<exam>
 		<title>LPI 101 Exam 2</title>

@@ -3,7 +3,7 @@
     <item android:id="@+id/menu_preferences"
           android:icon="@drawable/ic_action_settings"
           android:title="@string/Settings"
-          android:showAsAction="never" />
+          android:showAsAction="ifRoom|withText" />
     <item android:id="@+id/menu_delete"
           android:icon="@drawable/ic_action_trash"
           android:title="@string/Delete_selected_scores"

@@ -29,7 +29,7 @@ import android.widget.Toast;
 public class StartScreenActivity extends Activity {
 	private final int FADEIN = 0;
 	private int animationState = FADEIN;
-	
+
 	private ImageView imageView;
 	private Animation animation;
 	private boolean cancelThread = false;
@@ -41,7 +41,7 @@ public class StartScreenActivity extends Activity {
 		setContentView(R.layout.startscreenactivity);		
 
 		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-		
+
 		//Load default preference values
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -87,7 +87,7 @@ public class StartScreenActivity extends Activity {
 	private void cleanupDatabaseStates() {
 		ExamTrainerDbAdapter db = new ExamTrainerDbAdapter(this);
 		db.open();
-		
+
 		//Remove exams with state installing that have no installation 
 		//thread associated
 		Cursor cursor = db.getInstallingExams();
@@ -99,44 +99,32 @@ public class StartScreenActivity extends Activity {
 				db.deleteExam(examID);
 			}
 		}
-		
+
 		cursor.close();
 		db.close();
 	}
-	
-	private void loadLocalExams() {
-		int file_index = 0;
-		String[] filenames = null;
 
+	private void loadLocalExams() {
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(this);
 		examTrainerDbHelper.open();
-		AssetManager assetManager = this.getAssets();
 
-		if( assetManager != null ) {
-			try {
-				XmlPullExamListParser xmlPullExamListParser;
-				filenames = assetManager.list("");
-				int size = filenames.length;
-				for( file_index = 0; file_index < size; file_index++) {
-					String filename = filenames[file_index];
-					if(filename.matches("list.xml")) {
-						URL url = new URL("file:///"+filename);
-						xmlPullExamListParser = new XmlPullExamListParser(this, url);
-						xmlPullExamListParser.parse();
-						ArrayList<Exam> exams = xmlPullExamListParser.getExamList();
+		try {
+			XmlPullExamListParser xmlPullExamListParser;
+			URL url = new URL("file:///list.xml");
+			xmlPullExamListParser = new XmlPullExamListParser(this, url);
+			xmlPullExamListParser.parse();
+			ArrayList<Exam> exams = xmlPullExamListParser.getExamList();
 
-						for ( Exam exam : exams ) {
-							if ( ! examTrainerDbHelper.checkIfExamAlreadyInDatabase(exam) ) {
-								exam.addToDatabase(this);
-							}
-						}
-					}
+			for ( Exam exam : exams ) {
+				if ( examTrainerDbHelper.getRowId(exam) == -1 ) {
+					exam.addToDatabase(this);
 				}
-			} catch (Exception e) {
-				Log.w(this.getClass().getName() , "Updating exams failed: Error " + e.getMessage());
-				Toast.makeText(this, "Error: updating exam " + filenames[file_index] + " failed.", Toast.LENGTH_LONG).show();
 			}
+		} catch (Exception e) {
+			Log.w(this.getClass().getName() , "Updating exams failed: Error " + e.getMessage());
+			Toast.makeText(this, "Error: updating exams failed.", Toast.LENGTH_LONG).show();
 		}
+
 		examTrainerDbHelper.close();
 	}
 }

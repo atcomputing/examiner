@@ -52,14 +52,6 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 			Log.d("ExamACtivity", "ReceiveBroadcast: action="+action);
 			if( action.contentEquals(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED) ) {
 				activeFragment.updateView();
-//				String mode = ExamTrainer.getExamMode().toString();
-//				if( mode.contentEquals(ExamTrainer.ExamTrainerMode.EXAM_OVERVIEW.name()) ) {
-//					examOverviewFragment.updateView();
-//				} else if( mode.contentEquals(ExamTrainer.ExamTrainerMode.MANAGE_EXAMS.name()) ) {
-//					manageExamsFragment.updateView();
-//				} else if( mode.contentEquals(ExamTrainer.ExamTrainerMode.SELECT_EXAM.name()) ) {
-//					examSelectFragment.updateView();
-//				}
 			}
 		}
 	}

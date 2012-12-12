@@ -11,6 +11,11 @@ import android.database.Cursor;
  *
  */
 public class Exam {
+	
+	public static enum State {
+		INSTALLING, INSTALLED, NOT_INSTALLED
+	}
+	
 	private String title;
 	private String category;
 	private String author;
@@ -20,9 +25,15 @@ public class Exam {
 	private int itemsneededtopass;
 	private long timelimit;
 	private long installationDate;
-	private String installationState;
+	private State installationState;
 	private long examID;
 	
+	/**
+	 * Creates a new Exam object from information available in the database
+	 * @param context
+	 * @param examID the identifier (_ID) of the row in the database holding the exam information
+	 * @return null if exam with given examID is not in the database
+	 */
 	public static Exam newInstance(Context context, long examID) {
 		Exam exam = new Exam();
 		
@@ -31,6 +42,10 @@ public class Exam {
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(context);
 		examTrainerDbHelper.open();
 		Cursor cursor = examTrainerDbHelper.getExam(examID);
+		
+		if( ! cursor.moveToFirst() ) {
+			return null;
+		}
 		
 		int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
 		exam.setTitle(cursor.getString(index));
@@ -51,7 +66,8 @@ public class Exam {
 		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE);
 		exam.setInstallationDate(cursor.getLong(index));
 		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED);
-		exam.setInstallationState(cursor.getString(index));
+		String state = cursor.getString(index);
+		exam.setInstallationState(State.valueOf(state));
 		
 		cursor.close();
 		examTrainerDbHelper.close();
@@ -112,7 +128,7 @@ public class Exam {
 		return installationDate;
 	}
 	
-	public String getInstallationState() {
+	public State getInstallationState() {
 		return installationState;
 	}
 	
@@ -156,7 +172,7 @@ public class Exam {
 		this.installationDate = epoch;
 	}
 	
-	public void setInstallationState(String state) {
+	public void setInstallationState(State state) {
 		this.installationState = state;
 	}
 	

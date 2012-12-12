@@ -3,6 +3,7 @@ package nl.atcomputing.examtrainer.adapters;
 import java.util.HashMap;
 
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.activities.Exam;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import android.content.Context;
@@ -86,12 +87,12 @@ public class ManageExamsAdapter extends CursorAdapter  {
 		//Set state for button
 		vHolder.installUninstallButton.setEnabled(true);
 		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED);
-		String state = cursor.getString(index);
-		if( state.contentEquals(ExamTrainerDbAdapter.State.NOT_INSTALLED.name()) ) {
+		Exam.State state = Exam.State.valueOf(cursor.getString(index));
+		if( state == Exam.State.NOT_INSTALLED ) {
 			vHolder.installUninstallButton.setText(R.string.install);
-		} else if ( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLED.name()) ) {
+		} else if ( state == Exam.State.INSTALLED ) {
 			vHolder.installUninstallButton.setText(R.string.uninstall);
-		} else if ( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLING.name()) ) {
+		} else if ( state == Exam.State.INSTALLING ) {
 			vHolder.installUninstallButton.setText(R.string.Installing_exam);
 			vHolder.installUninstallButton.setEnabled(false);
 		} else {

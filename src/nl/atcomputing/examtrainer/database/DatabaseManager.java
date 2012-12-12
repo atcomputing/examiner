@@ -1,6 +1,7 @@
 package nl.atcomputing.examtrainer.database;
 
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.activities.Exam;
 import android.content.Context;
 import android.database.Cursor;
 import android.widget.Toast;
@@ -25,7 +26,7 @@ public class DatabaseManager {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this.context);
 		
 		if( examinationDbHelper.delete(examTitle, examDate) )  {
-			if( ! examTrainerDbHelper.setInstallationState(examID, ExamTrainerDbAdapter.State.NOT_INSTALLED) ) {
+			if( ! examTrainerDbHelper.setInstallationState(examID, Exam.State.NOT_INSTALLED) ) {
 				Toast.makeText(this.context, this.context.getString(R.string.Failed_to_uninstall_exam) + 
 						examTitle, Toast.LENGTH_LONG).show();
 			}

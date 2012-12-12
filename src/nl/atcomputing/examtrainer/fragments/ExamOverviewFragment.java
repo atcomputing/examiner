@@ -89,7 +89,7 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
 		boolean useTimeLimit = prefs.getBoolean(this.getResources().getString(R.string.pref_key_use_timelimits), false);
 
-		if( useTimeLimit ) {
+		if( useTimeLimit && ( this.exam.getTimeLimit() > 0 ) ) {
 			UsageDialog usageDialog = UsageDialog.newInstance(activity, R.string.Usage_Dialog_Time_limit_is_activated_for_this_exam);
 			if( usageDialog != null ) {
 				usageDialog.show(getFragmentManager(), "UsageDialog");
@@ -233,11 +233,11 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 	}
 	
 	private void updateButton() {
-		String state = this.exam.getInstallationState();
+		Exam.State state = this.exam.getInstallationState();
 
 		Button buttonStart = (Button) getActivity().findViewById(R.id.button_start_exam);
 		
-		if( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLED.name()) ) {
+		if( state == Exam.State.INSTALLED ) {
 			buttonStart.setEnabled(true);
 		} else {
 			buttonStart.setEnabled(false);
@@ -257,9 +257,9 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 		TextView textViewHistoryMessageValue = (TextView) activity.findViewById(R.id.startexam_history_textview_message_value);
 		textViewHistoryMessageValue.setVisibility(View.GONE);
 
-		String state = this.exam.getInstallationState();
+		Exam.State state = this.exam.getInstallationState();
 
-		if( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLING.name()) ) {
+		if( state == Exam.State.INSTALLING ) {
 			textViewHistoryMessage.setText(R.string.Installing_exam);
 			textViewHistoryMessage.setVisibility(View.VISIBLE);
 			InstallExamAsyncTask task = ExamTrainer.getInstallExamAsyncTask(this.exam.getExamID());
@@ -267,7 +267,7 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 				task.setProgressTextView(textViewHistoryMessageValue);
 				textViewHistoryMessageValue.setVisibility(View.VISIBLE);
 			}
-		} else if( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLED.name()) ) {
+		} else if( state == Exam.State.INSTALLED ) {
 			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(activity);
 			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
 			Cursor examinationCursor = examinationDbHelper.getScoresReversed();
@@ -286,7 +286,7 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 
 			adapter.changeCursor(examinationCursor);
 			adapter.notifyDataSetChanged();
-		} else if( state.contentEquals(ExamTrainerDbAdapter.State.NOT_INSTALLED.name()) ) {
+		} else if( state == Exam.State.NOT_INSTALLED ) {
 			textViewHistoryMessage.setText(R.string.Exam_not_installed);
 			textViewHistoryMessage.setVisibility(View.VISIBLE);
 		}

@@ -87,10 +87,11 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 
 		int answers_correct = 0;
 		int amountOfQuestions = questionIds.length;
-		if( this.showScoreInstantaneously ) {
+		if( ( this.showScoreInstantaneously ) ) {
 			answers_correct = examinationDbHelper.calculateScore(ExamTrainer.getScoresId());
 		} else {
 			long scoresId = ExamTrainer.getScoresId();
+			long delay = 5000 / this.amountOfItems;
 			for(int i = 0; i < amountOfQuestions; i++) {
 				long questionId = (Long) questionIds[i];
 				
@@ -104,7 +105,7 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 				publishProgress(i, answers_correct);
 
 				try {
-					Thread.sleep(100);
+					Thread.sleep(delay);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
