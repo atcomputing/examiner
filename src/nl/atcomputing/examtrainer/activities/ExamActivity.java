@@ -49,13 +49,17 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
+			Log.d("ExamACtivity", "ReceiveBroadcast: action="+action);
 			if( action.contentEquals(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED) ) {
-				String mode = ExamTrainer.getExamMode().toString();
-				if( mode.contentEquals(ExamTrainer.ExamTrainerMode.EXAM_OVERVIEW.name()) ) {
-					examOverviewFragment.updateView();
-				} else if( mode.contentEquals(ExamTrainer.ExamTrainerMode.MANAGE_EXAMS.name()) ) {
-					manageExamsFragment.updateView();
-				}
+				activeFragment.updateView();
+//				String mode = ExamTrainer.getExamMode().toString();
+//				if( mode.contentEquals(ExamTrainer.ExamTrainerMode.EXAM_OVERVIEW.name()) ) {
+//					examOverviewFragment.updateView();
+//				} else if( mode.contentEquals(ExamTrainer.ExamTrainerMode.MANAGE_EXAMS.name()) ) {
+//					manageExamsFragment.updateView();
+//				} else if( mode.contentEquals(ExamTrainer.ExamTrainerMode.SELECT_EXAM.name()) ) {
+//					examSelectFragment.updateView();
+//				}
 			}
 		}
 	}

@@ -142,6 +142,7 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 	}
 
 	public void updateView() {
+		this.exam = Exam.newInstance(getActivity(), ExamTrainer.getExamId());
 		updateHistoryView();
 		updateExamInfoView();
 		updateButton();
@@ -261,7 +262,7 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 		if( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLING.name()) ) {
 			textViewHistoryMessage.setText(R.string.Installing_exam);
 			textViewHistoryMessage.setVisibility(View.VISIBLE);
-			InstallExamAsyncTask task = ExamTrainer.getInstallExamAsyncTask(ExamTrainer.getExamId());
+			InstallExamAsyncTask task = ExamTrainer.getInstallExamAsyncTask(this.exam.getExamID());
 			if( task != null ) {
 				task.setProgressTextView(textViewHistoryMessageValue);
 				textViewHistoryMessageValue.setVisibility(View.VISIBLE);
@@ -317,7 +318,7 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 			startActivity(browserIntent);
 			break;
 		case R.id.button_start_exam:
-			abstractFragmentListener.onButtonClickListener(ExamOverviewFragment.this, ExamTrainer.getExamId());
+			abstractFragmentListener.onButtonClickListener(ExamOverviewFragment.this, this.exam.getExamID());
 			break;
 		}
 	}

@@ -145,7 +145,6 @@ public class ExamSelectFragment extends AbstractFragment {
 
 	@Override
 	public void updateView() {
-		// TODO Auto-generated method stub
-		
+		setupListView();
 	}
 }

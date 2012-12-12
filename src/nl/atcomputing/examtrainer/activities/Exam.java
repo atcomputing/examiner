@@ -21,9 +21,12 @@ public class Exam {
 	private long timelimit;
 	private long installationDate;
 	private String installationState;
+	private long examID;
 	
 	public static Exam newInstance(Context context, long examID) {
 		Exam exam = new Exam();
+		
+		exam.setExamID(examID);
 		
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(context);
 		examTrainerDbHelper.open();
@@ -66,6 +69,11 @@ public class Exam {
 		itemsneededtopass = 0;
 		timelimit = 0;
 		installationDate = 0;
+		examID = 0;
+	}
+	
+	public long getExamID() {
+		return examID;
 	}
 	
 	public String getTitle() {
@@ -106,6 +114,10 @@ public class Exam {
 	
 	public String getInstallationState() {
 		return installationState;
+	}
+	
+	public void setExamID(long examID) {
+		this.examID = examID;
 	}
 	
 	public void setTitle(String title) {
