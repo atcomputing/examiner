@@ -4,6 +4,7 @@ import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.activities.Exam;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.widget.Toast;
 
 public class DatabaseManager {
@@ -18,6 +19,10 @@ public class DatabaseManager {
 		examTrainerDbHelper.open();
 		
 		Cursor cursor = examTrainerDbHelper.getExam(examID);
+		if( ! cursor.moveToFirst() ) {
+			return;
+		}
+		
 		int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
 		String examTitle = cursor.getString(index);
 		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE);

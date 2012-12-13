@@ -6,6 +6,7 @@
 		<author>AT Computing</author>
 		<numberofitems>5</numberofitems>
 		<itemsneededtopass>3</itemsneededtopass>
+		<courseurl>http://atcomputing.nl/Training/unix-linux-deel-1.php</courseurl>
 		<url>file:///ul1-nl.xml</url>
 		<timelimit>0</timelimit>
 	</exam>

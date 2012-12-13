@@ -70,6 +70,7 @@ public class ExamTrainerDbAdapter {
 			int columnIndex = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID);
 			rowId = cursor.getLong(columnIndex);
 		}
+		cursor.close();
 		return rowId;
 	}
 
@@ -113,6 +114,7 @@ public class ExamTrainerDbAdapter {
 			String stateName = cursor.getString(cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED));
 			state = Exam.State.valueOf(stateName);
 		}
+		cursor.close();
 		return state;
 	}
 
@@ -131,23 +133,27 @@ public class ExamTrainerDbAdapter {
 	}
 
 	public String getExamTitle(long rowId) {
+		String title = null;
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
 				new String[] {ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE},
 				ExamTrainerDatabaseHelper.Exams._ID + "=" + rowId, null, null, null, null, null);
 		if ( cursor.moveToFirst() ) {
-			return cursor.getString(cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE));
+			title = cursor.getString(cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE));
 		}
-		return null;
+		cursor.close();
+		return title;
 	}
 
 	public String getURL(long rowId) {
+		String url = null;
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
 				new String[] {ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL},
 				ExamTrainerDatabaseHelper.Exams._ID + "=" + rowId, null, null, null, null, null);
 		if ( cursor.moveToFirst() ) {
-			return cursor.getString(cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL));
+			url = cursor.getString(cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL));
 		}
-		return null;
+		cursor.close();
+		return url;
 	}
 
 
@@ -232,6 +238,8 @@ public class ExamTrainerDbAdapter {
 		},
 		ExamTrainerDatabaseHelper.UsageDialogs.COLUMN_NAME_MSGID + "=" + messageResourceId, 
 		null, null, null, null, null);
-		return cursor.getCount() > 0;
+		int count = cursor.getCount();
+		cursor.close();
+		return count > 0;
 	}
 }

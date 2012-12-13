@@ -87,7 +87,7 @@ public class CalculateScore extends AsyncTask<Object, Integer, Integer> {
 
 		int answers_correct = 0;
 		int amountOfQuestions = questionIds.length;
-		if( ( this.showScoreInstantaneously ) ) {
+		if( ( this.showScoreInstantaneously ) || (this.amountOfItems < 15) ) {
 			answers_correct = examinationDbHelper.calculateScore(ExamTrainer.getScoresId());
 		} else {
 			long scoresId = ExamTrainer.getScoresId();

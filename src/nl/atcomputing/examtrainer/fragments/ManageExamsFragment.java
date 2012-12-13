@@ -73,8 +73,12 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.manageexams_menu_reload:
+			Activity activity = getActivity();
+			ListView manageExams = (ListView) activity.findViewById(R.id.manageexams_listview);
+			manageExams.setVisibility(View.INVISIBLE); // prevent user from installing exams when reloading
 			reloadExams();
 			setupListView();
+			manageExams.setVisibility(View.VISIBLE);
 			break;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -189,7 +193,7 @@ public class ManageExamsFragment extends AbstractFragment implements ManageExams
 					exam.addToDatabase(activity);
 				} else {
 					Exam.State state = examTrainerDbHelper.getInstallationState(rowId);
-					if ( state != Exam.State.INSTALLED ) {
+					if ( state == Exam.State.NOT_INSTALLED ) {
 						examTrainerDbHelper.deleteExam(rowId);
 						exam.addToDatabase(activity);
 					}

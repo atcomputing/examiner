@@ -145,10 +145,10 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 	}
 
 	public void onExamEnd() {
+		startCalculateScoreActivity();
 		FragmentManager fm = getSupportFragmentManager();
 		fm.popBackStack(ExamTrainer.ExamTrainerMode.EXAM.name(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		fm.popBackStack(ExamTrainer.ExamTrainerMode.EXAM_REVIEW.name(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-		startCalculateScoreActivity();
 	}
 
 	public void onItemClickListener(long id) {
