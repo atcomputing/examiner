@@ -193,10 +193,11 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 		Button buttonStartExam = (Button) activity.findViewById(R.id.button_start_exam);
 		buttonStartExam.setOnClickListener(this);
 		
+		Button buttonEnroll = (Button) getActivity().findViewById(R.id.button_enroll);
+		buttonEnroll.setOnClickListener(this);
+		
 		String courseURL = this.exam.getCourseURL();
 		if( courseURL == null ) {
-			Button buttonEnroll = (Button) getActivity().findViewById(R.id.button_enroll);
-			buttonEnroll.setOnClickListener(this);
 			buttonEnroll.setVisibility(View.GONE);
 		}
 		
