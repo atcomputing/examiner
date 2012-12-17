@@ -5,63 +5,29 @@
 		<category>AT Computing</category>
 		<author>AT Computing</author>
 		<numberofitems>5</numberofitems>
-		<itemsneededtopass>4</itemsneededtopass>
+		<itemsneededtopass>5</itemsneededtopass>
 		<courseurl>http://atcomputing.nl/Training/unix-linux-deel-1.php</courseurl>
 		<url>file:///ul1-nl.xml</url>
 		<timelimit>0</timelimit>
 	</exam>
 	<exam>
-		<title>LPI 101 Exam 1</title>
-		<category>LPI</category>
+		<title>UNIX and Linux part 1</title>
+		<category>AT Computing</category>
 		<author>AT Computing</author>
-		<numberofitems>60</numberofitems>
-		<itemsneededtopass>40</itemsneededtopass>
-		<url>file:///l101-proefexamen-1.xml</url>
-		<timelimit>90</timelimit>
+		<numberofitems>5</numberofitems>
+		<itemsneededtopass>5</itemsneededtopass>
+		<courseurl>http://www.atcomputing.net/Training/unix-linux-deel-1.en.php</courseurl>
+		<url>file:///ul1-en.xml</url>
+		<timelimit>0</timelimit>
 	</exam>
 	<exam>
-		<title>LPI 101 Exam 2</title>
-		<category>LPI</category>
+		<title>Android Development Fundamentals</title>
+		<category>AT Computing</category>
 		<author>AT Computing</author>
-		<numberofitems>60</numberofitems>
-		<itemsneededtopass>40</itemsneededtopass>
-		<url>file:///l101-proefexamen-2.xml</url>
-		<timelimit>90</timelimit>
-	</exam>
-	<exam>
-		<title>LPI 101 Exam 3</title>
-		<category>LPI</category>
-		<author>AT Computing</author>
-		<numberofitems>60</numberofitems>
-		<itemsneededtopass>40</itemsneededtopass>
-		<url>file:///l101-proefexamen-3.xml</url>
-		<timelimit>90</timelimit>
-	</exam>
-	<exam>
-		<title>LPI 102 Exam 1</title>
-		<category>LPI</category>
-		<author>AT Computing</author>
-		<numberofitems>60</numberofitems>
-		<itemsneededtopass>40</itemsneededtopass>
-		<url>file:///l102-proefexamen-1.xml</url>
-		<timelimit>90</timelimit>
-	</exam>
-	<exam>
-		<title>LPI 102 Exam 2</title>
-		<category>LPI</category>
-		<author>AT Computing</author>
-		<numberofitems>60</numberofitems>
-		<itemsneededtopass>40</itemsneededtopass>
-		<url>file:///l102-proefexamen-2.xml</url>
-		<timelimit>90</timelimit>
-	</exam>
-	<exam>
-		<title>LPI 102 Exam 3</title>
-		<category>LPI</category>
-		<author>AT Computing</author>
-		<numberofitems>60</numberofitems>
-		<itemsneededtopass>40</itemsneededtopass>
-		<url>file:///l102-proefexamen-3.xml</url>
-		<timelimit>90</timelimit>
+		<numberofitems>5</numberofitems>
+		<itemsneededtopass>5</itemsneededtopass>
+		<courseurl>http://atcomputing.nl/Training/android-development-advanced.php</courseurl>
+		<url>file:///andf.xml</url>
+		<timelimit>0</timelimit>
 	</exam>
 </exams>
