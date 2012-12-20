@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="startscreen_quote">“Yes,\n"      "you can.”</string>
     <string name="Calculating_your_score">Calculating your score</string>
     <string name="You_passed">You passed</string>
     <string name="You_failed">You failed</string>
@@ -22,12 +21,8 @@
     <string name="minutes">minutes</string>
     <string name="Next">Next</string>
     <string name="Prev">Previous</string>
-    <string name="Start">Start</string>
-    <string name="Delete_all">Delete all</string>
-    <string name="Get_new_exams">Get new exams</string>
     <string name="Hint">Hint</string>
     <string name="End_exam">End exam</string>
-    <string name="End_review">End review</string>
     <string name="end_of_exam_message">This was the last question.\nExiting the exam will
 		calculate your score.\nAre you sure you want to exit?</string>
     <string name="quit_exam_message">Are you sure you want to quit the current exam?</string>
@@ -40,7 +35,6 @@
 		more exams</string>
     <string name="questions">Questions</string>
     <string name="Installing_exam">Installing exam</string>
-    <string name="installed_on">Installed on</string>
     <string name="install">Install</string>
     <string name="uninstall">Uninstall</string>
     <string name="correct_answer_required_to_pass">Correct answers required to pass</string>
@@ -56,8 +50,6 @@
     <string name="About">About</string>
     <string name="Question">Question</string>
     <string name="Manage_Exams">Manage Exams</string>
-    <string name="Are_you_sure_you_want_to_delete_all_exams">Are you sure you want to delete all exams?\nThis will also remove all scores.</string>
-    <string name="manageexams_get_exams_explanation">Press settings to load	available exams.</string>
     <!-- Text for about -->
     <string name="Copyright">© Copyright AT Computing 2011–2012</string>
     <string name="Version">Version</string>
@@ -65,14 +57,12 @@
 		consultants in Linux, Open Source, UNIX and programming languages.</string>
     <string name="Visit_atcomputing">Visit http://www.atcomputing.nl</string>
     <!-- Error messages -->
-    <string name="Failed_to_delete_exam">Failed to delete exam</string>
     <string name="Delete_selected_scores">Delete selected scores</string>
     <string name="Quit">Quit</string>
     <string name="Amount_of_questions">Amount of questions</string>
     <string name="start_a_new_exam">Start a new exam</string>
     <string name="student_hat">student hat</string>
     <string name="no_previous_scores_available">No previous scores available</string>
-    <string name="name">Name</string>
     <string name="instant_score">Instant score</string>
     <string name="do_not_show_calculating_score_animation_before_showing_the_final_result">Do not show calculating score animation before showing the final result</string>
     <string name="deleting_scores_please_wait_">Deleting scores. Please wait…</string>
@@ -88,23 +78,17 @@
     <string name="pass_or_not_pass_image">pass or not pass image</string>
     <string name="at_computing_logo">AT Computing Logo</string>
     <string name="answer_correct_or_wrong">answer correct or wrong</string>
-    <string name="delete_all_exams">Delete all exams</string>
     <string name="cancel">Cancel</string>
     <string name="are_you_sure_you_want_to_uninstall_this_exam">Are you sure you want to uninstall this exam?\nThis will also remove the current scores for this exam.</string>
     <string name="unknown">unknown</string>
-    <string name="Uninstalling_exam">Uninstalling exam</string>
     <string name="Exam_not_installed">Exam not installed</string>
     <string name="Installation_proces_still_running_refusing_to_uninstall_exam">Installation process still running.\nRefusing to uninstall exam.</string>
     <string name="Reviewing_questions_is_only_available_after_completing_the_exam">Reviewing questions is only available after completing the exam</string>
     <string name="Do_not_show_this_message_again">Do not show this message again</string>
-    <string name="Time_limit_exceeded">Disabling time limit because time expired.</string>
-    <string name="Usage_Dialog_Press_menu_to_quit_the_exam_or_show_a_hint_if_available">You can quit the exam at any time by pressing the back button or navigate back in the action bar.\nYou can also use the question mark to show a hint for the current question if a hint is available.</string>
     <string name="Usage_Dialog_Time_limit_is_activated_for_this_exam">Time limit is activated for this exam.\nUse settings (under menu) to disable the time limit.</string>
     <string name="Usage_Dialog_examReviewScreenMessage">This is the exam review screen.\nSelecting a specific question will open the question and show you the correct answer.</string>
     <string name="Usage_Dialog_Sometimes_the_text_in_the_exhibit_or_choices_is_larger_than_fits_on_screen">Use horizontal scrolling to make the text fully visible.</string>
-    <string name="Tools_image">Tools image</string>
     <string name="Close">Close</string>
-    <string name="UsageDialogTitle">Usage</string>
     <string name="Failed_to_resume_exam">Failed to resume exam</string>
     <string name="No_exams_selected_to_delete">No exams selected to delete</string>
     <string name="Delete_selected_scores_">Delete selected scores?</string>
