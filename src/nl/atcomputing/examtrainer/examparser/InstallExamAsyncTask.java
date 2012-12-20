@@ -92,8 +92,7 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 				}
 				examQuestion.addToDatabase(examinationDbHelper);
 				count++;
-				percentage = (int) (100 * (count/(double )total));
-				ExamTrainer.setExamInstallationProgression(this.examID, percentage);
+				percentage = (int) (100 * (count/(double)total));
 				publishProgress(percentage);
 			}
 
@@ -143,7 +142,6 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 		Intent intent=new Intent();
 		intent.setAction(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED);
 		this.context.sendBroadcast(intent);
-
 	}
 
 	@Override

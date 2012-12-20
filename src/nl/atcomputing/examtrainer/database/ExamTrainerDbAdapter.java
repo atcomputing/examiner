@@ -1,5 +1,8 @@
 package nl.atcomputing.examtrainer.database;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import nl.atcomputing.examtrainer.activities.Exam;
 import android.content.ContentValues;
 import android.content.Context;
@@ -166,6 +169,15 @@ public class ExamTrainerDbAdapter {
 		return cursor;
 	}
 
+	public Cursor getNotInstalledExams() {
+		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
+				this.allRows, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "=\'" + 
+						Exam.State.NOT_INSTALLED.name() + "\'",
+						null, null, null, null, null);
+		
+		return cursor;
+	}
+	
 	public Cursor getInstalledAndInstallingExams() {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
 				this.allRows, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "=\'" + 

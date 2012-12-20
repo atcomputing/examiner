@@ -215,11 +215,11 @@ public final class ExamTrainer {
 		alert.show();
 	}
 	
-	public static void setExamInstallationProgression(long id, int percentage) {
-		examInstallationProgression.put(id, percentage);
-	}
-	
-	public static int getExamInstallationProgression(long id) {
-		return examInstallationProgression.get(id);
-	}
+//	public static void setExamInstallationProgression(long id, int percentage) {
+//		examInstallationProgression.put(id, percentage);
+//	}
+//	
+//	public static int getExamInstallationProgression(long id) {
+//		return examInstallationProgression.get(id);
+//	}
 }

@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
+import nl.atcomputing.examtrainer.examparser.InstallAllExamsAsyncTask;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
 import nl.atcomputing.examtrainer.examparser.XmlPullExamListParser;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -50,11 +50,12 @@ public class StartScreenActivity extends Activity {
 		//this.animation.setAnimationListener(this);
 		this.imageView.startAnimation(this.animation);
 
-		Thread loadlLocalExamsThread = new Thread(new Runnable() {
+		cleanupDatabaseStates();
+		loadLocalExams();
+		
+		Thread waitThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				loadLocalExams();
-				cleanupDatabaseStates();
 				try {
 					int waited = 0; // wait a maximum amount of time to prevent indefinite loop
 					while ( (cancelThread == false) && (waited < 20) ) {
@@ -71,7 +72,7 @@ public class StartScreenActivity extends Activity {
 				}
 			}
 		});
-		loadlLocalExamsThread.start();
+		waitThread.start();
 	}
 
 	@Override
@@ -124,7 +125,9 @@ public class StartScreenActivity extends Activity {
 			Log.w(this.getClass().getName() , "Updating exams failed: Error " + e.getMessage());
 			Toast.makeText(this, "Error: updating exams failed.", Toast.LENGTH_LONG).show();
 		}
-
 		examTrainerDbHelper.close();
+		
+		InstallAllExamsAsyncTask task = new InstallAllExamsAsyncTask(this);
+		task.execute();
 	}
 }

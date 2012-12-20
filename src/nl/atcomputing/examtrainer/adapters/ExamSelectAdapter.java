@@ -72,9 +72,6 @@ public class ExamSelectAdapter extends CursorAdapter  {
 		if( task != null ) {
 			task.setProgressTextView(holder.examAuthorView);
 		}
-		
-		Log.d("StartScreenActivity", "cleanupDatabaseStates: examID="+examID+
-				", state="+state);
 	}
 
 	@Override
