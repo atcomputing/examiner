@@ -4,7 +4,9 @@ import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.adapters.ExamSelectAdapter;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import android.app.Activity;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -66,10 +68,11 @@ public class ExamSelectFragment extends AbstractFragment {
 	@Override
 	public String getTitle() {
 		Activity activity = getActivity();
-		PackageInfo info;
+		ApplicationInfo info;
+		PackageManager pm = activity.getPackageManager();
 		try {
-			info = activity.getPackageManager().getPackageInfo("nl.atcomputing.examtrainer", 0);
-			return activity.getString(info.applicationInfo.labelRes);
+			info = pm.getApplicationInfo("nl.atcomputing.examtrainer", 0);
+			return pm.getApplicationLabel(info).toString();
 		} catch (NameNotFoundException e) {
 			return null;
 		}
