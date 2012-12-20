@@ -30,4 +30,24 @@
 		<url>file:///andf.xml</url>
 		<timelimit>0</timelimit>
 	</exam>
+	<exam>
+		<title>LPI certificering level 101</title>
+		<category>AT Computing</category>
+		<author>AT Computing</author>
+		<numberofitems>5</numberofitems>
+		<itemsneededtopass>5</itemsneededtopass>
+		<courseurl>http://atcomputing.nl/Training/lpi-certificering-level-1-examen-101.php</courseurl>
+		<url>file:///l101.xml</url>
+		<timelimit>0</timelimit>
+	</exam>
+	<exam>
+		<title>LPI certificering level 102</title>
+		<category>AT Computing</category>
+		<author>AT Computing</author>
+		<numberofitems>5</numberofitems>
+		<itemsneededtopass>5</itemsneededtopass>
+		<courseurl>http://atcomputing.nl/Training/lpi-certificering-level-1-examen-102.php</courseurl>
+		<url>file:///l102.xml</url>
+		<timelimit>0</timelimit>
+	</exam>
 </exams>
