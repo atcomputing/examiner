@@ -52,9 +52,9 @@ public class HistoryAdapter extends CursorAdapter  {
 		ImageView scoreEntryImage = (ImageView) view.findViewById(R.id.historyEntryPass);
 
 		if( examScore >= ExamTrainer.getItemsNeededToPass() ) { 
-			scoreEntryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.green_check));
+			scoreEntryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_green_check));
 		} else if ( examScore > -1 ) {
-			scoreEntryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.red_cross));
+			scoreEntryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_red_cross));
 		} else {
 			scoreEntryImage.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_action_hint));
 		}

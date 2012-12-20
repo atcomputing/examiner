@@ -1,8 +1,10 @@
 package nl.atcomputing.examtrainer.database;
 
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.activities.Exam;
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 import android.widget.Toast;
 
 public class DatabaseManager {
@@ -17,6 +19,10 @@ public class DatabaseManager {
 		examTrainerDbHelper.open();
 		
 		Cursor cursor = examTrainerDbHelper.getExam(examID);
+		if( ! cursor.moveToFirst() ) {
+			return;
+		}
+		
 		int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
 		String examTitle = cursor.getString(index);
 		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE);
@@ -25,7 +31,7 @@ public class DatabaseManager {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this.context);
 		
 		if( examinationDbHelper.delete(examTitle, examDate) )  {
-			if( ! examTrainerDbHelper.setInstallationState(examID, ExamTrainerDbAdapter.State.NOT_INSTALLED) ) {
+			if( ! examTrainerDbHelper.setInstallationState(examID, Exam.State.NOT_INSTALLED) ) {
 				Toast.makeText(this.context, this.context.getString(R.string.Failed_to_uninstall_exam) + 
 						examTitle, Toast.LENGTH_LONG).show();
 			}

@@ -134,13 +134,6 @@ public class ExamQuestionFragment extends AbstractFragment {
 
 		myHandler = new MyHandler(this);
 
-		if( this.questionId == 1 ) {
-			UsageDialog usageDialog = UsageDialog.newInstance(activity, R.string.Usage_Dialog_Press_menu_to_quit_the_exam_or_show_a_hint_if_available);
-			if( usageDialog != null ) {
-				usageDialog.show(getFragmentManager(), "UsageDialog");
-			}
-		}
-
 		this.examQuestion = new ExamQuestion(activity);
 		try {
 			this.examQuestion.fillFromDatabase(ExamTrainer.getExamDatabaseName(), this.questionId);
@@ -188,7 +181,6 @@ public class ExamQuestionFragment extends AbstractFragment {
 
 	@Override
 	public void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		setupTimer();
 		setupLayout();
@@ -576,11 +568,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 			public void onClick(View v) {
 				saveScore();
 				if ( questionId >= ExamTrainer.getAmountOfItems() ) {
-					if(ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW) {
-						//quit review
-					} else {
-						showDialog(ExamQuestionFragment.DIALOG_ENDOFEXAM_ID);
-					}
+					showDialog(ExamQuestionFragment.DIALOG_ENDOFEXAM_ID);
 				} else {
 					abstractFragmentListener.onButtonClickListener(ExamQuestionFragment.this, questionId + 1);
 				}
@@ -597,14 +585,13 @@ public class ExamQuestionFragment extends AbstractFragment {
 
 		if( this.questionId >= ExamTrainer.getAmountOfItems() ) {
 			if (ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW) {
-				buttonNextQuestion.setText(R.string.End_review);
+				buttonNextQuestion.setEnabled(false);
 			} else {
 				buttonNextQuestion.setText(R.string.End_exam);
 			}
 		} else {
 			buttonNextQuestion.setText(R.string.Next);
 		}
-
 		if( this.questionId == 1 ) {
 			buttonPrevQuestion.setEnabled(false);
 		} else {
@@ -616,7 +603,6 @@ public class ExamQuestionFragment extends AbstractFragment {
 
 	@Override
 	public void updateView() {
-		// TODO Auto-generated method stub
 
 	}
 }

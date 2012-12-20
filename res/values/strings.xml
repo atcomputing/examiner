@@ -109,4 +109,5 @@
     <string name="No_exams_selected_to_delete">No exams selected to delete</string>
     <string name="Delete_selected_scores_">Delete selected scores?</string>
     <string name="enroll">Enroll</string>
+    <string name="reload">Reload</string>
 </resources>

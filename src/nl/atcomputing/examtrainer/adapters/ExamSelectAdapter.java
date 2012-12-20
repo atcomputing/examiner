@@ -3,6 +3,7 @@ package  nl.atcomputing.examtrainer.adapters;
 import java.util.HashMap;
 
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.activities.Exam;
 import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
@@ -58,13 +59,13 @@ public class ExamSelectAdapter extends CursorAdapter  {
 		}
 			
 		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED);
-		String state = cursor.getString(index);
+		Exam.State state = Exam.State.valueOf(cursor.getString(index));
 
 		holder.examTitleView.setText(holder.examTitle);
 		
-		if( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLED.name()) ) {
+		if( state == Exam.State.INSTALLED ) {
 			holder.examAuthorView.setText(holder.author);
-		} else if ( state.contentEquals(ExamTrainerDbAdapter.State.INSTALLING.name()) ) {
+		} else if ( state == Exam.State.INSTALLING ) {
 			holder.examAuthorView.setText(R.string.Installing_exam);
 		}
 		

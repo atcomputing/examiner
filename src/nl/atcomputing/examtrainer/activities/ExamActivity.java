@@ -49,13 +49,9 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
+			Log.d("ExamACtivity", "ReceiveBroadcast: action="+action);
 			if( action.contentEquals(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED) ) {
-				String mode = ExamTrainer.getExamMode().toString();
-				if( mode.contentEquals(ExamTrainer.ExamTrainerMode.EXAM_OVERVIEW.name()) ) {
-					examOverviewFragment.updateView();
-				} else if( mode.contentEquals(ExamTrainer.ExamTrainerMode.MANAGE_EXAMS.name()) ) {
-					manageExamsFragment.updateView();
-				}
+				activeFragment.updateView();
 			}
 		}
 	}
@@ -149,10 +145,10 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 	}
 
 	public void onExamEnd() {
+		startCalculateScoreActivity();
 		FragmentManager fm = getSupportFragmentManager();
 		fm.popBackStack(ExamTrainer.ExamTrainerMode.EXAM.name(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		fm.popBackStack(ExamTrainer.ExamTrainerMode.EXAM_REVIEW.name(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
-		startCalculateScoreActivity();
 	}
 
 	public void onItemClickListener(long id) {

@@ -5,6 +5,7 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.activities.Exam;
 import nl.atcomputing.examtrainer.activities.ExamQuestion;
 import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.database.DatabaseManager;
@@ -53,7 +54,7 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 
 		ExamTrainerDbAdapter examTrainerDbHelperAdapter = new ExamTrainerDbAdapter(this.context);
 		examTrainerDbHelperAdapter.open();
-		if(! examTrainerDbHelperAdapter.setInstallationState(this.examID, ExamTrainerDbAdapter.State.INSTALLING)) {
+		if(! examTrainerDbHelperAdapter.setInstallationState(this.examID, Exam.State.INSTALLING)) {
 			Toast.makeText(this.context, "Failed to set exam " + this.examID + " to state installing.", Toast.LENGTH_LONG).show();
 		}
 		this.examDate = System.currentTimeMillis();
@@ -125,7 +126,7 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 
 			ExamTrainerDbAdapter examTrainerDbHelperAdapter = new ExamTrainerDbAdapter(this.context);
 			examTrainerDbHelperAdapter.open();
-			if(! examTrainerDbHelperAdapter.setInstallationState(this.examID, ExamTrainerDbAdapter.State.INSTALLED)) {
+			if(! examTrainerDbHelperAdapter.setInstallationState(this.examID, Exam.State.INSTALLED)) {
 				Toast.makeText(this.context, "Failed to set exam " + this.examTitle + " to installed.", Toast.LENGTH_LONG).show();
 			}
 			examTrainerDbHelperAdapter.close();
