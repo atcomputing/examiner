@@ -1,7 +1,6 @@
 
     <resources>
         <color name="correct_answer">#00FF00</color>
-        <color name="at_blue">#007FFF</color>
         <color name="exam_passed_text">#00b300</color>
         <color name="exam_failed_text">#b30000</color>
         <color name="transparent_background">#40000000</color>

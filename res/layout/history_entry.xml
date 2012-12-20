@@ -28,5 +28,5 @@
               android:layout_width="0dp"
               android:textSize="@dimen/textSizeDefault"
               android:layout_height="@dimen/rowHeightDefault"
-              android:src="@drawable/questionmark"/>
+              android:src="@drawable/ic_action_hint"/>
 </LinearLayout>
