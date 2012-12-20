@@ -16,7 +16,7 @@
     <string name="Could_not_remove_exam_database_file">Could not remove exam database file.</string>
     <string name="Failed_to_uninstall_exam">Failed to uninstall exam.</string>
     <string name="No_question_available">No question available.</string>
-    <string name="app_name">Exam Trainer</string>
+    <string name="app_name">AT Course Examinator</string>
     <string name="No_time_limit">No time limit</string>
     <string name="Time_limit_in_minutes">Time limit in minutes</string>
     <string name="minutes">minutes</string>

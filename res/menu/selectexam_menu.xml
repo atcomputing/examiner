@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/selectexam_menu_manage"
-          android:icon="@drawable/ic_action_install"
-          android:title="@string/Manage_Exams"
-          android:showAsAction="ifRoom|withText" />
     <item android:id="@+id/selectexam_menu_about"
           android:icon="@drawable/ic_action_about"
           android:title="@string/About"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+	<string name="app_name">AT Cursus Examinator</string>
     <string name="startscreen_quote">“Kan niet\n"    "bestaat niet”</string>
     <string name="Calculating_your_score">Uw score wordt berekend</string>
     <string name="You_passed">U bent geslaagd</string>

@@ -4,9 +4,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -41,6 +43,11 @@ public class InstallAllExamsAsyncTask extends AsyncTask<String, Integer, String>
 			InstallExamAsyncTask task = new InstallExamAsyncTask(this.context, null, examID);
 			task.execute();
 
+			//Sent notification to interested activities that examlist is updated
+			Intent intent=new Intent();
+			intent.setAction(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED);
+			this.context.sendBroadcast(intent);
+			
 			try {
 				task.get();
 			} catch (InterruptedException e) {
