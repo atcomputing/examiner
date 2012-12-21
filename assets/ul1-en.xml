@@ -3,13 +3,12 @@
 <exam>
   <item>
     <exhibit>total&amp;nbsp;0&lt;br/&gt;-rw-rw-r--&amp;nbsp;1&amp;nbsp;guru0&amp;nbsp;cursus&amp;nbsp;0&amp;nbsp;Dec&amp;nbsp;&amp;nbsp;7&amp;nbsp;13:01&amp;nbsp;-x&lt;br/&gt;-rw-rw-r--&amp;nbsp;1&amp;nbsp;guru0&amp;nbsp;cursus&amp;nbsp;0&amp;nbsp;Dec&amp;nbsp;&amp;nbsp;7&amp;nbsp;13:01&amp;nbsp;-xx&lt;br/&gt;-rw-rw-r--&amp;nbsp;1&amp;nbsp;guru0&amp;nbsp;cursus&amp;nbsp;0&amp;nbsp;Dec&amp;nbsp;&amp;nbsp;7&amp;nbsp;13:01&amp;nbsp;y&lt;br/&gt;-rw-rw-r--&amp;nbsp;1&amp;nbsp;guru0&amp;nbsp;cursus&amp;nbsp;0&amp;nbsp;Dec&amp;nbsp;&amp;nbsp;7&amp;nbsp;13:01&amp;nbsp;z</exhibit>
-    <question>Consider the above exhibit.&lt;br/&gt;You want to remove the file &lt;font face="monospace"&gt;-x&lt;/font&gt; from the directory listing shown in above exhibit.&lt;br/&gt;Which of the following commands can you use to remove the file?</question>
+    <question>You want to remove the file &lt;font face="monospace"&gt;-x&lt;/font&gt; from the directory listing shown in above exhibit.&lt;br/&gt;Which of the following commands can you use to remove the file?</question>
     <choice>&lt;font face="monospace"&gt;rm&amp;nbsp;-x&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;rm&amp;nbsp;*x&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;rm&amp;nbsp;--&amp;nbsp;-x&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;rm&amp;nbsp;\-x&lt;/font&gt;</choice>
     <correct_answer>&lt;font face="monospace"&gt;rm&amp;nbsp;--&amp;nbsp;-x&lt;/font&gt;</correct_answer>
-    <correct_answer></correct_answer>
     <hint>It is not the shell that will consider &lt;font face="monospace"&gt;-x&lt;/font&gt; as a special item. Hence, escaping &lt;font face="monospace"&gt;-x&lt;/font&gt; for the shell will not have the desired effect. In this case you will need to make it clear to the command &lt;font face="monospace"&gt;rm&lt;/font&gt; that &lt;font face="monospace"&gt;-x&lt;/font&gt; should not be interpreted as an option.</hint>
     <type>multiple choice</type>
   </item>
@@ -20,7 +19,7 @@
     <choice>&lt;font face="monospace"&gt;rm&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;wc&lt;/font&gt;</choice>
     <correct_answer>&lt;font face="monospace"&gt;ls&lt;/font&gt;</correct_answer>
-    <hint>Many commands on UNIX/Linux are abbreviated. For example, the command &lt;font face="monospace"&gt;cp&lt;/font&gt; stands for &lt;font face="monospace"&gt;copy&lt;/font&gt;. By determining the actual name of the command it usually makes it clear what action the command will perform when executed.</hint>
+    <hint>Many commands on UNIX/Linux are abbreviated. For example, the command &lt;font face="monospace"&gt;cp&lt;/font&gt; stands for &lt;font face="monospace"&gt;copy&lt;/font&gt;. By determining the full name of the command it usually makes it clear what action the command will perform when executed.</hint>
     <type>multiple choice</type>
   </item>
   <item>
@@ -34,25 +33,25 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <question>What is the meaning of the sticky bit permission on a directory?</question>
-    <choice>It has no meaning when used on a directory.</choice>
-    <choice>Prevents users from deleting the directory.</choice>
-    <choice>The kernel will keep the directory in memory to improve performance.</choice>
-    <choice>Allows files within the directory only to be removed by the owner, owner of the directory, or a user with root privileges.</choice>
-    <correct_answer>Allows files within the directory only to be removed by the owner, owner of the directory, or a user with root privileges.</correct_answer>
-    <hint>A directory that usually has the sticky bit permission is &lt;font face="monospace"&gt;/tmp&lt;/font&gt;.</hint>
+    <exhibit>There&amp;nbsp;are&amp;nbsp;10&amp;nbsp;kinds&amp;nbsp;of&amp;nbsp;people&lt;br/&gt;Those&amp;nbsp;who&amp;nbsp;understand&amp;nbsp;binary&lt;br/&gt;and&amp;nbsp;those&amp;nbsp;who&amp;nbsp;don't</exhibit>
+    <question>The textfile &lt;font face="monospace"&gt;riddle.txt&lt;/font&gt; contains the content shown above.&lt;br/&gt;Which line is returned when executing the following command?&lt;br/&gt;&lt;font face="monospace"&gt;grep&amp;nbsp;'^M'&amp;nbsp;riddle.txt&lt;/font&gt;</question>
+    <choice>No line at all</choice>
+    <choice>There are 10 kinds of people</choice>
+    <choice>Those who understand binary</choice>
+    <choice>and thos who don't</choice>
+    <correct_answer>No line at all</correct_answer>
+    <hint>The &lt;font face="monospace"&gt;^&lt;/font&gt; character will match at the beginning of a line.</hint>
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit>who&amp;nbsp;|&amp;nbsp;cut&amp;nbsp;-d'&amp;nbsp;'&amp;nbsp;-f1&amp;nbsp;&amp;gt;&amp;nbsp;namen.txt&amp;nbsp;|&amp;nbsp;sort&amp;nbsp;-u</exhibit>
-    <question>What will the above command do when executed in a shell?</question>
-    <choice>Generate an error, as the command &lt;font face="monospace"&gt;cut&lt;/font&gt; has no knowledge of an option &lt;font face="monospace"&gt;-u&lt;/font&gt;</choice>
-    <choice>Writes a list of all logged in users to the file &lt;font face="monospace"&gt;namen.txt&lt;/font&gt; and prints the same list sorted to screen.</choice>
-    <choice>Writes a list of all logged in users to the file &lt;font face="monospace"&gt;namen.txt&lt;/font&gt;</choice>
-    <choice>Will first execute the command &lt;font face="monospace"&gt;who&lt;/font&gt;, then execute &lt;font face="monospace"&gt;cut&lt;/font&gt;, and at last will execute the command &lt;font face="monospace"&gt;sort&lt;/font&gt;.</choice>
-    <correct_answer>Writes a list of all logged in users to the file &lt;font face="monospace"&gt;namen.txt&lt;/font&gt;</correct_answer>
-    <correct_answer></correct_answer>
-    <hint>In een zogenaamde pipe-constructie wordt de uitvoer van het linker commando gekoppeld aan de invoer van het rechter commando. Het &lt;font face="monospace"&gt;&amp;gt;&lt;/font&gt;-teken koppelt de uitvoer van het commando aan een bestand. Er is echter maar één stroom aan data, of te wel waar gaat de uitvoer van het commando &lt;font face="monospace"&gt;cut&lt;/font&gt; naartoe? Het bestand of naar het commando &lt;font face="monospace"&gt;sort&lt;/font&gt;?</hint>
+    <exhibit>who&amp;nbsp;|&amp;nbsp;sort&amp;nbsp;&amp;gt;&amp;nbsp;namen.txt&amp;nbsp;|&amp;nbsp;uniq&amp;nbsp;-c</exhibit>
+    <question>What will be the result when you execute above commandline?</question>
+    <choice>Error as &lt;font face="monospace"&gt;sort&lt;/font&gt; has no knowledge of &lt;font face="monospace"&gt;-c&lt;/font&gt;</choice>
+    <choice>Writes the list of logged in users to the file &lt;font face="monospace"&gt;namen.txt&lt;/font&gt; and prints the amount of times a user is logged in to screen.</choice>
+    <choice>Writes the list of all logged in users to the file &lt;font face="monospace"&gt;namen.txt&lt;/font&gt;.</choice>
+    <choice>Will first execute the command &lt;font face="monospace"&gt;who&lt;/font&gt;, then the command &lt;font face="monospace"&gt;sort&lt;/font&gt;, and after that the command &lt;font face="monospace"&gt;uniq&lt;/font&gt;.</choice>
+    <correct_answer>Writes the list of all logged in users to the file &lt;font face="monospace"&gt;namen.txt&lt;/font&gt;.</correct_answer>
+    <hint>In a so-called pipe-construction the commands are separated by the &lt;font face="monospace"&gt;|&lt;/font&gt; character. This will result in the output of the command left of the &lt;font face="monospace"&gt;|&lt;/font&gt; character be passed as input to the command right of the &lt;font face="monospace"&gt;|&lt;/font&gt; character. The &lt;font face="monospace"&gt;&amp;gt;&lt;/font&gt; character will connect the output of the command to the file specified after the &lt;font face="monospace"&gt;&amp;gt;&lt;/font&gt; character. However, there is only one stream of data. In other words, where will the output of the command &lt;font face="monospace"&gt;sort&lt;/font&gt; go to? The file &lt;font face="monospace"&gt;namen.txt&lt;/font&gt; of the command &lt;font face="monospace"&gt;uniq&lt;/font&gt;?</hint>
     <type>multiple choice</type>
   </item>
 </exam>
