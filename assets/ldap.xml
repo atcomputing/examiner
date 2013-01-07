@@ -43,7 +43,7 @@
   </item>
   <item>
     <exhibit>access&amp;nbsp;to&amp;nbsp;attrs=userPassword&lt;br/&gt;&amp;nbsp;&amp;nbsp;by&amp;nbsp;self&amp;nbsp;=xw&lt;br/&gt;&amp;nbsp;&amp;nbsp;by&amp;nbsp;anonymous&amp;nbsp;auth&lt;br/&gt;&amp;nbsp;&amp;nbsp;by&amp;nbsp;*&amp;nbsp;none</exhibit>
-    <question>Which of the following is true considering the ACL in above exhibit?</question>
+    <question>Which of the following is true considering the ACL in above exhibit.</question>
     <choice>The LDAP directory server itself may authenticate</choice>
     <choice>Anonymous may authorize other users</choice>
     <choice>Everyone is denied access to the attribute &lt;font face="monospace"&gt;userPassword&lt;/font&gt;</choice>

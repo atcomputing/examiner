@@ -45,7 +45,7 @@
   </item>
   <item>
     <exhibit>who&amp;nbsp;|&amp;nbsp;sort&amp;nbsp;&amp;gt;&amp;nbsp;namen.txt&amp;nbsp;|&amp;nbsp;uniq&amp;nbsp;-c</exhibit>
-    <question>What will be the result when you execute above commandline?</question>
+    <question>What will be the result when you execute the commandline shown above?</question>
     <choice>Error as &lt;font face="monospace"&gt;sort&lt;/font&gt; has no knowledge of &lt;font face="monospace"&gt;-c&lt;/font&gt;</choice>
     <choice>Writes the list of logged in users to the file &lt;font face="monospace"&gt;namen.txt&lt;/font&gt; and prints the amount of times a user is logged in to screen.</choice>
     <choice>Writes the list of all logged in users to the file &lt;font face="monospace"&gt;namen.txt&lt;/font&gt;.</choice>

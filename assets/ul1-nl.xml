@@ -8,10 +8,7 @@
     <choice>&lt;font face="monospace"&gt;rm&amp;nbsp;*x&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;rm&amp;nbsp;--&amp;nbsp;-x&lt;/font&gt;</choice>
     <choice>&lt;font face="monospace"&gt;rm&amp;nbsp;\-x&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;rm&amp;nbsp;./-x&lt;/font&gt;</choice>
-    <choice>&lt;font face="monospace"&gt;rm&amp;nbsp;??&lt;/font&gt;</choice>
     <correct_answer>&lt;font face="monospace"&gt;rm&amp;nbsp;--&amp;nbsp;-x&lt;/font&gt;</correct_answer>
-    <correct_answer>&lt;font face="monospace"&gt;rm&amp;nbsp;./-x&lt;/font&gt;</correct_answer>
     <hint>Het is niet de shell die de &lt;font face="monospace"&gt;-x&lt;/font&gt; als speciaal ziet. Die geeft het argument &lt;font face="monospace"&gt;-x&lt;/font&gt; netjes door aan het commando &lt;font face="monospace"&gt;rm&lt;/font&gt;. Je moet dus het commando duidelijk maken dat de &lt;font face="monospace"&gt;-x&lt;/font&gt; niet een optie betreft.</hint>
     <type>multiple choice</type>
   </item>
@@ -36,25 +33,25 @@
     <type>multiple choice</type>
   </item>
   <item>
-    <question>Wat is de betekenis van de sticky bit permissie op een directory?</question>
-    <choice>Heeft geen betekenis wanneer het gebruikt wordt op een directory.</choice>
-    <choice>Dan kan de directory niet meer verwijderd worden.</choice>
-    <choice>Dan zal de kernel de directory in geheugen houden om de snelheid te verbeteren.</choice>
-    <choice>Dan kunnen bestanden in die directory alleen worden verwijderd door de eigenaar van het bestand, de eigenaar van de directory, of de root gebruiker.</choice>
-    <correct_answer>Dan kunnen bestanden in die directory alleen worden verwijderd door de eigenaar van het bestand, de eigenaar van de directory, of de root gebruiker.</correct_answer>
-    <hint>De meest voorkomende directory waarbij de stick bit permissie is ingesteld is de &lt;font face="monospace"&gt;/tmp&lt;/font&gt; directory.</hint>
+    <exhibit>Er&amp;nbsp;zijn&amp;nbsp;10&amp;nbsp;soorten&amp;nbsp;mensen&lt;br/&gt;Mensen&amp;nbsp;die&amp;nbsp;binair&amp;nbsp;begrijpen&lt;br/&gt;en&amp;nbsp;mensen&amp;nbsp;die&amp;nbsp;dat&amp;nbsp;niet&amp;nbsp;begrijpen.</exhibit>
+    <question>Het tekstbestand &lt;font face="monospace"&gt;raadseltje.txt&lt;/font&gt; bevat bovenstaande tekst.&lt;br/&gt;Welke regel wordt door het volgende commando als resultaat gegeven?&lt;br/&gt;&lt;font face="monospace"&gt;grep&amp;nbsp;'^M'&amp;nbsp;raadseltje.txt&lt;/font&gt;</question>
+    <choice>Geen enkele regel</choice>
+    <choice>Mensen die binair begrijpen</choice>
+    <choice>Er zijn 10 soorten mensen</choice>
+    <choice>en mensen die dat niet begrijpen.</choice>
+    <correct_answer>Mensen die binair begrijpen</correct_answer>
+    <hint>Met het &lt;font face="monospace"&gt;^&lt;/font&gt;-teken kun je aangeven dat de tekst aan het begin van de regel moet voorkomen.</hint>
     <type>multiple choice</type>
   </item>
   <item>
-    <exhibit>who&amp;nbsp;|&amp;nbsp;cut&amp;nbsp;-d'&amp;nbsp;'&amp;nbsp;-f1&amp;nbsp;&amp;gt;&amp;nbsp;namen.txt&amp;nbsp;|&amp;nbsp;sort&amp;nbsp;-u</exhibit>
+    <exhibit>who&amp;nbsp;|&amp;nbsp;sort&amp;nbsp;&amp;gt;&amp;nbsp;namen.txt&amp;nbsp;|&amp;nbsp;uniq&amp;nbsp;-c</exhibit>
     <question>Wat doet de bovenstaande commandoregel als je die in een shell uitvoert?</question>
-    <choice>Geeft een foutmelding want het commando &lt;font face="monospace"&gt;cut&lt;/font&gt; kent de optie &lt;font face="monospace"&gt;-u&lt;/font&gt; niet</choice>
-    <choice>Schrijft de lijst van alle ingelogde gebruikers naar het bestand &lt;font face="monospace"&gt;namen.txt&lt;/font&gt; en print de lijst gesorteerd op het scherm</choice>
+    <choice>Geeft een foutmelding want het commando &lt;font face="monospace"&gt;sort&lt;/font&gt; kent de optie &lt;font face="monospace"&gt;-c&lt;/font&gt; niet</choice>
+    <choice>Schrijft de lijst van alle ingelogde gebruikers gesorteerd naar het bestand &lt;font face="monospace"&gt;namen.txt&lt;/font&gt; en print het aantal keer dat een gebruiker is ingelogd naar het scherm</choice>
     <choice>Schrijft de lijst van alle ingelogde gebruikers naar het bestand &lt;font face="monospace"&gt;namen.txt&lt;/font&gt;</choice>
-    <choice>Voert eerst het commando &lt;font face="monospace"&gt;who&lt;/font&gt; uit, dan het commando &lt;font face="monospace"&gt;cut&lt;/font&gt; en vervolgens het commando &lt;font face="monospace"&gt;sort&lt;/font&gt;</choice>
+    <choice>Voert eerst het commando &lt;font face="monospace"&gt;who&lt;/font&gt; uit, dan het commando &lt;font face="monospace"&gt;sort&lt;/font&gt; en vervolgens het commando &lt;font face="monospace"&gt;uniq&lt;/font&gt;</choice>
     <correct_answer>Schrijft de lijst van alle ingelogde gebruikers naar het bestand &lt;font face="monospace"&gt;namen.txt&lt;/font&gt;</correct_answer>
-    <correct_answer></correct_answer>
-    <hint>In een zogenaamde pipe-constructie wordt de uitvoer van het linker commando gekoppeld aan de invoer van het rechter commando. Het &lt;font face="monospace"&gt;&amp;gt;&lt;/font&gt;-teken koppelt de uitvoer van het commando aan een bestand. Er is echter maar één stroom aan data, of te wel waar gaat de uitvoer van het commando &lt;font face="monospace"&gt;cut&lt;/font&gt; naartoe? Het bestand of naar het commando &lt;font face="monospace"&gt;sort&lt;/font&gt;?</hint>
+    <hint>In een zogenaamde pipe-constructie wordt de uitvoer van het linker commando gekoppeld aan de invoer van het rechter commando. Het &lt;font face="monospace"&gt;&amp;gt;&lt;/font&gt;-teken koppelt de uitvoer van het commando aan een bestand. Er is echter maar één stroom aan data, of te wel waar gaat de uitvoer van het commando &lt;font face="monospace"&gt;sort&lt;/font&gt; naartoe? Het bestand of naar het commando &lt;font face="monospace"&gt;uniq&lt;/font&gt;?</hint>
     <type>multiple choice</type>
   </item>
 </exam>
