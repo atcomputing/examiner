@@ -13,6 +13,7 @@ import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -26,17 +27,41 @@ import android.widget.Toast;
 
 public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 	private Context context;
-	private long examID;
+	private long examID = -1;
 	private String examTitle;
 	private long examDate;
 	private TextView tvProgress;
 	private String url;
+	private Cursor cursor;
 
+	/**
+	 * Installs the exam as defined by the examsCursor which should be one or more rows from 
+	 * the examTrainer database. 
+	 * @param context
+	 * @param progress textview to show progress information when installing an exam
+	 * @param examsCursor one or more rows from the examTrainer database. If null all not 
+	 *        installed exams will be installed.
+	 */
 	public InstallExamAsyncTask(Context context, TextView progress, long examID) {
 		super();
 		this.examID = examID;
 		this.context = context;
 		this.tvProgress = progress;
+	}
+
+	/**
+	 * Installs the exam as defined by the examsCursor which should be one or more rows from 
+	 * the examTrainer database. 
+	 * @param context
+	 * @param progress textview to show progress information when installing an exam
+	 * @param examsCursor one or more rows from the examTrainer database. If null all not 
+	 *        installed exams will be installed. Cursor must contain the examId.
+	 */
+	public InstallExamAsyncTask(Context context, TextView progress, Cursor examsCursor) {
+		super();
+		this.context = context;
+		this.tvProgress = progress;
+		this.cursor = examsCursor;
 	}
 
 	public long getExamID() {
@@ -48,14 +73,33 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 	}
 
 	protected void onPreExecute() {
-		if( this.tvProgress != null ) {
-			this.tvProgress.setText(R.string.Installing_exam);
-		}
-
-		ExamTrainerDbAdapter examTrainerDbHelperAdapter = new ExamTrainerDbAdapter(this.context);
+		ExamTrainerDbAdapter examTrainerDbHelperAdapter = new ExamTrainerDbAdapter(context);
 		examTrainerDbHelperAdapter.open();
+		
+		if( this.cursor == null ) {
+			this.cursor = examTrainerDbHelperAdapter.getNotInstalledExams();
+		}
+		
+		if( this.cursor.getPosition() == -1 ) {
+			this.cursor.moveToFirst();
+		}
+		
+		this.examID = examTrainerDbHelperAdapter.getExamId(this.cursor);
+		
+		if( this.examID == -1 ) {
+			if( this.tvProgress != null ) {
+				this.tvProgress.setText(R.string.failed_to_install_exam);
+				examTrainerDbHelperAdapter.close();
+				return;
+			}
+		} else {
+			if( this.tvProgress != null ) {
+				this.tvProgress.setText(R.string.Installing_exam);
+			}
+		}
+		
 		if(! examTrainerDbHelperAdapter.setInstallationState(this.examID, Exam.State.INSTALLING)) {
-			Toast.makeText(this.context, "Failed to set exam " + this.examID + " to state installing.", Toast.LENGTH_LONG).show();
+			Log.w("InstallExamAsyncTask", "Failed to set exam " + this.examID + " to state installing.");
 		}
 		this.examDate = System.currentTimeMillis();
 
@@ -67,9 +111,18 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 		examTrainerDbHelperAdapter.close();
 
 		ExamTrainer.addInstallationThread(this.examID, this);
+
+		//Sent notification to interested activities that examlist is updated
+		Intent intent=new Intent();
+		intent.setAction(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED);
+		this.context.sendBroadcast(intent);
 	}
 
 	protected String doInBackground(String... dummy) {
+		if( this.examID == -1 ) {
+			return "";
+		}
+		
 		String returnMessage = "";
 
 		try {
@@ -121,6 +174,9 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 	}
 
 	protected void onPostExecute(String errorMessage) {
+		if( this.examID == -1 ) {
+			return;
+		}
 		if( errorMessage.contentEquals("") ) {
 
 			ExamTrainerDbAdapter examTrainerDbHelperAdapter = new ExamTrainerDbAdapter(this.context);
@@ -142,6 +198,12 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 		Intent intent=new Intent();
 		intent.setAction(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED);
 		this.context.sendBroadcast(intent);
+		
+		//Install next exam
+		if( this.cursor.moveToNext() ) {
+			InstallExamAsyncTask task = new InstallExamAsyncTask(this.context, null, this.cursor);
+			task.execute();
+		}
 	}
 
 	@Override

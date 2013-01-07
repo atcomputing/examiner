@@ -77,6 +77,20 @@ public class ExamTrainerDbAdapter {
 		return rowId;
 	}
 
+	/**
+	 * Searches table entries with given exam title and author
+	 * @param cursor the row for which you want the ExamId returned
+	 * @return -1 if no examId was found, examId otherwise.
+	 */
+	public long getExamId(Cursor cursor) {
+		int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID);
+		if( index != -1 ) { 
+			return cursor.getLong(index);
+		} else {
+			return -1;
+		}
+	}
+	
 	public long addExam(Exam exam) {
 		ContentValues values = new ContentValues();
 		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE, exam.getTitle());

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
-import nl.atcomputing.examtrainer.examparser.InstallAllExamsAsyncTask;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
 import nl.atcomputing.examtrainer.examparser.XmlPullExamListParser;
 import android.app.Activity;
@@ -127,7 +126,8 @@ public class StartScreenActivity extends Activity {
 		}
 		examTrainerDbHelper.close();
 		
-		InstallAllExamsAsyncTask task = new InstallAllExamsAsyncTask(this);
+		
+		InstallExamAsyncTask task = new InstallExamAsyncTask(this, null, null);
 		task.execute();
 	}
 }
