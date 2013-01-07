@@ -15,7 +15,6 @@
     <string name="Could_not_remove_exam_database_file">Het examen databestand kan niet worden verwijderd.</string>
     <string name="Failed_to_uninstall_exam">Mislukt om examen te verwijderen.</string>
     <string name="No_question_available">Vraag niet beschikbaar.</string>
-    <string name="app_name">AT Cursus Examinator</string>
     <string name="No_time_limit">Geen tijdslimiet</string>
     <string name="Time_limit_in_minutes">Tijdslimiet in minuten</string>
     <string name="minutes">minuten</string>
