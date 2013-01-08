@@ -57,7 +57,7 @@ public class StartScreenActivity extends Activity {
 			public void run() {
 				try {
 					int waited = 0; // wait a maximum amount of time to prevent indefinite loop
-					while ( (cancelThread == false) && (waited < 20) ) {
+					while ( (cancelThread == false) && (waited < 15) ) {
 						synchronized (this) {
 							wait(100);
 						}

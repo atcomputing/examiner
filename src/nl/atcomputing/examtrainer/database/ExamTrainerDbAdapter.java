@@ -176,7 +176,7 @@ public class ExamTrainerDbAdapter {
 
 	public Cursor getAllExams() {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
-				this.allRows, null, null, null, null, null, null);
+				this.allRows, null, null, null, null, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE, null);
 		if (cursor != null) {
 			cursor.moveToFirst();
 		}
@@ -187,7 +187,7 @@ public class ExamTrainerDbAdapter {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
 				this.allRows, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "=\'" + 
 						Exam.State.NOT_INSTALLED.name() + "\'",
-						null, null, null, null, null);
+						null, null, null, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE, null);
 		
 		return cursor;
 	}
@@ -198,7 +198,7 @@ public class ExamTrainerDbAdapter {
 						Exam.State.INSTALLED.name() +"\' OR " +
 						ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "=\'" + 
 						Exam.State.INSTALLING.name() +"\'",
-						null, null, null, null, null);
+						null, null, null, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE, null);
 		return cursor;
 	}
 

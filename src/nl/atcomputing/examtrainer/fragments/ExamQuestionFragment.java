@@ -8,14 +8,14 @@ import java.util.TimeZone;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import nl.atcomputing.dialogs.HintDialog;
-import nl.atcomputing.dialogs.TwoButtonDialog;
-import nl.atcomputing.dialogs.UsageDialog;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.activities.ExamQuestion;
 import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
+import nl.atcomputing.examtrainer.dialogs.HintDialog;
+import nl.atcomputing.examtrainer.dialogs.TwoButtonDialog;
+import nl.atcomputing.examtrainer.dialogs.UsageDialog;
 import android.app.Activity;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
@@ -34,6 +34,7 @@ import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,6 +56,8 @@ public class ExamQuestionFragment extends AbstractFragment {
 	private long questionId = 1;
 	private EditText editText;
 	private static TextView timeLimitTextView;
+	private static boolean timeLimitReached;
+	private TwoButtonDialog timeLimitReachedDialog;
 	private ArrayList <View> multipleChoices;
 	private static final String HANDLER_MESSAGE_KEY = "handler_update_timer"; 
 	private static final int HANDLER_MESSAGE_VALUE_UPDATE_TIMER = 0;
@@ -182,7 +185,15 @@ public class ExamQuestionFragment extends AbstractFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		setupTimer();
+		
+		long currentTime = System.currentTimeMillis();
+		if( currentTime > ExamTrainer.getTimeEnd() ) {
+			timeLimitReached = true;
+		} else {
+			timeLimitReached = false;
+			setupTimer();
+		}
+		
 		setupLayout();
 	}
 
@@ -251,18 +262,25 @@ public class ExamQuestionFragment extends AbstractFragment {
 			endOfExamDialog.show(getFragmentManager(), "EndOfExamDialog");
 			break;
 		case DIALOG_TIMELIMITREACHED_ID:
-			TwoButtonDialog timeLimitReachedDialog = TwoButtonDialog.newInstance(R.string.time_s_up_);
+			if( timeLimitReachedDialog != null ) {
+				return;
+			}
+			this.timeLimitReachedDialog = TwoButtonDialog.newInstance(R.string.time_s_up_);
 			timeLimitReachedDialog.setPositiveButton(R.string.calculate_score, new Runnable() {
 
 				public void run() {
 					setTheRestOfQuestionsToFalse();
 					examQuestionListener.onExamEnd();
+					timeLimitReachedDialog.dismiss();
+					timeLimitReachedDialog = null;
 				}
 			});
 			timeLimitReachedDialog.setNegativeButton(R.string.Quit, new Runnable() {
 
 				public void run() {
 					examQuestionListener.onStopExam();
+					timeLimitReachedDialog.dismiss();
+					timeLimitReachedDialog = null;
 				}
 			});
 			timeLimitReachedDialog.show(getFragmentManager(), "TimeLimitReachedDialog");
@@ -478,6 +496,10 @@ public class ExamQuestionFragment extends AbstractFragment {
 			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
 			this.editText.setText(cursor.getString(index));
 		}
+		
+		if( timeLimitReached ) {
+			this.editText.setEnabled(false);
+		}
 	}
 
 	private void showPreviouslySetChoices() {
@@ -507,7 +529,8 @@ public class ExamQuestionFragment extends AbstractFragment {
 				String tvText = tv.getText().toString();
 				CheckBox cbox = (CheckBox) view.findViewById(R.id.choiceCheckBox);
 				cbox.setChecked(false);
-				if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) {
+				if( ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) || 
+						( timeLimitReached ) ) {
 					cbox.setClickable(false);
 				}
 

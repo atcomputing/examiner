@@ -39,8 +39,7 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 	 * the examTrainer database. 
 	 * @param context
 	 * @param progress textview to show progress information when installing an exam
-	 * @param examsCursor one or more rows from the examTrainer database. If null all not 
-	 *        installed exams will be installed.
+	 * @param examID exam Identifier
 	 */
 	public InstallExamAsyncTask(Context context, TextView progress, long examID) {
 		super();
@@ -75,17 +74,22 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 	protected void onPreExecute() {
 		ExamTrainerDbAdapter examTrainerDbHelperAdapter = new ExamTrainerDbAdapter(context);
 		examTrainerDbHelperAdapter.open();
-		
-		if( this.cursor == null ) {
-			this.cursor = examTrainerDbHelperAdapter.getNotInstalledExams();
+
+		//Check if we are called in cursor mode
+		if( this.examID == -1 ) {
+			if( this.cursor == null ) {
+				this.cursor = examTrainerDbHelperAdapter.getNotInstalledExams();
+			}
+
+			if( this.cursor.getPosition() == -1 ) {
+				if( this.cursor.moveToFirst() ) {
+					this.examID = examTrainerDbHelperAdapter.getExamId(this.cursor);
+				}
+			} else {
+				this.examID = examTrainerDbHelperAdapter.getExamId(this.cursor);
+			}
 		}
-		
-		if( this.cursor.getPosition() == -1 ) {
-			this.cursor.moveToFirst();
-		}
-		
-		this.examID = examTrainerDbHelperAdapter.getExamId(this.cursor);
-		
+
 		if( this.examID == -1 ) {
 			if( this.tvProgress != null ) {
 				this.tvProgress.setText(R.string.failed_to_install_exam);
@@ -97,7 +101,7 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 				this.tvProgress.setText(R.string.Installing_exam);
 			}
 		}
-		
+
 		if(! examTrainerDbHelperAdapter.setInstallationState(this.examID, Exam.State.INSTALLING)) {
 			Log.w("InstallExamAsyncTask", "Failed to set exam " + this.examID + " to state installing.");
 		}
@@ -122,7 +126,7 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 		if( this.examID == -1 ) {
 			return "";
 		}
-		
+
 		String returnMessage = "";
 
 		try {
@@ -198,7 +202,7 @@ public class InstallExamAsyncTask extends AsyncTask<String, Integer, String> {
 		Intent intent=new Intent();
 		intent.setAction(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED);
 		this.context.sendBroadcast(intent);
-		
+
 		//Install next exam
 		if( this.cursor.moveToNext() ) {
 			InstallExamAsyncTask task = new InstallExamAsyncTask(this.context, null, this.cursor);

@@ -10,8 +10,10 @@ import android.content.pm.PackageManager;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnKeyListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -28,7 +30,7 @@ import com.actionbarsherlock.view.MenuItem;
  *
  */
 
-public class ExamSelectFragment extends AbstractFragment {
+public class ExamSelectFragment extends AbstractFragment implements OnKeyListener {
 	private TextView clickOnManageExams;
 	private TextView noExamsAvailable;
 	
@@ -43,12 +45,15 @@ public class ExamSelectFragment extends AbstractFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		return inflater.inflate(R.layout.examselectfragment, container, false);
+		View view = inflater.inflate(R.layout.examselectfragment, container, false);
+		view.setFocusableInTouchMode(true);
+		view.requestFocus();
+		view.setOnKeyListener(this);
+		return view;
 	}
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
 		setupListView();
 	}
@@ -80,7 +85,6 @@ public class ExamSelectFragment extends AbstractFragment {
 	
 	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-		// TODO Auto-generated method stub
 		inflater.inflate(R.menu.selectexam_menu, menu);
 	}
 
@@ -91,6 +95,8 @@ public class ExamSelectFragment extends AbstractFragment {
 		switch (item.getItemId()) {
 		case R.id.selectexam_menu_about:
 			String version;
+			ListView lv = (ListView) activity.findViewById(R.id.select_exam_list);
+			
 			try {
 				PackageInfo info = activity.getPackageManager().getPackageInfo("nl.atcomputing.examtrainer", 0);
 				version = info.versionName;
@@ -103,8 +109,10 @@ public class ExamSelectFragment extends AbstractFragment {
 			if( ( about_layout.getVisibility() == View.INVISIBLE ) || 
 					( about_layout.getVisibility() == View.GONE ) )	{
 				about_layout.setVisibility(View.VISIBLE);
+				lv.setEnabled(false);
 			} else {
 				about_layout.setVisibility(View.INVISIBLE);
+				lv.setEnabled(true);
 			}
 			break;
 		default:
@@ -149,5 +157,22 @@ public class ExamSelectFragment extends AbstractFragment {
 	@Override
 	public void updateView() {
 		setupListView();
+	}
+
+	@Override
+	public boolean onKey(View v, int keyCode, KeyEvent event) {
+		Activity activity = getActivity();
+		
+		if( keyCode == KeyEvent.KEYCODE_BACK )
+        {
+			ListView lv = (ListView) activity.findViewById(R.id.select_exam_list);
+			LinearLayout about_layout = (LinearLayout) activity.findViewById(R.id.about_window);
+			if( about_layout.getVisibility() == View.VISIBLE ) {
+				about_layout.setVisibility(View.INVISIBLE);
+				lv.setEnabled(true);
+				return true;
+			}
+        }
+		return false;
 	}
 }

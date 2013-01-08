@@ -49,7 +49,6 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			Log.d("ExamACtivity", "ReceiveBroadcast: action="+action);
 			if( action.contentEquals(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED) ) {
 				activeFragment.updateView();
 			}

@@ -1,4 +1,4 @@
-package nl.atcomputing.dialogs;
+package nl.atcomputing.examtrainer.dialogs;
 
 
 import nl.atcomputing.examtrainer.R;
