@@ -185,14 +185,19 @@ public class ExamQuestionFragment extends AbstractFragment {
 	@Override
 	public void onResume() {
 		super.onResume();
-		
-		long currentTime = System.currentTimeMillis();
-		if( currentTime > ExamTrainer.getTimeEnd() ) {
-			timeLimitReached = true;
-			showDialog(DIALOG_TIMELIMITREACHED_ID);
-		} else {
-			timeLimitReached = false;
-			setupTimer();
+
+		//Needed to prevent users from continuing by by-passing the
+		//AlertDialog on some devices
+		if ( ( ExamTrainer.getTimeLimit() > 0 ) && 
+				( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) ) {
+			long currentTime = System.currentTimeMillis();
+			if( currentTime > ExamTrainer.getTimeEnd() ) {
+				timeLimitReached = true;
+				showDialog(DIALOG_TIMELIMITREACHED_ID);
+			} else {
+				timeLimitReached = false;
+				setupTimer();
+			}
 		}
 		
 		setupLayout();
@@ -238,7 +243,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 	public String getTitle() {
 		return ExamTrainer.getExamTitle();
 	}
-	
+
 	public void showDialog(int id) {
 		final Activity activity = getActivity();
 		switch(id) {
@@ -472,12 +477,12 @@ public class ExamQuestionFragment extends AbstractFragment {
 
 				}
 			});
-			
+
 			if( ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) || 
 					( timeLimitReached ) ) {
 				cbox.setClickable(false);
 			}
-			
+
 			layout.addView(view);
 			this.multipleChoices.add(view);
 		}
@@ -503,7 +508,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 			int index = cursor.getColumnIndex(ExaminationDatabaseHelper.Answers.COLUMN_NAME_ANSWER);
 			this.editText.setText(cursor.getString(index));
 		}
-		
+
 		if( timeLimitReached ) {
 			this.editText.setEnabled(false);
 		}
@@ -518,7 +523,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) {
 			showAnswers();
 		} 
-		
+
 		//No need to get previous selected choices during an exam if there are none
 		if ( scoresAnswersCursor.getCount() < 1 ) {
 			examinationDbHelper.close();
