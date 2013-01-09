@@ -23,6 +23,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,6 @@ import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -189,6 +189,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 		long currentTime = System.currentTimeMillis();
 		if( currentTime > ExamTrainer.getTimeEnd() ) {
 			timeLimitReached = true;
+			showDialog(DIALOG_TIMELIMITREACHED_ID);
 		} else {
 			timeLimitReached = false;
 			setupTimer();
@@ -269,7 +270,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 			timeLimitReachedDialog.setPositiveButton(R.string.calculate_score, new Runnable() {
 
 				public void run() {
-					setTheRestOfQuestionsToFalse();
+					setTheRestOfTheQuestionsToFalse();
 					examQuestionListener.onExamEnd();
 					timeLimitReachedDialog.dismiss();
 					timeLimitReachedDialog = null;
@@ -348,7 +349,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 		}
 	}
 
-	private void setTheRestOfQuestionsToFalse() {
+	private void setTheRestOfTheQuestionsToFalse() {
 		ExaminationDbAdapter examinationDbHelper;
 		examinationDbHelper = new ExaminationDbAdapter(getActivity());
 		try {
@@ -471,6 +472,12 @@ public class ExamQuestionFragment extends AbstractFragment {
 
 				}
 			});
+			
+			if( ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) || 
+					( timeLimitReached ) ) {
+				cbox.setClickable(false);
+			}
+			
 			layout.addView(view);
 			this.multipleChoices.add(view);
 		}
@@ -529,10 +536,6 @@ public class ExamQuestionFragment extends AbstractFragment {
 				String tvText = tv.getText().toString();
 				CheckBox cbox = (CheckBox) view.findViewById(R.id.choiceCheckBox);
 				cbox.setChecked(false);
-				if( ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) || 
-						( timeLimitReached ) ) {
-					cbox.setClickable(false);
-				}
 
 				//Check if choice was selected by user previously
 				if ( scoresAnswersCursor.getCount() > 0 ) {

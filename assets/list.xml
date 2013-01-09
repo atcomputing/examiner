@@ -8,7 +8,7 @@
 		<itemsneededtopass>4</itemsneededtopass>
 		<courseurl>http://atcomputing.nl/Training/unix-linux-deel-1.php</courseurl>
 		<url>file:///ul1-nl.xml</url>
-		<timelimit>1</timelimit>
+		<timelimit>10</timelimit>
 	</exam>
 	<exam>
 		<title>UNIX and Linux part 1 (en)</title>
