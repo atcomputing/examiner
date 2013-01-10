@@ -99,7 +99,7 @@ public class ExamSelectFragment extends AbstractFragment implements OnKeyListene
 			
 			try {
 				PackageInfo info = activity.getPackageManager().getPackageInfo("nl.atcomputing.examtrainer", 0);
-				version = info.versionName;
+				version = info.versionName + "-"+ info.versionCode;;
 			} catch (NameNotFoundException e) {
 				version = getString(R.string.unknown);
 			}
