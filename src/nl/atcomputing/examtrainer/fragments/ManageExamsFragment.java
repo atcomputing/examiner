@@ -3,33 +3,29 @@ package nl.atcomputing.examtrainer.fragments;
 import java.net.URL;
 import java.util.ArrayList;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
-
 import nl.atcomputing.dialogs.TwoButtonDialog;
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.activities.Exam;
 import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter;
 import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter.ManageExamsAdapterListener;
-import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
 import nl.atcomputing.examtrainer.examparser.UninstallExamAsyncTask;
 import nl.atcomputing.examtrainer.examparser.XmlPullExamListParser;
+import nl.atcomputing.examtrainer.main.Exam;
 import android.app.Activity;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 
 /**
  * @author martijn brekhof

@@ -1,4 +1,4 @@
-package nl.atcomputing.examtrainer.activities;
+package nl.atcomputing.examtrainer.main;
 
 import java.util.Collection;
 import java.util.HashMap;

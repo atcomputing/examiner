@@ -3,9 +3,9 @@ package nl.atcomputing.examtrainer.adapters;
 import java.util.HashMap;
 
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.activities.Exam;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
+import nl.atcomputing.examtrainer.main.Exam;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;

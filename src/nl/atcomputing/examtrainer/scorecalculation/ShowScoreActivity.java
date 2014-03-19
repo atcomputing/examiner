@@ -3,8 +3,8 @@ package nl.atcomputing.examtrainer.scorecalculation;
 import java.util.List;
 
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
+import nl.atcomputing.examtrainer.main.ExamTrainer;
 import android.app.Activity;
 import android.content.res.Resources;
 import android.database.sqlite.SQLiteException;

@@ -2,9 +2,9 @@ package nl.atcomputing.examtrainer.fragments;
 
 import nl.atcomputing.dialogs.UsageDialog;
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.adapters.ExamReviewAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
+import nl.atcomputing.examtrainer.main.ExamTrainer;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;

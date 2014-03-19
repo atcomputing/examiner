@@ -3,11 +3,11 @@ package  nl.atcomputing.examtrainer.adapters;
 import java.util.HashMap;
 
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.activities.Exam;
-import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
+import nl.atcomputing.examtrainer.main.Exam;
+import nl.atcomputing.examtrainer.main.ExamTrainer;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;

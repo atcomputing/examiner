@@ -1,8 +1,8 @@
 package nl.atcomputing.examtrainer.examparser;
 
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.database.DatabaseManager;
+import nl.atcomputing.examtrainer.main.ExamTrainer;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;

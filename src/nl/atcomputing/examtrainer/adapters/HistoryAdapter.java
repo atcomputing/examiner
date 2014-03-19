@@ -3,8 +3,8 @@ package  nl.atcomputing.examtrainer.adapters;
 import java.util.HashMap;
 
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
+import nl.atcomputing.examtrainer.main.ExamTrainer;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;

@@ -8,6 +8,8 @@ import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
 import nl.atcomputing.examtrainer.examparser.XmlPullExamListParser;
+import nl.atcomputing.examtrainer.main.Exam;
+import nl.atcomputing.examtrainer.main.ExamTrainer;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -26,7 +28,7 @@ import android.widget.Toast;
  * @author martijn brekhof
  * Copyright AT Computing 2012
  */
-public class StartScreenActivity extends Activity {
+public class SplashScreenActivity extends Activity {
 	private final int FADEIN = 0;
 	private int animationState = FADEIN;
 
@@ -65,7 +67,7 @@ public class StartScreenActivity extends Activity {
 					}
 				} catch (InterruptedException e) {
 				} finally {
-					Intent intent = new Intent(StartScreenActivity.this, ExamActivity.class);
+					Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
 					startActivity(intent);
 					finish();
 				}

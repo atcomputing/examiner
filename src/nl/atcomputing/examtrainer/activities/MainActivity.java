@@ -10,6 +10,7 @@ import nl.atcomputing.examtrainer.fragments.ExamQuestionFragment.ExamQuestionLis
 import nl.atcomputing.examtrainer.fragments.ExamReviewFragment;
 import nl.atcomputing.examtrainer.fragments.ExamSelectFragment;
 import nl.atcomputing.examtrainer.fragments.ManageExamsFragment;
+import nl.atcomputing.examtrainer.main.ExamTrainer;
 import nl.atcomputing.examtrainer.scorecalculation.ShowScoreActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -34,7 +35,7 @@ import com.actionbarsherlock.view.MenuItem;
  *
  */
 
-public class ExamActivity extends SherlockFragmentActivity 
+public class MainActivity extends SherlockFragmentActivity 
 implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 
 	private ReceiveBroadcast receiveBroadcast;
@@ -235,7 +236,7 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 	}
 
 	private void startCalculateScoreActivity() {
-		Intent intent = new Intent(ExamActivity.this, ShowScoreActivity.class);
+		Intent intent = new Intent(MainActivity.this, ShowScoreActivity.class);
 		startActivity(intent);
 	}
 

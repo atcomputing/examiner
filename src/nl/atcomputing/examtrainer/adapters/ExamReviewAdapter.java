@@ -1,9 +1,9 @@
 package nl.atcomputing.examtrainer.adapters;
 
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.database.ExaminationDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
+import nl.atcomputing.examtrainer.main.ExamTrainer;
 import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;

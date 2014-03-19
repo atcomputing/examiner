@@ -1,4 +1,4 @@
-package nl.atcomputing.examtrainer.activities;
+package nl.atcomputing.examtrainer.main;
 
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;

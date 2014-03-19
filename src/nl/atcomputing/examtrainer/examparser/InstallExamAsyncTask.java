@@ -5,12 +5,12 @@ import java.net.URL;
 import java.util.ArrayList;
 
 import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.activities.Exam;
-import nl.atcomputing.examtrainer.activities.ExamQuestion;
-import nl.atcomputing.examtrainer.activities.ExamTrainer;
 import nl.atcomputing.examtrainer.database.DatabaseManager;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
+import nl.atcomputing.examtrainer.main.Exam;
+import nl.atcomputing.examtrainer.main.ExamQuestion;
+import nl.atcomputing.examtrainer.main.ExamTrainer;
 import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
