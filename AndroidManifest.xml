@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="5"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="19" />
 
     <supports-screens
         android:largeScreens="true"
@@ -20,7 +20,7 @@
         android:theme="@style/Theme.Sherlock"
         android:allowBackup="false" >
         <activity
-            android:name=".activities.StartScreenActivity"
+            android:name=".activities.SplashScreenActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activities.ExamActivity"
+            android:name=".activities.MainActivity"
             android:exported="false" >
             <intent-filter>
                 <action android:name="nl.atcomputing.examtrainer.examlistupdated" />
@@ -39,9 +39,6 @@
             android:name=".scorecalculation.ShowScoreActivity"
             android:exported="false" >
         </activity>
-        <activity
-            android:name=".fragments.ManageExamsFragment"
-            android:exported="false" />
         <activity
             android:name=".activities.PreferencesActivity"
             android:exported="false" >
