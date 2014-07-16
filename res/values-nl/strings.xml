@@ -88,4 +88,5 @@
 	<string name="Usage_Dialog_Time_limit_is_activated_for_this_exam">Tijdslimiet is geactiveerd voor dit examen.\nGebruik settings (via het menu) om dit uit te zetten.</string>
     <string name="Usage_Dialog_examReviewScreenMessage">Dit is het examenoverzicht.\nDoor een nummer te selecteren wordt de bijbehorende vraag geopend en het juiste antwoord getoond.</string>
 	<string name="Usage_Dialog_Sometimes_the_text_in_the_exhibit_or_choices_is_larger_than_fits_on_screen">Wanneer de tekst langer is dan op het scherm past kun je horizontaal scrollen gebruiken om de rest zichtbaar te maken.</string>
+	<string name="error_loading_exam_from_database">Fout bij het inladen van het examen.\nDatabase is waarschijnlijk corrupt.\nEen mogelijke oplossing is herinstallatie van de app</string>
 </resources>
