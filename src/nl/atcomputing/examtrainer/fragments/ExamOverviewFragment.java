@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 
 import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.activities.MainActivity;
 import nl.atcomputing.examtrainer.activities.PreferencesActivity;
 import nl.atcomputing.examtrainer.adapters.HistoryAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
@@ -93,8 +94,8 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 				@Override
 				public void onDismiss(DialogInterface dialog) {
 					//close fragment
-					if( activity instanceof ExamActivity ) {
-						((ExamActivity) activity).onBackPressed();
+					if( activity instanceof MainActivity ) {
+						((MainActivity) activity).onBackPressed();
 					}
 				}
 			});
