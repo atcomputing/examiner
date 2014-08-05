@@ -1,53 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <exams>
     <exam>
-		<title>UNIX en Linux deel 1</title>
+		<title>UNIX en Linux deel 1 (nl)</title>
 		<category>AT Computing</category>
 		<author>AT Computing</author>
 		<numberofitems>5</numberofitems>
-		<itemsneededtopass>5</itemsneededtopass>
+		<itemsneededtopass>4</itemsneededtopass>
 		<courseurl>http://atcomputing.nl/Training/unix-linux-deel-1.php</courseurl>
 		<url>file:///ul1-nl.xml</url>
-		<timelimit>0</timelimit>
+		<timelimit>10</timelimit>
 	</exam>
 	<exam>
-		<title>UNIX and Linux part 1</title>
+		<title>UNIX and Linux part 1 (en)</title>
 		<category>AT Computing</category>
 		<author>AT Computing</author>
 		<numberofitems>5</numberofitems>
-		<itemsneededtopass>5</itemsneededtopass>
+		<itemsneededtopass>4</itemsneededtopass>
 		<courseurl>http://www.atcomputing.net/Training/unix-linux-deel-1.en.php</courseurl>
 		<url>file:///ul1-en.xml</url>
-		<timelimit>0</timelimit>
+		<timelimit>10</timelimit>
 	</exam>
 	<exam>
-		<title>Android Development Fundamentals</title>
+		<title>Android Development Fundamentals (en)</title>
 		<category>AT Computing</category>
 		<author>AT Computing</author>
 		<numberofitems>5</numberofitems>
-		<itemsneededtopass>5</itemsneededtopass>
+		<itemsneededtopass>4</itemsneededtopass>
 		<courseurl>http://atcomputing.nl/Training/android-development-advanced.php</courseurl>
 		<url>file:///andf.xml</url>
-		<timelimit>0</timelimit>
+		<timelimit>10</timelimit>
 	</exam>
 	<exam>
-		<title>LPI certificering level 101</title>
+		<title>LPI certificering level 101 (nl)</title>
 		<category>AT Computing</category>
 		<author>AT Computing</author>
 		<numberofitems>5</numberofitems>
-		<itemsneededtopass>5</itemsneededtopass>
+		<itemsneededtopass>4</itemsneededtopass>
 		<courseurl>http://atcomputing.nl/Training/lpi-certificering-level-1-examen-101.php</courseurl>
 		<url>file:///l101.xml</url>
-		<timelimit>0</timelimit>
+		<timelimit>10</timelimit>
 	</exam>
 	<exam>
-		<title>LPI certificering level 102</title>
+		<title>LPI certificering level 102 (nl)</title>
 		<category>AT Computing</category>
 		<author>AT Computing</author>
 		<numberofitems>5</numberofitems>
-		<itemsneededtopass>5</itemsneededtopass>
+		<itemsneededtopass>4</itemsneededtopass>
 		<courseurl>http://atcomputing.nl/Training/lpi-certificering-level-1-examen-102.php</courseurl>
 		<url>file:///l102.xml</url>
-		<timelimit>0</timelimit>
+		<timelimit>10</timelimit>
+	</exam>
+	<exam>
+		<title>LPI certificering level 201 (nl)</title>
+		<category>AT Computing</category>
+		<author>AT Computing</author>
+		<numberofitems>5</numberofitems>
+		<itemsneededtopass>4</itemsneededtopass>
+		<courseurl>http://atcomputing.nl/Training/lpi-certificering-level-2-examen-201.php</courseurl>
+		<url>file:///l201.xml</url>
+		<timelimit>10</timelimit>
+	</exam>
+	<exam>
+		<title>LPI certificering level 202 (nl)</title>
+		<category>AT Computing</category>
+		<author>AT Computing</author>
+		<numberofitems>5</numberofitems>
+		<itemsneededtopass>4</itemsneededtopass>
+		<courseurl>http://atcomputing.nl/Training/lpi-certificering-level-2-examen-202.php</courseurl>
+		<url>file:///l202.xml</url>
+		<timelimit>10</timelimit>
+	</exam>
+	<exam>
+		<title>LDAP directory service (en)</title>
+		<category>AT Computing</category>
+		<author>AT Computing</author>
+		<numberofitems>5</numberofitems>
+		<itemsneededtopass>4</itemsneededtopass>
+		<courseurl>http://atcomputing.nl/Training/ldap-directory-service.php</courseurl>
+		<url>file:///ldap.xml</url>
+		<timelimit>10</timelimit>
 	</exam>
 </exams>

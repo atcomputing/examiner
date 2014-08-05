@@ -12,7 +12,6 @@ import nl.atcomputing.examtrainer.main.Exam;
 import nl.atcomputing.examtrainer.main.ExamTrainer;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.AssetManager;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -42,8 +41,6 @@ public class SplashScreenActivity extends Activity {
 
 		setContentView(R.layout.startscreenactivity);		
 
-		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
-
 		//Load default preference values
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
@@ -52,14 +49,15 @@ public class SplashScreenActivity extends Activity {
 		//this.animation.setAnimationListener(this);
 		this.imageView.startAnimation(this.animation);
 
-		Thread loadlLocalExamsThread = new Thread(new Runnable() {
+		cleanupDatabaseStates();
+		loadLocalExams();
+		
+		Thread waitThread = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				loadLocalExams();
-				cleanupDatabaseStates();
 				try {
 					int waited = 0; // wait a maximum amount of time to prevent indefinite loop
-					while ( (cancelThread == false) && (waited < 20) ) {
+					while ( (cancelThread == false) && (waited < 15) ) {
 						synchronized (this) {
 							wait(100);
 						}
@@ -69,11 +67,12 @@ public class SplashScreenActivity extends Activity {
 				} finally {
 					Intent intent = new Intent(SplashScreenActivity.this, MainActivity.class);
 					startActivity(intent);
+					overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 					finish();
 				}
 			}
 		});
-		loadlLocalExamsThread.start();
+		waitThread.start();
 	}
 
 	@Override
@@ -126,7 +125,10 @@ public class SplashScreenActivity extends Activity {
 			Log.w(this.getClass().getName() , "Updating exams failed: Error " + e.getMessage());
 			Toast.makeText(this, "Error: updating exams failed.", Toast.LENGTH_LONG).show();
 		}
-
 		examTrainerDbHelper.close();
+		
+		
+		InstallExamAsyncTask task = new InstallExamAsyncTask(this, null, null);
+		task.execute();
 	}
 }

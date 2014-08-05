@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
@@ -72,15 +74,13 @@ public class ExamSelectAdapter extends CursorAdapter  {
 		if( task != null ) {
 			task.setProgressTextView(holder.examAuthorView);
 		}
-		
-		Log.d("StartScreenActivity", "cleanupDatabaseStates: examID="+examID+
-				", state="+state);
 	}
 
 	@Override
 	public View newView(Context context, Cursor myCursor, ViewGroup parent) {
 		final LayoutInflater mInflater = LayoutInflater.from(context);
 		View view = (View) mInflater.inflate(layout, parent, false);
+		
 		return view;
 	}
 

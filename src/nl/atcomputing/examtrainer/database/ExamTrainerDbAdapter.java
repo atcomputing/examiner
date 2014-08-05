@@ -74,6 +74,20 @@ public class ExamTrainerDbAdapter {
 		return rowId;
 	}
 
+	/**
+	 * Searches table entries with given exam title and author
+	 * @param cursor the row for which you want the ExamId returned
+	 * @return -1 if no examId was found, examId otherwise.
+	 */
+	public long getExamId(Cursor cursor) {
+		int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID);
+		if( index != -1 ) { 
+			return cursor.getLong(index);
+		} else {
+			return -1;
+		}
+	}
+	
 	public long addExam(Exam exam) {
 		ContentValues values = new ContentValues();
 		values.put(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE, exam.getTitle());
@@ -159,20 +173,29 @@ public class ExamTrainerDbAdapter {
 
 	public Cursor getAllExams() {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
-				this.allRows, null, null, null, null, null, null);
+				this.allRows, null, null, null, null, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE, null);
 		if (cursor != null) {
 			cursor.moveToFirst();
 		}
 		return cursor;
 	}
 
+	public Cursor getNotInstalledExams() {
+		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
+				this.allRows, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "=\'" + 
+						Exam.State.NOT_INSTALLED.name() + "\'",
+						null, null, null, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE, null);
+		
+		return cursor;
+	}
+	
 	public Cursor getInstalledAndInstallingExams() {
 		Cursor cursor = db.query(true, ExamTrainerDatabaseHelper.Exams.TABLE_NAME,
 				this.allRows, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "=\'" + 
 						Exam.State.INSTALLED.name() +"\' OR " +
 						ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED + "=\'" + 
 						Exam.State.INSTALLING.name() +"\'",
-						null, null, null, null, null);
+						null, null, null, ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE, null);
 		return cursor;
 	}
 

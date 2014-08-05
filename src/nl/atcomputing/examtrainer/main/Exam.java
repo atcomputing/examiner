@@ -75,6 +75,36 @@ public class Exam {
 		return exam;
 	}
 	
+	public static Exam newInstance(Cursor cursor) {
+		Exam exam = new Exam();
+		
+		int index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams._ID);
+		exam.setExamID(cursor.getLong(index));
+		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_EXAMTITLE);
+		exam.setTitle(cursor.getString(index));
+		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_CATEGORY);
+		exam.setCategory(cursor.getString(index));
+		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AUTHOR);
+		exam.setAuthor(cursor.getString(index));
+		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_URL);
+		exam.setURL(cursor.getString(index));
+		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_COURSEURL);
+		exam.setCourseURL(cursor.getString(index));
+		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_AMOUNTOFITEMS);
+		exam.setNumberOfItems(cursor.getInt(index));
+		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS);
+		exam.setItemsNeededToPass(cursor.getInt(index));
+		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_TIMELIMIT);
+		exam.setTimeLimit(cursor.getLong(index));
+		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_DATE);
+		exam.setInstallationDate(cursor.getLong(index));
+		index = cursor.getColumnIndex(ExamTrainerDatabaseHelper.Exams.COLUMN_NAME_INSTALLED);
+		String state = cursor.getString(index);
+		exam.setInstallationState(State.valueOf(state));
+		
+		return exam;
+	}
+	
 	public Exam() {
 		title = null;
 		category = null;

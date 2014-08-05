@@ -15,7 +15,7 @@
     <string name="Could_not_remove_exam_database_file">Could not remove exam database file.</string>
     <string name="Failed_to_uninstall_exam">Failed to uninstall exam.</string>
     <string name="No_question_available">No question available.</string>
-    <string name="app_name">Exam Trainer</string>
+    <string name="app_name">AT Course Examiner</string>
     <string name="No_time_limit">No time limit</string>
     <string name="Time_limit_in_minutes">Time limit in minutes</string>
     <string name="minutes">minutes</string>
@@ -49,7 +49,6 @@
     <string name="Settings">Settings</string>
     <string name="About">About</string>
     <string name="Question">Question</string>
-    <string name="Manage_Exams">Manage Exams</string>
     <!-- Text for about -->
     <string name="Copyright">© Copyright AT Computing 2011–2012</string>
     <string name="Version">Version</string>
@@ -94,4 +93,5 @@
     <string name="Delete_selected_scores_">Delete selected scores?</string>
     <string name="enroll">Enroll</string>
     <string name="reload">Reload</string>
+    <string name="error_loading_exam_from_database">Error loading exam from database.\nDatabase file might be corrupt.\nReinstalling this app may fix this.</string>
 </resources>

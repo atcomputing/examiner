@@ -3,11 +3,11 @@ package nl.atcomputing.examtrainer.fragments;
 import java.net.URL;
 import java.util.ArrayList;
 
-import nl.atcomputing.dialogs.TwoButtonDialog;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter;
 import nl.atcomputing.examtrainer.adapters.ManageExamsAdapter.ManageExamsAdapterListener;
 import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
+import nl.atcomputing.examtrainer.dialogs.TwoButtonDialog;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
 import nl.atcomputing.examtrainer.examparser.UninstallExamAsyncTask;
 import nl.atcomputing.examtrainer.examparser.XmlPullExamListParser;

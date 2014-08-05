@@ -3,18 +3,20 @@ package nl.atcomputing.examtrainer.fragments;
 import java.io.Serializable;
 import java.util.HashMap;
 
-import nl.atcomputing.dialogs.RunThreadWithProgressDialog;
-import nl.atcomputing.dialogs.TwoButtonDialog;
-import nl.atcomputing.dialogs.UsageDialog;
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.activities.PreferencesActivity;
 import nl.atcomputing.examtrainer.adapters.HistoryAdapter;
-import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
+import nl.atcomputing.examtrainer.dialogs.ErrorDialog;
+import nl.atcomputing.examtrainer.dialogs.RunThreadWithProgressDialog;
+import nl.atcomputing.examtrainer.dialogs.TwoButtonDialog;
+import nl.atcomputing.examtrainer.dialogs.UsageDialog;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
 import nl.atcomputing.examtrainer.main.Exam;
 import nl.atcomputing.examtrainer.main.ExamTrainer;
 import android.app.Activity;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -47,7 +49,7 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 	private HistoryAdapter adapter;
 
 	private Exam exam;
-	
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -66,8 +68,8 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 
-		Activity activity = getActivity();
-
+		final Activity activity = getActivity();
+		
 		this.adapter = new HistoryAdapter(
 				getActivity(), 
 				R.layout.history_entry, 
@@ -81,9 +83,25 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 				this.adapter.setItemsChecked(itemsChecked);
 			}
 		}
-
-		this.exam = Exam.newInstance(activity, ExamTrainer.getExamId());
 		
+		this.exam = Exam.newInstance(activity, ExamTrainer.getExamId());
+		if( this.exam == null ) {
+			ErrorDialog dialog = ErrorDialog.newInstance(getSherlockActivity().getString(
+					R.string.error_loading_exam_from_database));
+			dialog.setOnDismissListener(new OnDismissListener() {
+				
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					//close fragment
+					if( activity instanceof ExamActivity ) {
+						((ExamActivity) activity).onBackPressed();
+					}
+				}
+			});
+			dialog.show(getFragmentManager(), "ErrorDialog");
+			return;
+		}
+
 		setupView();
 
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -95,7 +113,6 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 				usageDialog.show(getFragmentManager(), "UsageDialog");
 			}
 		}
-		
 	}
 
 
@@ -121,7 +138,7 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 			} else {
 				TwoButtonDialog confirmDialog = TwoButtonDialog.newInstance(R.string.Delete_selected_scores_);
 				confirmDialog.setPositiveButton(R.string.ok, new Runnable() {
-					
+
 					@Override
 					public void run() {
 						deleteSelectedFromDatabase(itemsChecked);
@@ -129,7 +146,7 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 				});
 				confirmDialog.show(getFragmentManager(), "ConfirmDeleteDialog");
 			}
-			
+
 			break;
 		case R.id.menu_preferences:
 			Intent intent = new Intent(getActivity(), PreferencesActivity.class);
@@ -143,23 +160,27 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 
 	public void updateView() {
 		this.exam = Exam.newInstance(getActivity(), ExamTrainer.getExamId());
+		if( this.exam == null ) {
+			return;
+		}
+		
 		updateHistoryView();
 		updateExamInfoView();
 		updateButton();
 	}
-	
+
 	@Override
 	public String getTitle() {
 		return ExamTrainer.getExamTitle();
 	}
-	
+
 	private void deleteSelectedFromDatabase(final HashMap<Integer, Boolean> itemsChecked) {
 		RunThreadWithProgressDialog pd = new RunThreadWithProgressDialog(getActivity(), 
 				new Thread(new Runnable() {
 					public void run() {
 						ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(getActivity());
 						examinationDbHelper.open(ExamTrainer.getExamDatabaseName()); 
-				
+
 						for( Integer key : itemsChecked.keySet() ) {
 							if( itemsChecked.get(key) ) {
 								examinationDbHelper.deleteScore(key);
@@ -192,15 +213,15 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 
 		Button buttonStartExam = (Button) activity.findViewById(R.id.button_start_exam);
 		buttonStartExam.setOnClickListener(this);
-		
+
 		Button buttonEnroll = (Button) getActivity().findViewById(R.id.button_enroll);
 		buttonEnroll.setOnClickListener(this);
-		
+
 		String courseURL = this.exam.getCourseURL();
 		if( courseURL == null ) {
 			buttonEnroll.setVisibility(View.GONE);
 		}
-		
+
 		setupHistoryView();
 		setupExamInfoView();
 	}
@@ -221,7 +242,7 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 
 	private void setupExamInfoView() {
 		Activity activity = getActivity();
-		
+
 		TextView tv = (TextView) activity.findViewById(R.id.startexam_amount_of_items_value);
 		tv.setText(Integer.toString(this.exam.getNumberOfItems()));
 		tv = (TextView) activity.findViewById(R.id.startexam_items_needed_to_pass_value);
@@ -232,12 +253,12 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 		ExamTrainer.setExamTitle(this.exam.getTitle());
 		ExamTrainer.setAmountOfItems(this.exam.getNumberOfItems());
 	}
-	
+
 	private void updateButton() {
 		Exam.State state = this.exam.getInstallationState();
 
 		Button buttonStart = (Button) getActivity().findViewById(R.id.button_start_exam);
-		
+
 		if( state == Exam.State.INSTALLED ) {
 			buttonStart.setEnabled(true);
 		} else {
@@ -284,9 +305,9 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 				textViewHistoryMessage.setVisibility(View.VISIBLE);
 				textViewHistoryMessage.setText(R.string.no_previous_scores_available);
 			}
-
-			adapter.changeCursor(examinationCursor);
-			adapter.notifyDataSetChanged();
+			
+			this.adapter.changeCursor(examinationCursor);
+			this.adapter.notifyDataSetChanged();
 		} else if( state == Exam.State.NOT_INSTALLED ) {
 			textViewHistoryMessage.setText(R.string.Exam_not_installed);
 			textViewHistoryMessage.setVisibility(View.VISIBLE);

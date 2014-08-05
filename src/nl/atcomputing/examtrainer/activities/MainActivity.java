@@ -50,7 +50,6 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
-			Log.d("ExamACtivity", "ReceiveBroadcast: action="+action);
 			if( action.contentEquals(ExamTrainer.BROADCAST_ACTION_EXAMLIST_UPDATED) ) {
 				activeFragment.updateView();
 			}
@@ -127,9 +126,6 @@ implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.selectexam_menu_manage:
-			showManageExamsFragment(true);
-			break;
 		case android.R.id.home:
 			if( this.activeFragment != this.examSelectFragment ) {
 				onBackPressed();
