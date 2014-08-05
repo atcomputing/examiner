@@ -51,12 +51,6 @@ public class ExamSelectFragment extends AbstractFragment implements OnKeyListene
 		view.setOnKeyListener(this);
 		return view;
 	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		setupListView();
-	}
 	
 	@Override
 	public void onResume() {
