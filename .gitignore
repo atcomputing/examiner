@@ -1,12 +1,10 @@
-<<<<<<< HEAD
-=======
-lint.xml
->>>>>>> course_examinator
-.settings
-.classpath
-.project
-build.properties
-bin/
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+gradle.properties
+local.properties
 *~
-gen/
-META-INF/
