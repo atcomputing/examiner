@@ -21,12 +21,12 @@
 
 package nl.atcomputing.examtrainer.database;
 
-import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.main.Exam;
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 import android.widget.Toast;
+
+import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.main.Exam;
 
 public class DatabaseManager {
 	private Context context;

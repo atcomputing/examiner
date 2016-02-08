@@ -31,7 +31,6 @@ public class RunThreadWithProgressDialog {
 	private Thread runInBackground;
 	private Runnable runOnUIThreadAfterRunInBackground;
 	private Context context;
-	private ProgressDialog dialog;
 	private static Handler handler;
 	
 	private static class MyHandler extends Handler {
@@ -58,7 +57,7 @@ public class RunThreadWithProgressDialog {
 	}
 	
 	public void run(String message) {
-		this.dialog = ProgressDialog.show(this.context, "", 
+		ProgressDialog dialog = ProgressDialog.show(this.context, "",
 				message, false);
 		
 		handler = new MyHandler(dialog, this.runOnUIThreadAfterRunInBackground);

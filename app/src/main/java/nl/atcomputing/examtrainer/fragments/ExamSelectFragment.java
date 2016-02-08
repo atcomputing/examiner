@@ -52,8 +52,6 @@ import com.actionbarsherlock.view.MenuItem;
  */
 
 public class ExamSelectFragment extends AbstractFragment implements OnKeyListener {
-	private TextView clickOnManageExams;
-	private TextView noExamsAvailable;
 	
 	@Override
     public void onAttach(Activity activity) {
@@ -114,7 +112,7 @@ public class ExamSelectFragment extends AbstractFragment implements OnKeyListene
 			
 			try {
 				PackageInfo info = activity.getPackageManager().getPackageInfo("nl.atcomputing.examtrainer", 0);
-				version = info.versionName + "-"+ info.versionCode;;
+				version = info.versionName + "-"+ info.versionCode;
 			} catch (NameNotFoundException e) {
 				version = getString(R.string.unknown);
 			}
@@ -139,8 +137,8 @@ public class ExamSelectFragment extends AbstractFragment implements OnKeyListene
 	private void setupListView() {
 		final Activity activity = getActivity();
 		ListView selectExam = (ListView) activity.findViewById(R.id.select_exam_list);
-		this.noExamsAvailable = (TextView) activity.findViewById(R.id.selectexam_no_exams_available);
-		this.clickOnManageExams = (TextView) activity.findViewById(R.id.selectexam_click_on_manage_exams);
+		TextView noExamsAvailable = (TextView) activity.findViewById(R.id.selectexam_no_exams_available);
+		TextView clickOnManageExams = (TextView) activity.findViewById(R.id.selectexam_click_on_manage_exams);
 
 		ExamTrainerDbAdapter examTrainerDbHelper = new ExamTrainerDbAdapter(activity);
 		examTrainerDbHelper.open();

@@ -44,8 +44,6 @@ import android.widget.Toast;
  */
 public class ExamReviewFragment extends AbstractFragment {
 	public static final String TAG = "ExamReviewActivity";
-	private GridView scoresGrid;
-	private ExamReviewAdapter adapter; 
 	private long examID;
 	private long score;
 	
@@ -116,10 +114,10 @@ public class ExamReviewFragment extends AbstractFragment {
 	private void setupScoresGrid() {
 		final Activity activity = getActivity();
 		
-		this.adapter = new ExamReviewAdapter(activity, R.layout.review_exam_entry, ExamTrainer.getScoresId());
+		ExamReviewAdapter adapter = new ExamReviewAdapter(activity, R.layout.review_exam_entry, ExamTrainer.getScoresId());
 
-		this.scoresGrid = (GridView) activity.findViewById(R.id.review_exam_grid);
-		this.scoresGrid.setAdapter(this.adapter);
+		GridView scoresGrid = (GridView) activity.findViewById(R.id.review_exam_grid);
+		scoresGrid.setAdapter(adapter);
 
 		scoresGrid.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view,

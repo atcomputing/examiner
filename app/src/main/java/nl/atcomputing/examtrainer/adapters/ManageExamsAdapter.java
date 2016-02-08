@@ -21,12 +21,6 @@
 
 package nl.atcomputing.examtrainer.adapters;
 
-import java.util.HashMap;
-
-import nl.atcomputing.examtrainer.R;
-import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
-import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
-import nl.atcomputing.examtrainer.main.Exam;
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
@@ -35,6 +29,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import java.util.HashMap;
+
+import nl.atcomputing.examtrainer.R;
+import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
+import nl.atcomputing.examtrainer.main.Exam;
 
 
 
@@ -128,13 +128,13 @@ public class ManageExamsAdapter extends CursorAdapter  {
 
 
 	private class ViewHolder {
-		TextView examTitleView;
-		TextView examAuthorView;
-		Button installUninstallButton;
+		private TextView examTitleView;
+		private TextView examAuthorView;
+		private Button installUninstallButton;
 	}
 
 	private class DataHolder {
-		String examTitle;
-		String author;
+		private String examTitle;
+		private String author;
 	}
 }

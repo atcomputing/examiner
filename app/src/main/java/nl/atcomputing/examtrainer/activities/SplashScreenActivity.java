@@ -53,7 +53,6 @@ public class SplashScreenActivity extends Activity {
 	private int animationState = FADEIN;
 
 	private ImageView imageView;
-	private Animation animation;
 	private boolean cancelThread = false;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,9 +65,9 @@ public class SplashScreenActivity extends Activity {
 		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
 		this.imageView= (ImageView)findViewById(R.id.logo);
-		this.animation = AnimationUtils.loadAnimation(this, R.anim.fadein);
+		Animation animation = AnimationUtils.loadAnimation(this, R.anim.fadein);
 		//this.animation.setAnimationListener(this);
-		this.imageView.startAnimation(this.animation);
+		this.imageView.startAnimation(animation);
 
 		cleanupDatabaseStates();
 		loadLocalExams();

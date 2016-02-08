@@ -245,11 +245,7 @@ public class ExamTrainerDbAdapter {
 		if ( cursor.moveToFirst() ) {
 			int res = cursor.getInt(cursor.getColumnIndex(ExamTrainerDatabaseHelper.UsageDialogs.COLUMN_NAME_SHOW));
 			cursor.close();
-			if( res == 0 ) {
-				return false;
-			} else {
-				return true;
-			}
+			return res != 0;
 		} else {
 			cursor.close();
 			return true;

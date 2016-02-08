@@ -21,24 +21,21 @@
 
 package  nl.atcomputing.examtrainer.adapters;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CursorAdapter;
+import android.widget.TextView;
+
 import java.util.HashMap;
 
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.database.ExamTrainerDatabaseHelper;
-import nl.atcomputing.examtrainer.database.ExamTrainerDbAdapter;
 import nl.atcomputing.examtrainer.examparser.InstallExamAsyncTask;
 import nl.atcomputing.examtrainer.main.Exam;
 import nl.atcomputing.examtrainer.main.ExamTrainer;
-import android.content.Context;
-import android.database.Cursor;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.CursorAdapter;
-import android.widget.TextView;
 
 /**
  * @author martijn brekhof
@@ -100,16 +97,15 @@ public class ExamSelectAdapter extends CursorAdapter  {
 	@Override
 	public View newView(Context context, Cursor myCursor, ViewGroup parent) {
 		final LayoutInflater mInflater = LayoutInflater.from(context);
-		View view = (View) mInflater.inflate(layout, parent, false);
+		View view = mInflater.inflate(layout, parent, false);
 		
 		return view;
 	}
 
-	class ViewHolder {
-		String examTitle;
-		long examID;
-		String author;
-		TextView examTitleView;
-		TextView examAuthorView;
+	private class ViewHolder {
+		private String examTitle;
+		private String author;
+		private TextView examTitleView;
+		private TextView examAuthorView;
 	}
 }

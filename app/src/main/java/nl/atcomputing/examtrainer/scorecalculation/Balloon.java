@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * Copyright 2012 AT Computing BV
  *
  * This file is part of Examiner.
@@ -28,12 +28,11 @@ import java.nio.FloatBuffer;
 import javax.microedition.khronos.opengles.GL10;
 
 import nl.atcomputing.examtrainer.R;
-import android.content.Context;
 
 /**
  * Based on code from http://insanitydesign.com/wp/projects/nehe-android-ports/
  * @author martijn brekhof
- * 
+ *
  */
 
 public class Balloon  {
@@ -44,15 +43,11 @@ public class Balloon  {
 
 	public float x;
 	public float y;
-	public int pixel_width;
-	public int pixel_height;
 
-	public float liftPercentage; 
-
-	public boolean popped = false; 
+	public float liftPercentage;
 
 	private static double ratio = 2.0;
-	
+
 	private int texture;
 	private int type;
 
@@ -69,24 +64,24 @@ public class Balloon  {
 			1.0f, 1.0f, 0.0f 		//Top Right
 	};
 
-	/** The initial texture coordinates (u, v) */	
+	/** The initial texture coordinates (u, v) */
 	private float textureCoords[] = {
-			0.0f, 0.0f, 
-			1.0f, 0.0f, 
-			0.0f, 1.0f, 
+			0.0f, 0.0f,
+			1.0f, 0.0f,
+			0.0f, 1.0f,
 			1.0f, 1.0f,
 	};
 
 
-	public Balloon(Context context, int balloon_type, int texture) {
+	public Balloon(int balloon_type, int texture) {
 
 		this.type = balloon_type;
 
 		this.texture = texture;
 
-		vertices[1] *= ratio; 
+		vertices[1] *= ratio;
 		vertices[4] *= ratio;
-		vertices[7] *= ratio; 
+		vertices[7] *= ratio;
 		vertices[10] *= ratio;
 
 		ByteBuffer byteBuf = ByteBuffer.allocateDirect(vertices.length * 4);
@@ -149,11 +144,12 @@ public class Balloon  {
 
 	public static int getReferenceDrawable(int t) {
 		switch(t) {
-		case TYPE_BLUE:
-			return R.drawable.aj_balloon_blue;
-		case TYPE_RED:
-			return R.drawable.aj_balloon_red;
+			case TYPE_BLUE:
+				return R.drawable.aj_balloon_blue;
+			case TYPE_RED:
+				return R.drawable.aj_balloon_red;
+			default:
+				return -1;
 		}
-		return -1;
 	}
 }

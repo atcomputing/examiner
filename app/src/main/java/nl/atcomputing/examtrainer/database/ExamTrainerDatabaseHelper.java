@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * Copyright 2011 AT Computing BV
  *
  * This file is part of Examiner.
@@ -34,10 +34,30 @@ import android.util.Log;
 public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 	private static String DATABASE_NAME = "ExamTrainer.db";
 	private static final int DATABASE_VERSION = 2;
-	
-	public static final class Exams implements BaseColumns {
-		private Exams() {}
 
+	private static final String DATABASE_CREATE_EXAMS_TABLE = "CREATE TABLE "
+															  + Exams.TABLE_NAME + " ("
+															  + Exams._ID + " INTEGER PRIMARY KEY,"
+															  + Exams.COLUMN_NAME_EXAMTITLE + " TEXT,"
+															  + Exams.COLUMN_NAME_DATE + " INTEGER,"
+															  + Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS + " INTEGER,"
+															  + Exams.COLUMN_NAME_AMOUNTOFITEMS + " INTEGER,"
+															  + Exams.COLUMN_NAME_INSTALLED + " TEXT,"
+															  + Exams.COLUMN_NAME_URL + " TEXT,"
+															  + Exams.COLUMN_NAME_COURSEURL + " TEXT,"
+															  + Exams.COLUMN_NAME_AUTHOR + " TEXT,"
+															  + Exams.COLUMN_NAME_CATEGORY + " TEXT,"
+															  + Exams.COLUMN_NAME_TIMELIMIT + " INTEGER"
+															  + ");";
+
+	private static final String DATABASE_CREATE_USAGEDIALOGS_TABLE = "CREATE TABLE "
+																	 + UsageDialogs.TABLE_NAME + " ("
+																	 + UsageDialogs._ID + " INTEGER PRIMARY KEY,"
+																	 + UsageDialogs.COLUMN_NAME_MSGID + " INTEGER,"
+																	 + UsageDialogs.COLUMN_NAME_SHOW + " INTEGER"
+																	 + ");";
+
+	public static final class Exams implements BaseColumns {
 		public static final String TABLE_NAME = "Exams";
 		public static final String COLUMN_NAME_EXAMTITLE = "examTitle";
 		public static final String COLUMN_NAME_DATE = "date";
@@ -49,38 +69,18 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 		public static final String COLUMN_NAME_AUTHOR = "author";
 		public static final String COLUMN_NAME_CATEGORY = "category";
 		public static final String COLUMN_NAME_TIMELIMIT = "timelimit";
-	}
-	
-	private static final String DATABASE_CREATE_EXAMS_TABLE = "CREATE TABLE " 
-	+ Exams.TABLE_NAME + " ("
-    + Exams._ID + " INTEGER PRIMARY KEY,"
-    + Exams.COLUMN_NAME_EXAMTITLE + " TEXT,"
-    + Exams.COLUMN_NAME_DATE + " INTEGER,"
-    + Exams.COLUMN_NAME_ITEMSNEEDEDTOPASS + " INTEGER,"
-    + Exams.COLUMN_NAME_AMOUNTOFITEMS + " INTEGER,"
-    + Exams.COLUMN_NAME_INSTALLED + " TEXT,"
-    + Exams.COLUMN_NAME_URL + " TEXT,"
-    + Exams.COLUMN_NAME_COURSEURL + " TEXT,"
-    + Exams.COLUMN_NAME_AUTHOR + " TEXT,"
-    + Exams.COLUMN_NAME_CATEGORY + " TEXT,"
-    + Exams.COLUMN_NAME_TIMELIMIT + " INTEGER"
-    + ");";
-	
-	public static final class UsageDialogs implements BaseColumns {
-		private UsageDialogs() {}
 
+		private Exams() {}
+	}
+
+	public static final class UsageDialogs implements BaseColumns {
 		public static final String TABLE_NAME = "UsageDialogs";
 		public static final String COLUMN_NAME_MSGID = "messageResourceId";
 		public static final String COLUMN_NAME_SHOW = "show";
+
+		private UsageDialogs() {}
 	}
-	
-	private static final String DATABASE_CREATE_USAGEDIALOGS_TABLE = "CREATE TABLE " 
-	+ UsageDialogs.TABLE_NAME + " ("
-    + UsageDialogs._ID + " INTEGER PRIMARY KEY,"
-    + UsageDialogs.COLUMN_NAME_MSGID + " INTEGER,"
-    + UsageDialogs.COLUMN_NAME_SHOW + " INTEGER"
-    + ");";
-	
+
 	public ExamTrainerDatabaseHelper(Context context) {
 		super(context, DATABASE_NAME, null, DATABASE_VERSION);
 	}
@@ -94,13 +94,15 @@ public class ExamTrainerDatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		switch( oldVersion ) {
-		case 1:
-			Log.w(ExamTrainerDatabaseHelper.class.getName(),
-					"Upgrading database from version 1 to 2");
-			db.execSQL(DATABASE_CREATE_USAGEDIALOGS_TABLE);
+			case 1:
+				Log.w(ExamTrainerDatabaseHelper.class.getName(),
+					  "Upgrading database from version 1 to 2");
+				db.execSQL(DATABASE_CREATE_USAGEDIALOGS_TABLE);
+				break;
+			default:
 		}
 	}
-	
+
 	public String getDatabaseName() {
 		return DATABASE_NAME;
 	}

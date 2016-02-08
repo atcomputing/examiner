@@ -60,7 +60,6 @@ public final class ExamTrainer {
 	private static long timeEnd = 0;
 	private static long timerStart; 
 	
-	private static HashMap<Long, Integer> examInstallationProgression = new HashMap<Long, Integer>();
 	private static HashMap<Long, InstallExamAsyncTask> installationThreads = new HashMap<Long, InstallExamAsyncTask>();
 	
 	// This class cannot be instantiated

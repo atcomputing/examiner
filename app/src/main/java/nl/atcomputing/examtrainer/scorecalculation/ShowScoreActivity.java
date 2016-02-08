@@ -162,7 +162,7 @@ public class ShowScoreActivity extends Activity {
 
 		@Override
 		protected Integer doInBackground(Integer... params) {
-			while( glSurfaceReady == false ) {
+			while( ! glSurfaceReady ) {
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e) {

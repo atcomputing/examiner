@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * Copyright 2012 AT Computing BV
  *
  * This file is part of Examiner.
@@ -44,6 +44,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,19 +80,21 @@ public class ExamQuestionFragment extends AbstractFragment {
 	private static boolean timeLimitReached;
 	private TwoButtonDialog timeLimitReachedDialog;
 	private ArrayList <View> multipleChoices;
-	private static final String HANDLER_MESSAGE_KEY = "handler_update_timer"; 
+	private static final String HANDLER_MESSAGE_KEY = "handler_update_timer";
 	private static final int HANDLER_MESSAGE_VALUE_UPDATE_TIMER = 0;
 	private static final int HANDLER_MESSAGE_VALUE_TIMELIMITREACHED = 1;
-	private static final String HANDLER_KEY_CURRENT_TIME = "handler_current_time"; 
+	private static final String HANDLER_KEY_CURRENT_TIME = "handler_current_time";
 
 	private Timer timer;
 	private static MyHandler myHandler;
 
 	private ExamQuestion examQuestion;
 
+	private ExamQuestionListener examQuestionListener;
+
 	private static class MyHandler extends Handler {
-		SimpleDateFormat dateFormatGmt = new SimpleDateFormat("HH:mm:ss", Locale.US);
-		ExamQuestionFragment fragment;
+		private SimpleDateFormat dateFormatGmt = new SimpleDateFormat("HH:mm:ss", Locale.US);
+		private ExamQuestionFragment fragment;
 
 		public MyHandler(ExamQuestionFragment fragment) {
 			super();
@@ -103,7 +106,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 			if( key == HANDLER_MESSAGE_VALUE_UPDATE_TIMER ) {
 				long currentTime = msg.getData().getLong(HANDLER_KEY_CURRENT_TIME);
 				Date date = new Date(ExamTrainer.getTimeEnd() - currentTime);
-				dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));		
+				dateFormatGmt.setTimeZone(TimeZone.getTimeZone("UTC"));
 				String timeLeft = dateFormatGmt.format(date);
 				timeLimitTextView.setText(timeLeft);
 			} else if ( key == HANDLER_MESSAGE_VALUE_TIMELIMITREACHED ) {
@@ -114,8 +117,6 @@ public class ExamQuestionFragment extends AbstractFragment {
 			}
 		}
 	}
-
-	private ExamQuestionListener examQuestionListener;
 
 	public interface ExamQuestionListener {
 		/**
@@ -138,7 +139,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 			this.examQuestionListener = (ExamQuestionListener) activity;
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
-					+ " must implement ExamQuestionListener");
+										 + " must implement ExamQuestionListener");
 		}
 
 		setHasOptionsMenu(true);
@@ -162,7 +163,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 			this.examQuestion.fillFromDatabase(ExamTrainer.getExamDatabaseName(), this.questionId);
 		} catch (SQLiteException e) {
 			ExamTrainer.showError(activity, activity.getResources().getString(R.string.Exam_is_empty) + "\n" +
-					this.getResources().getString(R.string.Try_reinstalling_the_exam));
+											this.getResources().getString(R.string.Try_reinstalling_the_exam));
 		}
 
 		/**
@@ -208,8 +209,8 @@ public class ExamQuestionFragment extends AbstractFragment {
 
 		//Needed to prevent users from continuing by by-passing the
 		//AlertDialog on some devices
-		if ( ( ExamTrainer.getTimeLimit() > 0 ) && 
-				( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) ) {
+		if ( ( ExamTrainer.getTimeLimit() > 0 ) &&
+			 ( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) ) {
 			long currentTime = System.currentTimeMillis();
 			if( currentTime > ExamTrainer.getTimeEnd() ) {
 				timeLimitReached = true;
@@ -219,7 +220,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 				setupTimer();
 			}
 		}
-		
+
 		setupLayout();
 	}
 
@@ -243,11 +244,11 @@ public class ExamQuestionFragment extends AbstractFragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle item selection
 		switch (item.getItemId()) {
-		case R.id.question_menu_get_hint:
-			showDialog(DIALOG_SHOW_HINT_ID);
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
+			case R.id.question_menu_get_hint:
+				showDialog(DIALOG_SHOW_HINT_ID);
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
 		}
 	}
 
@@ -267,83 +268,76 @@ public class ExamQuestionFragment extends AbstractFragment {
 	public void showDialog(int id) {
 		final Activity activity = getActivity();
 		switch(id) {
-		case DIALOG_ENDOFEXAM_ID:
-			TwoButtonDialog endOfExamDialog = TwoButtonDialog.newInstance(R.string.end_of_exam_message);
-			endOfExamDialog.setPositiveButton(R.string.yes, new Runnable() {
+			case DIALOG_ENDOFEXAM_ID:
+				TwoButtonDialog endOfExamDialog = TwoButtonDialog.newInstance(R.string.end_of_exam_message);
+				endOfExamDialog.setPositiveButton(R.string.yes, new Runnable() {
 
-				public void run() {
-					if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) {
+					public void run() {
+						if( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) {
+							examQuestionListener.onExamEnd();
+						}
+						else {
+							examQuestionListener.onStopExam();
+						}
+					}
+				});
+				endOfExamDialog.setNegativeButton(R.string.no, null);
+				endOfExamDialog.show(getFragmentManager(), "EndOfExamDialog");
+				break;
+			case DIALOG_TIMELIMITREACHED_ID:
+				if( timeLimitReachedDialog != null ) {
+					return;
+				}
+				this.timeLimitReachedDialog = TwoButtonDialog.newInstance(R.string.time_s_up_);
+				timeLimitReachedDialog.setPositiveButton(R.string.calculate_score, new Runnable() {
+
+					public void run() {
+						setTheRestOfTheQuestionsToFalse();
 						examQuestionListener.onExamEnd();
-					} 
-					else {
+						timeLimitReachedDialog.dismiss();
+						timeLimitReachedDialog = null;
+					}
+				});
+				timeLimitReachedDialog.setNegativeButton(R.string.Quit, new Runnable() {
+
+					public void run() {
+						examQuestionListener.onStopExam();
+						timeLimitReachedDialog.dismiss();
+						timeLimitReachedDialog = null;
+					}
+				});
+				timeLimitReachedDialog.show(getFragmentManager(), "TimeLimitReachedDialog");
+				break;
+			case DIALOG_QUITEXAM_ID:
+				TwoButtonDialog quitExamDialog = TwoButtonDialog.newInstance(R.string.quit_exam_message);
+				quitExamDialog.setPositiveButton(R.string.Quit, new Runnable() {
+
+					public void run() {
 						examQuestionListener.onStopExam();
 					}
+				});
+				quitExamDialog.setNegativeButton(R.string.resume, null);
+				quitExamDialog.show(getFragmentManager(), "QuitExamDialog");
+				break;
+			case DIALOG_SHOW_HINT_ID:
+				ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(activity);
+				examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
+				String message = examinationDbHelper.getHint(this.questionId);
+				examinationDbHelper.close();
+				if( message == null ) {
+					message = getString(R.string.hint_not_available);
 				}
-			});
-			endOfExamDialog.setNegativeButton(R.string.no, new Runnable() {
-
-				public void run() {
-				}
-			});
-			endOfExamDialog.show(getFragmentManager(), "EndOfExamDialog");
-			break;
-		case DIALOG_TIMELIMITREACHED_ID:
-			if( timeLimitReachedDialog != null ) {
-				return;
-			}
-			this.timeLimitReachedDialog = TwoButtonDialog.newInstance(R.string.time_s_up_);
-			timeLimitReachedDialog.setPositiveButton(R.string.calculate_score, new Runnable() {
-
-				public void run() {
-					setTheRestOfTheQuestionsToFalse();
-					examQuestionListener.onExamEnd();
-					timeLimitReachedDialog.dismiss();
-					timeLimitReachedDialog = null;
-				}
-			});
-			timeLimitReachedDialog.setNegativeButton(R.string.Quit, new Runnable() {
-
-				public void run() {
-					examQuestionListener.onStopExam();
-					timeLimitReachedDialog.dismiss();
-					timeLimitReachedDialog = null;
-				}
-			});
-			timeLimitReachedDialog.show(getFragmentManager(), "TimeLimitReachedDialog");
-			break;
-		case DIALOG_QUITEXAM_ID:
-			TwoButtonDialog quitExamDialog = TwoButtonDialog.newInstance(R.string.quit_exam_message);
-			quitExamDialog.setPositiveButton(R.string.Quit, new Runnable() {
-
-				public void run() {
-					examQuestionListener.onStopExam();
-				}
-			});
-			quitExamDialog.setNegativeButton(R.string.resume, new Runnable() {
-
-				public void run() {
-
-				}
-			});
-			quitExamDialog.show(getFragmentManager(), "QuitExamDialog");
-			break;
-		case DIALOG_SHOW_HINT_ID:
-			ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(activity);
-			examinationDbHelper.open(ExamTrainer.getExamDatabaseName());
-			String message = examinationDbHelper.getHint(this.questionId);
-			examinationDbHelper.close();
-			if( message == null ) {
-				message = getString(R.string.hint_not_available);
-			}
-			HintDialog hintDialog = HintDialog.newInstance(message);
-			hintDialog.show(getFragmentManager(), "HintDialog");
-			break;
+				HintDialog hintDialog = HintDialog.newInstance(message);
+				hintDialog.show(getFragmentManager(), "HintDialog");
+				break;
+			default:
+				Log.d("ExamQuestionFragment", "showDialog: no such dialog: "+id);
 		}
 	}
 
 	public void setupTimer() {
-		if ( ( ExamTrainer.getTimeLimit() > 0 ) && 
-				( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) ) {
+		if ( ( ExamTrainer.getTimeLimit() > 0 ) &&
+			 ( ExamTrainer.getExamMode() != ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) ) {
 			this.timer = new Timer();
 			this.timer.scheduleAtFixedRate(new TimerTask() {
 
@@ -421,9 +415,9 @@ public class ExamQuestionFragment extends AbstractFragment {
 				String answer = Html.fromHtml(cursor.getString(index)).toString();
 				str.append(answer + "\n");
 			} while(cursor.moveToNext());
-			Toast.makeText(activity, 
-					getResources().getString(R.string.correct_answers) + ":\n\n" +
-							str.toString(), Toast.LENGTH_LONG).show();
+			Toast.makeText(activity,
+						   getResources().getString(R.string.correct_answers) + ":\n\n" +
+						   str.toString(), Toast.LENGTH_LONG).show();
 		}
 		cursor.close();
 	}
@@ -437,7 +431,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 			String userAnswer = this.editText.getText().toString();
 			if( userAnswer.length() > 0 ) {
 				examinationDbHelper.setScoresAnswersOpen(ExamTrainer.getScoresId(), this.questionId,
-						userAnswer);
+														 userAnswer);
 			}
 			Cursor correctAnswers = examinationDbHelper.getAnswers(this.questionId);
 			if( correctAnswers.getCount() < 1 ) {
@@ -462,7 +456,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 
 	private void createChoicesLayout(LinearLayout layout) {
 		final Activity activity = getActivity();
-		CheckBox cbox; 
+		CheckBox cbox;
 		this.multipleChoices = new ArrayList<View>();
 		ArrayList<String> choices = this.examQuestion.getChoices();
 
@@ -498,8 +492,8 @@ public class ExamQuestionFragment extends AbstractFragment {
 				}
 			});
 
-			if( ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) || 
-					( timeLimitReached ) ) {
+			if( ( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) ||
+				( timeLimitReached ) ) {
 				cbox.setClickable(false);
 			}
 
@@ -542,7 +536,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 
 		if( ExamTrainer.getExamMode() == ExamTrainer.ExamTrainerMode.EXAM_REVIEW ) {
 			showAnswers();
-		} 
+		}
 
 		//No need to get previous selected choices during an exam if there are none
 		if ( scoresAnswersCursor.getCount() < 1 ) {
@@ -566,7 +560,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 				if ( scoresAnswersCursor.getCount() > 0 ) {
 					scoresAnswersCursor.moveToFirst();
 					do {
-						String answer = Html.fromHtml(scoresAnswersCursor.getString(index)).toString();			
+						String answer = Html.fromHtml(scoresAnswersCursor.getString(index)).toString();
 						if( answer.contentEquals(tvText)) {
 							cbox.setChecked(true);
 						}
@@ -654,6 +648,6 @@ public class ExamQuestionFragment extends AbstractFragment {
 
 	@Override
 	public void updateView() {
-
+		//no need to update view here
 	}
 }

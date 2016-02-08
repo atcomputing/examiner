@@ -40,7 +40,6 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 	private final int RUN = 1;
 	private int mode = PAUSE;
 	private float zoom = -10f;
-	private int amountOfBalloons;
 	private Textures textures;
 	private Balloon[] balloons;
 	private boolean showBalloons;
@@ -50,10 +49,10 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 	private float screenBoundaryRight;
 	private float screenBoundaryLeft;
 	private float screenBoundaryBottom;
-	float topScreenBoundaryForBalloon;
-	float bottomScreenBoundaryForBalloon;
-	float leftScreenBoundaryForBalloon;
-	float rightScreenBoundaryForBalloon;
+	private float topScreenBoundaryForBalloon;
+	private float bottomScreenBoundaryForBalloon;
+	private float leftScreenBoundaryForBalloon;
+	private float rightScreenBoundaryForBalloon;
 
 	//	private long startTime;
 	//	private final int framerate = 33; //framerate is milliseconds per update
@@ -175,17 +174,13 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 
 
 	protected void showBalloons(int amount) {
-		this.amountOfBalloons = amount;
 		Random rng = new Random();
 
-		int resource_id = Balloon.getReferenceDrawable(Balloon.TYPE_BLUE);
-
-		this.balloons = new Balloon[this.amountOfBalloons];
-		for( int i = 0; i < this.amountOfBalloons; i++ ) {
+		this.balloons = new Balloon[amount];
+		for( int i = 0; i < amount; i++ ) {
 			int type = rng.nextInt(Balloon.AMOUNT_OF_TYPES);
-			resource_id = Balloon.getReferenceDrawable(type);
-			Balloon b = new Balloon(this.activity, type,
-					this.textures.getTexture(resource_id));
+			Balloon b = new Balloon(type,
+					this.textures.getTexture(Balloon.getReferenceDrawable(type)));
 			b.x = this.screenBoundaryRight - (rng.nextFloat() * this.screenBoundaryRight * 2f);
 			b.y = this.topScreenBoundaryForBalloon;
 			b.setLift(0.005f + rng.nextFloat()/8f);

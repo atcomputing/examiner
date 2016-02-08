@@ -185,10 +185,6 @@ public class ExamQuestion {
 		}
 	}
 	
-	public void updateQuestionInDatabase(String databaseName, long questionNumber) {
-		
-	}
-	
 	public ExamQuestion fillFromDatabase(String databaseName, long questionId) 
 			throws SQLiteException {
 		ExaminationDbAdapter examinationDbHelper = new ExaminationDbAdapter(this.context);
