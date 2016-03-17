@@ -28,13 +28,11 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
 
+public class ErrorDialog extends DialogFragment {
 
-public class ErrorDialog extends SherlockDialogFragment {
-	
-	private DialogInterface.OnClickListener onClickListener;
 	private DialogInterface.OnDismissListener onDismissListener;
 	
 	public static ErrorDialog newInstance(String message) {
@@ -56,7 +54,8 @@ public class ErrorDialog extends SherlockDialogFragment {
 		super.onDismiss(dialog);
 		this.onDismissListener.onDismiss(dialog);
 	}
-	
+
+	@Override
 	public Dialog onCreateDialog(Bundle savedInstanceState) {
 		String message = getArguments().getString("message");
 		
@@ -70,9 +69,6 @@ public class ErrorDialog extends SherlockDialogFragment {
 		.setCancelable(false)
 		.setPositiveButton(R.string.Close, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int id) {
-				if( onClickListener != null ) {
-					onClickListener.onClick(dialog, id);
-				}
 				dialog.dismiss();
 			}
 		});

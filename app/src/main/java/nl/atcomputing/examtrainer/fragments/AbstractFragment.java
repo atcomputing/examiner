@@ -22,14 +22,14 @@
 package nl.atcomputing.examtrainer.fragments;
 
 import android.app.Activity;
+import android.support.v4.app.Fragment;
 
-import com.actionbarsherlock.app.SherlockFragment;
 /**
  * @author martijn brekhof
  *
  */
 
-abstract public class AbstractFragment extends SherlockFragment {
+abstract public class AbstractFragment extends Fragment {
 	protected FragmentListener abstractFragmentListener;
 	
 	public interface FragmentListener {

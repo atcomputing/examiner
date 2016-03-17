@@ -38,10 +38,8 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
 
-
-public class UsageDialog extends SherlockDialogFragment {
+public class UsageDialog extends DialogFragment {
 
 	/**
 	 * Creates a new instance of a usage dialog for the given message
@@ -73,7 +71,7 @@ public class UsageDialog extends SherlockDialogFragment {
 		super.onCreate(savedInstanceState);
 		setStyle(DialogFragment.STYLE_NO_TITLE, 0);
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -107,7 +105,7 @@ public class UsageDialog extends SherlockDialogFragment {
 
 		Button button = (Button) view.findViewById(R.id.dialog_usage_button);
 		button.setOnClickListener(new OnClickListener() {
-			
+
 			public void onClick(View v) {
 				getDialog().dismiss();
 			}

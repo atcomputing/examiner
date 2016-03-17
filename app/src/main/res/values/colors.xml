@@ -19,10 +19,25 @@
 -->
 
 
-    <resources>
-        <color name="correct_answer">#00FF00</color>
-        <color name="exam_passed_text">#00b300</color>
-        <color name="exam_failed_text">#b30000</color>
-        <color name="transparent_background">#40000000</color>
-        <color name="choice">#FF444444</color>
-    </resources>
+<resources>
+    <color name="correct_answer">#0b8e0b</color>
+    <color name="exam_passed_text">#00b300</color>
+    <color name="exam_failed_text">#b30000</color>
+    <color name="transparent_background">#DD000000</color>
+    <color name="transparent_lightbackground">#1F000000</color>
+    <color name="transparent_darkbackground">#80000000</color>
+    <color name="atblack">#000000</color>
+    <color name="atblue">#007fff</color>
+    <color name="atbluedark">#0059b3</color>
+    <color name="atblueverydark">#003cb3</color>
+    <color name="atbluelight">#4da6ff</color>
+    <color name="atblueverylight">#4db5ff</color>
+    <color name="atblueveryverylight">#8bcfff</color>
+    <color name="atwhite">#ffffff</color>
+    <color name="atwhite_dividers">#1F000000</color>
+    <color name="atwhite_disabled">#4D000000</color>
+    <color name="atwhite_secondarytext">#C3000000</color>
+    <color name="atwhite_text">#FFFFFFFF</color>
+    <color name="athighlight">#10007FFF</color>
+    <color name="attransparant">#00000000</color>
+</resources>

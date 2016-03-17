@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ Copyright 2015 AT Computing BV
+
+ This file is part of Linux Reference Card.
+
+ Linux Reference Card is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+
+ Linux Reference Card is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+
+ You should have received a copy of the GNU General Public License
+ along with Linux Reference Card.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    android:background="@color/atwhite">
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        style="@style/Dialog">
+
+        <ImageView
+            android:src="@drawable/atlogo"
+            style="@style/Dialog.Icon"/>
+
+        <TextView
+            android:id="@+id/message"
+            android:text="@string/text_about_atcomputing"
+            style="@style/Dialog" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:text="@string/Version"
+                style="@style/Dialog.Copyright" >
+            </TextView>
+
+            <TextView
+                android:id="@+id/about_version_number"
+                style="@style/Dialog.Copyright" >
+            </TextView>
+        </LinearLayout>
+
+        <TextView
+            style="@style/Dialog.Copyright"
+            android:text="@string/Copyright" >
+        </TextView>
+
+        <TextView
+            style="@style/Dialog.Copyright"
+            android:autoLink="web"
+            android:text="@string/Visit_atcomputing" >
+        </TextView>
+    </LinearLayout>
+</ScrollView>

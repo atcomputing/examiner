@@ -20,7 +20,7 @@
 
 	<resources>
        <!-- KEYS USED IN PREFERENCES -->
-       <string name="pref_key_use_timelimits">use_timelimits_pref_key</string>
-       <string name="pref_key_preferences">preferences_pref_key</string>
-      <string name="pref_key_show_score_instantaneous">instant_score_pref_key</string>
+       <string translatable="false" name="pref_key_use_timelimits">use_timelimits_pref_key</string>
+       <string translatable="false" name="pref_key_preferences">preferences_pref_key</string>
+      <string translatable="false" name="pref_key_show_score_instantaneous">instant_score_pref_key</string>
 	</resources>

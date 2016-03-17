@@ -46,6 +46,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -57,9 +60,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 /**
  * @author martijn brekhof
  *
@@ -108,7 +108,7 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 		
 		this.exam = Exam.newInstance(activity, ExamTrainer.getExamId());
 		if( this.exam == null ) {
-			ErrorDialog dialog = ErrorDialog.newInstance(getSherlockActivity().getString(
+			ErrorDialog dialog = ErrorDialog.newInstance(activity.getString(
 					R.string.error_loading_exam_from_database));
 			dialog.setOnDismissListener(new OnDismissListener() {
 				
@@ -116,7 +116,7 @@ public class ExamOverviewFragment extends AbstractFragment implements OnClickLis
 				public void onDismiss(DialogInterface dialog) {
 					//close fragment
 					if( activity instanceof MainActivity ) {
-						((MainActivity) activity).onBackPressed();
+						activity.onBackPressed();
 					}
 				}
 			});

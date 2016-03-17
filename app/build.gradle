@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "23.0.0"
+    compileSdkVersion 26
+    buildToolsVersion '26.0.1'
 
     defaultConfig {
         applicationId "nl.atcomputing.examtrainer"
-        minSdkVersion 9
-        targetSdkVersion 22
+        minSdkVersion 14
+        targetSdkVersion 26
         versionCode 6
         versionName "1.0.1"
     }
@@ -19,8 +19,14 @@ android {
     }
 }
 
+ext {
+    supportLibraryVersion='26.1.0'
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:support-v4:22.2.0'
-    compile 'com.actionbarsherlock:actionbarsherlock:4.4.0@aar'
+    compile "com.android.support:appcompat-v7:${supportLibraryVersion}"
+    compile "com.android.support:support-v4:${supportLibraryVersion}"
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile "com.android.support:support-annotations:${supportLibraryVersion}"
 }

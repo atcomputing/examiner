@@ -21,6 +21,7 @@
 
 package nl.atcomputing.examtrainer.activities;
 
+import android.app.ActionBar;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -33,12 +34,11 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.BackStackEntry;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Toast;
-
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
 
 import nl.atcomputing.examtrainer.R;
 import nl.atcomputing.examtrainer.database.ExaminationDbAdapter;
@@ -57,7 +57,7 @@ import nl.atcomputing.examtrainer.scorecalculation.ShowScoreActivity;
  * @author martijn brekhof
  */
 
-public class MainActivity extends SherlockFragmentActivity
+public class MainActivity extends AppCompatActivity
 		implements FragmentListener, ExamQuestionListener, OnBackStackChangedListener {
 
 	private ReceiveBroadcast receiveBroadcast;
@@ -81,6 +81,9 @@ public class MainActivity extends SherlockFragmentActivity
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.examactivity);
+
+		Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+		setSupportActionBar(toolbar);
 
 		overridePendingTransition(R.anim.fadein, R.anim.fadeout);
 
@@ -223,11 +226,13 @@ public class MainActivity extends SherlockFragmentActivity
 			setTitle(title);
 		}
 
-		ActionBar actionBar = getSupportActionBar();
-		if (this.activeFragment != this.examSelectFragment) {
-			actionBar.setDisplayHomeAsUpEnabled(true);
-		} else {
-			actionBar.setDisplayHomeAsUpEnabled(false);
+		ActionBar actionBar = getActionBar();
+		if (actionBar != null) {
+			if (this.activeFragment != this.examSelectFragment) {
+				actionBar.setDisplayHomeAsUpEnabled(true);
+			} else {
+				actionBar.setDisplayHomeAsUpEnabled(false);
+			}
 		}
 	}
 

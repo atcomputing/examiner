@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * Copyright 2012 AT Computing BV
  *
  * This file is part of Examiner.
@@ -22,20 +22,16 @@
 package nl.atcomputing.examtrainer.dialogs;
 
 
-import nl.atcomputing.examtrainer.R;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.TextView;
+import android.support.v4.app.DialogFragment;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
+import nl.atcomputing.examtrainer.R;
 
-
-public class TwoButtonDialog extends SherlockDialogFragment {
+public class TwoButtonDialog extends DialogFragment {
 	protected int posButtonMsgResourceId;
 	protected int negButtonMsgResourceId = R.string.cancel;
 	protected Runnable posButtonAction;
@@ -69,10 +65,7 @@ public class TwoButtonDialog extends SherlockDialogFragment {
 		Dialog dialog;
 		AlertDialog.Builder builder;
 		builder = new AlertDialog.Builder(activity);
-		View view = LayoutInflater.from(activity).inflate(R.layout.dialog_message, null);
-		TextView tv = (TextView) view.findViewById(R.id.dialog_message);
-		tv.setText(msgResourceId);
-		builder.setView(view);
+		builder.setMessage(msgResourceId);
 		if( ( posButtonMsgResourceId != 0 ) && ( posButtonAction != null ) ) {
 			builder.setPositiveButton(posButtonMsgResourceId, new DialogInterface.OnClickListener() {
 

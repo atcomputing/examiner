@@ -24,7 +24,7 @@ package nl.atcomputing.examtrainer.scorecalculation;
 import static android.opengl.GLES11.GL_MODELVIEW_MATRIX;
 import static android.opengl.GLES11.GL_PROJECTION_MATRIX;
 import static android.opengl.GLES11.glGetFloatv;
-import static android.util.FloatMath.sqrt;
+import static java.lang.Math.sqrt;
 
 /**
  * Taken from http://www.racer.nl/reference/vfc_markmorley.htm
@@ -174,8 +174,8 @@ public class Frustum
                         frustum[ 0 ][ 2 ] = clip[ 11 ] - clip[ 8 ];
                         frustum[ 0 ][ 3 ] = clip[ 15 ] - clip[ 12 ];
                         // normalise
-                        float t =
-                                        1.0f / sqrt( frustum[ 0 ][ 0 ] * frustum[ 0 ][ 0 ] + frustum[ 0 ][ 1 ]
+                        double t =
+                                        1.0 / sqrt( frustum[ 0 ][ 0 ] * frustum[ 0 ][ 0 ] + frustum[ 0 ][ 1 ]
                                                         * frustum[ 0 ][ 1 ] + frustum[ 0 ][ 2 ] * frustum[ 0 ][ 2 ] );
                         frustum[ 0 ][ 0 ] *= t;
                         frustum[ 0 ][ 1 ] *= t;

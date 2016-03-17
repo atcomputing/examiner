@@ -46,28 +46,25 @@
     </LinearLayout>
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/startexam_examinfo"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_above="@id/startexam_bottom_buttonbar"
         android:layout_alignParentTop="true"
-        android:background="@color/transparent_background"
         android:baselineAligned="false"
         android:orientation="horizontal" >
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="fill_parent"
-            android:layout_margin="@dimen/paddingSmall"
             android:layout_weight="1"
-            android:background="@color/transparent_background"
+            android:layout_margin="@dimen/paddingSmall"
             android:orientation="vertical" >
 
             <LinearLayout
                 android:id="@+id/startexam_history_textview_linearlayout"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <TextView
                     android:id="@+id/startexam_history_textview_message"
@@ -81,6 +78,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingLeft="@dimen/paddingDefault"
+                    android:paddingStart="@dimen/paddingDefault"
                     android:textSize="@dimen/textSizeDefault" />
             </LinearLayout>
 
@@ -88,14 +86,13 @@
                 android:id="@+id/startexam_history_header"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                android:gravity="center"
-                android:orientation="horizontal" >
+                android:background="@color/atblueveryverylight"
+                android:orientation="horizontal">
 
                 <CheckBox
                     android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:gravity="center"
+                    android:layout_height="wrap_content"
+                    style="@style/CheckBox"
                     android:visibility="invisible" />
 
                 <TextView
@@ -114,17 +111,16 @@
             <ListView
                 android:id="@+id/startexam_history_listview"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:cacheColorHint="#00000000" />
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dip"
             android:layout_height="fill_parent"
-            android:layout_margin="@dimen/paddingSmall"
             android:layout_weight="1"
-            android:background="#AA404040"
+            android:background="@color/atblueveryverylight"
             android:orientation="vertical"
+            android:layout_margin="@dimen/paddingSmall"
             android:padding="@dimen/paddingSmall" >
 
             <RelativeLayout
@@ -133,14 +129,20 @@
 
                 <TextView
                     android:id="@+id/startexam_amount_of_items_text"
-                    style="@style/TextWhite"
+                    style="@style/NormalText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:text="@string/Amount_of_questions" />
 
                 <TextView
                     android:id="@+id/startexam_amount_of_items_value"
-                    style="@style/TextWhite"
-                    android:layout_alignParentRight="true" />
+                    style="@style/NormalText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -149,14 +151,20 @@
 
                 <TextView
                     android:id="@+id/startexam_items_needed_to_pass_text"
-                    style="@style/TextWhite"
+                    style="@style/NormalText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:text="@string/Required_to_pass" />
 
                 <TextView
                     android:id="@+id/startexam_items_needed_to_pass_value"
-                    style="@style/TextWhite"
-                    android:layout_alignParentRight="true" />
+                    style="@style/NormalText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -165,14 +173,20 @@
 
                 <TextView
                     android:id="@+id/startexam_timelimit_text"
-                    style="@style/TextWhite"
+                    style="@style/NormalText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
                     android:text="@string/Time_limit_in_minutes" />
 
                 <TextView
                     android:id="@+id/startexam_timelimit_value"
-                    style="@style/TextWhite"
-                    android:layout_alignParentRight="true" />
+                    style="@style/NormalText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

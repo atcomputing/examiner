@@ -26,6 +26,7 @@
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
               android:paddingRight="@dimen/paddingDefault"
+              android:paddingEnd="@dimen/paddingDefault"
               android:textSize="@dimen/textSizeDefault"/>
     <ImageView android:contentDescription="@string/answer_correct_or_wrong" 
       android:id="@+id/reviewExamAnswer"

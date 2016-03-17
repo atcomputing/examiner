@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.MyTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- colorPrimary is used for the default action bar background -->
+        <item name="colorPrimary">@color/atblueverylight</item>
+
+        <!-- colorPrimaryDark is used for the status bar -->
+        <item name="colorPrimaryDark">@color/atbluedark</item>
+
+        <!-- colorAccent is used as the default value for colorControlActivated,
+             which is used to tint widgets -->
+        <item name="colorAccent">@color/atblueverydark</item>
+        <item name="android:colorBackground">@color/atwhite</item>
+        <item name="android:textColorPrimary">@color/atblueverydark</item>
+        <item name="android:colorForeground">@color/atblueverydark</item>
+        <item name="android:navigationBarColor">@color/atblueverydark</item>
+
+    </style>
+
+    <!--<style name="TitleText" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">-->
+        <!--<item name="android:textColor">@color/atwhite</item>-->
+        <!--<item name="android:textSize">@dimen/textSizeHuge</item>-->
+    <!--</style>-->
+</resources>

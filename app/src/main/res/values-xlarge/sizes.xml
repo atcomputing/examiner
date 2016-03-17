@@ -19,11 +19,11 @@
 -->
 
 <resources>
-    <dimen name="textSizeDefault">25dp</dimen>
-    <dimen name="textSizeRowItem">25dp</dimen>
-    <dimen name="textSizeRowSubItem">20dp</dimen>
-    <dimen name="textSizeHuge">55dp</dimen>
-    <dimen name="textSizeDialog">35dp</dimen>
+    <dimen name="textSizeDefault">25sp</dimen>
+    <dimen name="textSizeRowItem">25sp</dimen>
+    <dimen name="textSizeRowSubItem">20sp</dimen>
+    <dimen name="textSizeHuge">55sp</dimen>
+    <dimen name="textSizeDialog">35sp</dimen>
     <dimen name="paddingDefault">25dp</dimen>
     <dimen name="paddingSmall">12dp</dimen>
     <dimen name="rowHeightDefault">60dp</dimen>

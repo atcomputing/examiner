@@ -30,15 +30,14 @@
      	    android:id="@+id/choiceCheckBox"
      	    android:layout_width="wrap_content" 
     		android:layout_height="wrap_content"
-    		android:layout_gravity="left|center_vertical"
-    		android:layout_marginRight="@dimen/paddingDefault"/>
+    		android:layout_gravity="start|center_vertical"
+			style="@style/CheckBox"/>
      	 
      	<TextView 
      	    android:id="@+id/choiceTextView"
      	    android:layout_width="fill_parent" 
     		android:layout_height="wrap_content"
-    		android:textSize="@dimen/textSizeDefault"
+			style="@style/RowEntryMainText"
     		android:textStyle="bold"
-    		android:textColor="#FFFFFFFF"
-    		android:gravity="center_vertical"/>
+    		android:gravity="start|center_vertical"/>
 </LinearLayout>

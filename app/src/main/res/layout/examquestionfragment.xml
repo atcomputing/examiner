@@ -21,8 +21,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/question_toplayout_container"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#000000" >
+    android:layout_height="fill_parent">
 
     <LinearLayout
         android:id="@+id/buttonLayout"
@@ -54,7 +53,7 @@
         android:id="@+id/titleBar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
+        android:background="@color/atblueveryverylight"
         android:gravity="top" >
 
         <TextView
@@ -62,10 +61,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:paddingLeft="@dimen/paddingDefault"
             android:paddingRight="@dimen/paddingDefault"
             android:text="@string/Question"
-            android:textColor="@android:color/black"
             android:textSize="@dimen/textSizeDefault" />
 
         <TextView
@@ -73,9 +72,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@id/question_textQuestion"
+            android:layout_toEndOf="@id/question_textQuestion"
             android:paddingRight="@dimen/paddingDefault"
+            android:paddingEnd="@dimen/paddingDefault"
             android:text=""
-            android:textColor="@android:color/black"
             android:textSize="@dimen/textSizeDefault" />
 
         <TextView
@@ -83,9 +83,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
             android:paddingRight="@dimen/paddingDefault"
+            android:paddingEnd="@dimen/paddingDefault"
             android:text="@string/No_time_limit"
-            android:textColor="@android:color/black"
             android:textSize="@dimen/textSizeDefault" />
     </RelativeLayout>
 
@@ -106,7 +107,7 @@
                 android:id="@+id/horizontalScrollViewExhibit"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:background="#333333"
+                android:background="@color/transparent_lightbackground"
                 android:scrollbars="none" >
 
                 <TextView
@@ -114,7 +115,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/paddingDefault"
-                    android:textColor="#FFFFFF"
                     android:textSize="@dimen/textSizeDefault"
                     android:typeface="monospace" />
             </HorizontalScrollView>
@@ -124,7 +124,6 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/paddingDefault"
-                android:textColor="#CCCCCC"
                 android:textSize="@dimen/textSizeDefault"
                 android:typeface="serif" />
 

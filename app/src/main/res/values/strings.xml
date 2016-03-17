@@ -19,7 +19,7 @@
 -->
 
 <resources>
-
+    <string name="confirm_ok">OK</string>
     <string name="Calculating_your_score">Calculating your score</string>
     <string name="You_passed">You passed</string>
     <string name="You_failed">You failed</string>

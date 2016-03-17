@@ -19,18 +19,18 @@
 -->
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    	android:layout_height="wrap_content"
-    	android:orientation="vertical"
-    	android:layout_alignParentLeft="true">
-    <TextView
-        android:id="@+id/selectexamEntryTitle"
-        style="@style/RowEntryMainText"
-        android:layout_gravity="top"
-        android:background="@android:color/transparent" />
-    <TextView
-        android:id="@+id/selectexamEntryAuthor"
-        style="@style/RowEntrySubitemText"
-        android:layout_gravity="bottom"
-        android:background="@android:color/transparent"/>
+			  android:layout_width="fill_parent"
+			  android:layout_height="wrap_content"
+			  android:orientation="vertical"
+			  android:layout_alignParentLeft="true"
+			  android:layout_alignParentStart="true"
+			  android:padding="@dimen/paddingDefault">
+	<TextView
+		android:id="@+id/selectexamEntryTitle"
+		style="@style/RowEntryMainText"
+		android:layout_gravity="top"/>
+	<TextView
+		android:id="@+id/selectexamEntryAuthor"
+		style="@style/RowEntrySubitemText"
+		android:layout_gravity="bottom"/>
 </LinearLayout>

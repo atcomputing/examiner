@@ -46,6 +46,9 @@ import android.os.Message;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -59,9 +62,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 /**
  * @author martijn brekhof
  *
@@ -505,7 +505,7 @@ public class ExamQuestionFragment extends AbstractFragment {
 		if( amountOfMultilineChoices > 1 ) {
 			for( View view : this.multipleChoices ) {
 				TextView tv = (TextView) view.findViewById(R.id.choiceTextView);
-				tv.setBackgroundColor(getResources().getColor(R.color.choice));
+				tv.setBackgroundColor(getResources().getColor(R.color.transparent_lightbackground));
 				int padding = getResources().getDimensionPixelSize(R.dimen.paddingSmall);
 				view.setPadding(0, padding, 0, padding);
 			}

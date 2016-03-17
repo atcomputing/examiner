@@ -97,9 +97,7 @@ public class ExamSelectAdapter extends CursorAdapter  {
 	@Override
 	public View newView(Context context, Cursor myCursor, ViewGroup parent) {
 		final LayoutInflater mInflater = LayoutInflater.from(context);
-		View view = mInflater.inflate(layout, parent, false);
-		
-		return view;
+		return mInflater.inflate(layout, parent, false);
 	}
 
 	private class ViewHolder {

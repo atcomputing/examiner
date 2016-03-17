@@ -19,5 +19,5 @@
 -->
 
 <resources>
-    <dimen name="textSizeHuge">90dp</dimen>
+    <dimen name="textSizeHuge">90sp</dimen>
 </resources>
