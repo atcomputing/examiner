@@ -87,7 +87,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/atblueveryverylight"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:elevation="@dimen/toolbarElevation">
 
                 <CheckBox
                     android:layout_width="wrap_content"

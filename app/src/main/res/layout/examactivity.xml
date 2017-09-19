@@ -32,7 +32,8 @@
         android:layout_height="wrap_content"
         app:theme="@style/Theme.MyTheme"
         app:logo="@drawable/launcher"
-        android:background="?attr/colorPrimary"/>
+        android:background="?attr/colorPrimary"
+        android:elevation="@dimen/toolbarElevation"/>
 
     <FrameLayout
         android:id="@+id/exam_fragment_holder"

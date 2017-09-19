@@ -28,4 +28,5 @@
     <dimen name="paddingSmall">5dp</dimen>
     <dimen name="rowHeightDefault">20dp</dimen>
     <dimen name="columnWidthDefault">90dp</dimen>
+    <dimen name="toolbarElevation">2dp</dimen>
 </resources>

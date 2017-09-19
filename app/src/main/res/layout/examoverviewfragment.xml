@@ -51,10 +51,10 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/startexam_bottom_buttonbar"
-        android:layout_margin="@dimen/paddingSmall"
         android:orientation="vertical"
         android:padding="@dimen/paddingSmall"
-        android:background="@color/atblueveryverylight">
+        android:background="@color/atblueveryverylight"
+        android:elevation="@dimen/toolbarElevation">
 
         <RelativeLayout
             android:layout_width="fill_parent"
@@ -154,7 +154,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:orientation="horizontal"
-        android:background="@color/atblueveryverylight">
+        android:background="@color/atblueveryverylight"
+        android:elevation="@dimen/toolbarElevation">
 
         <CheckBox
             android:layout_width="wrap_content"
