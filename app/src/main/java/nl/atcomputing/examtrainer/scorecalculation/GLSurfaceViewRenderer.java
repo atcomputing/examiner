@@ -1,5 +1,5 @@
 /**
- * 
+ *
  * Copyright 2012 AT Computing BV
  *
  * This file is part of Examiner.
@@ -21,14 +21,17 @@
 
 package nl.atcomputing.examtrainer.scorecalculation;
 
+import android.graphics.Color;
+import android.opengl.GLSurfaceView;
+import android.opengl.GLSurfaceView.Renderer;
+import android.opengl.GLU;
+
 import java.util.Random;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import android.opengl.GLSurfaceView;
-import android.opengl.GLSurfaceView.Renderer;
-import android.opengl.GLU;
+import nl.atcomputing.examtrainer.R;
 
 /**
  * @author martijn brekhof
@@ -53,6 +56,7 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 	private float bottomScreenBoundaryForBalloon;
 	private float leftScreenBoundaryForBalloon;
 	private float rightScreenBoundaryForBalloon;
+	private int backgroundColor;
 
 	//	private long startTime;
 	//	private final int framerate = 33; //framerate is milliseconds per update
@@ -62,7 +66,7 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 	 * after another app was active.
 	 */
 	private boolean onSurfaceChangedAlreadyCalled = false;
-	
+
 	public GLSurfaceViewRenderer(ShowScoreActivity activity) {
 		super(activity);
 		this.activity = activity;
@@ -72,6 +76,8 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 		//Request focus
 		this.requestFocus();
 		this.setFocusableInTouchMode(true);
+
+		backgroundColor = activity.getResources().getColor(R.color.atblueveryverylight);
 
 		this.wind = new Wind();
 		this.wind.setWindChance(30);
@@ -95,7 +101,7 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 		}
 
 		//Clear Screen And Depth Buffer
-		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);	
+		gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 
 		gl.glMatrixMode(GL10.GL_MODELVIEW);
 		gl.glLoadIdentity();                      // reset the matrix to its default state
@@ -109,7 +115,7 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 			}
 
 			for(Balloon b: this.balloons) {
-				b.x += this.wind.getWind(-b.y) * direction; 
+				b.x += this.wind.getWind(-b.y) * direction;
 				b.y -= b.getLift();
 
 				if( b.y < bottomScreenBoundaryForBalloon ) {
@@ -129,7 +135,7 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 		}
 	}
 
-	public void onSurfaceChanged(GL10 gl, int width, int height) 
+	public void onSurfaceChanged(GL10 gl, int width, int height)
 	{
 		if( this.onSurfaceChangedAlreadyCalled ) {
 			return;
@@ -149,17 +155,17 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 		gl.glLoadIdentity();                        // reset the matrix to its default state
 		gl.glFrustumf(-hratio , hratio, -vratio, vratio, 1.0f, 250f);
 		updateScreenBoundaries();
-		this.wind.setWindowSize(this.screenBoundaryTop, 
-				this.screenBoundaryBottom, 
-				this.screenBoundaryLeft,
-				this.screenBoundaryRight);
+		this.wind.setWindowSize(this.screenBoundaryTop,
+								this.screenBoundaryBottom,
+								this.screenBoundaryLeft,
+								this.screenBoundaryRight);
 
 		this.activity.setGLSurfaceReady();
 
 		this.onSurfaceChangedAlreadyCalled = true;
 	}
 
-	public void onSurfaceCreated(GL10 gl, EGLConfig config) 
+	public void onSurfaceCreated(GL10 gl, EGLConfig config)
 	{
 		gl.glEnable(GL10.GL_TEXTURE_2D);					//Enable Texture Mapping
 		gl.glDisable(GL10.GL_DITHER);
@@ -167,6 +173,11 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 		gl.glDisable(GL10.GL_DEPTH_TEST);					//Disable depth test
 		gl.glCullFace(GL10.GL_FRONT);						//only draw front of polygon
 		gl.glBlendFunc(GL10.GL_SRC_ALPHA, GL10.GL_ONE_MINUS_SRC_ALPHA);
+
+		gl.glClearColor(Color.red(backgroundColor),
+						Color.green(backgroundColor),
+						Color.blue(backgroundColor),
+						Color.alpha(backgroundColor));
 
 		this.textures = new Textures(this.activity);
 		this.textures.loadTextures(gl);
@@ -180,7 +191,7 @@ public class GLSurfaceViewRenderer extends GLSurfaceView implements Renderer {
 		for( int i = 0; i < amount; i++ ) {
 			int type = rng.nextInt(Balloon.AMOUNT_OF_TYPES);
 			Balloon b = new Balloon(type,
-					this.textures.getTexture(Balloon.getReferenceDrawable(type)));
+									this.textures.getTexture(Balloon.getReferenceDrawable(type)));
 			b.x = this.screenBoundaryRight - (rng.nextFloat() * this.screenBoundaryRight * 2f);
 			b.y = this.topScreenBoundaryForBalloon;
 			b.setLift(0.005f + rng.nextFloat()/8f);

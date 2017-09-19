@@ -32,7 +32,7 @@
     <color name="atblueverydark">#003cb3</color>
     <color name="atbluelight">#4da6ff</color>
     <color name="atblueverylight">#4db5ff</color>
-    <color name="atblueveryverylight">#8bcfff</color>
+    <color name="atblueveryverylight">#ff8bcfff</color>
     <color name="atwhite">#ffffff</color>
     <color name="atwhite_dividers">#1F000000</color>
     <color name="atwhite_disabled">#4D000000</color>
